@@ -1,0 +1,92 @@
+import React,{useEffect,useState} from 'react';
+import { useData } from '../../contexts/DataContext';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import DefaultLayout from '../../layout/DefaultLayout';
+import BaiscTable from '../../components/Tables/basic';
+import { useAuth } from '../../contexts/AuthContext';
+import FormLayout from '../../layout/DefaultFormLayout';
+
+
+
+function App() {
+
+ 
+  const data=useData()
+  const {user} =  useAuth()
+  const { t, i18n } = useTranslation();
+
+  const { id } = useParams()
+  const {pathname,search } = useLocation()
+  const navigate = useNavigate()
+
+  let required_data=['doctors']
+  
+  useEffect(()=>{
+        
+        if(!user) return
+        setTimeout(()=>(
+          data._get(required_data) 
+        ),500)
+
+  },[user,pathname])
+
+
+  useEffect(()=>{
+    if(data.updateTable){
+         data.setUpdateTable(null)
+         data.handleLoaded('remove','doctors')
+         data._get(required_data) 
+    }
+ },[data.updateTable])
+
+  
+
+  return (
+   
+         <DefaultLayout pageContent={{title:t('menu.specialty-categories'),desc:t('titles.specialty-categories'),btn:{onClick:(e)=>{
+                 navigate('/add-doctors')
+         },text:t('menu.specialty-categories')}}}>
+           
+
+             {id && <FormLayout  title={id ? t('common.edit-category') : t('common.add-category')}>
+
+             </FormLayout>}
+            
+             {!id && <BaiscTable canAdd={user?.role=="admin"} addPath={'/add-specialty-category'} loaded={data._loaded.includes('doctors')} header={[
+                         <BaiscTable.MainActions options={{
+                          deleteFunction:'default',
+                          deleteUrl:'api/specialty-categories/delete'}
+                         } items={data._doctors}/>,
+                         'ID',
+                          t('form.name'),
+                          t('form.english-name'),
+                          t('form.image'),
+                        ]
+                      }
+
+                       body={data._doctors.map((i,_i)=>(
+                        
+                              <BaiscTable.Tr>
+                                <BaiscTable.Td>
+                                  <BaiscTable.Actions options={{
+                                       deleteFunction:'default',
+                                       deleteUrl:'api/specialty-categories/delete',
+                                       id:i.id}
+                                  }/>
+                                </BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.id}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.name}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{t('common.'+i.medical_specialty)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.email}</BaiscTable.Td>  
+                            </BaiscTable.Tr>
+                        ))}
+
+                      
+                    />}
+
+         </DefaultLayout>
+  );
+}
+
+export default App;

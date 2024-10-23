@@ -1,0 +1,214 @@
+import React, { useEffect, useState } from 'react'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import DashboardIcon from '../../assets/images/menu-icons/dashboard.svg'
+import PatientIcon from '../../assets/images/menu-icons/patient.svg'
+import LogoIcon from '../../assets/images/dark-logo-1.png'
+import MedicalPrescriptionIcon from '../../assets/images/menu-icons/medical-prescription.svg'
+import ClinicalDiaryIcon from '../../assets/images/menu-icons/clinical-diary.svg'
+import AppointmentsIcon from '../../assets/images/menu-icons/appointments.svg'
+import DoctorIcon from '../../assets/images/menu-icons/doctor.svg'
+import schedulerIcon from '../../assets/images/menu-icons/scheduler.svg'
+import SettingsIcon from '../../assets/images/menu-icons/settings.svg'
+import ExamIcon from '../../assets/images/menu-icons/exams.svg'
+import FindDoctorIcon from '../../assets/images/menu-icons/find-doctors.svg'
+
+import { t } from 'i18next';
+import { useAuth } from '../../contexts/AuthContext';
+
+function SideBar() {
+
+    const {pathname}=useLocation()
+    const navigate = useNavigate()
+    const {user} = useAuth()
+
+    const menuItems = [
+      {name:t('menu.home'),path:'/',paths:['/'],field:'dashboard',icon:'dashboard',access:['all']},
+      {name:t('menu.find-a-specialist'),path:'/specialists',paths:['/specialists'],field:'specialists',icon:'find_doctor',access:['admin','patient']},
+      {name:t('menu.appointments'),path:'/appointments',field:'appointments',icon:'appointments',sub_menus:[
+          {name:t('menu.all-appointments'),path:'/appointments',paths:['appointments','appointment/:id']},
+          {name:t('menu.add-appointments'),path:'/add-appointments',paths:['add-appointments'],access:['patient']},
+      ],access:['all']},
+      {name:user?.role=="doctor" ? t('menu.my-patients') : t('menu.patients'),path:'/patients',field:'patients',icon:'patient',sub_menus:[
+        {name:t('menu.all-patients'),path:'/patients',paths:['patients','patient/:id']},
+        {name:t('menu.add-patients'),path:'/add-patient',paths:['add-patient'],access:['admin']},
+      ],access:['admin','doctor']},
+      {name:t('menu.doctors'),path:'/doctors',field:'doctors',icon:'doctor',sub_menus:[
+        {name:t('menu.doctors'),path:'/doctors',paths:['doctors','doctor/:id']},
+        {name:t('menu.add-doctors'),path:'/add-doctors',paths:['add-doctors']},
+        {name:t('menu.specialty-categories'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category']},        
+      ],access:['admin']},
+      /* {name:t('menu.medical-prescription'),path:'/medical-prescription',paths:['/medical-prescription'],field:'medical-prescription',icon:'medical_prescription',sub_menus:[
+        {name:t('menu.all-medical-prescription'),path:'/medical-prescription',paths:['medical-prescription','medical-prescription/:id']},
+        {name:t('menu.add-medical-prescription'),path:'/add-medical-prescription',paths:['add-medical-prescription']},
+      ],access:['all']},
+   
+    {name:t('menu.clinical-diary'),path:'/clinical-diary',field:'clinical-diary',icon:'clinical_diary',sub_menus:[
+        {name:t('menu.all-clinical-diary'),path:'/all-clinical-diary',paths:['clinical-diary','clinical-diary/:id']},
+        {name:t('menu.add-clinical-diary'),path:'/add-clinical-diary',paths:['add-clinical-diary'],access:['doctor']},
+      ],access:['all']},
+
+      {name:t('menu.exams'),path:'/exams',paths:['/exams'],field:'exams',icon:'exams',sub_menus:[
+        {name:t('menu.all-exams'),path:'/exams',paths:['exams','exams/:id']},
+        {name:t('menu.add-exams'),path:'/add-exams',paths:['add-exams'],access:['doctor']},
+      ],access:['all']},*/
+     
+      {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient']},
+      
+      {name:t('menu.settings'),path:'/profile',field:'settings',icon:'settings',sub_menus:[
+        {name:t('menu.profile'),path:'/profile',paths:['profile'],access:['all']},
+        {name:t('menu.consultation-availability'),path:'/consultation-availability',paths:['consultation-availability'],access:['doctor']},
+       
+      ],access:['patient','doctor']},
+
+  ]
+
+
+  let images={
+      dashboard:DashboardIcon,
+      patient:PatientIcon,
+      appointments:AppointmentsIcon,
+      medical_prescription:MedicalPrescriptionIcon,
+      clinical_diary:ClinicalDiaryIcon,
+      doctor:DoctorIcon,
+      scheduler:schedulerIcon,
+      settings:SettingsIcon,
+      exams:ExamIcon,
+      find_doctor:FindDoctorIcon
+  }
+
+    const [menuOpen, setMenuOpen] = useState([]);
+
+    function closeAndOpen(path){
+        if(menuOpen.includes(path)){
+          setMenuOpen(menuOpen.filter(i=>i!=path))
+        }else{
+          setMenuOpen([...menuOpen,path])
+        }
+    }
+
+    useEffect(()=>{
+       let mainPath=pathname.split('/')[1]
+
+       menuItems.forEach(i=>{
+             if(i.sub_menus) {
+                  i.sub_menus.map(f=>{
+
+                   if(f.path.includes(mainPath) && mainPath){
+                      setMenuOpen([i.path])
+                   }
+
+                  })
+             }else{
+                  if(i.path.includes(mainPath) && mainPath){
+                    setMenuOpen([i.path])
+                  }
+             }
+       })
+    },[pathname])
+
+
+    
+  function checkAccess(item,isSub){
+
+      if(!isSub){
+         return item.access.includes(user?.role) || item.access.includes('all')
+      }else{
+        return  item.access?.includes(user?.role) || !item.access || item.access?.includes('all')
+      }
+
+  }
+
+
+    function checkActive(item,isSub){
+
+        if(!item) return false
+
+        let macth=false
+ 
+        if(isSub || !item.sub_menus){
+         
+ 
+          item.paths.forEach(p=>{
+               let _pathname=p.includes(':') ? pathname.split('/').filter((_,_i)=>_i!=pathname.split('/').length - 1).join('') : pathname.split('/').join('')
+               let path=p.split('/').join('').split(':')[0]
+ 
+               if(path == _pathname) {
+                 macth=true
+               }
+          })
+           
+          return macth
+ 
+        }else{
+ 
+          item.sub_menus.forEach(sub=>{
+               sub.paths.forEach(p=>{
+                 let _pathname=p.includes(':') ? pathname.split('/').filter((_,_i)=>_i!=pathname.split('/').length - 1).join('') : pathname.split('/').join('')
+                 let path=p.split('/').join('').split(':')[0]
+   
+                 if(path == _pathname) {
+                     macth=true
+                 }
+               })
+          })
+          return macth
+        }
+    }
+
+
+
+
+    return (
+    <div className="min-w-[230px] max-w-[240px] bg-white h-[100vh]">
+
+           <div className="flex justify-center py-[20px] mb-6">
+                <h1 className="text-[25px] font-medium">
+                   <img src={LogoIcon} width={120}/>
+                </h1>
+           </div>
+
+           <div className="">
+                    {menuItems.map((item, index) => (
+                        <div key={index} className={`mb-4 ${!checkAccess(item) ? 'hidden':''}`}>
+                              <div className={`px-[20px] flex relative hover:*:cursor-pointer hover:*:text-honolulu_blue-500`} onClick={()=>{
+                                 if(item.sub_menus){
+                                    closeAndOpen(item.path)
+                                 }
+                              }}>
+                                  {checkActive(item) && <span className="bg-honolulu_blue-500 w-[3px]  rounded-[0.3rem] h-full flex absolute left-0 top-0"></span>}
+                                  <img onClick={()=>navigate(item.path)} src={images[item.icon]} className="mr-4"/>
+                                  <div className="flex justify-between flex-1">
+                                       <a onClick={()=>navigate(item.path)}
+                                          className={`${checkActive(item) ? 'text-honolulu_blue-500 font-medium':''} hover:text-honolulu_blue-500`}
+                                       >
+                                          {item.name}
+                                       </a>
+
+                                      {item.sub_menus && <div className={`${menuOpen.includes(item.path) ? 'rotate-180':''} transition-all duration-100`}>
+                                              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+                                      </div>}
+                                      
+                                  </div>
+                              </div>
+
+                              {item.sub_menus && <div className={`p-[15px] ${item.path} ${menuOpen.includes(item.path) ? '':'hidden'}`}>
+                                      <div className={`rounded-[0.3rem]  bg-gray-100 p-[10px] flex flex-col gap-y-2 ml-2`}>
+                                          {item.sub_menus.map(i=>(
+                                            <NavLink
+                                                to={i.path} 
+                                                className={`text-[0.9rem] ${!checkAccess(i,'isSub') ? 'hidden':''}  ${checkActive(i,true) ? 'text-honolulu_blue-500 font-medium':' opacity-80'} hover:text-honolulu_blue-500`}
+                                            >
+                                                {i.name} 
+                                            </NavLink>
+                                          ))}
+                                      </div>
+                              </div>}
+                        </div>
+                    ))}
+           </div>
+
+    </div>
+  )
+}
+
+export default SideBar
