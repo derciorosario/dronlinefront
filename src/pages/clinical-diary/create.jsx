@@ -225,7 +225,7 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
             </div>}
            
 
-           <FormLayout hideInputs={user?.role=="admin"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-clinical-diary') : t('menu.add-clinical-diary')} verified_inputs={verified_inputs} form={form}
+           <FormLayout hideInputs={user?.role!="doctor"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-clinical-diary') : t('menu.add-clinical-diary')} verified_inputs={verified_inputs} form={form}
           
             topBarContent={
 
@@ -240,7 +240,7 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
             }
 
             bottomContent={(
-                <div className="mt-5">
+                <div className={`mt-5 ${user?.role!="doctor" ? 'hidden':''}`}>
                   <span className="flex mb-5 items-center">
                     
                       {t('common.documents')} 
@@ -291,7 +291,7 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
             )}
 
             button={(
-               <div className={`mt-[40px] ${user?.role=="admin" ? 'hidden':''}`}>
+               <div className={`mt-[40px] ${user?.role!="doctor" ? 'hidden':''}`}>
                  <FormLayout.Button onClick={()=>{
                      SubmitForm()
                  }} valid={valid} loading={loading} label={itemToShow.action=="update" ? t('common.update') :t('common.send')}/>
@@ -299,10 +299,22 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
             )}
             >
 
-            <FormCard hide={itemToShow.action=="create"} items={[
-                {name:t('form.consultation-id'),value:id ? form.id : '-'},
-             ]}/>
- 
+          <FormCard hide={itemToShow.action == "create"} items={[
+              {name: t('form.consultation-id'), value: form.id},
+              {name: t('form.main-complaint'), value: form.main_complaint},
+              {name: t('form.current-illness-history'), value: form.current_illness_history},
+              {name: t('form.past-medical-history'), value: form.past_medical_history},
+              {name: t('form.psychosocial-history'), value: form.psychosocial_history},
+              {name: t('form.family-history'), value: form.family_history},
+              {name: t('form.gynecological-history'), value: form.gynecological_history},
+              {name: t('form.physical-exam'), value: form.physical_exam},
+              {name: t('form.complementary-exams'), value: form.complementary_exams},
+              {name: t('form.diagnoses'), value: form.diagnoses},
+              {name: t('form.therapeutic-plan'), value: form.therapeutic_plan},
+              {name: t('form.prescribed-medications'), value: form.prescribed_medications},
+              {name: t('form.therapeutic-recommendations'), value: form.therapeutic_recommendations},
+              {name: t('form.other-instructions'), value: form.other_instructions},
+          ]}/>
                   
 
             <FormLayout.Input 

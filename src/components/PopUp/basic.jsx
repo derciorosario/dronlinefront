@@ -5,7 +5,7 @@ import { useData } from '../../contexts/DataContext'
 function BasicPopUp({link,title,btnConfirm,btnCancel,message,show}) {
   const data=useData()
   return (
-     <div id="info-popup" tabindex="-1" class={`overflow-y-auto bg-[rgba(0,0,0,0.3)] ${!show ? 'opacity-0 translate-y-[60px] pointer-events-none':''} fixed top-0 right-0 items-center flex justify-center left-0 z-50 w-full  delay-0 ease-in transition-all md:inset-0 h-[100vh]`}>
+     <div id="info-popup" tabindex="-1" class={`overflow-y-auto ${data._openPopUps.basic_popup=="you-have-saved-appointment"  ?  '_basic_popup':''} bg-[rgba(0,0,0,0.3)] ${!show ? 'opacity-0 translate-y-[60px] pointer-events-none':''} fixed top-0 right-0 items-center flex justify-center left-0 z-50 w-full  delay-0 ease-in transition-all md:inset-0 h-[100vh]`}>
       <div class="relative _basic_popup p-4 bg-white rounded-lg shadow w-[500px]  max-md:w-[90%]  md:p-8 table">
                 <div class="mb-4 text-sm font-light text-gray-500 ">
                     <h3 class="mb-3 text-2xl font-bold text-gray-900">{title}</h3>
@@ -22,6 +22,7 @@ function BasicPopUp({link,title,btnConfirm,btnCancel,message,show}) {
                 </div>
     </div>
     </div>
+
   )
 }
 

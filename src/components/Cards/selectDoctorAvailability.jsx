@@ -89,7 +89,10 @@ function SelectDoctorAvailability({ item, setItem }) {
                                                 <option value={i}>{i} - {data.timeAfter30Minutes(i)}</option>
                                             ))}
                                         </select>
-                                        <span className="text-[12px] text-gray-500">{t('common.normal')}</span>
+                                        <span className="text-[12px] text-gray-500 flex items-center gap-x-1">
+                                          <span className="w-[10px] flex rounded-[0.1rem] h-[10px] bg-honolulu_blue-300"></span>
+                                          {t('common.normal')}
+                                        </span>
                                     </div> }
 
 
@@ -105,7 +108,10 @@ function SelectDoctorAvailability({ item, setItem }) {
                                                 <option value={i}>{i} - {data.timeAfter30Minutes(i)}</option>
                                             ))}
                                         </select>
-                                        <span className="text-[12px] text-gray-500">{t('common.urgent')}</span>
+                                        <span className="text-[12px] text-gray-500 flex items-center gap-x-1">
+                                          <span className="w-[10px] flex rounded-[0.1rem] h-[10px] bg-orange-200"></span>
+                                          {t('common.urgent')}
+                                        </span>
                                     </div> }
 
                                     {((getAvailableHours(item,'normal').length==0 && getAvailableHours(item,'urgent').length==0)) && <span className="text-[14px] text-gray-500">({t('common.no-availability-for-this-date')})</span>}

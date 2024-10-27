@@ -15,8 +15,6 @@ function AppointmentItems({show,itemToShow,setItemToShow}) {
  const data=useData()
  const {user} = useAuth()
 
- console.log({itemToShow})
-
   return (
 
      <div  className={`w-full  h-[100vh] bg-[rgba(0,0,0,0.4)] ease-in _doctor_list ${!show ? 'opacity-0 pointer-events-none translate-y-[100px]':''} ease-in transition-all delay-75 fixed flex items-center justify-center z-50`}>   

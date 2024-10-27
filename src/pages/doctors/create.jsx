@@ -11,6 +11,7 @@ import AdditionalMessage from '../messages/additional'
 import { useAuth } from '../../contexts/AuthContext'
 import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
 import LogoFIle from '../../components/Inputs/logo'
+import toast from 'react-hot-toast'
 
 function addPatients({ShowOnlyInputs}) {
 
@@ -51,6 +52,7 @@ function addPatients({ShowOnlyInputs}) {
     marital_status: "",
     occupation: "",
     nationality: "",
+    identification_document:'',
     country_of_residence: "",
     province_of_residence: "",
     residential_address: "",
@@ -73,9 +75,21 @@ function addPatients({ShowOnlyInputs}) {
        !form.gender ||
        !form.main_contact ||
        !form.short_biography  ||
-       !form.date_of_birth 
-       /*(!form.passport_number_filename && !form.identification_number_filename && !form.birth_certificate_filename) ||
-       (!form.passport_number && !form.identification_number && !form.birth_certificate)*/
+       !form.date_of_birth ||
+       !form.identification_document ||
+
+       ((!form.passport_number || !form.passport_number_filename) && form.identification_document=="passport_number") ||
+       ((!form.identification_number || !form.identification_number_filename) && form.identification_document=="identification_number") ||
+       ((!form.birth_certificate || !form.birth_certificate_filename) && form.identification_document=="birth_certificate") ||
+      
+       !form.marital_status ||
+       !form.country_of_residence || 
+       !form.occupation ||
+       !form.residential_address ||
+       !form.nationality ||
+       !form.marital_status ||
+       !form.country_of_residence 
+    
     ){
        v=false
     }
@@ -113,21 +127,25 @@ function addPatients({ShowOnlyInputs}) {
 
       let response=await data.makeRequest({method:'get',url:`api/doctor/`+id,withToken:true, error: ``},0);
 
-     setForm({...form,...response})
+      setForm({...form,...response})
 
-     setLoading(false)
+      setLoading(false)
 
-     setItemToEditLoaded(true)
+      setItemToEditLoaded(true)
 
     }catch(e){
 
+      console.log({e})
+
+      return
+
       if(e.message==404){
-         toast.error(t('item-not-found'))
+         toast.error(t('common.item-not-found'))
          navigate('/doctors')
       }else  if(e.message=='Failed to fetch'){
         
       }else{
-        toast.error(t('unexpected-error'))
+        toast.error(t('common.unexpected-error'))
         navigate('/doctors')  
       }
   }
@@ -178,7 +196,6 @@ function addPatients({ShowOnlyInputs}) {
 
         setLoading(false)
 
-        return
         setForm({...initial_form,keep_message:true})
         setMessageType('green')
         setMessage(t('messages.added-successfully'))
@@ -251,16 +268,14 @@ function addPatients({ShowOnlyInputs}) {
             bottomContent={(
                 <div className="mt-5">
                    
-                  <div className="mb-10">
-                     <LogoFIle res={handleUploadedFiles} _upload={{key:'profile_picture_filename'}} label={t('common.profile-piture')}/>
-                  </div>
-
                 
-                  <span className="flex mb-5 items-center">{t('common.documents')}  <label className="text-[0.9rem] ml-2">({t('messages.add-atleast-one-document')})</label> <span className="text-red-500">*</span></span>
+                
+                  <span className="flex mb-5 items-center hidden">{t('common.documents')}  <label className="text-[0.9rem] ml-2">({t('messages.add-atleast-one-document')})</label> <span className="text-red-500">*</span></span>
                   <div className="flex gap-x-4 flex-wrap gap-y-8">
-                      <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-number')} r={true}/>
-                      <FileInput _upload={{key:'birth_certificate_filename',filename:form.birth_certificate_filename}} res={handleUploadedFiles} label={t('form.birth-certificate')} r={true}/>
-                      <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport-number')} r={true}/>
+                      {form.identification_document=="identification_number" &&  <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-number')} r={true}/>}
+                      {form.identification_document=="birth_certificate" &&  <FileInput _upload={{key:'birth_certificate_filename',filename:form.birth_certificate_filename}} res={handleUploadedFiles} label={t('form.birth-certificate')} r={true}/>}
+                      {form.identification_document=="passport_number" &&  <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport-number')} r={true}/>}
+                
                   </div>
 
                   <span className="flex mb-5 items-center mt-8">
@@ -319,12 +334,17 @@ function addPatients({ShowOnlyInputs}) {
             )}
 
               button={(
-                <div className="mt-[40px]">
+                <div className="mt-[60px] ">
                   <FormLayout.Button onClick={SubmitForm} valid={valid} loading={loading} label={loading ? t('common.loading') : id ? t('common.update') : t('common.send') }/>
                 </div>
               )}
               >
-                
+
+                   <div className="mb-10 w-full">
+                     <LogoFIle res={handleUploadedFiles} _upload={{key:'profile_picture_filename'}} label={t('common.profile-piture')}/>
+                  </div>
+
+          
               <PatientForm form_name={'doctors'} itemsToHide={['password','hospitalization_history','family_history_of_diseases']} form={form} setForm={setForm} verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
 
             </FormLayout>

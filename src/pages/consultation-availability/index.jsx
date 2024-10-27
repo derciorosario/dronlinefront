@@ -227,9 +227,6 @@ function index() {
                 }
             })
 
-            console.log({normal_specific_date,urgent_specific_date})
-
-
             let r=await data.makeRequest({method:'post',url:`api/doctor-schedule/${user.data.id}/set`,withToken:true,data:{
               
                 days:{

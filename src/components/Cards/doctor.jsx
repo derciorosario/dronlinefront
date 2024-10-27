@@ -200,14 +200,14 @@ function getAvailableHours(item,type){
                     </svg>
                 </a>*/}
 
-                 <a onClick={()=>{
+                 {user?.role=="patient" && <a onClick={()=>{
                      data.setSelectedDoctorToSchedule(item)
                 }} class={`inline-flex items-center cursor-pointer px-3 py-2 text-sm font-medium text-center text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 rounded-lg  focus:ring-4 focus:outline-none focus:ring-blue-300`}>
                     {t('common.book')}
                     <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                     </svg>
-                </a>
+                </a>}
 
 
             </div>

@@ -28,7 +28,7 @@ function index() {
   
   useEffect(()=>{
 
-      setItems(data._appointments.map(i=>({
+      setItems(data._appointments.data?.map(i=>({
             event_id:Math.random(),
             title:`C. ${data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.pt_name} ${i.scheduled_hours}`,
             start: new Date(`${i.consultation_date.replaceAll('-','/')} ${i.scheduled_hours}`),

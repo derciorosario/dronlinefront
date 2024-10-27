@@ -23,6 +23,12 @@ import Profile from './pages/profile/index'
 import Specialists from './pages/specialists/index'
 import SpecialtyCategories from './pages/specialty-categories/index'
 import CreateSpecialtyCategories from './pages/specialty-categories/create'
+import Dependents from './pages/dependents/index'
+import CreateDependents from './pages/dependents/create'
+import PaymentManagement from './pages/payment-management/index'
+import CreatePaymentManagement from './pages/payment-management/create'
+import DoctorRequests from './pages/doctor_requests/index'
+import CreateDoctorRequests from './pages/doctor_requests/create'
 
 function App() {
 
@@ -51,9 +57,18 @@ function App() {
          <Route path="/patients"  element={<Patients/>} />
          <Route path="/patient/:id"  element={<CreatePacient/>} />
 
+         <Route path="/add-dependent"  element={<CreateDependents/>} />
+         <Route path="/dependents"  element={<Dependents/>} />
+         <Route path="/dependent/:id"  element={<CreateDependents/>} />
+
+         <Route path="/payment-management" element={<PaymentManagement/>} />
+         <Route path="/payment-management/:id" element={<CreatePaymentManagement/>} />
+
+         <Route path="/membership-requests" element={<DoctorRequests/>} />
+         <Route path="/membership-requests/:id" element={<CreateDoctorRequests/>} />
+        
          <Route path="/appointment/:id/clinical-diary" element={<CreateClinicalDiary/>} />
          <Route path="/appointment/:id/clinical-diary/:id" element={<CreateClinicalDiary/>} />
-
 
          <Route path="/add-clinical-diary"  element={<CreateClinicalDiary/>} />
          <Route path="/clinical-diary/:id" element={<CreateClinicalDiary/>} />

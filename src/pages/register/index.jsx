@@ -87,7 +87,6 @@ function Login() {
 
 
  function validadeErrors(e){
-
       if(e.message==404){
           setMessage(t('common.user-not-found'))
       }else if(e.message==401){
@@ -101,8 +100,6 @@ function Login() {
       }else{
           setMessage(t('common.unexpected-error'))
       }
-    
-
  }
 
 
@@ -216,7 +213,7 @@ async function VerifyCode(){
         let response=await data.makeRequest({method:'post',url:`api/verify_code`,data:{...form,register:true,register_method:data.auth.type || 'email'}, error: ``},0);
         localStorage.setItem('token',response.token)
         toast.success(t('messages.successfully-registered'))
-        window.location.href="/"
+        window.location.href=data.getScheduledAppointment() || "/"
 
     }catch(e){
 

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import SelectPayemntMethod from './selectPayemntMethod';
 import SendProof from './proof';
 import Mpesa from './m-pesa';
+import toast from 'react-hot-toast';
 
 function PaymentProcess({ info }) {
 
@@ -25,7 +26,17 @@ function PaymentProcess({ info }) {
           </span>
         </div>
 
-      <ol class="items-center border-b pb-4 flex w-full max-w-2xl text-center text-sm font-medium text-gray-500  sm:text-base">
+        {info.step!=3 && <div className="flex absolute mb-3 top-1 right-2">
+            <span onClick={() => {
+                localStorage.setItem('saved_appointment_url',window.location.search)
+                toast.success(t('messages.successfully-saved'))
+            }} className="table px-2 bg-honolulu_blue-500 text-white right-1 top-1 py-1 text-[14px] rounded-full cursor-pointer hover:bg-gray-300">
+              {t('common.close-and-save')}
+            </span>
+        </div>}
+
+
+      <ol class="items-center mt-3 border-b pb-4 flex w-full max-w-2xl text-center text-sm font-medium text-gray-500  sm:text-base">
         <li class="after:border-1 flex items-center text-primary-700 after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200  sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10">
             <span class="flex items-center after:mx-2 after:text-gray-200 after:content-['/']  sm:after:hidden">
             <svg class={`me-2 h-4 w-4 sm:h-5 sm:w-5 ${(info.step==1 || !info.step) ? '':' fill-green-500'}`} aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"  viewBox="0 0 24 24">

@@ -20,15 +20,15 @@ const checkFileType = (filename) => {
 
   return (
 
-    <div class={`flex items-start mb-6 gap-2.5 ${hide ? 'hidden':''}`}>
-<div className="border bg-gray-200 rounded-full w-[40px] h-[40px] flex items-center justify-center">{'U'}</div>
+<div class={`flex ${comment.user_id == user?.id ? 'justify-end':' justify-start'} mb-6 gap-2.5 ${hide ? 'hidden':''}`}>
+   {comment.user_id != user?.id && <div className="border bg-gray-200 rounded-full w-[40px] h-[40px] flex items-center justify-center">{comment.user?.name?.charAt()?.toUpperCase()}</div>}
    <div class="flex flex-col gap-1">
       <div class="flex items-center space-x-2 rtl:space-x-reverse">
-         <span class="text-sm font-semibold text-gray-900">{comment.user_id != user?.id ? t('common.you') : t('common.doctor')}</span>
+         <span class="text-sm font-semibold text-gray-900">{comment.user_id == user?.id ? t('common.you') : comment.user?.name}</span>
        
       </div>
-      <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl ">
-         <div class="flex items-start bg-gray-50  rounded-xl p-2">
+      <div class={`flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 ${ comment.user_id != user?.id ? 'bg-gray-100':'bg-honolulu_blue-50'} rounded-e-xl rounded-es-xl`}>
+         <div class={`flex items-start ${ comment.user_id != user?.id ? 'bg-gray-50':'bg-honolulu_blue-100'}  rounded-xl p-2`}>
             <div class="me-2">
                <span class="flex items-center gap-2 text-sm font-medium text-gray-900  pb-2">
                  {checkFileType(comment.filename)=="d" ? 
@@ -57,11 +57,7 @@ const checkFileType = (filename) => {
       </div>
       <span class="text-sm font-normal text-gray-500">{comment.not_sent ? t('common.sending') : comment.created_at.split('T')[0]}</span>
    </div>
-   <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" data-dropdown-placement="bottom-start" class="inline-flex hidden self-center items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50" type="button">
-      <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-         <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
-      </svg>
-   </button>
+   
    
    
 </div>

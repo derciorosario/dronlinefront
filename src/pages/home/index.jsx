@@ -9,7 +9,6 @@ import { useAuth } from '../../contexts/AuthContext';
 
 function App() {
 
- 
   const data=useData()
   const { t, i18n } = useTranslation();
   const {user} = useAuth()
@@ -25,6 +24,7 @@ function App() {
               //}else{
                 navigate('/add-appointments')
               //}
+              
          } : null,text:t('menu.add-appointments')}}}>
           
          </DefaultLayout>

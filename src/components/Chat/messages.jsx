@@ -1,22 +1,26 @@
 import React from 'react'
 import ChatFileMessage from './fileMessage'
 import { useAuth } from '../../contexts/AuthContext'
+import { t } from 'i18next'
 
 function ChatMessages({messages,hide}) {
   const {user} = useAuth()
+
+  console.log({messages})
+
   return (
      <>
      {messages.map((i,_i)=>(
 
-<>
+  <>
     {i.filename ? <ChatFileMessage comment={i} hide={hide}/> : (
          <>
-             {user?.id==i.user_id ? <div className={`flex gap-2.5 justify-end  mx-5 ${hide ? 'hidden':''}`}>
+      {user?.id==i.user_id ? <div className={`flex gap-2.5 justify-end  mx-5 ${hide ? 'hidden':''}`}>
     <div className="">
     <div className="grid mb-2">
       <h5 className="text-right text-gray-900 text-sm font-semibold leading-snug pb-1">{t('common.you')}</h5>
       <div className="px-3 py-2 bg-honolulu_blue-500 rounded">
-      <h2 className="text-white text-sm font-normal leading-snug">{i.comment}</h2>
+         <h2 className="text-white text-sm font-normal leading-snug">{i.comment}</h2>
       </div>
       <div className="justify-start items-center inline-flex">
       {!i.not_sent && <h3 className="text-gray-500 text-xs font-normal leading-4 py-1">{i.created_at.split('T')[0]}</h3>}
@@ -27,13 +31,13 @@ function ChatMessages({messages,hide}) {
       </div>
       </div>
       </div>
-          <div className="border bg-gray-200 rounded-full w-[40px] h-[40px] flex items-center justify-center">{user?.name?.charAt()?.toLocaleUpperCase()}</div>
+          <div className="border hidden bg-gray-200 rounded-full w-[40px] h-[40px] flex items-center justify-center">{user?.name?.charAt()?.toLocaleUpperCase()}</div>
       </div> : 
     <div  className="grid">
     <div className="flex gap-2.5 mb-4">
       <div className="border bg-gray-200 rounded-full w-[40px] h-[40px] flex items-center justify-center">A</div>
       <div className="grid">
-        <h5 className="text-gray-900 text-sm font-semibold leading-snug pb-1">{i.user.name}</h5>
+        <h5 className="text-gray-900 text-sm font-semibold leading-snug pb-1">{i.user?.name}</h5>
         <div className="w-max grid">
           <div className="px-3.5 py-2 bg-gray-100 rounded justify-start  items-center gap-3 inline-flex">
             <h5 className="text-gray-900 text-sm font-normal leading-snug">{i.comment}</h5>

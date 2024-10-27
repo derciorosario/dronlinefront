@@ -14,7 +14,7 @@ import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
 import FormCard from '../../components/Cards/form'
 import LogoFile from '../../components/Inputs/logo'
 
-function addPatients({ShowOnlyInputs}) {
+function AddDependents({ShowOnlyInputs,hideLayout}) {
 
   const [message,setMessage]=useState('')
   const [verified_inputs,setVerifiedInputs]=useState([])
@@ -29,6 +29,7 @@ function addPatients({ShowOnlyInputs}) {
   const [itemToEditLoaded,setItemToEditLoaded]=useState(false)
   const [MessageBtnSee,setMessageBtnSee]=useState(null)
   const {user}= useAuth()
+
 
   let initial_form={
     name:'',
@@ -51,61 +52,52 @@ function addPatients({ShowOnlyInputs}) {
     country_of_residence: "",
     province_of_residence: "",
     residential_address: "",
-    identification_document:'',
     hospitalization_history: '',
     family_history_of_diseases: '',
+    identification_document:'',
+    relationship:'',
     type_of_care:'',
     uploaded_files:[],
     chronic_diseases: [],
     surgery_or_relevant_procedures: [],
     drug_allergy: [],
     continuous_use_of_medications: [],
-
     has_chronic_diseases:null,
     has_surgery_or_relevant_procedures: null,
     has_drug_allergy:null,
     has_continuous_use_of_medications: null
-
   }
 
   const [form,setForm]=useState(initial_form)
-
-
   
   useEffect(()=>{
     let v=true
-    if(
-      !form.name ||
-       !form.email ||
-       !form.address ||
+
+    if(!form.name ||
        !form.gender ||
        !form.main_contact ||
-       !form.date_of_birth ||
+       !form.date_of_birth  ||
+       !form.relationship ||
        !form.identification_document ||
-
+       
        ((!form.passport_number || !form.passport_number_filename) && form.identification_document=="passport_number") ||
        ((!form.identification_number || !form.identification_number_filename) && form.identification_document=="identification_number") ||
-       ((!form.birth_certificate || !form.birth_certificate_filename) && form.identification_document=="birth_certificate") ||
-    
-       !form.marital_status ||
-       !form.country_of_residence || 
-       !form.occupation ||
-       !form.residential_address ||
-       !form.nationality ||
-       !form.marital_status ||
-       !form.country_of_residence 
+       ((!form.birth_certificate || !form.birth_certificate_filename) && form.identification_document=="birth_certificate") 
+
     ){
       v=false
     }
+
     setValid(v)
     console.log({form})
+
  },[form])
 
 
 
   
  useEffect(()=>{
-  if(!user || !id){
+  if(!user || !id || hideLayout){
       return
   }
 
@@ -115,7 +107,7 @@ function addPatients({ShowOnlyInputs}) {
   
   (async()=>{
     try{
-      let response=await data.makeRequest({method:'get',url:`api/patient/`+id,withToken:true, error: ``},0);
+      let response=await data.makeRequest({method:'get',url:`api/dependent/`+id,withToken:true, error: ``},0);
 
      setForm({...form,...response})
 
@@ -124,16 +116,14 @@ function addPatients({ShowOnlyInputs}) {
      setItemToEditLoaded(true)
 
     }catch(e){
-
-
       if(e.message==404){
-         toast.error(t('item-not-found'))
-         navigate('/patients')
+         toast.error(t('common.item-not-found'))
+         //navigate('/dependents')
       }else  if(e.message=='Failed to fetch'){
-        
+         
       }else{
         toast.error(t('unexpected-error'))
-        navigate('/patients')  
+        navigate('/dependents')  
       }
   }
 })()
@@ -142,17 +132,15 @@ function addPatients({ShowOnlyInputs}) {
 
 
  async function SubmitForm(){
-
-
   setLoading(true)
 
   try{
 
    
-    if(id){
+    if(id && !hideLayout){
 
 
-      let r=await data.makeRequest({method:'post',url:`api/patient/`+id,withToken:true,data:{
+      let r=await data.makeRequest({method:'post',url:`api/patient/${form.patient_id}/dependents/`+id,withToken:true,data:{
         ...form
       }, error: ``},0);
 
@@ -171,25 +159,25 @@ function addPatients({ShowOnlyInputs}) {
         return
       }
 
-      if(!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))){
-        setMessage(t('common.invalid-email'))
-        setMessageType('red')
-        setLoading(false)
-        return
-      }
-   
-      let response=await data.makeRequest({method:'post',url:`api/register-patient`,withToken:true,data:{
+     
+      let response=await data.makeRequest({method:'post',url:`api/patients/${user.data?.id}/dependents`,withToken:true,data:{
         ...form,uploaded_files:form.uploaded_files.filter(i=>i.filename)
       }, error: ``},0)
 
+      if(hideLayout){
+        data.setJustCreatedDependent(response)
+        data._closeAllPopUps()
+       
+      }
       setForm({...initial_form,keep_message:true})
       setMessageType('green')
       setMessage(t('messages.added-successfully'))
       setLoading(false)
       data._scrollToSection('center-content')
       setVerifiedInputs([])
+      
       setMessageBtnSee({onClick:()=>{
-              navigate('/patient/'+response.id)
+              navigate('/dependent/'+response.id)
               setItemToEditLoaded(false)
               setMessage('')
               if(document.querySelector('#center-content')) {
@@ -197,14 +185,16 @@ function addPatients({ShowOnlyInputs}) {
               }
       }})
 
-      data.handleLoaded('remove','patients')
+      data.handleLoaded('remove','dependents')
 
     }
 
   }catch(e){
 
+    
     console.log({e})
-  
+
+
     setMessageType('red')
 
     if(e.message==409){
@@ -229,58 +219,86 @@ function addPatients({ShowOnlyInputs}) {
     setForm({...form,[upload.key]:upload.filename})
   }
 
- 
+  const [formStep,setFormStep]=useState(1)
 
-  return (
-     <DefaultLayout hide={ShowOnlyInputs}>
-           {message && <div className="px-[20px] mt-9" id="_register_msg">
+
+  if(hideLayout){
+
+    return pageContent()
+    
+  }
+
+
+  function pageContent(){
+    return (
+       <>
+       
+       {message && <div className="px-[20px] mt-9" id="_register_msg">
                <AdditionalMessage  float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
            </div>}
 
-           {!itemToEditLoaded && id && <div className="mt-10">
+           {(!itemToEditLoaded && id && !hideLayout) && <div className="mt-10">
               <DefaultFormSkeleton/>
             </div>}
 
-           <FormLayout  hideInputs={user?.role=="doctor"} hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={user?.role=="doctor" ? t('common.patient') : id ? t('common.update-patiente') : t('menu.add-patient')} verified_inputs={verified_inputs} form={form} bottomContent={(
+           <FormLayout hideInputs={user?.role!="patient"} hide={(!itemToEditLoaded && id) && !hideLayout} hideTitle={ShowOnlyInputs} title={!id ? t('menu.add-family') : t('common.update-family')} verified_inputs={verified_inputs} form={form} bottomContent={(
                  <>
-                  
-                 
-                <div className={`${user?.role=="doctor" ? 'hidden':''} mt-5`}>
-                  <span className="flex mb-5 items-center hidden">{t('common.documents')}  <label className="text-[0.9rem] ml-2">({t('messages.add-atleast-one-document')})</label> <span className="text-red-500">*</span></span>
-                  <div className="flex gap-x-4 flex-wrap gap-y-8">
-                      {form.identification_document=="identification_number" &&  <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-number')} r={true}/>}
-                      {form.identification_document=="birth_certificate" &&  <FileInput _upload={{key:'birth_certificate_filename',filename:form.birth_certificate_filename}} res={handleUploadedFiles} label={t('form.birth-certificate')} r={true}/>}
-                      {form.identification_document=="passport_number" &&  <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport-number')} r={true}/>}
-                  </div>
-                </div>
+                    <div className={`${user?.role!="patient" ? 'hidden':''}`}>
+                      <span className="flex mb-5 items-center hidden">{t('common.documents')}  <label className="text-[0.9rem] ml-2">({t('messages.add-atleast-one-document')})</label> <span className="text-red-500">*</span></span>
+                      <div className="flex gap-x-4 flex-wrap gap-y-8 mt-5">
+                          {form.identification_document=="identification_number" &&  <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-number')} r={true}/>}
+                          {form.identification_document=="birth_certificate" &&  <FileInput _upload={{key:'birth_certificate_filename',filename:form.birth_certificate_filename}} res={handleUploadedFiles} label={t('form.birth-certificate')} r={true}/>}
+                          {form.identification_document=="passport_number" &&  <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport-number')} r={true}/>}
+                      </div>
+                    </div>
                 </>
             )}
 
             button={(
-                <div className={`${user?.role=="doctor" ? 'hidden':''} mt-10`}>
+               <div className={`${user?.role!="patient" ? 'hidden':''} mt-5`}>
                      <FormLayout.Button onClick={SubmitForm} valid={valid} loading={loading} label={loading ? t('common.loading') : t('common.send') }/>
                 </div>
             )}
             >
-
-           <FormCard hide={user?.role!="doctor"} items={[
-              {name:t('form.patient-name'),value:form.name},
-              {name:'Email',value:form.email},
-              {name:t('form.main-contact'),value:form.main_contact},
+           <FormCard hide={user?.role=="patient"} items={[
+              {name:t('form.dependent-name'),value:form.name},
+              {name:t('form.relationship'),value:t('common.'+form.relationship)},
+              {name:'Email',value:form.email || '-'},
+              {name:t('form.main-contact'),value:form.main_contact || '-'},
+              {name:t('form.alternative-contact'),value:form.alternative_contact || '-'},
+              {name:t('form.address'),value:form.address || '-'},
               {name:t('form.gender'),value: t('common.'+form.gender),hide:!form.gender},
+              {name:t('form.hospitalization_history'),value:form.hospitalization_history || '-'},
+              {name:t('form.family_history_of_diseases'),value:form.family_history_of_diseases || '-'},
+              {name:t('common.identification-document'),value:t('form.'+form.identification_document.replaceAll('_','-')) || '-'},
+
+          
             ]}/>
 
-             <div className={`${user?.role=="doctor" ? 'hidden':''} w-full`}>
-              <div className="mb-10">
-                <LogoFile res={handleUploadedFiles} _upload={{key:'profile_picture_filename'}} label={t('common.profile-piture')}/>
-              </div>
+
+            <div className="hidden">
+               <PatientForm.Stepper formStep={formStep} setFormStep={setFormStep}/>
             </div>
 
-            <PatientForm setForm={setForm}  form_name={'patient'} hide={user?.role=="doctor"}  itemsToHide={['password','medical-specialty','order-number','short_biography','long_biography']} form={form}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
+            <div className={`${user?.role!="patient" ? 'hidden':''} w-full`}>
+                      <div className="mb-10">
+                        <LogoFile res={handleUploadedFiles} _upload={{key:'profile_picture_filename'}} label={t('common.profile-piture')}/>
+                      </div>
+            </div>
+
+            <PatientForm hideInputs={user?.role!="patient"} setForm={setForm}  form_name={'dependent'} hide={user?.role=="doctor"}  itemsToHide={['password','medical-specialty','order-number','short_biography','long_biography']} form={form}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
 
             </FormLayout>
+       </>
+    )
+  }
+
+
+  return (
+     <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
+            {pageContent()}
      </DefaultLayout>
   )
 }
 
-export default addPatients
+export default AddDependents

@@ -75,6 +75,9 @@ function App() {
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.pt_name}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.en_name}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.description}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
+                               
                             </BaiscTable.Tr>
                         ))}
 

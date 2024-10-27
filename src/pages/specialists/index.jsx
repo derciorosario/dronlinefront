@@ -288,12 +288,10 @@ function App({showOnlyList}) {
   useEffect(()=>{ 
         if(!user) return
         data._get(required_data,{doctors:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
-  },[user,pathname,search,currentPage,updateFilters])
+  },[user,pathname,search,currentPage,updateFilters,data.updateTable])
 
 useEffect(()=>{
-
   data.handleLoaded('remove','doctors')
-
 },[updateFilters])
     
   useEffect(()=>{
@@ -305,7 +303,6 @@ useEffect(()=>{
     if(data.updateTable){
          data.setUpdateTable(null)
          data.handleLoaded('remove','doctors')
-         data._get(required_data) 
     }
  },[data.updateTable])
 

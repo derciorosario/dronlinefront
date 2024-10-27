@@ -170,10 +170,7 @@ const Calendar = ({items}) => {
   }
 
 
-  },[currentDate,doctorData,data._appointments])
-
-
-  console.log({events})
+  },[currentDate,doctorData,data._loaded])
 
   const handleDateChange = (date) => {
     const currentMonth = date.toLocaleString("default", { month: "long" });

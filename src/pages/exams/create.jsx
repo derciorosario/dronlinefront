@@ -47,21 +47,16 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
 
 },[user,pathname])
 
-
-
-  let initial_form={
+let initial_form={
     "clinical_information": "",
     "requested_exams": "",
     "results_report":"",
     "requested_at":"",
     uploaded_files:[],
     comments:[]
-  }
+}
 
-
-  const [form,setForm]=useState(initial_form)
-
-
+const [form,setForm]=useState(initial_form)
   
   useEffect(()=>{
 
@@ -230,7 +225,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
             </div>}
            
 
-           <FormLayout hideInputs={user?.role=="admin"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-exams') : t('common.add-exam')} verified_inputs={verified_inputs} form={form}
+           <FormLayout hideInputs={user?.role!="doctor"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-exams') : t('common.add-exam')} verified_inputs={verified_inputs} form={form}
           
             topBarContent={
                 (<button onClick={()=>setShowComment(true)} type="button" class={`text-white ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
@@ -243,9 +238,10 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
             }
 
             bottomContent={(
-                <div className="mt-5">
+
+              <div className={`mt-5 ${user?.role!="doctor" ? 'hidden':''}`}>
                   <span className="flex mb-5 items-center">
-                    
+
                       {t('common.documents')} 
                     
                       <button onClick={()=>{
@@ -294,7 +290,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
             )}
 
             button={(
-               <div className={`mt-[40px] ${user?.role=="admin" ? 'hidden':''}`}>
+               <div className={`mt-[40px] ${user?.role!="doctor" ? 'hidden':''}`}>
                  <FormLayout.Button onClick={()=>{
                      SubmitForm()
                  }} valid={valid} loading={loading} label={itemToShow.action=="update" ? t('common.update') :t('common.send')}/>
@@ -302,8 +298,14 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
             )}
             >
 
-            <FormCard hide={!id} items={[
-                {name:t('form.consultation-id'),value:id ? form.id : '-'},
+
+
+            <FormCard  hide={itemToShow.action!="update" || user?.role=="doctor"} items={[
+                {name:t('form.consultation-id'),value:form.id},
+                {name:t('form.clinical-information'),value:form.clinical_information},
+                {name:t('form.requested-exams'),value:form.requested_exams},
+                {name:t('form.results-report'),value:form.results_report},
+                {name:t('form.requested-on'),value:form.requested_at}
              ]}/>
  
                   {/*<SearchInput r={true} label={t('form.patient-name')} loaded={data._loaded.includes('patients')} res={setPatientId} items={data._patients} />*/}
@@ -312,6 +314,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                     verified_inputs={verified_inputs} 
                     form={form} 
                     r={true} 
+                    hide={user?.role!="doctor"}
                     type={'date'}
                     onBlur={() => setVerifiedInputs([...verified_inputs, 'requested-on'])} 
                     label={t('form.requested-on')} 
@@ -324,6 +327,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                   verified_inputs={verified_inputs} 
                   form={form} 
                   r={true} 
+                  hide={user?.role!="doctor"}
                   textarea={true}
                   onBlur={() => setVerifiedInputs([...verified_inputs, 'clinical_information'])} 
                   label={t('form.clinical-information')} 
@@ -335,6 +339,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                 <FormLayout.Input 
                   verified_inputs={verified_inputs} 
                   form={form} 
+                  hide={user?.role!="doctor"}
                   r={true} 
                   textarea={true}
                   onBlur={() => setVerifiedInputs([...verified_inputs, 'requested_exams'])} 
@@ -349,6 +354,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                   verified_inputs={verified_inputs} 
                   form={form} 
                   r={true} 
+                  hide={user?.role!="doctor"}
                   textarea={true}
                   onBlur={() => setVerifiedInputs([...verified_inputs, 'results_report'])} 
                   label={t('form.results-report')} 

@@ -23,7 +23,17 @@
 iframe{
   width: 100% !important;
 }
+._refresh_btn:hover *{
+  color: #fff !important;
+  fill: #fff !important;
+}
 
+
+.hide_scrollbar::-webkit-scrollbar,
+.hide_scrollbar::-webkit-scrollbar-thumb{
+  display: none !important;
+  width: 0;
+}
 
 /*.rs__popper_actions .css-nl6has{
   display: none !important;

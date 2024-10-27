@@ -5,8 +5,9 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 
-function FileInput({_upload,label,res}) {
+function FileInput({_upload,label,res,r}) {
       let id=Math.random()
+      const data = useData()
 
       const fileInputRef_1 = React.useRef(null);
 
@@ -22,14 +23,15 @@ function FileInput({_upload,label,res}) {
       ..._upload
     })
 
+ 
 
     useEffect(()=>{
              res(upload)
     },[upload])
 
-    const data = useData()
 
-    const [file,setFile]=useState({})
+
+    const [file,setFile]=useState({name:_upload.filename?.replace(data.APP_BASE_URL+"/"+data.SERVER_FILE_STORAGE_PATH+"/",'')})
    
     const handleSubmit = async (event) => {
       let f = event.target.files[0];
@@ -99,7 +101,7 @@ function FileInput({_upload,label,res}) {
 
     <div className="w-[500px]">
       
-       {label &&   <span class="block mb-2 text-sm text-gray-900" for={id}>{label}</span>}
+       {label &&   <span class="block mb-2 text-sm text-gray-900" for={id}>{label} {r && <span className="text-red-500">*</span>}</span>}
         
         <div className={`flex items-center w-full text-sm h-[40px] text-gray-900 border overflow-hidden border-gray-300 rounded-[0.3rem]   bg-gray-50`}>
              

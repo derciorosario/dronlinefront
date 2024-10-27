@@ -12,6 +12,7 @@ import FormCard from '../../components/Cards/form'
 import Comment from '../../components/modals/comments'
 import Loader from '../../components/Loaders/loader'
 import AppointmentItems from '../../components/Cards/appointmentItems'
+import SearchInput from '../../components/Inputs/search'
 
 function addAppointments({ShowOnlyInputs}) {
 
@@ -37,22 +38,20 @@ function addAppointments({ShowOnlyInputs}) {
           
 
   
-  let required_data=['doctors','specialty_categories']
-  useEffect(()=>{
-        
+  let required_data=['doctors','specialty_categories','dependents']
+  useEffect(()=>{   
         if(!user) return
         setTimeout(()=>(
           data._get(required_data) 
         ),500)
-
   },[user,pathname])
+
+
   useEffect(()=>{
-        
     if(!user) return
     setTimeout(()=>(
       data._get(required_data) 
     ),500)
-
 },[user,pathname])
 
 
@@ -79,6 +78,9 @@ function addAppointments({ShowOnlyInputs}) {
     "scheduled_hours":"",
     "scheduled_weekday":"",
     "scheduled_date":"",
+    is_for_dependent:null,
+    dependent:{},
+    dependent_id:null,
     medical_prescriptions:[],
     documents:[],
     comments:[],
@@ -92,45 +94,48 @@ function addAppointments({ShowOnlyInputs}) {
   
   useEffect(()=>{
     let v=true
-
     if(
        (selectedDoctor.status!="selected" && form.type_of_care!="requested") ||
        !form.reason_for_consultation ||
-       !form.type_of_care
+       !form.type_of_care ||
+        form.is_for_dependent==null ||
+        (form.is_for_dependent && !form.dependent_id)
+
     ){
       v=false
     }
-
     setValid(v)
+    console.log({form})
  },[form])
 
 
  useEffect(()=>{
-
   if(!id && form.id){
     setForm(initial_form)
     setSelectedDoctor({...selectedDoctor,status:'not_selected'})
   }
-
 },[pathname])
  
+const [dependents,setDependents]=useState([])
+const [dependensLoaded,setDependesLoaded]=useState([])
+
 
  useEffect(()=>{
-  
   if(!user || !id){
       return
   }
-  
   (async()=>{
 
     try{
-
      let response=await data.makeRequest({method:'get',url:`api/appointments/`+id,withToken:true, error: ``},0);
 
      setForm({...form,...response})
      setLoading(false)
      setSelectedDoctor({...selectedDoctor,status:'selected'})
      setItemToEditLoaded(true)
+     if(response.is_for_dependent){
+        setDependents([...dependents.filter(i=>i.id!=response.dependent_id),response.dependent])
+     }
 
     }catch(e){
       console.log(e)
@@ -147,7 +152,14 @@ function addAppointments({ShowOnlyInputs}) {
   
 })()
 
-},[user,pathname])
+},[user,pathname,itemToEditLoaded])
+
+
+useEffect(()=>{
+  if(data.updateTable){
+    setItemToEditLoaded(false)
+  }
+},[data.updateTable])
 
 
 
@@ -156,9 +168,8 @@ useEffect(()=>{
   (async()=>{
     try{
 
+
       let res=data._sendFilter(searchParams)
-
-
       if(res.scheduled_type_of_care=="requested"){
         setForm({...form,type_of_care:'requested'})
         return
@@ -170,7 +181,7 @@ useEffect(()=>{
           setSelectedDoctor({status:'selected'})
           let is_urgent=response.urgent_availability.weekday[res.scheduled_weekday]?.includes(res.scheduled_hours.split(',')[0])
          
-         // console.log({a:response.urgent_availability.weekday})
+         //console.log({a:response.urgent_availability.weekday})
           setForm({...form,
               name:response.name,
               is_urgent,
@@ -182,15 +193,19 @@ useEffect(()=>{
               scheduled_doctor:res.scheduled_doctor,
               scheduled_hours:res.scheduled_hours,
               scheduled_weekday:res.scheduled_weekday,
-              type_of_care:is_urgent ? 'urgent': form.type_of_care
+              type_of_care:is_urgent ? 'urgent': (form.type_of_care || 'scheduled')
           })
+          //alert(is_urgent ? 'urgent': (form.type_of_care || 'normal'))
 
       }
+
      
     }catch(e){
 
       if(e.message==404){
         toast.error(t('common.doctor-not-found'))
+        setForm(initial_form)
+        setSelectedDoctor({...selectedDoctor,status:'not_selected'})
       }else  if(e.message=='Failed to fetch'){
         toast.error(t('common.doctor-not-found-try'))
       }else{
@@ -200,8 +215,6 @@ useEffect(()=>{
 
   }
 })()
-
- 
 },[pathname,search])
 
 
@@ -209,16 +222,17 @@ useEffect(()=>{
 
 
   async function SubmitForm(){
-       setLoading(true)
+
+    setLoading(true)
 
     try{
 
 
       if(id){
-
-
         let r=await data.makeRequest({method:'post',url:`api/appointments/`+id,withToken:true,data:{
-          ...form
+          ...form,
+          dependent_id:form.is_for_dependent ? form.dependent_id : null
+        
         }, error: ``},0);
   
         setForm({...form,r})
@@ -229,8 +243,11 @@ useEffect(()=>{
       }else{
 
         let response=await data.makeRequest({method:'post',url:`api/appointments`,withToken:true,data:{
-          ...form
+          ...form,
+          dependent_id:form.is_for_dependent ? form.dependent_id : null
         }, error: ``},0);
+
+        localStorage.removeItem('saved_appointment_url')
   
         setForm({...initial_form})
         setMessageType('green')
@@ -247,7 +264,6 @@ useEffect(()=>{
                 }
         }})
         
-         
         if(form.type_of_care=="urgent"){
           data._showPopUp('basic_popup','contact-us-if-delay')
         }
@@ -256,11 +272,8 @@ useEffect(()=>{
         data.handleLoaded('remove','appointments')
         let new_params={scheduled_date:'',scheduled_doctor:'',scheduled_hours:'',scheduled_weekday:''}
         data._updateFilters(new_params,setSearchParams)
-
-
-         
-
       }
+
      
 
     }catch(e){
@@ -287,7 +300,6 @@ useEffect(()=>{
 
   useEffect(()=>{
 
-
              if(data.paymentInfo.done){
                   setForm({...initial_form})
                   setMessageType('green')
@@ -295,7 +307,6 @@ useEffect(()=>{
                   setLoading(false)
                   data._scrollToSection('center-content')
                   setVerifiedInputs([])
-
 
                   if(!data.paymentInfo.is_proof){
                     
@@ -319,19 +330,61 @@ useEffect(()=>{
                   data._updateFilters(new_params,setSearchParams)
                   data.setPaymentInfo({...data.paymentInfo,done:false,type_of_care:null})
              }
-             
+ },[data.paymentInfo])
 
-  },[data.paymentInfo])
+ const [itemToShow,setItemToShow]=useState(null)
+
+ function setDependentId(id){
+      setForm({...form,dependent_id:id})
+ }
+
+ useEffect(()=>{
+    if(data.justCreatedDependent){
+        console.log([...dependents,data.justCreatedDependent])
+        setDependents([...dependents,data.justCreatedDependent])
+        setForm({...form,dependent_id:JSON.parse(JSON.stringify(data.justCreatedDependent.id))})
+        data.setJustCreatedDependent(null)
+        toast.success(t('messages.added-successfully'))
+    }
+ },[data.justCreatedDependent])
+
+
+ useEffect(()=>{
+    (async()=>{
+      try{
+        let _dependents=await data.makeRequest({method:'get',url:`api/all-patient-dependens`,withToken:true, error: ``},0);
+        setDependents(_dependents)
+        setDependesLoaded(true)
+      }catch(e){
+        console.log({e})
+      }
+    })()
+ },[])
+
+
+ useEffect(()=>{
+
+    if(!user || user?.role!="patient"){
+      return
+    }
+
+    if(!user?.data?.date_of_birth){
+       data._showPopUp('basic_popup','conclude_patient_info')
+    }else if(localStorage.getItem('saved_appointment_url')){
+       data._showPopUp('basic_popup','you-have-saved-appointment')
+    }
+
+ },[])
 
 
 
-  const [itemToShow,setItemToShow]=useState(null)
+ 
 
 
+return (
 
-  return (
+<div>   
 
-  <>   
   <AppointmentItems setItemToShow={setItemToShow} show={Boolean(itemToShow)} itemToShow={itemToShow}/> 
   <DefaultLayout hide={ShowOnlyInputs}>
 
@@ -344,6 +397,9 @@ useEffect(()=>{
   {!itemToEditLoaded && id && <div className="mt-10">
     <DefaultFormSkeleton/>
   </div>}
+
+
+  <div className={`${(!user?.data?.date_of_birth && user?.role=="patient") ? 'opacity-65 pointer-events-none':''} `}>
 
   <FormLayout hideInputs={user?.role=="doctor"} hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={id ? t('common.updated-added-appointment') : t('menu.add-appointments')} verified_inputs={verified_inputs} form={form}
 
@@ -392,45 +448,80 @@ useEffect(()=>{
   bottomContent={(
     <div></div>
   )}
+  
 
   button={(
     <div className={`mt-[40px] ${user?.role=="doctor" ? 'hidden':''}`}>
 
-      <FormLayout.Button onClick={()=>{
-          data.setPaymentInfo(({...data.paymentInfo,step:1,...form,user_id:user?.id}))
+     {(user?.data?.date_of_birth)  && <FormLayout.Button onClick={()=>{
+         if(id){
+            SubmitForm()
+         }else{
+            data.setPaymentInfo(({...data.paymentInfo,step:1,...form,user_id:user?.id}))
+         }
+         
       }} valid={valid} loading={loading} label={id ? t('common.update') :t('common.proceed-with-payment')}/>
-   
+   }
     </div>
   )}
   >
 
 
-  <div className="flex justify-end w-full mt-4">
-        <button onClick={()=>setShowComment(true)} type="button" class={`text-white  ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
-          <span className="ml-2">Chat</span>
-          {(form.comments.length!=0 && id) && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full w-[20px] h-[20px] flex items-center justify-center">
-              {form.comments.length}
-          </div>}
-        </button>
-  </div>
+ <div className={`flex justify-between w-full`}>
+    <div className="flex flex-wrap"></div>
+
+    <div className="mt-4">
+            {!(form.status!="pending" && form.status!="cancelled") && <button onClick={()=>setShowComment(true)} type="button" class={`text-white  ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
+              <span className="ml-2">Chat</span>
+              {(form.comments.length!=0 && id) && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full w-[20px] h-[20px] flex items-center justify-center">
+                  {form.comments.length}
+              </div>}
+            </button>}
+      </div>
+      
+ </div>
 
   <FormCard hide={!id} items={[
     {name:t('form.consultation-id'),value:id ? form.id : '-'},
     {name:t('form.consultation-status'),value:!form.consultation_status ? t('common.pending') : t('form.'+form.consultation_status)},
-    {name:t('form.patient-name'),value:form?.user?.name,hide:user?.role=="patient"},
+    {name:t('form.patient-name'),value:form.is_for_dependent ? form.dependent?.name : form?.user?.name,hide:user?.role=="patient",
+      link:!form.is_for_dependent ? false : (form.is_for_dependent ? '/dependent/'+form.dependent?.id : '/patient/'+form.patient?.id),hide:user?.role=="patient"
+    },
     {name:t('form.consultation-date'),value:form.consultation_date,hide:user?.role=="patient"},
     {name:t('form.estimated-consultation-duration'),value:form.estimated_consultation_duration,hide:true},
-    {name:t('form.type-of-care'),value:form.type_of_care,hide:user?.role=="patient"},
+    {name:t('form.type-of-care'),value:t(`form.${form.type_of_care}-c`),hide:user?.role=="patient"},
     {name:t('form.consultation-method'),value:t('common.'+form.consultation_method),hide:user?.role=="patient"},
     {name:t('form.reason-for-consultation'),value:form.reason_for_consultation,hide:user?.role=="patient"},
-    {name:t('form.additional-observations'),value:form.additional_observations,hide:user?.role=="patient"},
-
-    {name:t('form.uploaded-documents'),value:id ? 19 : '-'},
+    {name:t('form.additional-observations'),value:form.additional_observations,hide:user?.role=="patient"}  
     
   ]}/>
 
 
+ <div className={`w-[360px] _add_dependent ${user?.role!="patient"? 'hidden':''}`}>
+       <label  class="block text-sm  mb-2 mt-7 text-gray-900">
+        {t('common.how-is-the-consultation-for')}<span className="text-red-500">*</span>
+        {form.is_for_dependent==true && <span onClick={()=>{
+            setForm({...form,is_for_dependent:false})
+        }} className="text-[14px] ml-7 cursor-pointer underline text-honolulu_blue-400">{t('common.set-for-me')}</span>}
+      </label>
+       
+       {form.is_for_dependent==true && <SearchInput btnAddRes={()=>{
+          data._showPopUp('add_dependent')
+       }} r={true} placeholder={t('common.family-name')} id={form.dependent_id}  label={''} loaded={dependensLoaded} res={setDependentId} items={dependents.map(i=>({...i,name:`${i.name} (${t('common.'+i.relationship)})`}))}/> }
+
+       {form.is_for_dependent!=true && <div className="flex items-center gap-x-4 mt-3 mb-2">
+                                <label onClick={()=>setForm({...form,is_for_dependent:false})} className="flex items-center cursor-pointer hover:opacity-70">
+                                    <input type="radio" name={'dependent'} checked={form.is_for_dependent==false}  className="mr-1 cursor-pointer"/>
+                                    <span>{t('common.for-me')}</span>
+                                </label>
+
+                                <label onClick={()=>setForm({...form,is_for_dependent:true})} className="flex items-center cursor-pointer hover:opacity-70">
+                                    <input type="radio" name={'dependent'} checked={form.is_for_dependent==true} className="mr-1 cursor-pointer"/>
+                                    <span className="cursor-pointer">{t('common.for-a-family-member')}</span>
+                                </label>
+         </div>}
+    </div>  
 
 
     <FormLayout.Input verified_inputs={verified_inputs}
@@ -449,217 +540,22 @@ useEffect(()=>{
       ]}
 
       form={form} r={true}
+      hide={user?.role!="patient"}
       onBlur={()=>setVerifiedInputs([...verified_inputs,'type_of_care'])}
       label={t('form.type-of-care')}
       onChange={(e)=>setForm({...form,type_of_care:e.target.value})}
       field={'type_of_care'}
+      disabled={Boolean(id)}
       value={form.type_of_care}/>
 
 
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form}
-        hide={true}
-        type={'date'}
-        r={true}
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-date'])} 
-        label={t('form.consultation-date')} 
-        onChange={(e) => setForm({...form, consultation_date: e.target.value})} 
-        field={'consultation_date'} 
-        value={form.consultation_date}
-      />
-    
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        r={true} 
-        type={'date'}
-        hide={true}
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'location-telemedicine'])} 
-        label={t('form.location-telemedicine')} 
-        onChange={(e) => setForm({...form, location_telemedicine: e.target.value})} 
-        field={'location_telemedicine'} 
-        value={form.location_telemedicine}
-      />
+   
 
       <FormLayout.Input 
         verified_inputs={verified_inputs} 
         form={form} 
         hide={true}
-        disabled={true}
-        noBorder={true}
-        r={true} 
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-id'])} 
-        label={t('form.consultation-id')} 
-        onChange={(e) => setForm({...form, consultation_id: e.target.value})} 
-        field={'consultation_id'} 
-        value={form.consultation_id}
-      />
 
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        hide={true}
-        r={true} 
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'patient-id'])} 
-        label={t('form.patient-id')} 
-        onChange={(e) => setForm({...form, patient_id: e.target.value})} 
-        field={'patient_id'} 
-        value={form.patient_id}
-      />
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        r={true} 
-        hide={true}
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'doctor-id'])} 
-        label={t('form.doctor-id')} 
-        onChange={(e) => setForm({...form, doctor_id: e.target.value})} 
-        field={'doctor_id'} 
-        value={form.doctor_id}
-      />
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        r={true} 
-        hide={true}
-        selectOptions={
-          [
-            { name: t('common.cardiology'), value: 'cardiology' },
-            { name: t('common.dermatology'), value: 'dermatology' },
-            { name: t('common.neurology'), value: 'neurology' },
-            { name: t('common.pediatrics'), value: 'pediatrics' },
-            { name: t('common.orthopedics'), value: 'orthopedics' },
-            { name: t('common.psychiatry'), value: 'psychiatry' },
-            { name: t('common.radiology'), value: 'radiology' },
-            { name: t('common.oncology'), value: 'oncology' },
-            { name: t('common.gastroenterology'), value: 'gastroenterology' },
-            { name: t('common.ophthalmology'), value: 'ophthalmology' },
-            { name: t('common.endocrinology'), value: 'endocrinology' },
-            { name: t('common.gynecology'), value: 'gynecology' },
-            { name: t('common.urology'), value: 'urology' },
-            { name: t('common.pulmonology'), value: 'pulmonology' }
-          ]
-        }
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'medical-specialty'])} 
-        label={t('form.medical-specialty')} 
-        onChange={(e) => setForm({...form, medical_specialty: e.target.value})} 
-        field={'medical_specialty'} 
-        value={form.medical_specialty}
-      />
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        hide={true}
-        r={true} 
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-status'])} 
-        label={t('form.consultation-status')} 
-        onChange={(e) => setForm({...form, consultation_status: e.target.value})} 
-        field={'consultation_status'} 
-        value={form.consultation_status}
-      />
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        hide={true}
-        r={true} 
-        selectOptions={
-          [
-            /*{name:t('common.in-person'),value:'in-person'},
-            {name:t('common.telemedicine'),value:'zoom'},*/
-            {name:'Google meet',value:'meet'}
-          ]
-        }
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-method'])} 
-        label={t('form.consultation-method')} 
-        onChange={(e) => setForm({...form, consultation_method: e.target.value})} 
-        field={'consultation_method'} 
-        value={form.consultation_method}
-      />
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        r={true} 
-        hide={true}
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'payment-confirmed'])} 
-        label={t('form.payment-confirmed')} 
-        onChange={(e) => setForm({...form, payment_confirmed: e.target.value})} 
-        field={'payment_confirmed'} 
-        value={form.payment_confirmed}
-      />
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        r={true} 
-        hide={true}
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'notifications-sent'])} 
-        label={t('form.notifications-sent')} 
-        onChange={(e) => setForm({...form, notifications_sent: e.target.value})} 
-        field={'notifications_sent'} 
-        value={form.notifications_sent}
-      />
-
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        r={true} 
-        hide={true}
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'location-telemedicine'])} 
-        label={t('form.location-telemedicine')} 
-        onChange={(e) => setForm({...form, location_telemedicine: e.target.value})} 
-        field={'location_telemedicine'} 
-        value={form.location_telemedicine}
-      />
-
-    
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        r={true} 
-        hide={true}
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'prescription-id'])} 
-        label={t('form.prescription-id')} 
-        onChange={(e) => setForm({...form, prescription_id: e.target.value})} 
-        field={'prescription_id'} 
-        value={form.prescription_id}
-      />
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        hide={true}
-        r={true} 
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'exam-id'])} 
-        label={t('form.exam-id')} 
-        onChange={(e) => setForm({...form, exam_id: e.target.value})} 
-        field={'exam_id'} 
-        value={form.exam_id}
-      />
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form}
-        hide={true} 
-        r={true} 
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'uploaded-documents'])} 
-        label={t('form.uploaded-documents')} 
-        onChange={(e) => setForm({...form, uploaded_documents: e.target.value})} 
-        field={'uploaded_documents'} 
-        value={form.uploaded_documents}
-      />
-
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        hide={true}
         selectOptions={
           [
             {name:'30 '+t('common.minutes'),value:'30-min'},
@@ -667,6 +563,7 @@ useEffect(()=>{
             {name:t('common.more-than-1h'),value:'1-h+'},
           ]
         }
+
         r={true} 
         onBlur={() => setVerifiedInputs([...verified_inputs, 'estimated-consultation-duration'])} 
         label={t('form.estimated-consultation-duration')} 
@@ -676,12 +573,15 @@ useEffect(()=>{
       />
 
 
-      <div className={`flex mt-7 ${user?.role!="patient" || form.type_of_care=="requested"  ? 'hidden':''} justify-end flex-col  _doctor_list`}>
+      <div className={`flex ${id ? 'opacity-60 pointer-events-none':''} mt-7 ${user?.role!="patient" || form.type_of_care=="requested"  ? 'hidden':''} justify-end flex-col  _doctor_list`}>
         
         <label class="mb-2 text-sm  text-gray-900">{t('common.doctor')}</label>
 
         <div onClick={()=>{
-          if(selectedDoctor.status!="loading") data._showPopUp('doctor_list')
+          if(selectedDoctor.status!="loading") {
+            data.setUpdateTable(Math.random())
+            data._showPopUp('doctor_list')
+          }
         }} class={`bg-gray w-[400px] ${(selectedDoctor.status=="loading" || id) ? ' pointer-events-none':''} hover:bg-gray-100 cursor-pointer  h-[43px] border-gray-300  active:opacity-75  text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 border items-center flex justify-between p-2.5`}>    
         
             {selectedDoctor.status=="not_selected" && <>
@@ -733,6 +633,7 @@ useEffect(()=>{
         form={form} 
         r={true} 
         textarea={true}
+        hide={user?.role!="patient"}
         onBlur={() => setVerifiedInputs([...verified_inputs, 'reason-for-consultation'])} 
         label={t('form.reason-for-consultation')} 
         onChange={(e) => setForm({...form, reason_for_consultation: e.target.value})} 
@@ -744,6 +645,7 @@ useEffect(()=>{
         verified_inputs={verified_inputs} 
         form={form}
         textarea={true}
+        hide={user?.role!="patient"}
         onBlur={() => setVerifiedInputs([...verified_inputs, 'additional-observations'])} 
         label={t('form.additional-observations')} 
         onChange={(e) => setForm({...form, additional_observations: e.target.value})} 
@@ -753,9 +655,10 @@ useEffect(()=>{
 
 
   </FormLayout>
+  </div>
 
   </DefaultLayout>
-      </> 
+      </div> 
   )
 }
 

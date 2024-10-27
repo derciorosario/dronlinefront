@@ -1,5 +1,5 @@
 import { t } from 'i18next'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useData } from '../../contexts/DataContext'
 import ChatFile from '../Inputs/chatFile'
@@ -9,7 +9,15 @@ import ChatMessages from '../Chat/messages'
 function Comment({show,setShow,comments,form,setForm}) {
 
 
+ 
+  useEffect(() => {
+    
+    const interval = setInterval(() => {
+     if(show) update_comments()
+    }, 3000);
 
+    return () => clearInterval(interval);
+  }, [show]);
 
 
 const {user} = useAuth()
@@ -26,7 +34,8 @@ const [showChooseFile,setShowChooseFile]=useState('')
          created_at:new Date().toISOString(),
          generated_id:Math.random().toString(),
          not_sent:true,
-         user
+         user,
+         user_id:user.id
      }
 
     if(filename) {
@@ -191,8 +200,6 @@ const [showChooseFile,setShowChooseFile]=useState('')
             <div className="flex items-center gap-2">
            
             <button onClick={()=>{
-              alert('In development')
-              return
               if(commentText)  add_comment()
             }} className={`items-center  ${showChooseFile ? ' opacity-0 pointer-events-none w-0':'transition-all ease-in'}   overflow-hidden  flex px-3 py-2 ${commentText ? 'bg-honolulu_blue-500':'bg-gray-400'} rounded-full shadow `}>
                 

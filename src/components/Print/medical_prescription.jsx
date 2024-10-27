@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Logo from '../../assets/images/dark-logo-1.png'
 import { t } from 'i18next'
+import PrintTable from '../Tables/print'
 
 function MedicalPrescriptionPrint({item,setItem}) {
 
@@ -65,7 +66,38 @@ function MedicalPrescriptionPrint({item,setItem}) {
 
 
 
-               <div className="mt-10 min-h-[400px]">
+
+                <div className="w-full p-10">
+
+                <PrintTable header={[
+                    'ID',
+                    t('form.name'),
+                    t('form.dosage'),
+                    t('form.dosing-instructions'),
+                    t('form.prescribed-quantity'),
+                    t('form.treatment-duration'),
+                    t('form.pharmaceutical-form')
+                ]} body={(item?.medical_prescription_items || []).map(i=>(
+                        <PrintTable.Tr>
+                            <PrintTable.Td>{i.id}</PrintTable.Td>
+                            <PrintTable.Td>{i.name}</PrintTable.Td>
+                            <PrintTable.Td>{i.dosage}</PrintTable.Td>
+                            <PrintTable.Td>{i.dosing_instructions}</PrintTable.Td>
+                            <PrintTable.Td>{i.prescribed_quantity}</PrintTable.Td>
+                            <PrintTable.Td>{i.treatment_duration}</PrintTable.Td>
+                            <PrintTable.Td>{i.pharmaceutical_form}</PrintTable.Td>
+                           
+                    </PrintTable.Tr>
+                ))}>
+                    
+                </PrintTable>
+
+             </div>
+
+
+
+
+               <div className="mt-10 min-h-[400px] hidden">
                      {item?.medical_prescription_items?.map((i,_i)=>(
                             <div className="flex gap-x-4 mb-5">
                                 <span className="w-[40px] h-[40px] border-[rgba(0,0,0,0.4)] border rounded-full  flex items-center justify-center">{_i+1}</span>

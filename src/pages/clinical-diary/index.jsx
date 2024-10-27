@@ -61,6 +61,8 @@ function globalOnclick(id){
     update_id:id
    })
 }
+
+
  
   return (
    
@@ -85,6 +87,7 @@ function globalOnclick(id){
                           deleteFunction:'default',
                           deleteUrl:'api/delete/clinical-diary'}
                          } items={data._clinical_diary?.data || []}/>,
+                         '.',
                          'ID',
                           t('form.main-complaint'),
                           t('form.current-illness-history'),
@@ -113,6 +116,32 @@ function globalOnclick(id){
                                        deleteUrl:'api/delete/clinical-diary',
                                        id:i.id}
                                   }/>
+                                </BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>{
+                                    data.setSinglePrintContent({
+                                      patient: itemToShow.appointment.user,
+                                      title: t('menu.clinical-diary'),
+                                      content: [
+                                          {name: t('form.consultation-id'), value: itemToShow.appointment.id},
+                                          {name: t('form.main-complaint'), value: i.main_complaint},
+                                          {name: t('form.current-illness-history'), value: i.current_illness_history},
+                                          {name: t('form.past-medical-history'), value: i.past_medical_history},
+                                          {name: t('form.psychosocial-history'), value: i.psychosocial_history},
+                                          {name: t('form.family-history'), value: i.family_history},
+                                          {name: t('form.gynecological-history'), value: i.gynecological_history},
+                                          {name: t('form.physical-exam'), value: i.physical_exam},
+                                          {name: t('form.complementary-exams'), value: i.complementary_exams},
+                                          {name: t('form.diagnoses'), value: i.diagnoses},
+                                          {name: t('form.therapeutic-plan'), value: i.therapeutic_plan},
+                                          {name: t('form.prescribed-medications'), value: i.prescribed_medications},
+                                          {name: t('form.therapeutic-recommendations'), value: i.therapeutic_recommendations},
+                                          {name: t('form.other-instructions'), value: i.other_instructions},
+                                      ]
+                                    })
+                                 }}>
+
+                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
+                               
                                 </BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.main_complaint}</BaiscTable.Td>

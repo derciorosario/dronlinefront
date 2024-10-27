@@ -69,7 +69,7 @@ function globalOnclick(id){
   return (
    
         <>
-        <MedicalPrescriptionPrint item={medicalPrescriptionPrintContent} setItem={setMedicalPrescriptionPrintContent}/>
+         <MedicalPrescriptionPrint item={medicalPrescriptionPrintContent} setItem={setMedicalPrescriptionPrintContent}/>
          <DefaultLayout hide={hideLayout} pageContent={{title:t('menu.medical-prescription'),desc:t('titles.medical-prescriptions')}}>
            
             

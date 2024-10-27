@@ -7,7 +7,7 @@ import i18n from '../../../../landingpage/src/i18n'
 
 
 
-function PatientForm({form_name,form,setForm,verified_inputs,setVerifiedInputs,itemsToHide,hide,cannot_edit}) {
+function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,verified_inputs,setVerifiedInputs,itemsToHide,hide,cannot_edit}) {
 
   const data=useData()
   const {user} = useAuth()
@@ -73,33 +73,57 @@ function PatientForm({form_name,form,setForm,verified_inputs,setVerifiedInputs,i
         ),500)
   },[user])
 
-
+  
   return (
     <>
-
-
       
-
-
-              <FormLayout.Input disabled={data.auth.type=="google"} verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'name'])} label={t('form.full-name')} onChange={(e)=>setForm({...form,name:e.target.value})} field={'name'} value={form.name}  />
-              <FormLayout.Input disabled={data.auth.type=="google"} verified_inputs={verified_inputs} form={form}  r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'email'])} label={'Email'} onChange={(e)=>setForm({...form,email:e.target.value})} field={'email'} value={form.email}/>
-              <FormLayout.Input hide={itemsToHide?.includes('password')} errorMsg={
+             <FormLayout.Input hide={form_name!="dependent" || hideInputs} verified_inputs={verified_inputs} form={form} selectOptions={
+               [
+                { "name": t('common.child'), "value": "child" },
+                { "name": t('common.spouse'), "value": "spouse" },
+                { "name": t('common.parent'), "value": "parent" },
+                { "name": t('common.sibling'), "value": "sibling" },
+                { "name": t('common.grandparent'), "value": "grandparent" },
+                { "name": t('common.grandchild'), "value": "grandchild" },
+                { "name": t('common.uncle'), "value": "uncle" },
+                { "name": t('common.aunt'), "value": "aunt" },
+                { "name": t('common.nephew'), "value": "nephew" },
+                { "name": t('common.niece'), "value": "niece" },
+                { "name": t('common.cousin'), "value": "cousin" },
+                 {name:t('common.another'),value:'other'}
+               ]
+              } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'relationship'])} label={t('form.relationship')} onChange={(e)=>setForm({...form,relationship:e.target.value})} field={'relationship'} value={form.relationship}/>
+              
+              <FormLayout.Input hide={formStep && formStep==2 || hideInputs} disabled={data.auth.type=="google"} verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'name'])} label={t('form.full-name')} onChange={(e)=>setForm({...form,name:e.target.value})} field={'name'} value={form.name}  />
+              <FormLayout.Input hide={formStep && formStep==2 || hideInputs || form_name=="dependent" || itemsToHide.includes('email')} disabled={data.auth.type=="google"} verified_inputs={verified_inputs} form={form}  r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'email'])} label={'Email'} onChange={(e)=>setForm({...form,email:e.target.value})} field={'email'} value={form.email}/>
+              <FormLayout.Input hide={hideInputs || itemsToHide?.includes('password')} errorMsg={
                  (form.length <= 7 && verified_inputs.includes('password')) ? t('messages.password-min-8') : verified_inputs.includes('password') && !form.password ? t('common.required-field') :''
               } verified_inputs={verified_inputs} form={form} r={true} type={'password'} onBlur={()=>setVerifiedInputs([...verified_inputs,'password'])} label={t('form.password')} onChange={(e)=>setForm({...form,password:e.target.value})} field={'password'} value={form.password}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} r={true} type={'date'} onBlur={()=>setVerifiedInputs([...verified_inputs,'date_of_birth'])} label={t('form.date-of-birth')} onChange={(e)=>setForm({...form,date_of_birth:e.target.value})} field={'date_of_birth'} value={form.date_of_birth}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'main_contact'])} label={t('form.main-contact')} onChange={(e)=>setForm({...form,main_contact:e.target.value.replace(/[^0-9]/g, '')})} field={'main_contact'} value={form.main_contact}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'alternative_contact'])} label={t('form.alternative-contact')} onChange={(e)=>setForm({...form,alternative_contact:e.target.value.replace(/[^0-9]/g, '')})} field={'alternative_contact'} value={form.alternative_contact}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'occupation'])} label={t('form.occupation')} onChange={(e)=>setForm({...form,occupation:e.target.value})} field={'occupation'} value={form.occupation}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'province_of_residence'])} label={t('form.province_of_residence')} onChange={(e)=>setForm({...form,province_of_residence:e.target.value})} field={'province-of-residence'} value={form.province_of_residence}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'residential_address'])} label={t('form.residential_address')} onChange={(e)=>setForm({...form,residential_address:e.target.value})} field={'residential-address'} value={form.residential_address}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'nationality'])} label={t('form.nationality')} onChange={(e)=>setForm({...form,nationality:e.target.value})} field={'residential-address'} value={form.nationality}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'years_of_experience'])} label={t('common.years_of_experience')} onChange={(e)=>setForm({...form,years_of_experience:e.target.value.replace(/[^0-9]/g, '')})} field={'years_of_experience'} value={form.years_of_experience}/>
+              
+              <FormLayout.Input hide={formStep && formStep==2 || hideInputs} verified_inputs={verified_inputs} form={form} r={true} type={'date'} onBlur={()=>setVerifiedInputs([...verified_inputs,'date_of_birth'])} label={t('form.date-of-birth')} onChange={(e)=>setForm({...form,date_of_birth:e.target.value})} field={'date_of_birth'} value={form.date_of_birth}/>
+              <FormLayout.Input hide={formStep && formStep==2 || hideInputs} verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'main_contact'])} label={t('form.main-contact')} onChange={(e)=>setForm({...form,main_contact:e.target.value.replace(/[^0-9]/g, '')})} field={'main_contact'} value={form.main_contact}/>
+              <FormLayout.Input hide={formStep && formStep==2 || hideInputs} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'alternative_contact'])} label={t('form.alternative-contact')} onChange={(e)=>setForm({...form,alternative_contact:e.target.value.replace(/[^0-9]/g, '')})} field={'alternative_contact'} value={form.alternative_contact}/>
+              <FormLayout.Input hide={formStep && formStep==2 || hideInputs || form_name=="dependent"} verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'occupation'])} label={t('form.occupation')} onChange={(e)=>setForm({...form,occupation:e.target.value})} field={'occupation'} value={form.occupation}/>
+              <FormLayout.Input hide={formStep && formStep==2 || hideInputs || form_name=="dependent"} verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'province_of_residence'])} label={t('form.province_of_residence')} onChange={(e)=>setForm({...form,province_of_residence:e.target.value})} field={'province-of-residence'} value={form.province_of_residence}/>
+              <FormLayout.Input hide={formStep && formStep==2 || hideInputs} verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'residential_address'])} label={t('form.residential_address')} onChange={(e)=>setForm({...form,residential_address:e.target.value})} field={'residential-address'} value={form.residential_address}/>
+              <FormLayout.Input hide={formStep && formStep==2 || hideInputs || form_name=="dependent"} verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'nationality'])} label={t('form.nationality')} onChange={(e)=>setForm({...form,nationality:e.target.value})} field={'residential-address'} value={form.nationality}/>
+              <FormLayout.Input hide={formStep && formStep==2 || hideInputs} verified_inputs={verified_inputs} form={form} selectOptions={
+               [
+                 {name:t('common.female'),value:'female'},
+                 {name:t('common.male'),value:'male'},
+                 {name:t('common.another'),value:'other'}
+               ]
+              } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'gender'])} label={t('form.gender')} onChange={(e)=>setForm({...form,gender:e.target.value})} field={'gender'} value={form.gender}/>
+              
+             
+              <FormLayout.Input hide={(formStep && formStep==1) || form_name!="doctor" || hideInputs} verified_inputs={verified_inputs} form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'years_of_experience'])} label={t('common.years_of_experience')} onChange={(e)=>setForm({...form,years_of_experience:e.target.value.replace(/[^0-9]/g, '')})} field={'years_of_experience'} value={form.years_of_experience}/>
          
               <FormLayout.Input 
                   verified_inputs={verified_inputs} 
                   form={form} 
+
                   r={true} 
-                  hide={itemsToHide?.includes('medical-specialty')}
+                  hide={itemsToHide?.includes('medical-specialty') || (formStep && formStep==2) || hideInputs}
                   selectOptions={
 
                     data._specialty_categories.map((i,_i)=>({
@@ -108,7 +132,6 @@ function PatientForm({form_name,form,setForm,verified_inputs,setVerifiedInputs,i
                     }))
 
                     /*[
-
                       { name: t('common.cardiology'), value: 'cardiology' },
                       { name: t('common.dermatology'), value: 'dermatology' },
                       { name: t('common.neurology'), value: 'neurology' },
@@ -133,14 +156,14 @@ function PatientForm({form_name,form,setForm,verified_inputs,setVerifiedInputs,i
                 />
 
 
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} selectOptions={
+              <FormLayout.Input hide={(formStep && formStep==2) || form_name=="dependent" || hideInputs} verified_inputs={verified_inputs} form={form} selectOptions={
                 [
                   {name:t('common.single'),value:'single'},
                   {name:t('common.married'),value:'married'},
                 ]
-               } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'marital_status'])} label={t('form.marital_status')} onChange={(e)=>setForm({...form,marital_status:e.target.value})} field={'marital_status'} value={form.marital_status}/>
+               } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'marital_status']) || hideInputs} label={t('form.marital_status')} onChange={(e)=>setForm({...form,marital_status:e.target.value})} field={'marital_status'} value={form.marital_status}/>
               
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} selectOptions={
+              <FormLayout.Input  hide={(formStep && formStep==2) ||  form_name=="dependent" || hideInputs} verified_inputs={verified_inputs} form={form} selectOptions={
 
                 [
                   { name: t('contries.Afghanistan'), value: "Afghanistan" },
@@ -340,25 +363,12 @@ function PatientForm({form_name,form,setForm,verified_inputs,setVerifiedInputs,i
                } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'country_of_residence'])} label={t('form.country_of_residence')} onChange={(e)=>setForm({...form,country_of_residence:e.target.value})} field={'country-of-residence'} value={form.country_of_residence}/>
        
 
-               <FormLayout.Input verified_inputs={verified_inputs} form={form} selectOptions={
-               
-                [
-                  {name:t('common.female'),value:'female'},
-                  {name:t('common.male'),value:'male'},
-                  {name:t('common.another'),value:'other'}
-                ]
-
-              } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'gender'])} label={t('form.gender')} onChange={(e)=>setForm({...form,gender:e.target.value})} field={'gender'} value={form.gender}/>
-              
-
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'address'])} label={t('form.address')} onChange={(e)=>setForm({...form,address:e.target.value})} field={'address'} value={form.address}/>
-              <FormLayout.Input hide={itemsToHide?.includes('order-number')} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'order_number'])} label={t('form.order-number')} onChange={(e)=>setForm({...form,order_number:e.target.value})} field={'order-number'} value={form.order_number}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'identification_number'])} label={t('form.identification-number')} onChange={(e)=>setForm({...form,identification_number:e.target.value})} field={'order_number'} value={form.identification_number}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'birth_certificate'])} label={t('form.birth-certificate')} onChange={(e)=>setForm({...form,birth_certificate:e.target.value})} field={'birth_certificate'} value={form.birth_certificate}/>
-              <FormLayout.Input verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'passport_number'])} label={t('form.passport-number')} onChange={(e)=>setForm({...form,passport_number:e.target.value})} field={'passport_number'} value={form.passport_number}/>
              
-             {form_name=="patient" && <>
 
+              <FormLayout.Input hide={(formStep && formStep==2) || hideInputs} verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'address'])} label={t('form.address')} onChange={(e)=>setForm({...form,address:e.target.value})} field={'address'} value={form.address}/>
+              <FormLayout.Input hide={itemsToHide?.includes('order-number') || hideInputs || (formStep && formStep==2)} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'order_number'])} label={t('form.order-number')} onChange={(e)=>setForm({...form,order_number:e.target.value})} field={'order-number'} value={form.order_number}/>
+             
+             {( (((form_name=="patient" && !formStep) || form_name=="dependent") || (formStep && formStep==2 && form_name=="patient")) && !hideInputs) && <>
               <FormLayout.Input setForm={setForm} verified_inputs={verified_inputs} type={'item-list'} form={form}   label={t('form.chronic_diseases')} field={'chronic_diseases_input'}  onClick={()=>{
                 handleList({action:'add',setForm,form,list:'chronic_diseases',input:'chronic_diseases_input'})
               }} r={true} has_items_to_add={form.has_chronic_diseases} confirmContent={confirmContent({list:'chronic_diseases',form,setForm,field:'has_chronic_diseases'})} listContent={listItems({form,list:'chronic_diseases'})}  onChange={(e)=>setForm({...form,chronic_diseases_input:e.target.value})} list={'chronic_diseases'}  value={form.chronic_diseases_input}/>
@@ -374,19 +384,62 @@ function PatientForm({form_name,form,setForm,verified_inputs,setVerifiedInputs,i
               <FormLayout.Input setForm={setForm} verified_inputs={verified_inputs} type={'item-list'} form={form}   label={t('form.continuous_use_of_medications')} field={'continuous_use_of_medications_input'}  onClick={()=>{
                 handleList({action:'add',setForm,form,list:'continuous_use_of_medications',input:'continuous_use_of_medications_input'})
               }}  r={true} has_items_to_add={form.has_continuous_use_of_medications} confirmContent={confirmContent({list:'continuous_use_of_medications',form,setForm,field:'has_continuous_use_of_medications'})} listContent={listItems({form,list:'continuous_use_of_medications'})}  onChange={(e)=>setForm({...form,continuous_use_of_medications_input:e.target.value})} list={'continuous_use_of_medications'}  value={form.continuous_use_of_medications_input}/>
-       
              </>
               }
-
               
-              
-              <FormLayout.Input hide={itemsToHide?.includes('hospitalization_history')} verified_inputs={verified_inputs} textarea={true} form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'hospitalization_history'])} label={t('form.hospitalization_history')} onChange={(e)=>setForm({...form,hospitalization_history:e.target.value})} field={'hospitalization_history'} value={form.hospitalization_history}/>
-              <FormLayout.Input hide={itemsToHide?.includes('family_history_of_diseases')} verified_inputs={verified_inputs} textarea={true} form={form}   onBlur={()=>setVerifiedInputs([...verified_inputs,'family_history_of_diseases'])} label={t('form.family_history_of_diseases')} onChange={(e)=>setForm({...form,family_history_of_diseases:e.target.value})} field={'family_history_of_diseases'} value={form.family_history_of_diseases}/>
+              <FormLayout.Input hide={hideInputs || itemsToHide?.includes('hospitalization_history') || form_name=="doctor" || (formStep && formStep==1)} verified_inputs={verified_inputs} textarea={true} form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'hospitalization_history'])} label={t('form.hospitalization_history')} onChange={(e)=>setForm({...form,hospitalization_history:e.target.value})} field={'hospitalization_history'} value={form.hospitalization_history}/>
+              <FormLayout.Input hide={hideInputs || itemsToHide?.includes('family_history_of_diseases') || form_name=="doctor" || (formStep && formStep==1)} verified_inputs={verified_inputs} textarea={true} form={form}   onBlur={()=>setVerifiedInputs([...verified_inputs,'family_history_of_diseases'])} label={t('form.family_history_of_diseases')} onChange={(e)=>setForm({...form,family_history_of_diseases:e.target.value})} field={'family_history_of_diseases'} value={form.family_history_of_diseases}/>
 
-              <FormLayout.Input hide={itemsToHide?.includes('short_biography')} verified_inputs={verified_inputs} textarea={true} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'short_biography'])} label={t('form.short_biography')} onChange={(e)=>setForm({...form,short_biography:e.target.value})} field={'short_biography'} value={form.short_biography}/>
-              <FormLayout.Input hide={itemsToHide?.includes('long_biography')} verified_inputs={verified_inputs} textarea={true} form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'long_biography'])} label={t('form.long_biography')} onChange={(e)=>setForm({...form,long_biography:e.target.value})} field={'long_biography'} value={form.long_biography}/>
+              <FormLayout.Input hide={hideInputs || itemsToHide?.includes('short_biography') || form_name=="patient" || (formStep && formStep==1)} verified_inputs={verified_inputs} textarea={true} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'short_biography'])} label={t('form.short_biography')} onChange={(e)=>setForm({...form,short_biography:e.target.value})} field={'short_biography'} value={form.short_biography}/>
+              <FormLayout.Input hide={hideInputs || itemsToHide?.includes('long_biography') || form_name=="patient" || (formStep && formStep==1)} verified_inputs={verified_inputs} textarea={true} form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'long_biography'])} label={t('form.long_biography')} onChange={(e)=>setForm({...form,long_biography:e.target.value})} field={'long_biography'} value={form.long_biography}/>
+
+              <FormLayout.Input hide={hideInputs || formStep && formStep==2} verified_inputs={verified_inputs} form={form} selectOptions={
+               [
+                 {name:t('form.identification-number'),value:'identification_number'},
+                 {name:t('form.birth-certificate'),value:'birth_certificate'},
+                 {name:t('form.passport-number'),value:'passport_number'}
+               ]
+              } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'identification_document'])} label={t('common.identification-document')} onChange={(e)=>setForm({...form,identification_document:e.target.value})} field={'identification_document'} value={form.identification_document}/>
+
+              <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="identification_number"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'identification_number'])} label={t('form.identification-number')} onChange={(e)=>setForm({...form,identification_number:e.target.value})} field={'order_number'} value={form.identification_number}/>
+              <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="birth_certificate"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'birth_certificate'])} label={t('form.birth-certificate')} onChange={(e)=>setForm({...form,birth_certificate:e.target.value})} field={'birth_certificate'} value={form.birth_certificate}/>
+              <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="passport_number"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'passport_number'])} label={t('form.passport-number')} onChange={(e)=>setForm({...form,passport_number:e.target.value})} field={'passport_number'} value={form.passport_number}/>
              
+              
+  
     </>
+  )
+}
+
+
+
+
+PatientForm.Stepper=({formStep,setFormStep})=>{
+  return (
+              <ol class="flex mb-3 items-center w-full p-3 space-x-2 text-sm font-medium text-center text-gray-500 bg-white  rounded-[0.4rem]  sm:text-base sm:p-4 sm:space-x-4 rtl:space-x-reverse">
+                      <li onClick={()=>setFormStep(1)} class={`flex relative items-center cursor-pointer hover:opacity-50 ${formStep==1 ? 'text-honolulu_blue-500':''}`}>
+                          <span class="flex items-center justify-center me-2 text-xs shrink-0">
+                                <label><svg className={`${formStep==1 ? 'fill-honolulu_blue-500':''}`} xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q53 0 100-15.5t86-44.5q-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160Zm0-360q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm0-60Zm0 360Z"/></svg></label>
+                           </span>
+                          <span class="hidden sm:inline-flex">{t('common.personal-info')}</span>
+                          <svg class={`w-3 h-3  ms- hidden sm:ms-4 rtl:rotate-180`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 9 4-4-4-4M1 9l4-4-4-4"/>
+                          </svg>
+                          {formStep == 1 && <span className="w-full bg-honolulu_blue-400 h-[1px] rounded absolute top-[100%] translate-y-[15px] left-0"></span>}
+                      </li>
+
+                      <li onClick={()=>setFormStep(2)} class={`flex items-center relative cursor-pointer hover:opacity-50 ${formStep==2 ? 'text-honolulu_blue-500':''}`}>
+                          <span class="flex items-center justify-center me-2 text-xs rounded-full shrink-0">
+                               <span><svg className={`${formStep==2 ? 'fill-honolulu_blue-500':''}`} xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M280-240h80v-80h80v-80h-80v-80h-80v80h-80v80h80v80Zm240-140h240v-60H520v60Zm0 120h160v-60H520v60ZM160-80q-33 0-56.5-23.5T80-160v-440q0-33 23.5-56.5T160-680h200v-120q0-33 23.5-56.5T440-880h80q33 0 56.5 23.5T600-800v120h200q33 0 56.5 23.5T880-600v440q0 33-23.5 56.5T800-80H160Zm0-80h640v-440H600q0 33-23.5 56.5T520-520h-80q-33 0-56.5-23.5T360-600H160v440Zm280-440h80v-200h-80v200Zm40 220Z"/></svg></span>
+                           </span>
+                          <span class="hidden sm:inline-flex"> {t('common.medical-info')}</span>
+                          <svg class="w-3 h-3 hidden ms-2 sm:ms-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 9 4-4-4-4M1 9l4-4-4-4"/>
+                          </svg>
+                          {formStep == 2 && <span className="w-full bg-honolulu_blue-400 h-[1px] rounded absolute top-[100%] translate-y-[15px] left-0"></span>}
+                      </li>
+                     
+                  </ol>
   )
 }
 

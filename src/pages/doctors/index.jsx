@@ -126,8 +126,9 @@ function App() {
                           'Email',
                           t('form.main-contact'),
                           t('form.gender'),
-                          t('form.uploaded-documents'),
                           t('form.address'),
+                          t('common.created_at'),
+                          t('common.last-update'),
                         ]
                       }
 
@@ -147,8 +148,10 @@ function App() {
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.email}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.main_contact}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t('common.'+i.gender)}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/doctor/`+i.id}>{i.uploaded_documents?.length || 0}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t(i.address)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
+                               
                             </BaiscTable.Tr>
                         ))}
 

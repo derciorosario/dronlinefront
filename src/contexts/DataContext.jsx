@@ -7,8 +7,7 @@ import { useAuth } from './AuthContext';
 const DataContext = createContext();
 export const DataProvider = ({ children }) => {
 
-
-    const [isLoading, setIsLoading] = useState(true);
+   
     const [dialogs,setDialogs]=useState({
       
     })
@@ -21,8 +20,10 @@ export const DataProvider = ({ children }) => {
       delete:false,
       confim_message:false,
       header_user_dropdown:false,
-      filters:false
-      
+      filters:false,
+      add_dependent:false,
+      table_options:false,
+      notifications:false
     }
   
     const [_openPopUps, _setOpenPopUps] = useState(initial_popups);
@@ -88,17 +89,9 @@ export const DataProvider = ({ children }) => {
         return res
 
     
-     }
-
-
-
-
-
-
-
-
+    }
    
-    const {makeRequest,APP_BASE_URL,SERVER_FILE_STORAGE_PATH} = useAuth()
+    const {makeRequest,APP_BASE_URL,SERVER_FILE_STORAGE_PATH,isLoading,setIsLoading} = useAuth()
 
     const [auth,setAuth]=useState({
       email:'',
@@ -115,10 +108,14 @@ export const DataProvider = ({ children }) => {
     const [_exams,setExams]=useState([])
     const [_years_of_experience,setYearsOfExperience]=useState([])
     const [_medical_prescriptions,setMedicalPrescriptions]=useState([])
+    const [_dependents,setDependents]=useState([])
+    const [_appointment_invoices,setAppointmentInvoices]=useState([])
+    const [_doctor_requests,setDoctorRequests]=useState([])
     const [updateTable,setUpdateTable]=useState(null)
     
 
     let dbs=[
+
       {name:'appointments',update:setAppointments,get:_appointments},
       {name:'doctors',update:setDoctors,get:_doctors},
       {name:'patients',update:setPatients,get:_patients},
@@ -126,7 +123,11 @@ export const DataProvider = ({ children }) => {
       {name:'exams',update:setExams,get:_exams},
       {name:'specialty_categories',update:setSpecialtyCategories,get:_specialty_categories},
       {name:'years_of_experience',update:setYearsOfExperience,get:_years_of_experience},
-      {name:'medical_prescriptions',update:setMedicalPrescriptions,get:_medical_prescriptions}
+      {name:'medical_prescriptions',update:setMedicalPrescriptions,get:_medical_prescriptions},
+      {name:'dependents',update:setDependents,get:_dependents},
+      {name:'appointment_invoices',update:setAppointmentInvoices,get:_appointment_invoices},
+      {name:'doctor_requests',update:setDoctorRequests,get:_doctor_requests}
+
     ]
     
 
@@ -140,17 +141,13 @@ export const DataProvider = ({ children }) => {
 
 
     async function _get(from,params){
-    
       let items=typeof from == "string" ? [from] : from
   
       let _data={}
   
       for (let f = 0; f < items.length; f++) {
-
         let selected=dbs.filter(i=>i.name==items[f])[0]
           try{
-
-           
             let response=await makeRequest({params:params?.[items[f]],method:'get',url:`api/${items[f].replaceAll('_','-')}`,withToken:true, error: ``},100);
             handleLoaded('add',items[f])
             selected.update(response)
@@ -159,12 +156,11 @@ export const DataProvider = ({ children }) => {
             console.log({e})
             _data[items[f]]=[]
           }
-
       }
       return _data
+
     }
 
-    
     let initial_filters={
       search: '',
       email:'',
@@ -311,15 +307,41 @@ export const DataProvider = ({ children }) => {
       return `${updatedHours}:${updatedMinutes}`;
     }
 
+
+
+    function getScheduledAppointment(){
+
+      if(localStorage.getItem('appointment')){
+          try{
+                let {scheduled_date,scheduled_hours,scheduled_weekday,scheduled_doctor} = JSON.parse(localStorage.getItem('appointment'))
+                localStorage.removeItem('appointment')
+                return `/add-appointments?scheduled_doctor=${scheduled_doctor}&scheduled_hours=${scheduled_hours}&scheduled_date=${scheduled_date}&scheduled_weekday=${scheduled_weekday}`
+          }catch(e){
+                return null
+          }
+
+      }
+
+    }
+
+
     const [selectedDoctorToSchedule,setSelectedDoctorToSchedule]=useState({})
     const [paymentInfo,setPaymentInfo]=useState({})
+    const [singlePrintContent,setSinglePrintContent]=useState(null)
+    const [justCreatedDependent,setJustCreatedDependent]=useState(null)
 
     const value = {
+      singlePrintContent,
+      setSinglePrintContent,
+      isLoading, setIsLoading,
+      justCreatedDependent,
+      setJustCreatedDependent,
       paymentInfo,setPaymentInfo,
       selectedDoctorToSchedule,
       setSelectedDoctorToSchedule,
       showFilters,
       setShowFilters,
+      getScheduledAppointment,
       handleSelectDoctorAvailability,
       selectedDoctors,
       setSelectedDoctors,
@@ -339,6 +361,7 @@ export const DataProvider = ({ children }) => {
       _appointments,
       _specialty_categories,
       _patients,
+      _dependents,
       _doctors,
       _clinical_diary,
       _closeAllPopUps,
@@ -359,7 +382,10 @@ export const DataProvider = ({ children }) => {
       getParamsFromFilters,
       _medical_prescriptions,
       _exams,
-      _years_of_experience
+      _years_of_experience,
+      setDependents,
+      _appointment_invoices,
+      _doctor_requests
     };
 
 

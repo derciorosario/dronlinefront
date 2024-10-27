@@ -13,22 +13,54 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
   const [auth, setAuth] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+   
   
   let env="dev"
   const APP_BASE_URL  = env =="pro" ? "https://dronline-server.derflash.online": 'http://127.0.0.1:8000'
   const SERVER_FILE_STORAGE_PATH=`storage/uploads`
      
-
   const login = (userData, authToken) => {
     setUser(userData);
     setToken(authToken);
-   // if(localStorage.getItem('token')) localStorage.setItem('token', authToken);
+   
   };
 
-  const logout = () => {
-    setUser(null);
-    setToken(null);
+
+    async function logoutFromServer(){
+         try{
+           await makeRequest({method:'post',url:'api/logout',withToken:true, error: ``},0);
+         }catch(e){
+           console.log({e})
+           if(e.message=='Failed to fetch'){
+            return false
+           }
+         }
+         return true
+    }
+
+    const logout =  async() => {
+
+     
+      if(!window.location.href.includes('/login')) {
+        setIsLoading(true)
+     }
+
+
+     if(localStorage.getItem('token')){
+      if(!await logoutFromServer()){
+        toast.error(t('common.check-network'))
+        setIsLoading(false)
+        return
+      }
+     }
+     
+
+     
+
+    
     localStorage.removeItem('token');
+
 
     if(!window.location.href.includes('/login')) {
        window.location.href="/login"
@@ -41,27 +73,23 @@ export const AuthProvider = ({ children }) => {
 
 
 
-
-
-
-
     useEffect(() => {
 
 
       const fetchUserData = async () => {
         try {
          
-          let response=await makeRequest({method:'get',url:`api/user`, error: ``,withToken:true},0);
-         
+          let response=await makeRequest({method:'get',url:`api/user`, error: ``,withToken:true},5);
           login(response, localStorage.getItem('token'));
           setAuth(true)
         } catch (error) {
           console.log({error})
           console.error('Error fetching user data:', error);
           setLoading(false)
-          //logout()
+          localStorage.removeItem('token')
+          logout()
         } finally {
-          setLoading(false);
+         // setLoading(false);
         }
       };
 
@@ -162,17 +190,14 @@ export const AuthProvider = ({ children }) => {
 
         })
 
-        console.log({result,url})
-
-
         return  result;
     
       } catch (error) {
         console.error('Error making request:', error);
 
         if(error.message=="401"){
-           toast.error(t('common.session-expired'))
-           setTimeout(()=>logout(),100)
+           //toast.error(t('common.session-expired'))
+           //setTimeout(()=>logout(),100)
         }
     
         if (maxRetries > 0) {
@@ -187,7 +212,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{APP_BASE_URL, user, login,SERVER_FILE_STORAGE_PATH, makeRequest,logout, isAuthenticated , loading, setUser, setLoading, token,auth}}>
+    <AuthContext.Provider value={{isLoading, setIsLoading,APP_BASE_URL, user, login,SERVER_FILE_STORAGE_PATH, makeRequest,logout, isAuthenticated , loading, setUser, setLoading, token,auth}}>
       {children}
     </AuthContext.Provider>
   );

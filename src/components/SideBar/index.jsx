@@ -11,6 +11,8 @@ import schedulerIcon from '../../assets/images/menu-icons/scheduler.svg'
 import SettingsIcon from '../../assets/images/menu-icons/settings.svg'
 import ExamIcon from '../../assets/images/menu-icons/exams.svg'
 import FindDoctorIcon from '../../assets/images/menu-icons/find-doctors.svg'
+import DependentIcon from '../../assets/images/menu-icons/dependent.svg'
+import PaymentManagement from '../../assets/images/menu-icons/payment-management.svg' 
 
 import { t } from 'i18next';
 import { useAuth } from '../../contexts/AuthContext';
@@ -24,19 +26,32 @@ function SideBar() {
     const menuItems = [
       {name:t('menu.home'),path:'/',paths:['/'],field:'dashboard',icon:'dashboard',access:['all']},
       {name:t('menu.find-a-specialist'),path:'/specialists',paths:['/specialists'],field:'specialists',icon:'find_doctor',access:['admin','patient']},
+     
       {name:t('menu.appointments'),path:'/appointments',field:'appointments',icon:'appointments',sub_menus:[
           {name:t('menu.all-appointments'),path:'/appointments',paths:['appointments','appointment/:id']},
           {name:t('menu.add-appointments'),path:'/add-appointments',paths:['add-appointments'],access:['patient']},
       ],access:['all']},
+
+      {name:t('menu.family'),path:'/dependents',field:'dependents',icon:'dependent',sub_menus:[
+        {name:t('menu.all-family'),path:'/dependents',paths:['dependents','dependent/:id']},
+        {name:t('menu.add-family'),path:'/add-dependent',paths:['add-dependent'],access:['patient']},
+      ],access:['admin','patient']},
+      
+
       {name:user?.role=="doctor" ? t('menu.my-patients') : t('menu.patients'),path:'/patients',field:'patients',icon:'patient',sub_menus:[
         {name:t('menu.all-patients'),path:'/patients',paths:['patients','patient/:id']},
         {name:t('menu.add-patients'),path:'/add-patient',paths:['add-patient'],access:['admin']},
       ],access:['admin','doctor']},
+
       {name:t('menu.doctors'),path:'/doctors',field:'doctors',icon:'doctor',sub_menus:[
         {name:t('menu.doctors'),path:'/doctors',paths:['doctors','doctor/:id']},
         {name:t('menu.add-doctors'),path:'/add-doctors',paths:['add-doctors']},
-        {name:t('menu.specialty-categories'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category']},        
+        {name:t('menu.specialty-categories'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category']},  
+        {name:t('menu.membership-requests'),path:'/membership-requests',paths:['/membership-requests','/membership-requests/:id'],field:'membership-requests',access:['admin']},
       ],access:['admin']},
+        
+      
+
       /* {name:t('menu.medical-prescription'),path:'/medical-prescription',paths:['/medical-prescription'],field:'medical-prescription',icon:'medical_prescription',sub_menus:[
         {name:t('menu.all-medical-prescription'),path:'/medical-prescription',paths:['medical-prescription','medical-prescription/:id']},
         {name:t('menu.add-medical-prescription'),path:'/add-medical-prescription',paths:['add-medical-prescription']},
@@ -51,9 +66,12 @@ function SideBar() {
         {name:t('menu.all-exams'),path:'/exams',paths:['exams','exams/:id']},
         {name:t('menu.add-exams'),path:'/add-exams',paths:['add-exams'],access:['doctor']},
       ],access:['all']},*/
-     
+
+    
       {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient']},
       
+      {name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin']},
+
       {name:t('menu.settings'),path:'/profile',field:'settings',icon:'settings',sub_menus:[
         {name:t('menu.profile'),path:'/profile',paths:['profile'],access:['all']},
         {name:t('menu.consultation-availability'),path:'/consultation-availability',paths:['consultation-availability'],access:['doctor']},
@@ -73,7 +91,9 @@ function SideBar() {
       scheduler:schedulerIcon,
       settings:SettingsIcon,
       exams:ExamIcon,
-      find_doctor:FindDoctorIcon
+      find_doctor:FindDoctorIcon,
+      dependent:DependentIcon,
+      payment_management:PaymentManagement
   }
 
     const [menuOpen, setMenuOpen] = useState([]);

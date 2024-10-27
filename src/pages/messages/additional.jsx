@@ -6,24 +6,19 @@ function AdditionalMessage({type,setMessage,message,float,id,btnSee,btnClose,tit
   const timeoutPercentage=useRef(0)
   const [per,setPer]=useState(0)
 
-
   useEffect(() => {
     if(!message){
       timeoutPercentage.current=0
       return
     }
-
     const interval = setInterval(() => {
       timeoutPercentage.current = timeoutPercentage.current + 1;
       if(timeoutPercentage.current==100){
         setMessage('')
       }
-
       setPer(timeoutPercentage.current)
     }, 50);
-  
     return () => clearInterval(interval);
-
   }, [message]);
 
 
