@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function SelectDoctorAvailability({ item, setItem }) {
   const data = useData();
@@ -25,6 +26,7 @@ function SelectDoctorAvailability({ item, setItem }) {
   const {handleSelectDoctorAvailability,selectedDoctors,setSelectedDoctors} = useData()
   const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
   const [typeOfCare,setTypeOfCare]=useState(null)
+  const [selectedMonth,setSelectedMonth]=useState(new Date(dayjs().$d).getMonth())
 
   function getAvailableHours(item,type){
 
@@ -40,8 +42,87 @@ function SelectDoctorAvailability({ item, setItem }) {
   }
 
 
+  const months = [
+    "january", "february", "march", "april", "may", "june",
+    "july", "august", "september", "october", "november", "december"
+  ];
+   
+  useEffect(()=>{
+
+    if(!item?.id) return
+
+    const interval = setInterval(() => {
+
+            let available_days=[]
+            //let days=Array.from({ length:31 }, () => 0).map((i,_i)=>_i+1)
+           
+            let m=document.querySelector('.MuiPickersCalendarHeader-label').textContent.split(' ')[0].toLowerCase()
+            let _year=document.querySelector('.MuiPickersCalendarHeader-label').textContent.split(' ')[1]
+            let _month=months.findIndex(i=>i==m)
+            let selected_month=_month
+            
+            console.log({_year,_month})
+            
+            let d=data.getDatesForMonthWithBuffer(_month + 1, _year)
+            let weekdaysAvailability=[item.availability.weekday,item.urgent_availability.weekday]
+
+            let unavailable_dates=[]
+            if(!Array.isArray(item.availability.unavailable_specific_date)){
+                unavailable_dates=Object.keys(item.availability.unavailable_specific_date)
+            }
 
 
+            let unavailable_days=[]
+            unavailable_dates.forEach(date=>{
+              let day=new Date(date).getDate()
+              let month=new Date(date).getMonth()
+              if(month==selected_month){
+                  unavailable_days.push(day)
+              }
+            })
+
+            //console.log({unavailable_days,d})
+
+            weekdaysAvailability.forEach((a,_a)=>{
+              Object.keys(a).forEach((i,_i)=>{
+                let index=weeks.findIndex(f=>f==i)
+                d.filter(z=> new Date(z).getDay()==index && !unavailable_days.includes(new Date(z).getDate())).forEach(date=>{
+                    let day=new Date(date).getDate()
+                    let month=new Date(date).getMonth()
+                    if(month==selected_month && !available_days.includes(day)){
+                      available_days.push(day)
+                    }    
+                })
+              })  
+          })  
+
+
+          try{
+              setTimeout(()=>{
+                  document.querySelectorAll('.MuiPickersDay-root').forEach(btn=>{
+                    let day=parseInt(btn.textContent || null)
+                    if(day){
+                        if(!available_days.includes(day)){
+                              btn.style.opacity="0.4"
+                              btn.style.pointerEvents="none"
+                        }else{
+                              btn.style.opacity="1"
+                              btn.style.pointerEvents="visible"
+                        }
+                    }
+                })
+              },200)
+          }catch(e){
+            console.log(w)
+          }
+ 
+     }, 200);
+
+     return () => clearInterval(interval);
+
+  },[item])
+
+ 
   return (
     <div className={`w-full h-[100vh] bg-[rgba(0,0,0,0.2)] ease-in _doctor_list ${!item?.id ? 'opacity-0 pointer-events-none translate-y-[100px]' : ''} ease-in transition-all delay-75 fixed flex items-center justify-center z-[60]`}>
       <div className="w-full overflow-y-auto p-4 relative bg-white border border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">
@@ -64,11 +145,12 @@ function SelectDoctorAvailability({ item, setItem }) {
                     {t('common.date')}
                  </h5>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <MuiCalendar
-                    selectedDate={selectedDate}
-                    handleDateChange={handleDateChange}
-                    setSelectedDate={setSelectedDate}
-                />
+                  <MuiCalendar
+                      selectedDate={selectedDate}
+                      handleDateChange={handleDateChange}
+                      setSelectedDate={setSelectedDate}
+                      minDate={dayjs()}
+                  />
                 </LocalizationProvider>
               </div>
               <div className="flex-1">
@@ -118,8 +200,6 @@ function SelectDoctorAvailability({ item, setItem }) {
                
                             </div> 
 
-                           
-                           
 
 
                   </div>

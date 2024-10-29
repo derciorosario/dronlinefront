@@ -108,7 +108,7 @@ return (
 
   <div>
 
-  <FormLayout  hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={t('common.payment')} verified_inputs={verified_inputs} form={form}
+  <FormLayout  hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={t('menu.membership-requests')} verified_inputs={verified_inputs} form={form}
 
   topBarContent
 
@@ -129,7 +129,7 @@ return (
   <FormCard hide={!id} items={[
     {name:'ID',value:form.id},
     {name:t('form.full-name'),value:form.name},
-    {name:t('form.main-contact'),value:form?.main_contact},
+    {name:t('form.main-contact'),value:form?.contact_code +" "+form?.contact},
     {name:'Email',value:form.email},
     {name:t('form.medical-specialty'),value:form.specialty}, 
     {name:t('form.address'),value:form.address}, 

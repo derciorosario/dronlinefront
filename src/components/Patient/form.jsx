@@ -30,6 +30,9 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
   }
 
   function confirmContent({form,setForm,field}){
+
+    //console.log({aaaa:form[field],field})
+
     return (
         <>
         {form[field]!= true && <div className="flex items-center gap-x-4 mb-2">
@@ -116,7 +119,7 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
               } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'gender'])} label={t('form.gender')} onChange={(e)=>setForm({...form,gender:e.target.value})} field={'gender'} value={form.gender}/>
               
              
-              <FormLayout.Input hide={(formStep && formStep==1) || form_name!="doctor" || hideInputs} verified_inputs={verified_inputs} form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'years_of_experience'])} label={t('common.years_of_experience')} onChange={(e)=>setForm({...form,years_of_experience:e.target.value.replace(/[^0-9]/g, '')})} field={'years_of_experience'} value={form.years_of_experience}/>
+              <FormLayout.Input r={true} hide={(formStep && formStep==1)  || hideInputs || itemsToHide.includes('years_of_experience') || (form_name=="patient")} verified_inputs={verified_inputs} form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'years_of_experience'])} label={t('common.years_of_experience')} onChange={(e)=>setForm({...form,years_of_experience:e.target.value.replace(/[^0-9]/g, '')})} field={'years_of_experience'} value={form.years_of_experience}/>
          
               <FormLayout.Input 
                   verified_inputs={verified_inputs} 
@@ -395,13 +398,13 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
 
               <FormLayout.Input hide={hideInputs || formStep && formStep==2} verified_inputs={verified_inputs} form={form} selectOptions={
                [
-                 {name:t('form.identification-number'),value:'identification_number'},
+                 {name:t('form.identification-doc'),value:'identification_number'},
                  {name:t('form.birth-certificate'),value:'birth_certificate'},
-                 {name:t('form.passport-number'),value:'passport_number'}
+                 {name:t('form.passport'),value:'passport_number'}
                ]
               } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'identification_document'])} label={t('common.identification-document')} onChange={(e)=>setForm({...form,identification_document:e.target.value})} field={'identification_document'} value={form.identification_document}/>
 
-              <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="identification_number"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'identification_number'])} label={t('form.identification-number')} onChange={(e)=>setForm({...form,identification_number:e.target.value})} field={'order_number'} value={form.identification_number}/>
+              <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="identification_number"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'identification_number'])} label={t('form.identification-doc-number')} onChange={(e)=>setForm({...form,identification_number:e.target.value})} field={'order_number'} value={form.identification_number}/>
               <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="birth_certificate"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'birth_certificate'])} label={t('form.birth-certificate')} onChange={(e)=>setForm({...form,birth_certificate:e.target.value})} field={'birth_certificate'} value={form.birth_certificate}/>
               <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="passport_number"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'passport_number'])} label={t('form.passport-number')} onChange={(e)=>setForm({...form,passport_number:e.target.value})} field={'passport_number'} value={form.passport_number}/>
              

@@ -13,11 +13,8 @@ import CreateDoctors from './pages/doctors/create'
 import ConsultationAvailability from './pages/consultation-availability/index'
 import Scheduler from './pages/scheduler/index'
 import Patients from './pages/patients/index'
-import ClinicalDiary from './pages/clinical-diary/index'
 import CreateClinicalDiary from './pages/clinical-diary/create'
-import MedicalPrescription from './pages/medical-prescription/index'
 import CreateMedicalPrescription from './pages/medical-prescription/create'
-import Exams from './pages/exams/index'
 import CreateExams from './pages/exams/create'
 import Profile from './pages/profile/index'
 import Specialists from './pages/specialists/index'
@@ -29,6 +26,8 @@ import PaymentManagement from './pages/payment-management/index'
 import CreatePaymentManagement from './pages/payment-management/create'
 import DoctorRequests from './pages/doctor_requests/index'
 import CreateDoctorRequests from './pages/doctor_requests/create'
+import Managers from './pages/managers/index'
+import CreateManagers from './pages/managers/create'
 
 function App() {
 
@@ -52,6 +51,10 @@ function App() {
          
          <Route path="/add-doctors" element={<ProtectedRoute redirectTo="/login"><CreateDoctors/></ProtectedRoute>}/>
          <Route path="/doctor/:id" element={<ProtectedRoute redirectTo="/login"><CreateDoctors/></ProtectedRoute>}/>
+
+         <Route path="/managers" element={<ProtectedRoute redirectTo="/login"><Managers/></ProtectedRoute>}/>
+         <Route path="/add-managers" element={<ProtectedRoute redirectTo="/login"><CreateManagers/></ProtectedRoute>}/>
+         <Route path="/manager/:id" element={<ProtectedRoute redirectTo="/login"><CreateManagers/></ProtectedRoute>}/>
 
          <Route path="/add-patient"  element={<CreatePacient/>} />
          <Route path="/patients"  element={<Patients/>} />

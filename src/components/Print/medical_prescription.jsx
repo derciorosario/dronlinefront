@@ -67,11 +67,10 @@ function MedicalPrescriptionPrint({item,setItem}) {
 
 
 
-                <div className="w-full p-10">
+                <div className="w-full py-10">
 
                 <PrintTable header={[
-                    'ID',
-                    t('form.name'),
+                    t('form.medication-name'),
                     t('form.dosage'),
                     t('form.dosing-instructions'),
                     t('form.prescribed-quantity'),
@@ -79,7 +78,6 @@ function MedicalPrescriptionPrint({item,setItem}) {
                     t('form.pharmaceutical-form')
                 ]} body={(item?.medical_prescription_items || []).map(i=>(
                         <PrintTable.Tr>
-                            <PrintTable.Td>{i.id}</PrintTable.Td>
                             <PrintTable.Td>{i.name}</PrintTable.Td>
                             <PrintTable.Td>{i.dosage}</PrintTable.Td>
                             <PrintTable.Td>{i.dosing_instructions}</PrintTable.Td>

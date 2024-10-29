@@ -67,7 +67,6 @@ function App() {
     }
  },[data.updateTable])
 
-
   return (
    
          <DefaultLayout pageContent={{title:user?.role=="doctor" ? t('common.my-patients') : t('common.patients'),desc:user?.role=="doctor" ? t('common.my-patients') : t('titles.patients'),btn:{onClick:(e)=>{

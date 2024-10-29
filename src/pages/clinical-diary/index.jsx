@@ -122,7 +122,6 @@ function globalOnclick(id){
                                       patient: itemToShow.appointment.user,
                                       title: t('menu.clinical-diary'),
                                       content: [
-                                          {name: t('form.consultation-id'), value: itemToShow.appointment.id},
                                           {name: t('form.main-complaint'), value: i.main_complaint},
                                           {name: t('form.current-illness-history'), value: i.current_illness_history},
                                           {name: t('form.past-medical-history'), value: i.past_medical_history},

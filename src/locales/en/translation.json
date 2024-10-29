@@ -53,6 +53,7 @@
         "specialists":"Explore a nossa lista profissionais"
     },
     "form":{
+        "identification-document":"Documento de identificação",
         "short_biography":"Bibiográfia curta",
         "long_biography":"Bibiográfia longa",
         "immediate":"Imediato",
@@ -271,8 +272,10 @@
         "no-data-found":"Nenhum dado encontrado",
         "doctors":"Médicos",
         "other-documents":"Outros documentos",
-        "add-doctor":"Acualizar médico",
-        "update-doctor":"Acualizar médico",
+        "add-doctor":"Actualizar médico",
+        "update-doctor":"Actualizar médico",
+        "update-manager":"Actualizar gestor",
+        "add-manager":"Adicionar gestor",
         "you":"Você",
         "sending":"A enviar",
         "updated-added-appointment":"Actualizar consulta agendada",

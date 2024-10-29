@@ -3,8 +3,12 @@ import { useData } from '../../contexts/DataContext'
 import { t } from 'i18next'
 
 function SelectPayemntMethod({info}) {
- 
+
+
   const data=useData()
+  
+  console.log({info,a:data._specialty_categories})
+ 
   return (
     <div>
 
@@ -53,15 +57,15 @@ function SelectPayemntMethod({info}) {
           <div class="-my-3 divide-y divide-gray-200">
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('common.consult')}</dt>
-              <dd class="text-base font-medium text-gray-900">{info?.medical_specialty}</dd>
+              <dd class="text-base font-medium text-gray-900">{data._specialty_categories.filter(i=>i.id==info?.medical_specialty)[0]?.pt_name}</dd>
             </dl>
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('form.type-of-care')}</dt>
-              <dd class="text-base font-medium text-gray-900">{info?.type_of_care}</dd>
+              <dd class="text-base font-medium text-gray-900">{t('form.'+info?.type_of_care+"-c")}</dd>
             </dl>
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('common.doctor')}</dt>
-              <dd class="text-base font-medium text-gray-900">{info?.doctor?.name}</dd>
+              <dd class="text-base font-medium text-gray-900">{(data._doctors.data || []).filter(i=>i.id==info?.doctor_id)[0]?.name}</dd>
             </dl>
 
             <dl class="flex items-center justify-between gap-4 py-3">

@@ -13,6 +13,7 @@ import ExamIcon from '../../assets/images/menu-icons/exams.svg'
 import FindDoctorIcon from '../../assets/images/menu-icons/find-doctors.svg'
 import DependentIcon from '../../assets/images/menu-icons/dependent.svg'
 import PaymentManagement from '../../assets/images/menu-icons/payment-management.svg' 
+import managersIcon from '../../assets/images/menu-icons/managers.svg'
 
 import { t } from 'i18next';
 import { useAuth } from '../../contexts/AuthContext';
@@ -24,59 +25,45 @@ function SideBar() {
     const {user} = useAuth()
 
     const menuItems = [
-      {name:t('menu.home'),path:'/',paths:['/'],field:'dashboard',icon:'dashboard',access:['all']},
+      {name:t('menu.home'),path:'/',paths:['/'],field:'dashboard',icon:'dashboard',access:['all'],manager_access:true},
       {name:t('menu.find-a-specialist'),path:'/specialists',paths:['/specialists'],field:'specialists',icon:'find_doctor',access:['admin','patient']},
      
       {name:t('menu.appointments'),path:'/appointments',field:'appointments',icon:'appointments',sub_menus:[
-          {name:t('menu.all-appointments'),path:'/appointments',paths:['appointments','appointment/:id']},
+          {name:t('menu.all-appointments'),path:'/appointments',paths:['appointments','appointment/:id'],manager_access:true},
           {name:t('menu.add-appointments'),path:'/add-appointments',paths:['add-appointments'],access:['patient']},
-      ],access:['all']},
+      ],access:['all'],manager_access:{name:'appointments',per:['read']}},
 
       {name:t('menu.family'),path:'/dependents',field:'dependents',icon:'dependent',sub_menus:[
         {name:t('menu.all-family'),path:'/dependents',paths:['dependents','dependent/:id']},
         {name:t('menu.add-family'),path:'/add-dependent',paths:['add-dependent'],access:['patient']},
-      ],access:['admin','patient']},
-      
+      ],access:['patient']},
 
       {name:user?.role=="doctor" ? t('menu.my-patients') : t('menu.patients'),path:'/patients',field:'patients',icon:'patient',sub_menus:[
-        {name:t('menu.all-patients'),path:'/patients',paths:['patients','patient/:id']},
-        {name:t('menu.add-patients'),path:'/add-patient',paths:['add-patient'],access:['admin']},
-      ],access:['admin','doctor']},
+        {name:t('menu.all-patients'),path:'/patients',paths:['patients','patient/:id'],manager_access:{name:'patient',per:['read','delete']}},
+        {name:t('menu.add-patients'),path:'/add-patient',paths:['add-patient'],access:['admin'],manager_access:{name:'patient',per:['create','update']}},
+      ],access:['admin','doctor'],manager_access:{name:'patient',per:['read']}},
 
       {name:t('menu.doctors'),path:'/doctors',field:'doctors',icon:'doctor',sub_menus:[
-        {name:t('menu.doctors'),path:'/doctors',paths:['doctors','doctor/:id']},
-        {name:t('menu.add-doctors'),path:'/add-doctors',paths:['add-doctors']},
-        {name:t('menu.specialty-categories'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category']},  
-        {name:t('menu.membership-requests'),path:'/membership-requests',paths:['/membership-requests','/membership-requests/:id'],field:'membership-requests',access:['admin']},
+        {name:t('menu.doctors'),path:'/doctors',paths:['doctors','doctor/:id'],manager_access:{name:'doctor',per:['read','delete']}},
+        {name:t('menu.add-doctors'),path:'/add-doctors',paths:['add-doctors'],manager_access:{name:'doctor',per:['create','update']}},
+        {name:t('menu.specialty-categories'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category'],manager_access:{name:'specialty_categories',per:['read','create','update','delete']}},  
+        {name:t('menu.membership-requests'),path:'/membership-requests',paths:['/membership-requests','/membership-requests/:id'],field:'membership-requests',access:['admin'],manager_access:{name:'doctor_requests',per:['read','approve','reject']}},
+      ],access:['admin'],manager_access:{name:'doctor',per:['read']},permission_pedendents:['doctor_requests']},
+
+      {name:t('menu.managers'),path:'/managers',field:'managers',icon:'manager',sub_menus:[
+        {name:t('menu.managers'),path:'/managers',paths:['managers','manager/:id']},
+        {name:t('menu.add-managers'),path:'/add-managers',paths:['add-managers'],},
       ],access:['admin']},
-        
-      
-
-      /* {name:t('menu.medical-prescription'),path:'/medical-prescription',paths:['/medical-prescription'],field:'medical-prescription',icon:'medical_prescription',sub_menus:[
-        {name:t('menu.all-medical-prescription'),path:'/medical-prescription',paths:['medical-prescription','medical-prescription/:id']},
-        {name:t('menu.add-medical-prescription'),path:'/add-medical-prescription',paths:['add-medical-prescription']},
-      ],access:['all']},
-   
-    {name:t('menu.clinical-diary'),path:'/clinical-diary',field:'clinical-diary',icon:'clinical_diary',sub_menus:[
-        {name:t('menu.all-clinical-diary'),path:'/all-clinical-diary',paths:['clinical-diary','clinical-diary/:id']},
-        {name:t('menu.add-clinical-diary'),path:'/add-clinical-diary',paths:['add-clinical-diary'],access:['doctor']},
-      ],access:['all']},
-
-      {name:t('menu.exams'),path:'/exams',paths:['/exams'],field:'exams',icon:'exams',sub_menus:[
-        {name:t('menu.all-exams'),path:'/exams',paths:['exams','exams/:id']},
-        {name:t('menu.add-exams'),path:'/add-exams',paths:['add-exams'],access:['doctor']},
-      ],access:['all']},*/
-
     
       {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient']},
       
-      {name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin']},
+      {name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
 
       {name:t('menu.settings'),path:'/profile',field:'settings',icon:'settings',sub_menus:[
-        {name:t('menu.profile'),path:'/profile',paths:['profile'],access:['all']},
-        {name:t('menu.consultation-availability'),path:'/consultation-availability',paths:['consultation-availability'],access:['doctor']},
+        {name:t('menu.profile'),path:'/profile',paths:['profile'],access:['all'],manager_access:true},
+        {name:t('menu.consultation-availability'),path:'/consultation-availability',paths:['consultation-availability'],access:['doctor']}, //manager_access:{name:'doctor_availability',per:['read','update']}
        
-      ],access:['patient','doctor']},
+      ],access:['patient','doctor','admin','manager'],manager_access:true},
 
   ]
 
@@ -93,7 +80,8 @@ function SideBar() {
       exams:ExamIcon,
       find_doctor:FindDoctorIcon,
       dependent:DependentIcon,
-      payment_management:PaymentManagement
+      payment_management:PaymentManagement,
+      manager:managersIcon
   }
 
     const [menuOpen, setMenuOpen] = useState([]);
@@ -130,9 +118,36 @@ function SideBar() {
     
   function checkAccess(item,isSub){
 
+
       if(!isSub){
+
+         if(user?.role=="manager" && user){
+
+
+               let show=false
+              
+              if(item.permission_pedendents){
+                item.permission_pedendents.forEach(d=>{
+                      if(user.data.permissions[d].includes('read')){
+                         show=true
+                     }
+                })
+              }
+
+              
+
+              return show || user.data.permissions[item.manager_access?.name]?.some(i=>item.manager_access?.per?.includes(i)) || item.manager_access==true
+         }
+       
          return item.access.includes(user?.role) || item.access.includes('all')
+
+
       }else{
+
+         if(user?.role=="manager" && user){
+           return user.data.permissions[item.manager_access?.name]?.some(i=>item.manager_access?.per?.includes(i)) || item.manager_access==true
+         }
+
         return  item.access?.includes(user?.role) || !item.access || item.access?.includes('all')
       }
 
@@ -198,7 +213,9 @@ function SideBar() {
                                   {checkActive(item) && <span className="bg-honolulu_blue-500 w-[3px]  rounded-[0.3rem] h-full flex absolute left-0 top-0"></span>}
                                   <img onClick={()=>navigate(item.path)} src={images[item.icon]} className="mr-4"/>
                                   <div className="flex justify-between flex-1">
-                                       <a onClick={()=>navigate(item.path)}
+                                       <a onClick={()=>{
+                                         if(!item.sub_menus) navigate(item.path)
+                                       }}
                                           className={`${checkActive(item) ? 'text-honolulu_blue-500 font-medium':''} hover:text-honolulu_blue-500`}
                                        >
                                           {item.name}

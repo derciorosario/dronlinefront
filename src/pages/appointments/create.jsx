@@ -13,6 +13,7 @@ import Comment from '../../components/modals/comments'
 import Loader from '../../components/Loaders/loader'
 import AppointmentItems from '../../components/Cards/appointmentItems'
 import SearchInput from '../../components/Inputs/search'
+import { format } from 'date-fns'
 
 function addAppointments({ShowOnlyInputs}) {
 
@@ -98,8 +99,12 @@ function addAppointments({ShowOnlyInputs}) {
        (selectedDoctor.status!="selected" && form.type_of_care!="requested") ||
        !form.reason_for_consultation ||
        !form.type_of_care ||
-        form.is_for_dependent==null ||
-        (form.is_for_dependent && !form.dependent_id)
+       form.is_for_dependent==null ||
+       (form.is_for_dependent && !form.dependent_id) ||
+       ((!form.scheduled_hours || !form.consultation_date) && form.type_of_care=="requested")
+
+
+      
 
     ){
       v=false
@@ -244,6 +249,7 @@ useEffect(()=>{
 
         let response=await data.makeRequest({method:'post',url:`api/appointments`,withToken:true,data:{
           ...form,
+          scheduled_date:form.type_of_care=="requested" ? form.consultation_date : form.scheduled_date,
           dependent_id:form.is_for_dependent ? form.dependent_id : null
         }, error: ``},0);
 
@@ -370,7 +376,7 @@ useEffect(()=>{
 
     if(!user?.data?.date_of_birth){
        data._showPopUp('basic_popup','conclude_patient_info')
-    }else if(localStorage.getItem('saved_appointment_url')){
+    }else if(localStorage.getItem('saved_appointment_url') && !id){
        data._showPopUp('basic_popup','you-have-saved-appointment')
     }
 
@@ -622,11 +628,38 @@ return (
           
         </div>
         
-      
-      
-        
-
       </div>
+
+      
+
+         
+    <FormLayout.Input 
+        verified_inputs={verified_inputs} 
+        form={form} 
+        r={true} 
+        type={'date'}
+        onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-date'])} 
+        label={t('form.consultation-date')} 
+        onChange={(e) => setForm({...form, consultation_date: e.target.value})} 
+        field={'consultation_date'} 
+        hide={form.type_of_care!="requested"}
+        value={form.consultation_date}
+      />
+
+      <FormLayout.Input 
+        verified_inputs={verified_inputs} 
+        form={form} 
+        r={true} 
+        type={'time'}
+        hide={form.type_of_care!="requested"}
+        onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-hour'])} 
+        label={t('form.consultation-hour')} 
+        onChange={(e) => setForm({...form, scheduled_hours: e.target.value})} 
+        field={'consultation_date'} 
+        value={form.scheduled_hours}
+      />
+
+
       
     <FormLayout.Input 
         verified_inputs={verified_inputs} 

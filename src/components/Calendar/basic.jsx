@@ -66,36 +66,7 @@ const Calendar = ({items}) => {
 
   
   
-  function getDatesForMonthWithBuffer(month, year) {
-    
-    if (month < 1 || month > 12) {
-      throw new Error("Invalid month. Month must be between 1 and 12.");
-    }
   
-    const firstDay = new Date(year, month - 1, 1);
-    const lastDay = new Date(year, month, 0);
-  
-    const dates = [];
-  
-    const previousMonthLastDay = new Date(year, month - 1, 0);
-    const previousMonthStartDay = previousMonthLastDay.getDate() - 4;
-  
-    for (let day = previousMonthStartDay; day <= previousMonthLastDay.getDate(); day++) {
-      dates.push(new Date(year, month - 2, day).toISOString().split('T')[0]);
-    }
-  
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-      dates.push(new Date(year, month - 1, day).toISOString().split('T')[0]);
-    }
-  
-    for (let day = 1; day <= 5; day++) {
-      dates.push(new Date(year, month, day).toISOString().split('T')[0]);
-    }
-  
-    setDates(dates)
-    return dates
-
-  }
   
   useEffect(()=>{
 
@@ -105,7 +76,7 @@ const Calendar = ({items}) => {
 
     if(!doctorData) return
     
-    let d=getDatesForMonthWithBuffer(currentDate.getMonth() + 1, currentDate.getFullYear())
+    let d=data.getDatesForMonthWithBuffer(currentDate.getMonth() + 1, currentDate.getFullYear())
 
     let _events=[]
 
@@ -170,7 +141,7 @@ const Calendar = ({items}) => {
   }
 
 
-  },[currentDate,doctorData,data._loaded])
+  },[currentDate,doctorData,data._loaded,data.updateTable])
 
   const handleDateChange = (date) => {
     const currentMonth = date.toLocaleString("default", { month: "long" });

@@ -246,9 +246,9 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
                     <div className={`${user?.role!="patient" ? 'hidden':''}`}>
                       <span className="flex mb-5 items-center hidden">{t('common.documents')}  <label className="text-[0.9rem] ml-2">({t('messages.add-atleast-one-document')})</label> <span className="text-red-500">*</span></span>
                       <div className="flex gap-x-4 flex-wrap gap-y-8 mt-5">
-                          {form.identification_document=="identification_number" &&  <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-number')} r={true}/>}
+                          {form.identification_document=="identification_number" &&  <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-doc')} r={true}/>}
                           {form.identification_document=="birth_certificate" &&  <FileInput _upload={{key:'birth_certificate_filename',filename:form.birth_certificate_filename}} res={handleUploadedFiles} label={t('form.birth-certificate')} r={true}/>}
-                          {form.identification_document=="passport_number" &&  <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport-number')} r={true}/>}
+                          {form.identification_document=="passport_number" &&  <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport')} r={true}/>}
                       </div>
                     </div>
                 </>
@@ -286,7 +286,7 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
                       </div>
             </div>
 
-            <PatientForm hideInputs={user?.role!="patient"} setForm={setForm}  form_name={'dependent'} hide={user?.role=="doctor"}  itemsToHide={['password','medical-specialty','order-number','short_biography','long_biography']} form={form}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
+            <PatientForm hideInputs={user?.role!="patient"} setForm={setForm}  form_name={'dependent'} hide={user?.role=="doctor"}  itemsToHide={['password','medical-specialty','order-number','short_biography','long_biography','years_of_experience']} form={form}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
 
             </FormLayout>
        </>

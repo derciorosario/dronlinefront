@@ -111,8 +111,9 @@ export const DataProvider = ({ children }) => {
     const [_dependents,setDependents]=useState([])
     const [_appointment_invoices,setAppointmentInvoices]=useState([])
     const [_doctor_requests,setDoctorRequests]=useState([])
+    const [_managers,setManagers]=useState([])
+
     const [updateTable,setUpdateTable]=useState(null)
-    
 
     let dbs=[
 
@@ -126,7 +127,8 @@ export const DataProvider = ({ children }) => {
       {name:'medical_prescriptions',update:setMedicalPrescriptions,get:_medical_prescriptions},
       {name:'dependents',update:setDependents,get:_dependents},
       {name:'appointment_invoices',update:setAppointmentInvoices,get:_appointment_invoices},
-      {name:'doctor_requests',update:setDoctorRequests,get:_doctor_requests}
+      {name:'doctor_requests',update:setDoctorRequests,get:_doctor_requests},
+      {name:'managers',update:setManagers,get:_managers}
 
     ]
     
@@ -308,6 +310,38 @@ export const DataProvider = ({ children }) => {
     }
 
 
+    function getDatesForMonthWithBuffer(month, year) {
+    
+      if (month < 1 || month > 12) {
+        throw new Error("Invalid month. Month must be between 1 and 12.");
+      }
+    
+      const firstDay = new Date(year, month - 1, 1);
+      const lastDay = new Date(year, month, 0);
+    
+      const dates = [];
+    
+      const previousMonthLastDay = new Date(year, month - 1, 0);
+      const previousMonthStartDay = previousMonthLastDay.getDate() - 4;
+    
+      for (let day = previousMonthStartDay; day <= previousMonthLastDay.getDate(); day++) {
+        dates.push(new Date(year, month - 2, day).toISOString().split('T')[0]);
+      }
+    
+      for (let day = 1; day <= lastDay.getDate(); day++) {
+        dates.push(new Date(year, month - 1, day).toISOString().split('T')[0]);
+      }
+    
+      for (let day = 1; day <= 5; day++) {
+        dates.push(new Date(year, month, day).toISOString().split('T')[0]);
+      }
+    
+      //setDates(dates)
+      return dates
+  
+    }
+
+
 
     function getScheduledAppointment(){
 
@@ -332,6 +366,7 @@ export const DataProvider = ({ children }) => {
 
     const value = {
       singlePrintContent,
+      getDatesForMonthWithBuffer,
       setSinglePrintContent,
       isLoading, setIsLoading,
       justCreatedDependent,
@@ -361,6 +396,7 @@ export const DataProvider = ({ children }) => {
       _appointments,
       _specialty_categories,
       _patients,
+      _managers,
       _dependents,
       _doctors,
       _clinical_diary,

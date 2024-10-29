@@ -3,6 +3,7 @@ import { useData } from '../../contexts/DataContext'
 import Logo from '../../assets/images/dark-logo-1.png'
 import { t } from 'i18next'
 import FormCard from '../Cards/form'
+import PrintTable from '../Tables/print'
 export default function SinglePrint({item,setItem}) {
     const data=useData()
 
@@ -39,11 +40,10 @@ export default function SinglePrint({item,setItem}) {
                          <span>Pro. No:</span>
                          <span className="flex border-b border-black ml-4 min-w-[200px]">{item?.id}</span>
                      </div>
-  
                  </div>
   
   
-                 <div className="flex px-5 mt-10 justify-between">
+                 <div className="flex px-5 mt-10 justify-between hidden">
   
                      <div className="flex flex-col justify-end items-end">
                           <span>Endereço:</span>
@@ -58,19 +58,25 @@ export default function SinglePrint({item,setItem}) {
                          <span>Tel:</span>
                          <span className="flex border-b border-black ml-4 min-w-[200px]">{item?.patient?.main_contact}</span>
                      </div>
-  
-                 </div>
-  
-  
-  
-  
-  
-                 <div className="w-full py-10">
-                    <FormCard printMode={true} items={(item?.content || [])}/>
-                 </div>
-  
-  
-  
+
+                   </div>
+
+                    {/**** <div className="w-full py-10">
+                        <FormCard printMode={true} items={(item?.content || [])}/>
+                    </div> */}
+                 
+                    <div className="w-full py-10">
+
+                    <PrintTable header={[t('common.name'),'']} body={(item?.content || []).filter(i=>i.name || i.value).map(i=>(
+                            <PrintTable.Tr>
+                                    <PrintTable.Td>{i.name}</PrintTable.Td>
+                                    <PrintTable.Td>{i.value}</PrintTable.Td>
+                          </PrintTable.Tr>
+                    ))}>
+                        
+                    </PrintTable>
+
+                    </div>
   
   
                  <div className="flex-1 flex flex-col justify-end">

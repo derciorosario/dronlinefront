@@ -50,6 +50,10 @@ function Header({pageContent}) {
                       
                   }} className="ml-7 _header_user_dropdown relative bg-gray-100 rounded-[0.3rem] py-1 px-2.5 cursor-pointer flex justify-center items-center">
                     
+                    <div className="absolute bottom-0 right-1 translate-y-[0.7rem]">
+                          <span className="bg-honolulu_blue-500 px-1 py-[0.05rem] text-white rounded-[0.3rem] text-[0.7rem]">{t('common.'+user?.role)}</span>
+                    </div>
+
                     <div class="relative inline-flex items-center justify-center w-8 h-8  bg-gray-200 rounded-full mr-3">
                         <span class="font-medium text-gray-600">{user?.name?.charAt()?.toLocaleUpperCase()}</span>
                     </div>

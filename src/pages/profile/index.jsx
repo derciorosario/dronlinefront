@@ -117,7 +117,8 @@ function index() {
       if(formStep==1 && currentPage=="personal-info"){
 
         if(
-          !form.name ||
+
+           !form.name ||
            !form.email ||
            !form.address ||
            !form.gender ||
@@ -136,6 +137,7 @@ function index() {
            !form.nationality ||
            !form.marital_status ||
            !form.country_of_residence 
+
         ){
           v=false
         }
@@ -152,6 +154,14 @@ function index() {
       setValid(v)
       console.log({form})
    },[form,currentPage])
+
+
+
+   useEffect(()=>{
+       if((user?.role=="manager" || user?.role=="admin") && currentPage=="personal-info"){
+           setCurrentPage('login-and-password')
+       }
+   },[user])
 
    
 
@@ -275,7 +285,9 @@ function index() {
           
              <div className="w-[300px] p-3 rounded-[0.3rem] bg-white">
                   
-                    <div className="w-[170px] flex items-center justify-center h-[170px] rounded-full bg-gray-200 relative mx-auto">                
+                    <div onClick={()=>{
+                       alert('Still in development!')
+                    }} className="w-[170px] flex items-center justify-center h-[170px] rounded-full bg-gray-200 relative mx-auto">                
                            <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960"  fill="#5f6368"><path d="M480-260q75 0 127.5-52.5T660-440q0-75-52.5-127.5T480-620q-75 0-127.5 52.5T300-440q0 75 52.5 127.5T480-260Zm0-80q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM160-120q-33 0-56.5-23.5T80-200v-480q0-33 23.5-56.5T160-760h126l74-80h240l74 80h126q33 0 56.5 23.5T880-680v480q0 33-23.5 56.5T800-120H160Zm0-80h640v-480H638l-73-80H395l-73 80H160v480Zm320-240Z"/></svg> 
                            <div className="absolute cursor-pointer active:opacity-50 right-0 bottom-6 rounded-full w-[30px] h-[30px] bg-honolulu_blue-400 flex items-center justify-center">
                               <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"  fill="#fff"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
@@ -289,7 +301,7 @@ function index() {
                     </div>
 
                     <div className="mt-4 px-3 gap-y-2">
-                        {pages.map(i=>(
+                        {pages.filter(i=>i.name!="personal-info" || (user?.role=="patient" || user?.role=="doctor")).map(i=>(
                             <div onClick={()=>{
                                   if(i.name=="logout"){
                                     data._showPopUp('confim_message',t('common.sure-to-logout'))
@@ -343,8 +355,8 @@ function index() {
                         {currentPage=="login-and-password" && <LoginPage setForm={setForm} form={form} verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>}
                     </div>
 
-                    
-                   {user?.role=="patient" && <div className={`${user?.role=="doctor" ? 'hidden':''} mt-10`}>
+                     
+                   {(user?.role=="patient" || currentPage=="login-and-password") && <div className={`${user?.role=="doctor" ? 'hidden':''} mt-10`}>
                           <FormLayout.Button onClick={()=>{
                              if(currentPage=="personal-info"){
                               SubmitForm()

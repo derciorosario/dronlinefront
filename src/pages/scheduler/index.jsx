@@ -33,13 +33,11 @@ function index() {
             title:`C. ${data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.pt_name} ${i.scheduled_hours}`,
             start: new Date(`${i.consultation_date.replaceAll('-','/')} ${i.scheduled_hours}`),
             end: new Date(`${i.consultation_date.replaceAll('-','/')} ${data.timeAfter30Minutes(i.scheduled_hours)}`),
-            color: i.status=="pending" ? 'orange':'blue',
+            color: i.status=="pending" ? 'gray':i.status=="paid" ? 'orange' : i.status=="canceled" ? 'red' : 'blue',
       })))
 
 
-
-
-},[data._appointments,data._specialty_categories])
+},[data._appointments,data._specialty_categories,data.updateTable])
   
 
 

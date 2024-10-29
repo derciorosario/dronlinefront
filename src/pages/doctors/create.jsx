@@ -88,7 +88,8 @@ function addPatients({ShowOnlyInputs}) {
        !form.residential_address ||
        !form.nationality ||
        !form.marital_status ||
-       !form.country_of_residence 
+       !form.country_of_residence ||
+       !form.years_of_experience
     
     ){
        v=false
@@ -137,7 +138,6 @@ function addPatients({ShowOnlyInputs}) {
 
       console.log({e})
 
-      return
 
       if(e.message==404){
          toast.error(t('common.item-not-found'))
@@ -263,19 +263,17 @@ function addPatients({ShowOnlyInputs}) {
               <DefaultFormSkeleton/>
             </div>}
 
-           <FormLayout hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={t('common.add-doctor')} verified_inputs={verified_inputs} form={form}
+           <FormLayout hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={id ? t('common.update-doctor') : t('common.add-doctor')} verified_inputs={verified_inputs} form={form}
            
             bottomContent={(
                 <div className="mt-5">
-                   
-                
                 
                   <span className="flex mb-5 items-center hidden">{t('common.documents')}  <label className="text-[0.9rem] ml-2">({t('messages.add-atleast-one-document')})</label> <span className="text-red-500">*</span></span>
+                  
                   <div className="flex gap-x-4 flex-wrap gap-y-8">
-                      {form.identification_document=="identification_number" &&  <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-number')} r={true}/>}
+                      {form.identification_document=="identification_number" &&  <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-doc')} r={true}/>}
                       {form.identification_document=="birth_certificate" &&  <FileInput _upload={{key:'birth_certificate_filename',filename:form.birth_certificate_filename}} res={handleUploadedFiles} label={t('form.birth-certificate')} r={true}/>}
-                      {form.identification_document=="passport_number" &&  <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport-number')} r={true}/>}
-                
+                      {form.identification_document=="passport_number" &&  <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport')} r={true}/>}
                   </div>
 
                   <span className="flex mb-5 items-center mt-8">
