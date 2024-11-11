@@ -28,9 +28,17 @@ import DoctorRequests from './pages/doctor_requests/index'
 import CreateDoctorRequests from './pages/doctor_requests/create'
 import Managers from './pages/managers/index'
 import CreateManagers from './pages/managers/create'
+import AppointmentFeedback from './pages/feedback/appointment-feedback.jsx'
+import AppFeedback from './pages/feedback/app-feedback.jsx'
+import Invoice from './pages/invoice/index.jsx'
+import Faq from './pages/faq/index.jsx'
+import CreateFaq from './pages/faq/create.jsx'
+import Logs from './pages/logs/index.jsx'
+import UserActivities from './pages/user-activities/index.jsx'
+import Refunds from './pages/refunds/index.jsx'
+import CreateRefunds from './pages/refunds/create.jsx'
 
 function App() {
-
   return (
     <Router>
 
@@ -60,12 +68,24 @@ function App() {
          <Route path="/patients"  element={<Patients/>} />
          <Route path="/patient/:id"  element={<CreatePacient/>} />
 
+         <Route path="/appointment-feedback"  element={<AppointmentFeedback/>} />
+         <Route path="/app-feedback"  element={<AppFeedback/>} />
+
          <Route path="/add-dependent"  element={<CreateDependents/>} />
          <Route path="/dependents"  element={<Dependents/>} />
          <Route path="/dependent/:id"  element={<CreateDependents/>} />
 
+         <Route path="/faqs"  element={<Faq/>} />
+         <Route path="/faq/:id"  element={<CreateFaq/>} />
+         <Route path="/add-faq"  element={<CreateFaq/>} />
+
+         <Route path="/invoice/:id"  element={<Invoice/>} />
+
          <Route path="/payment-management" element={<PaymentManagement/>} />
          <Route path="/payment-management/:id" element={<CreatePaymentManagement/>} />
+
+         <Route path="/refunds" element={<Refunds/>} />
+         <Route path="/refund/:id" element={<CreateRefunds/>} />
 
          <Route path="/membership-requests" element={<DoctorRequests/>} />
          <Route path="/membership-requests/:id" element={<CreateDoctorRequests/>} />
@@ -85,8 +105,12 @@ function App() {
          <Route path="/profile" element={<Profile/>} />  
 
          <Route path="/consultation-availability"  element={<ConsultationAvailability/>} />
+         <Route path="/consultation-availability/:id"  element={<ConsultationAvailability/>} />
 
          <Route path="/scheduler"  element={<Scheduler/>} />
+
+         <Route path="/logs"  element={<Logs/>} />
+         <Route path="/user-activities"  element={<UserActivities/>} />
 
          <Route path="*" element={<NotFound />} />
 

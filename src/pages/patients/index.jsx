@@ -67,9 +67,17 @@ function App() {
     }
  },[data.updateTable])
 
+ useEffect(()=>{
+  if(!user) return
+  if(user?.role=="manager" && !user?.data?.permissions?.patient?.includes('read')){
+         navigate('/') 
+  }
+},[user])
+
+
   return (
    
-         <DefaultLayout pageContent={{title:user?.role=="doctor" ? t('common.my-patients') : t('common.patients'),desc:user?.role=="doctor" ? t('common.my-patients') : t('titles.patients'),btn:{onClick:(e)=>{
+         <DefaultLayout pageContent={{title:user?.role=="doctor" ? t('common.my-patients') : t('common.patients'),desc:user?.role=="doctor" ? t('common.my-patients') : t('titles.patients'),btn:!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.patient?.includes('create'))) ? null : {onClick:(e)=>{
                  
              navigate('/add-patient')
 
@@ -90,7 +98,7 @@ function App() {
 
 
                            <BaiscTable canAdd={user?.role=="admin"}  addPath={'/add-patient'} loaded={data._loaded.includes('patients')} header={[
-                          user?.role=="doctor" ? null : <BaiscTable.MainActions options={{
+                          user?.role=="doctor" ? null : <BaiscTable.MainActions hide={!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.patient?.includes('delete')))} options={{
                           deleteFunction:'default',
                           deleteUrl:'api/patients/delete'}
                          } items={data._patients?.data || []}/>,
@@ -110,7 +118,7 @@ function App() {
                               <BaiscTable.Tr>
                                 <BaiscTable.Td hide={user?.role=="doctor"}>
 
-                                  <BaiscTable.Actions options={{
+                                  <BaiscTable.Actions hide={!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.patient?.includes('delete')))} options={{
                                        deleteFunction:'default',
                                        deleteUrl:'api/patients/delete',
                                        id:i.id}

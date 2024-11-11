@@ -12,7 +12,7 @@ const childrenWithProps = React.Children.map(children, child => {
 return (
     <div className={`bg-white w-full m-3 py-3 rounded-[0.3rem] min-h-[60vh] pb-[30px] ${hide ? 'hidden':''}`}>
         {!hideTitle && <div className="w-full border-b px-3 pb-2 flex justify-between items-center">
-             <span className=" pointer-events-auto">{title}</span>
+             <span className="">{title}</span>
              {topBarContent}
         </div>}
         

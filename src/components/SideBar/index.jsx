@@ -14,6 +14,9 @@ import FindDoctorIcon from '../../assets/images/menu-icons/find-doctors.svg'
 import DependentIcon from '../../assets/images/menu-icons/dependent.svg'
 import PaymentManagement from '../../assets/images/menu-icons/payment-management.svg' 
 import managersIcon from '../../assets/images/menu-icons/managers.svg'
+import FeedbackIcon from '../../assets/images/menu-icons/feedback.svg'
+import AppSettingsIcon from '../../assets/images/menu-icons/app-settings.svg'
+import StatsIcon from '../../assets/images/menu-icons/stats.svg'
 
 import { t } from 'i18next';
 import { useAuth } from '../../contexts/AuthContext';
@@ -39,31 +42,53 @@ function SideBar() {
       ],access:['patient']},
 
       {name:user?.role=="doctor" ? t('menu.my-patients') : t('menu.patients'),path:'/patients',field:'patients',icon:'patient',sub_menus:[
-        {name:t('menu.all-patients'),path:'/patients',paths:['patients','patient/:id'],manager_access:{name:'patient',per:['read','delete']}},
-        {name:t('menu.add-patients'),path:'/add-patient',paths:['add-patient'],access:['admin'],manager_access:{name:'patient',per:['create','update']}},
+        {name:t('menu.all-patients'),path:'/patients',paths:['patients','patient/:id'],manager_access:{name:'patient',per:['read']}},
+        {name:t('menu.add-patients'),path:'/add-patient',paths:['add-patient'],access:['admin'],manager_access:{name:'patient',per:['create']}},
       ],access:['admin','doctor'],manager_access:{name:'patient',per:['read']}},
 
       {name:t('menu.doctors'),path:'/doctors',field:'doctors',icon:'doctor',sub_menus:[
-        {name:t('menu.doctors'),path:'/doctors',paths:['doctors','doctor/:id'],manager_access:{name:'doctor',per:['read','delete']}},
-        {name:t('menu.add-doctors'),path:'/add-doctors',paths:['add-doctors'],manager_access:{name:'doctor',per:['create','update']}},
-        {name:t('menu.specialty-categories'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category'],manager_access:{name:'specialty_categories',per:['read','create','update','delete']}},  
-        {name:t('menu.membership-requests'),path:'/membership-requests',paths:['/membership-requests','/membership-requests/:id'],field:'membership-requests',access:['admin'],manager_access:{name:'doctor_requests',per:['read','approve','reject']}},
+        {name:t('menu.doctors'),path:'/doctors',paths:['doctors','doctor/:id'],manager_access:{name:'doctor',per:['read']}},
+        {name:t('menu.add-doctors'),path:'/add-doctors',paths:['add-doctors'],manager_access:{name:'doctor',per:['create']}},
+        {name:t('menu.specialty-categories'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category'],manager_access:{name:'specialty_categories',per:['read']}},  
+        {name:t('menu.membership-requests'),path:'/membership-requests',paths:['/membership-requests','/membership-requests/:id'],field:'membership-requests',access:['admin'],manager_access:{name:'doctor_requests',per:['read']}},
       ],access:['admin'],manager_access:{name:'doctor',per:['read']},permission_pedendents:['doctor_requests']},
 
       {name:t('menu.managers'),path:'/managers',field:'managers',icon:'manager',sub_menus:[
         {name:t('menu.managers'),path:'/managers',paths:['managers','manager/:id']},
-        {name:t('menu.add-managers'),path:'/add-managers',paths:['add-managers'],},
+        {name:t('menu.add-managers'),path:'/add-managers',paths:['add-managers']},
       ],access:['admin']},
-    
+
+
+      {name:t('common.stats'),path:'/logs',field:'app-feedback',icon:'logs',sub_menus:[
+        {name:t('common.action-logs'),path:'/logs',paths:['logs'],manager_access:{name:'stats',per:['read']}},
+        {name:t('common.duration-logs'),path:'/user-activities',paths:['/user-activities'],manager_access:{name:'stats',per:['read']}},
+      ],access:['admin'],manager_access:{name:'stats',per:['read']}},
+     
+     
       {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient']},
       
-      {name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
+     // {name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
 
+     {name:t('menu.payment-management'),path:'/payment-management',field:'payment-management',icon:'payment_management',sub_menus:[
+      {name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management'],manager_access:true},
+      {name:t('common.refunds'),path:'/refunds',paths:['/refunds'],manager_access:true},
+     ],access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
+    
+
+      {name:'Feedback',path:'/app-feedback',field:'app-feedback',icon:'feedback',sub_menus:[
+        {name:t('menu.app-feedback'),path:'/app-feedback',paths:['app-feedback'],manager_access:{name:'feedback',per:['read']}},
+        {name:t('menu.appointment-feedback'),path:'/appointment-feedback',paths:['appointment-feedback'],manager_access:{name:'feedback',per:['read']}},
+      ],access:['admin'],manager_access:{name:'feedback',per:['read']}},
+    
       {name:t('menu.settings'),path:'/profile',field:'settings',icon:'settings',sub_menus:[
         {name:t('menu.profile'),path:'/profile',paths:['profile'],access:['all'],manager_access:true},
         {name:t('menu.consultation-availability'),path:'/consultation-availability',paths:['consultation-availability'],access:['doctor']}, //manager_access:{name:'doctor_availability',per:['read','update']}
-       
-      ],access:['patient','doctor','admin','manager'],manager_access:true},
+      ],access:['patient','doctor','admin'],manager_access:true},
+
+      {name:t('menu.app-settings'),path:'/faqs',field:'faq',icon:'app_settings',sub_menus:[
+        {name:'Faqs',path:'/faqs',paths:['faqs','faq/:id','faq'],manager_access:true},
+      ],access:['admin'],manager_access:{name:'app_settings',per:['read']}},
+
 
   ]
 
@@ -81,7 +106,10 @@ function SideBar() {
       find_doctor:FindDoctorIcon,
       dependent:DependentIcon,
       payment_management:PaymentManagement,
-      manager:managersIcon
+      manager:managersIcon,
+      app_settings:AppSettingsIcon,
+      feedback:FeedbackIcon,
+      logs:StatsIcon
   }
 
     const [menuOpen, setMenuOpen] = useState([]);
@@ -128,7 +156,7 @@ function SideBar() {
               
               if(item.permission_pedendents){
                 item.permission_pedendents.forEach(d=>{
-                      if(user.data.permissions[d].includes('read')){
+                      if(user?.data?.permissions[d]?.includes('read')){
                          show=true
                      }
                 })

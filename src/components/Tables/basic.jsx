@@ -53,7 +53,6 @@ BaiscTable.Tr = ({children,onClick,hide}) => {
 }
 
 BaiscTable.Td = ({children,url,hide,onClick}) => {
-  
   const navigate=useNavigate()
   
   return (    
@@ -67,8 +66,14 @@ BaiscTable.Td = ({children,url,hide,onClick}) => {
 }
 
 
+
 BaiscTable.MainActions = ({items,options,hide}) => {
+
   const data=useData()
+
+  if(hide){
+    return <></>
+  }
   return (   
     
     <div className={`flex items-center _delete ${hide ? 'hidden':''}`}>
@@ -90,22 +95,21 @@ BaiscTable.MainActions = ({items,options,hide}) => {
       </div>}
 
    </div>
-
-
   )
 }
 
 
-BaiscTable.AdvancedActions=({items,id})=>{
+BaiscTable.AdvancedActions=({items,id,w,hide})=>{
     const data=useData()
     return (
        <>
        <div></div>
-       <div className={`relative translate-y-[30px] ${(items || []).filter(i=>!i.hide).length == 0 ? 'hidden':''} flex items-center`}>
+       <div className={`relative ${hide ? 'hidden':''} translate-y-[30px] ${(items || []).filter(i=>!i.hide).length == 0 ? 'hidden':''} flex items-center`}>
+          
           <span className="_table_options" onClick={()=>{
                data._showPopUp('table_options',id)
           }}><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#111"><path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/></svg></span>
-          {data._openPopUps.table_options==id && <div id="dropdown" class="z-10 _table_options bg-white  absolute right-[20px] divide-y divide-gray-100 rounded-lg shadow w-[130px]">
+          {data._openPopUps.table_options==id && <div id="dropdown" class={`z-10 _table_options bg-white  absolute right-[20px] divide-y divide-gray-100 rounded-lg shadow w-[${w ? w :'130'}px]`}>
                         <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
                            {(items || []).filter(i=>!i.hide).map((i,_i)=>(
                               <li onClick={i.onClick} className="flex items-center px-4 hover:bg-gray-100">
@@ -121,12 +125,12 @@ BaiscTable.AdvancedActions=({items,id})=>{
 }
 
 
-BaiscTable.Actions=({options})=>{
+BaiscTable.Actions=({options,hide})=>{
 
   const data=useData()
 
   return (
-     <div className="flex items-center _delete">
+     <div className={`flex items-center _delete ${hide ? 'hidden':''}`}>
         <div onClick={()=>data.add_remove_table_item(options.id)} class="flex items-center mr-5">
             <input checked={data._selectedTableItems.includes(options.id)} id="checked-checkbox" type="checkbox" value="" class="w-4 cursor-pointer h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"/>
         </div>

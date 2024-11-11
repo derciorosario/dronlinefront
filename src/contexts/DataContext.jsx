@@ -3,14 +3,19 @@ import sign from "jwt-encode";
 import axios from 'axios'
 import qs from 'qs';
 import { useAuth } from './AuthContext';
-
+import html2pdf from 'html2pdf.js';
+let env="dev"
+import io from 'socket.io-client';
+const socket = io(env!="dev" ? 'https://dronline-node-server.derflash.online' : 'http://localhost:3000')
+let log_id=Math.random().toString()
 const DataContext = createContext();
-export const DataProvider = ({ children }) => {
 
+export const DataProvider = ({ children }) => {
    
     const [dialogs,setDialogs]=useState({
       
     })
+    
     
     const [isDeleting,setIsDeleting]=useState(false)
 
@@ -23,8 +28,16 @@ export const DataProvider = ({ children }) => {
       filters:false,
       add_dependent:false,
       table_options:false,
-      notifications:false
+      notifications:false,
+      support_messages:false,
+      feedback:false,
+      reviews:false,
+      cancel_appointment:true,
+      
     }
+    let not_closing_popups=[
+      'support_messages'
+    ]
   
     const [_openPopUps, _setOpenPopUps] = useState(initial_popups);
   
@@ -45,6 +58,13 @@ export const DataProvider = ({ children }) => {
             close=false
           }
       })
+
+
+      Object.keys(initial_popups).forEach(k=>{
+          if(not_closing_popups.includes(k) && _openPopUps[k]){
+             close=false
+          }
+      })
   
       if(close){
         document.removeEventListener('click', handleOutsideClick); 
@@ -61,7 +81,7 @@ export const DataProvider = ({ children }) => {
 
     function _search(search,array){
 
-      function search_from_object(object,text){
+        function search_from_object(object,text){
              text=search
              let add=false
              Object.keys(object).forEach(k=>{
@@ -72,14 +92,16 @@ export const DataProvider = ({ children }) => {
              })
     
              return add
-       }
+        }
 
-
-        if (!array) return []
+        if (!array){ 
+          return []
+        }
     
         let d=JSON.parse(JSON.stringify(array))
     
         let res=[]
+
         d.forEach((t,_)=>{
           if(search_from_object(t)) {
               res.push(array.filter(j=>t.id.toString().includes(j.id))[0])
@@ -87,11 +109,9 @@ export const DataProvider = ({ children }) => {
         })
     
         return res
-
-    
     }
    
-    const {makeRequest,APP_BASE_URL,SERVER_FILE_STORAGE_PATH,isLoading,setIsLoading} = useAuth()
+    const {makeRequest,APP_BASE_URL,SERVER_FILE_STORAGE_PATH,isLoading,setIsLoading,user,serverTime,setServerTime} = useAuth()
 
     const [auth,setAuth]=useState({
       email:'',
@@ -112,11 +132,22 @@ export const DataProvider = ({ children }) => {
     const [_appointment_invoices,setAppointmentInvoices]=useState([])
     const [_doctor_requests,setDoctorRequests]=useState([])
     const [_managers,setManagers]=useState([])
+    const [_app_feedback,setAppFeedBack]=useState([])
+    const [_appointment_feedback,setAppointmentFeedBack]=useState([])
+    const [_faqs,setFaqs]=useState([])
+    const [_logs,setLogs]=useState([])
+    const [_all_users,setAllUsers]=useState([])
+    const [_all_managers,setAllManagers]=useState([])
+    const [_all_patients,setAllPatients]=useState([])
+    const [_all_doctors,setAllDoctors]=useState([])
+    const [_all_pendents,setAllPendents]=useState([])
+    const [_user_activities,setUserActivities]=useState([])
+    const [_notifications,setNotifications]=useState([])
+    const [_users_activity_info,setUsersActivityInfo]=useState([])
 
     const [updateTable,setUpdateTable]=useState(null)
 
     let dbs=[
-
       {name:'appointments',update:setAppointments,get:_appointments},
       {name:'doctors',update:setDoctors,get:_doctors},
       {name:'patients',update:setPatients,get:_patients},
@@ -128,8 +159,19 @@ export const DataProvider = ({ children }) => {
       {name:'dependents',update:setDependents,get:_dependents},
       {name:'appointment_invoices',update:setAppointmentInvoices,get:_appointment_invoices},
       {name:'doctor_requests',update:setDoctorRequests,get:_doctor_requests},
-      {name:'managers',update:setManagers,get:_managers}
-
+      {name:'managers',update:setManagers,get:_managers},
+      {name:'faqs',update:setFaqs,get:_faqs},
+      {name:'app_feedback',update:setAppFeedBack,get:_app_feedback},
+      {name:'appointment_feedback',update:setAppointmentFeedBack,get:_appointment_feedback},
+      {name:'logs',update:setLogs,get:_logs},
+      {name:'all_users',update:setAllUsers,get:_all_users},
+      {name:'all_managers',update:setAllManagers,get:_all_managers},
+      {name:'all_doctors',update:setAllDoctors,get:_all_doctors},
+      {name:'all_patients',update:setAllPatients,get:_all_patients},
+      {name:'all_pendents',update:setAllPendents,get:_all_pendents},
+      {name:'user_activities',update:setUserActivities,get:_user_activities},
+      {name:'notifications',update:setNotifications,get:_notifications},
+      {name:'users_activity_info',update:setUsersActivityInfo,get:_users_activity_info}
     ]
     
 
@@ -140,6 +182,21 @@ export const DataProvider = ({ children }) => {
          setLoaded((prev)=>prev.filter(i=>i!=item))
       }
     }   
+
+
+     function _cn(number){
+      return new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(typeof "string" ? parseFloat(number) : number).replaceAll('.',' ')
+     }
+   
+     function _cn_n(string){
+        string=string.toString()
+        if (string.startsWith('0')) {
+          string = string.replace('0', '');
+        }
+        return string.replace(/[^0-9]/g, '')
+     }
+
+  
 
 
     async function _get(from,params){
@@ -160,8 +217,86 @@ export const DataProvider = ({ children }) => {
           }
       }
       return _data
-
     }
+
+    const [online,setOnline]=useState(false)
+
+    const [updatingServerInfo,setUpdatingServerInfo] = useState(null);
+
+    const timeRef = useRef(null)
+
+
+    useEffect(() => {
+      
+
+      if(!timeRef.current) return
+      
+      const intervalId = setInterval(() => {
+        
+        timeRef.current = new Date(timeRef.current.getTime() + 3000);
+  
+        setServerTime({
+          week_day: timeRef.current.getDay(),
+          month: timeRef.current.getMonth() + 1,
+          date: timeRef.current.toISOString().split('T')[0],
+          hour: timeRef.current.toTimeString().slice(0, 5),
+          day: timeRef.current.getDate().toString().padStart(2, '0'),
+        });
+
+      }, 3000);
+  
+      return () => clearInterval(intervalId);
+
+    }, [updatingServerInfo]);
+
+
+   
+
+    useEffect(()=>{
+
+      socket.on('info',({time})=>{
+         setServerTime(time)
+         timeRef.current=new Date(`${time.date}T${time.hour}:00`)
+         setUpdatingServerInfo(Math.random())
+      })
+      
+      socket.emit('info')
+
+      socket.on('disconnect', (data) => {
+        setOnline(false)
+      });
+
+      socket.on('connect', (data) => {
+        setOnline(true)
+      });
+
+    },[])
+
+    /** useEffect(() => {
+        const interval = setInterval(() => {
+            //getUnreadSupportMessages()
+        }, 5000)
+        return () => clearInterval(interval);
+    }, []); */
+
+   
+
+   
+    useEffect(() => {
+
+      if(!user || user?.role=="admin" || user?.role=="patient" || user?.role=="doctor") return
+
+      const interval = setInterval(() => {
+          socket.emit('log-user',{
+            id:user.id,
+            email:user.email,
+            log_id,
+            role:user.role
+          })
+      }, 5000)
+
+      return () => clearInterval(interval);
+    }, [user]);
 
     let initial_filters={
       search: '',
@@ -172,7 +307,8 @@ export const DataProvider = ({ children }) => {
       scheduled_hours:'',
       scheduled_weekday:'',
       scheduled_date:'',
-      scheduled_type_of_care:''
+      scheduled_type_of_care:'',
+      canceled_appointment_id:''
     }
     
     const [_filters, setFilters] = useState(initial_filters);
@@ -284,7 +420,14 @@ export const DataProvider = ({ children }) => {
     function getParamsFromFilters(options){
          let params={}
          options.forEach(o=>{
-            params[o.param]=o.selected_ids.join(',')
+            if(params[o.param]){
+              if(o.selected_ids.length)  {
+                params[o.param]=params[o.param]+","+o.selected_ids.join(',')
+              }
+            }else{
+              params[o.param]=o.selected_ids.join(',')
+            }
+            
          })
 
          return params
@@ -341,10 +484,24 @@ export const DataProvider = ({ children }) => {
   
     }
 
+    const downloadPDF = (id,name) => {
+
+      const element = document.getElementById(id);
+      const options = {
+        margin: 1,
+        filename: `${name}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+  
+      html2pdf().from(element).set(options).save();
+
+    };
+
 
 
     function getScheduledAppointment(){
-
       if(localStorage.getItem('appointment')){
           try{
                 let {scheduled_date,scheduled_hours,scheduled_weekday,scheduled_doctor} = JSON.parse(localStorage.getItem('appointment'))
@@ -353,10 +510,26 @@ export const DataProvider = ({ children }) => {
           }catch(e){
                 return null
           }
-
       }
-
     }
+
+    const [unreadSupportMessages,setUnreadSupportMessages]=useState(0)
+
+    async function getUnreadSupportMessages(){
+        try{
+            let r=await makeRequest({method:'get',url:'api/get-unread-messages',withToken:true, error: ``},0);
+            setUnreadSupportMessages(r.unread_messages_count)
+        }catch(e){
+            console.log(e)
+        }
+    }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            //getUnreadSupportMessages()
+        }, 5000)
+        return () => clearInterval(interval);
+    }, []);
 
 
     const [selectedDoctorToSchedule,setSelectedDoctorToSchedule]=useState({})
@@ -364,13 +537,19 @@ export const DataProvider = ({ children }) => {
     const [singlePrintContent,setSinglePrintContent]=useState(null)
     const [justCreatedDependent,setJustCreatedDependent]=useState(null)
 
+    const [appointmentcancelationData,setAppointmentcancelationData]=useState({})
+
     const value = {
+      appointmentcancelationData,
+      setAppointmentcancelationData,
       singlePrintContent,
       getDatesForMonthWithBuffer,
       setSinglePrintContent,
       isLoading, setIsLoading,
       justCreatedDependent,
       setJustCreatedDependent,
+      _all_users,
+      _notifications,
       paymentInfo,setPaymentInfo,
       selectedDoctorToSchedule,
       setSelectedDoctorToSchedule,
@@ -381,24 +560,37 @@ export const DataProvider = ({ children }) => {
       selectedDoctors,
       setSelectedDoctors,
       _scrollToSection,
+      _all_doctors,
+      _all_managers,
+      _all_patients,
+      _all_pendents,
       makeRequest,
       _showPopUp,
       setDialogs,
       _sendFilter,
+      _users_activity_info,
+      _faqs,
       _updateFilters,
       auth,
+      downloadPDF,
+      _cn,
+      _logs,
+      _cn_n,
       timeAfter30Minutes,
       setAuth,
       APP_BASE_URL,
       SERVER_FILE_STORAGE_PATH,
       _get,
       _loaded,
+      _app_feedback,
+      _appointment_feedback,
       _appointments,
       _specialty_categories,
       _patients,
       _managers,
       _dependents,
       _doctors,
+      _user_activities,
       _clinical_diary,
       _closeAllPopUps,
       _setOpenPopUps,
@@ -421,17 +613,10 @@ export const DataProvider = ({ children }) => {
       _years_of_experience,
       setDependents,
       _appointment_invoices,
-      _doctor_requests
+      _doctor_requests,
+      unreadSupportMessages,
+      serverTime
     };
-
-
-
-
-
-
-
-
-
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };

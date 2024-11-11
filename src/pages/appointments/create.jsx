@@ -102,10 +102,6 @@ function addAppointments({ShowOnlyInputs}) {
        form.is_for_dependent==null ||
        (form.is_for_dependent && !form.dependent_id) ||
        ((!form.scheduled_hours || !form.consultation_date) && form.type_of_care=="requested")
-
-
-      
-
     ){
       v=false
     }
@@ -183,24 +179,38 @@ useEffect(()=>{
       if(res.scheduled_doctor && res.scheduled_hours && res.scheduled_weekday && res.scheduled_date){
           setSelectedDoctor({status:'loading',hours:[]})
           let response=await data.makeRequest({method:'get',url:`api/doctor/`+res.scheduled_doctor,withToken:true, error: ``},0);
-          setSelectedDoctor({status:'selected'})
-          let is_urgent=response.urgent_availability.weekday[res.scheduled_weekday]?.includes(res.scheduled_hours.split(',')[0])
          
-         //console.log({a:response.urgent_availability.weekday})
-          setForm({...form,
-              name:response.name,
-              is_urgent,
-              medical_specialty:response.medical_specialty,
-              consultation_date:res.scheduled_date,
-              doctor_id:response.id,
-              patient_id:user.data?.id || null,
-              scheduled_date:res.scheduled_date,
-              scheduled_doctor:res.scheduled_doctor,
-              scheduled_hours:res.scheduled_hours,
-              scheduled_weekday:res.scheduled_weekday,
-              type_of_care:is_urgent ? 'urgent': (form.type_of_care || 'scheduled')
-          })
-          //alert(is_urgent ? 'urgent': (form.type_of_care || 'normal'))
+          let is_urgent=response.urgent_availability.weekday[res.scheduled_weekday]?.includes(res.scheduled_hours.split(',')[0])
+          let new_form={...form,
+            name:response.name,
+            is_urgent,
+            medical_specialty:response.medical_specialty,
+            consultation_date:res.scheduled_date,
+            doctor_id:response.id,
+            patient_id:user.data?.id || null,
+            scheduled_date:res.scheduled_date,
+            scheduled_doctor:res.scheduled_doctor,
+            scheduled_hours:res.scheduled_hours,
+            scheduled_weekday:res.scheduled_weekday,
+            type_of_care:is_urgent ? 'urgent': (form.type_of_care || 'scheduled')
+          }
+
+          if(res.canceled_appointment_id){
+            new_form.canceled_appointment_id=res.canceled_appointment_id
+          }
+
+          let available_hours=getAvailableHours(response,new_form.type_of_care,res.scheduled_date,{[response.id]:res.scheduled_weekday},res.canceled_appointment_id)
+
+          setSelectedDoctor({status:'selected'})
+          setForm(new_form)
+          if(!available_hours.includes(res.scheduled_hours)){
+            data._showPopUp('basic_popup','appointment-no-longer-available')
+            setSelectedDoctor({status:'not_selected'})
+          }else{
+            setSelectedDoctor({status:'selected'})
+            setForm(new_form)
+          }
+         
 
       }
 
@@ -221,6 +231,63 @@ useEffect(()=>{
   }
 })()
 },[pathname,search])
+
+
+
+function getAvailableHours(item,type,date,selectedWeekDays,canceled_appointment_id=null){
+
+ 
+  if(data.serverTime){
+     if(new Date(data.serverTime.date) > new Date()){
+      return []
+     }
+  }
+  
+  
+  if(type=="scheduled"){
+      return (item.availability.unavailable_specific_date[date] ? [] : item.availability.specific_date[date] ? item.availability.specific_date[date] : item.urgent_availability.specific_date[date] ? [] : !selectedWeekDays[item.id] ? (item.availability.weekday[weeks[new Date().getDay()]] || []) : (item.availability.weekday[selectedWeekDays[item.id]] || [])).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!item.on_appointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=canceled_appointment_id))
+  }else{
+      return (item.urgent_availability.unavailable_specific_date[date] ? [] : item.urgent_availability.specific_date[date] ? item.urgent_availability.specific_date[date] : item.availability.specific_date[date] ? [] : !selectedWeekDays[item.id] ? (item.urgent_availability.weekday[weeks[new Date().getDay()]] || []) : (item.urgent_availability.weekday[selectedWeekDays[item.id]] || [])).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>item.on_appointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=canceled_appointment_id))
+  }
+}
+
+
+
+
+
+function checkDoctorAvailability(res,item){
+
+          let available_days=[]
+          let _year=new Date(res.scheduled_date).getFullYear()
+          let _month=new Date(res.scheduled_date).getMonth()
+          let selected_month=_month
+
+          let d=data.getDatesForMonthWithBuffer(_month + 1, _year)
+          let weekdaysAvailability=[item.availability.weekday,item.urgent_availability.weekday]
+
+          let unavailable_dates=[]
+          if(!Array.isArray(item.availability.unavailable_specific_date)){
+              unavailable_dates=Object.keys(item.availability.unavailable_specific_date)
+          }
+
+
+          weekdaysAvailability.forEach((a,_a)=>{
+            Object.keys(a).forEach((i,_i)=>{
+              let index=weeks.findIndex(f=>f==i)
+              d.filter(z=> new Date(z).getDay()==index && !unavailable_days.includes(new Date(z).getDate())).forEach(date=>{
+                  let day=new Date(date).getDate()
+                  let month=new Date(date).getMonth()
+                  if(month==selected_month && !available_days.includes(day)){
+                    available_days.push(day)
+                  }    
+              })
+            })  
+          })
+
+}
+
+
+
 
 
 
@@ -250,7 +317,7 @@ useEffect(()=>{
         let response=await data.makeRequest({method:'post',url:`api/appointments`,withToken:true,data:{
           ...form,
           scheduled_date:form.type_of_care=="requested" ? form.consultation_date : form.scheduled_date,
-          dependent_id:form.is_for_dependent ? form.dependent_id : null
+          dependent_id:form.is_for_dependent ? form.dependent_id : null,
         }, error: ``},0);
 
         localStorage.removeItem('saved_appointment_url')
@@ -370,6 +437,12 @@ useEffect(()=>{
 
  useEffect(()=>{
 
+
+    if(user?.role!="patient" && !id){
+           navigate('/')
+    }
+
+
     if(!user || user?.role!="patient"){
       return
     }
@@ -380,11 +453,11 @@ useEffect(()=>{
        data._showPopUp('basic_popup','you-have-saved-appointment')
     }
 
- },[])
+    
+
+ },[user])
 
 
-
- 
 
 
 return (
@@ -404,7 +477,6 @@ return (
     <DefaultFormSkeleton/>
   </div>}
 
-
   <div className={`${(!user?.data?.date_of_birth && user?.role=="patient") ? 'opacity-65 pointer-events-none':''} `}>
 
   <FormLayout hideInputs={user?.role=="doctor"} hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={id ? t('common.updated-added-appointment') : t('menu.add-appointments')} verified_inputs={verified_inputs} form={form}
@@ -419,7 +491,7 @@ return (
             })} type="button" class={`text-gray-600 border focus:ring-4 focus:outline-none font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2`}> 
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#111"><path d="M680-320q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T720-440q0-17-11.5-28.5T680-480q-17 0-28.5 11.5T640-440q0 17 11.5 28.5T680-400ZM440-40v-116q0-21 10-39.5t28-29.5q32-19 67.5-31.5T618-275l62 75 62-75q37 6 72 18.5t67 31.5q18 11 28.5 29.5T920-156v116H440Zm79-80h123l-54-66q-18 5-35 13t-34 17v36Zm199 0h122v-36q-16-10-33-17.5T772-186l-54 66Zm-76 0Zm76 0Zm-518 0q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v200q-16-20-35-38t-45-24v-138H200v560h166q-3 11-4.5 22t-1.5 22v36H200Zm80-480h280q26-20 57-30t63-10v-40H280v80Zm0 160h200q0-21 4.5-41t12.5-39H280v80Zm0 160h138q11-9 23.5-16t25.5-13v-51H280v80Zm-80 80v-560 137-17 440Zm480-240Z"/></svg>
               <span className="ml-2">{t('menu.clinical-diary')}</span>
-              {(form.clinical_diaries.length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full w-[20px] h-[20px] flex items-center justify-center">
+              {(form.clinical_diaries.length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
                  {form.clinical_diaries.length}
               </div>}
             </button>
@@ -430,7 +502,7 @@ return (
             })} type="button" class={`text-gray-600 border focus:ring-4 focus:outline-none font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2`}>         
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#111"><path d="m678-134 46-46-64-64-46 46q-14 14-14 32t14 32q14 14 32 14t32-14Zm102-102 46-46q14-14 14-32t-14-32q-14-14-32-14t-32 14l-46 46 64 64ZM735-77q-37 37-89 37t-89-37q-37-37-37-89t37-89l148-148q37-37 89-37t89 37q37 37 37 89t-37 89L735-77ZM200-200v-560 560Zm0 80q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v245q-20-5-40-5t-40 3v-243H200v560h243q-3 20-3 40t5 40H200Zm280-670q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM280-600v-80h400v80H280Zm0 160v-80h400v34q-8 5-15.5 11.5T649-460l-20 20H280Zm0 160v-80h269l-49 49q-8 8-14.5 15.5T474-280H280Z"/></svg>
               <span className="ml-2">{t('menu.medical-prescription')}</span>
-              {(form.medical_prescriptions.length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full w-[20px] h-[20px] flex items-center justify-center">
+              {(form.medical_prescriptions.length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
                  {form.medical_prescriptions.length}
               </div>}
             </button>
@@ -441,7 +513,7 @@ return (
             })} type="button" class={`text-gray-600 border focus:ring-4 focus:outline-none font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2`}>     
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-600q17 0 28.5-11.5T360-640q0-17-11.5-28.5T320-680q-17 0-28.5 11.5T280-640q0 17 11.5 28.5T320-600Zm0 160q17 0 28.5-11.5T360-480q0-17-11.5-28.5T320-520q-17 0-28.5 11.5T280-480q0 17 11.5 28.5T320-440Zm0 160q17 0 28.5-11.5T360-320q0-17-11.5-28.5T320-360q-17 0-28.5 11.5T280-320q0 17 11.5 28.5T320-280ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h440l200 200v440q0 33-23.5 56.5T760-120H200Zm0-80h560v-400H600v-160H200v560Zm0-560v160-160 560-560Z"/></svg>
               <span className="ml-2">{t('menu.exams')}</span>
-              {(form.exams.length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full w-[20px] h-[20px] flex items-center justify-center">
+              {(form.exams.length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
                  {form.exams.length}
               </div>}
             </button>
@@ -477,18 +549,29 @@ return (
     <div className="flex flex-wrap"></div>
 
     <div className="mt-4">
-            {!(form.status!="pending" && form.status!="cancelled") && <button onClick={()=>setShowComment(true)} type="button" class={`text-white  ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
-              <span className="ml-2">Chat</span>
-              {(form.comments.length!=0 && id) && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full w-[20px] h-[20px] flex items-center justify-center">
-                  {form.comments.length}
+            {!(form.status!="pending" && form.status!="cancelled") && <div className={`flex _feedback items-center gap-x-2  ${user?.role=="admin" || user?.role=="manager" ? 'hidden':''}  ${!id || !itemToEditLoaded ? 'hidden':''}`}>
+             
+                <button onClick={()=>setShowComment(true)} type="button" class={`text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
+                  <span className="ml-2">Chat</span>
+                  {(form.comments.length!=0 && id) && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full px-2 flex items-center justify-center">
+                      {form.comments.length}
+                  </div>}
+              </button>
+
+              <button onClick={()=>{
+                  data._showPopUp('feedback',{...form})
+              }} class={`text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4  ${user?.role=="doctor" ? 'hidden':''}  focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/></svg>
+                    <span className="ml-2 hidden">{t('common.reviews')}</span>
+              </button>
               </div>}
-            </button>}
-      </div>
+        </div>
       
  </div>
 
   <FormCard hide={!id} items={[
+
     {name:t('form.consultation-id'),value:id ? form.id : '-'},
     {name:t('form.consultation-status'),value:!form.consultation_status ? t('common.pending') : t('form.'+form.consultation_status)},
     {name:t('form.patient-name'),value:form.is_for_dependent ? form.dependent?.name : form?.user?.name,hide:user?.role=="patient",
@@ -500,7 +583,7 @@ return (
     {name:t('form.consultation-method'),value:t('common.'+form.consultation_method),hide:user?.role=="patient"},
     {name:t('form.reason-for-consultation'),value:form.reason_for_consultation,hide:user?.role=="patient"},
     {name:t('form.additional-observations'),value:form.additional_observations,hide:user?.role=="patient"}  
-    
+
   ]}/>
 
 
@@ -554,9 +637,6 @@ return (
       disabled={Boolean(id)}
       value={form.type_of_care}/>
 
-
-   
-
       <FormLayout.Input 
         verified_inputs={verified_inputs} 
         form={form} 
@@ -578,15 +658,16 @@ return (
         value={form.estimated_consultation_duration}
       />
 
-
-      <div className={`flex ${id ? 'opacity-60 pointer-events-none':''} mt-7 ${user?.role!="patient" || form.type_of_care=="requested"  ? 'hidden':''} justify-end flex-col  _doctor_list`}>
+      <div className={`flex ${id ? 'opacity-60 pointer-events-none':''} mt-7 ${user?.role!="patient" || form.type_of_care=="requested" || (!form.type_of_care && selectedDoctor.status!="loading") ? 'hidden':''} justify-end flex-col  _doctor_list`}>
         
         <label class="mb-2 text-sm  text-gray-900">{t('common.doctor')}</label>
 
         <div onClick={()=>{
           if(selectedDoctor.status!="loading") {
-            data.setUpdateTable(Math.random())
-            data._showPopUp('doctor_list')
+
+              data.setUpdateTable(Math.random())
+              data._showPopUp('doctor_list')
+
           }
         }} class={`bg-gray w-[400px] ${(selectedDoctor.status=="loading" || id) ? ' pointer-events-none':''} hover:bg-gray-100 cursor-pointer  h-[43px] border-gray-300  active:opacity-75  text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 border items-center flex justify-between p-2.5`}>    
         

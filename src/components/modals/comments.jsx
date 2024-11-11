@@ -17,7 +17,7 @@ function Comment({show,setShow,comments,form,setForm}) {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [show]);
+  }, []);
 
 
 const {user} = useAuth()
@@ -164,7 +164,7 @@ const [showChooseFile,setShowChooseFile]=useState('')
     
 
 
-    <div className={`w-full bg-white rounded-b-lg ${user?.role=="admin" ? '_hidden':''}`}>
+    <div className={`w-full bg-white overflow-hidden rounded-b-lg ${user?.role=="admin" ? '_hidden':''}`}>
 
 
     <div className="w-full pl-3 pr-1 py-1  bg-white border border-gray-200 items-center gap-2 inline-flex justify-between">

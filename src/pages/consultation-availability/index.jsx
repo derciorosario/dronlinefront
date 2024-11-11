@@ -8,7 +8,7 @@ import FormLayout from '../../layout/DefaultFormLayout'
 import AdditionalMessage from '../messages/additional'
 import { useData } from '../../contexts/DataContext'
 import { useAuth } from '../../contexts/AuthContext'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../../components/Loaders/loader'
 import dayjs from 'dayjs';
 
@@ -22,8 +22,11 @@ function index() {
     const data=useData()
     const [selectedDate, setSelectedDate] = useState(dayjs());
     const [specificList,setSpecificList]=useState([])
-
+    const [doctorInfo,setDoctorInfo]=useState({})
+    const navigate=useNavigate()
     const {pathname} = useParams()
+
+    const { id } = useParams()
 
     const {user} = useAuth()
 
@@ -84,9 +87,10 @@ function index() {
             '21:00', '21:30',
             '22:00', '22:30',
             '23:00', '23:30'
-  ];  
+     ];  
 
-      const [valid,setValid]=useState(false)
+     
+     const [valid,setValid]=useState(false)
 
     
       const handleDateChange = (newDate) => {
@@ -117,14 +121,11 @@ function index() {
              }
       }
 
-      console.log({availableSpecific,urgentAvailableSpecific,specificList,days,urgent_days})
-
       useEffect(()=>{
-
         if(dateView=="calendar"){
             handleSpecificDate()
         }
-    },[dateView,specificList])
+     },[dateView,specificList])
 
     useEffect(()=>{
 
@@ -142,6 +143,15 @@ function index() {
 
 
 
+    useEffect(()=>{
+         if(!user) return
+         if(user?.role=="manager" && !user?.data?.permissions?.doctor_availability?.includes('update')){
+                navigate('/') 
+         }
+    },[user])
+
+
+
 
     useEffect(()=>{
 
@@ -153,9 +163,11 @@ function index() {
         (async()=>{
           try{
 
-            let response=await data.makeRequest({method:'get',url:`api/doctor/`+user.data.id,withToken:true, error: ``},100);
+            let response=await data.makeRequest({method:'get',url:`api/doctor/`+(id || user.data.id),withToken:true, error: ``},100);
           
             let _data={}
+
+            setDoctorInfo({name:response.name})
 
             weeks.forEach(d=>{
                 _data[d]=[]
@@ -227,7 +239,7 @@ function index() {
                 }
             })
 
-            let r=await data.makeRequest({method:'post',url:`api/doctor-schedule/${user.data.id}/set`,withToken:true,data:{
+            let r=await data.makeRequest({method:'post',url:`api/doctor-schedule/${id || user.data.id}/set`,withToken:true,data:{
               
                 days:{
                     "weekday":days,
@@ -273,10 +285,10 @@ function index() {
 
   return (
     
-        <DefaultLayout pageContent={!itemToEditLoaded ? {} : {title:t('menu.consultation-availability'),desc:t('titles.consultation-availability')}}>
+        <DefaultLayout disableUpdateButton={true} pageContent={!itemToEditLoaded ? {} : {title:t('menu.consultation-availability'),desc:id ? t('common.availability') +" - "+doctorInfo.name :  t('titles.consultation-availability')}}>
                
 
-               <AdditionalMessage  float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
+            <AdditionalMessage  float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
           
 
               <div className={`w-full h-[60vh] ${!itemToEditLoaded ? 'flex':'hidden'} items-center justify-center`}>

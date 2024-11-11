@@ -6,6 +6,8 @@ import toast from 'react-hot-toast';
 
 function ChatFile({show,setShow,_upload,res}) {
 
+  
+
   const data=useData()
   const fileInputRef_1 = React.useRef(null);
   const [fileTitle, setFileTitle]=useState('')
@@ -84,14 +86,16 @@ function ChatFile({show,setShow,_upload,res}) {
   };
 
   function close(reset){
-    if(!reset) setShow(false)
-    setUpload({
-      filename:'',
-      uploading:false,
-      progress:0
-    })
-    setFile({})
-    setFileTitle('')
+     setTimeout(()=>{
+      if(!reset) setShow(false)
+        setUpload({
+          filename:'',
+          uploading:false,
+          progress:0
+        })
+        setFile({})
+        setFileTitle('')
+     },100)
   }
   
 
@@ -102,8 +106,7 @@ function ChatFile({show,setShow,_upload,res}) {
   return (
 
 
- <div className=" absolute w-full  z-30">
-
+ <div className=" absolute w-full  z-30 _support_messages">
 
        
     {show && !upload.uploading && <div className="flex justify-center mb-3">

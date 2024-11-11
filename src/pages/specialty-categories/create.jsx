@@ -195,6 +195,14 @@ function index({ShowOnlyInputs}) {
     setForm({...form,[upload.key]:upload.filename})
   }
 
+  useEffect(()=>{
+    if(!user) return
+    if(user?.role=="manager" && !user?.data?.permissions?.specialty_categories?.includes('create') && !id){
+           navigate('/') 
+    }
+  },[user])
+
+
 
   return (
      <DefaultLayout>
@@ -227,7 +235,7 @@ function index({ShowOnlyInputs}) {
                     )}
 
                     button={(
-                    <div className={`mt-[40px] ${user?.role=="doctor" ? 'hidden':''}`}>
+                    <div className={`mt-[40px] ${(user?.role=="manager" && !user?.data?.permissions?.specialty_categories?.includes('update') && id) ? 'hidden':''}`}>
                         <FormLayout.Button onClick={()=>{
                             SubmitForm()
                         }} valid={valid} loading={loading} label={id ? t('common.update') :t('common.send')}/>

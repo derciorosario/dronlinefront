@@ -8,7 +8,7 @@ function BasicPagination({total,current,last,setCurrentPage,from,show}) {
 
   return (
     <nav aria-label="Page navigation example" className={`my-[30px] px-2  delay-100 ease-in transition ${!show ? 'opacity-0 pointer-events-none':''}`}>
-      <ul class={`inline-flex -space-x-px text-base h-10`}>
+      <ul class={`inline-flex -space-x-px text-base h-10 flex-wrap w-full overflow-x-auto`}>
 
        
         <li onClick={()=>{

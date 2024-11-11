@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useData } from '../../contexts/DataContext'
 import Loader from '../Loaders/loader'
 
-export default function BasicFilter({filterOptions,setFilterOptions,setUpdateFilters,show}) {
+export default function BasicFilter({filterOptions,setFilterOptions,setUpdateFilters,show,end,start,setEnd,setStart}) {
 
   const data=useData()
   
@@ -44,6 +44,24 @@ export default function BasicFilter({filterOptions,setFilterOptions,setUpdateFil
                  setUpdateFilters(Math.random())
             }} className=" text-gray-500 mb-4 text-[13px] hover:text-honolulu_blue-500 cursor-pointer flex justify-center">{t('common.clear-all-filters')}</span>
 }
+
+
+            {(end!=undefined && start!=undefined) && <div id="dropdown" className="z-10  p-3 bg-white rounded-lg shadow  w-full mb-2">
+                <h6 className="mb-2 text-sm font-medium text-gray-900">
+                     {t('common.start')}
+                </h6>
+
+                <input onChange={(e)=>setStart(e.target.value)} value={start} type="date" className="block w-full mb-2 py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+               
+                <h6 className="mb-2 text-sm font-medium text-gray-900">
+                     {t('common.end')}
+                </h6>
+                <input onChange={(e)=>setEnd(e.target.value)} value={end} type="date" className="block w-full py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+               
+            </div>}
+
+
+
 
             {filterOptions.map((f,_f)=>(
 
@@ -126,6 +144,8 @@ export default function BasicFilter({filterOptions,setFilterOptions,setUpdateFil
                 
                 </ul>
                </div>
+
+
             ))}
 
 

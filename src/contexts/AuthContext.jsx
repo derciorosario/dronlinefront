@@ -14,10 +14,10 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [auth, setAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-   
+  const [serverTime,setServerTime]=useState(null)
   
-  let env="pro"
-  const APP_BASE_URL  = env =="pro" ? "https://dronline-server.derflash.online": 'http://127.0.0.1:8000'
+  let env="dev"
+  const APP_BASE_URL = env =="pro" ? "https://dronline-server.derflash.online": 'http://127.0.0.1:8000'
   const SERVER_FILE_STORAGE_PATH=`storage/uploads`
      
   const login = (userData, authToken) => {
@@ -212,7 +212,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{isLoading, setIsLoading,APP_BASE_URL, user, login,SERVER_FILE_STORAGE_PATH, makeRequest,logout, isAuthenticated , loading, setUser, setLoading, token,auth}}>
+    <AuthContext.Provider value={{isLoading,serverTime,setServerTime, setIsLoading,APP_BASE_URL, user, login,SERVER_FILE_STORAGE_PATH, makeRequest,logout, isAuthenticated , loading, setUser, setLoading, token,auth}}>
       {children}
     </AuthContext.Provider>
   );

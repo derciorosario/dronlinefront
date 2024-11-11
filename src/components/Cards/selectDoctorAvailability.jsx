@@ -7,11 +7,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import Loader from '../Loaders/loader';
 
-function SelectDoctorAvailability({ item, setItem }) {
+function SelectDoctorAvailability({ item }) {
   const data = useData();
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const navigate = useNavigate()
+
+  const [afterAppointments,setAfterAppointments]=useState([])
+  const [afterAppointmentsLoaded,setAfterAppointmentsLoaded]=useState([])
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
@@ -29,17 +33,54 @@ function SelectDoctorAvailability({ item, setItem }) {
   const [selectedMonth,setSelectedMonth]=useState(new Date(dayjs().$d).getMonth())
 
   function getAvailableHours(item,type){
-
     if(!item?.id){
         return []
     }
     let date=selectedDates[item.id] || new Date().toISOString().split('T')[0]
     if(type=="normal"){
-        return (item.availability.unavailable_specific_date[date] ? [] : item.availability.specific_date[date] ? item.availability.specific_date[date] : item.urgent_availability.specific_date[date] ? [] : !selectedWeekDays[item.id] ? (item.availability.weekday[weeks[new Date().getDay()]] || []) : (item.availability.weekday[selectedWeekDays[item.id]] || [])).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m))
+        return (item.availability.unavailable_specific_date[date] ? [] : item.availability.specific_date[date] ? item.availability.specific_date[date] : item.urgent_availability.specific_date[date] ? [] : !selectedWeekDays[item.id] ? (item.availability.weekday[weeks[new Date().getDay()]] || []) : (item.availability.weekday[selectedWeekDays[item.id]] || [])).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!afterAppointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=data.appointmentcancelationData?.consultation?.id))
     }else{
-        return (item.urgent_availability.unavailable_specific_date[date] ? [] : item.urgent_availability.specific_date[date] ? item.urgent_availability.specific_date[date] : item.availability.specific_date[date] ? [] : !selectedWeekDays[item.id] ? (item.urgent_availability.weekday[weeks[new Date().getDay()]] || []) : (item.urgent_availability.weekday[selectedWeekDays[item.id]] || [])).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m))
+        return (item.urgent_availability.unavailable_specific_date[date] ? [] : item.urgent_availability.specific_date[date] ? item.urgent_availability.specific_date[date] : item.availability.specific_date[date] ? [] : !selectedWeekDays[item.id] ? (item.urgent_availability.weekday[weeks[new Date().getDay()]] || []) : (item.urgent_availability.weekday[selectedWeekDays[item.id]] || [])).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!afterAppointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=data.appointmentcancelationData?.consultation?.id))
     }
   }
+
+
+  async function getAppointmentsAfterDates(){
+    try{
+      let r=await data.makeRequest({method:'post',url:`api/after-date-appointments`,withToken:true,data:{
+       doctor_id:item.id
+      }, error: ``},0);
+      console.log({r})
+      setAfterAppointments(r)
+      setAfterAppointmentsLoaded(true)
+
+   }catch(e){
+       console.log({e})
+   }
+
+  }
+
+
+  
+  useEffect(() => {
+      if(!item?.id){
+        setAfterAppointments([])
+        setAfterAppointmentsLoaded(false)
+      }
+  }, [item]);
+
+  useEffect(() => {
+    if(!item?.id) return
+
+    getAppointmentsAfterDates()
+
+    const interval = setInterval(() => {
+       // getAppointmentsAfterDates()
+    }, 5000)
+
+    return () => clearInterval(interval);
+  }, [item]);
+
 
 
   const months = [
@@ -48,6 +89,8 @@ function SelectDoctorAvailability({ item, setItem }) {
   ];
    
   useEffect(()=>{
+
+    return
 
     if(!item?.id) return
 
@@ -60,8 +103,8 @@ function SelectDoctorAvailability({ item, setItem }) {
             let _year=document.querySelector('.MuiPickersCalendarHeader-label').textContent.split(' ')[1]
             let _month=months.findIndex(i=>i==m)
             let selected_month=_month
-            
-            console.log({_year,_month})
+            let current_day=new Date().getDate()
+            let current_month=new Date().getMonth()
             
             let d=data.getDatesForMonthWithBuffer(_month + 1, _year)
             let weekdaysAvailability=[item.availability.weekday,item.urgent_availability.weekday]
@@ -98,11 +141,14 @@ function SelectDoctorAvailability({ item, setItem }) {
 
 
           try{
+            
+            
+           
               setTimeout(()=>{
                   document.querySelectorAll('.MuiPickersDay-root').forEach(btn=>{
                     let day=parseInt(btn.textContent || null)
                     if(day){
-                        if(!available_days.includes(day)){
+                        if(!available_days.includes(day) || (day < current_day && _month==current_month)){
                               btn.style.opacity="0.4"
                               btn.style.pointerEvents="none"
                         }else{
@@ -119,13 +165,12 @@ function SelectDoctorAvailability({ item, setItem }) {
      }, 200);
 
      return () => clearInterval(interval);
-
   },[item])
 
  
   return (
-    <div className={`w-full h-[100vh] bg-[rgba(0,0,0,0.2)] ease-in _doctor_list ${!item?.id ? 'opacity-0 pointer-events-none translate-y-[100px]' : ''} ease-in transition-all delay-75 fixed flex items-center justify-center z-[60]`}>
-      <div className="w-full overflow-y-auto p-4 relative bg-white border border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">
+    <div className={`w-full h-[100vh] bg-[rgba(0,0,0,0.2)] ease-in  overflow-y-auto _doctor_list ${!item?.id ? 'opacity-0 pointer-events-none translate-y-[100px]' : 'z-[60]'} ease-in transition-all delay-75 fixed flex items-center justify-center`}>
+      <div className="w-full  p-4 relative bg-white  border border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">
         <div className="flex absolute mb-3 top-1 left-2">
           <span onClick={() => {
             data.setSelectedDoctorToSchedule({});
@@ -154,12 +199,16 @@ function SelectDoctorAvailability({ item, setItem }) {
                 </LocalizationProvider>
               </div>
               <div className="flex-1">
+
                   <h5 className="text-[17px] font-medium leading-none text-gray-900 ">
                     {t('common.hour')}
                   </h5>
-                  <div className="flex flex-wrap mt-4">
 
+                  <div className={`${afterAppointmentsLoaded ? 'hidden':'flex'} justify-center pt-10 items-center w-full`}>
+                        <Loader/>
+                  </div>
 
+                  <div className={`flex flex-wrap mt-4 ${!afterAppointmentsLoaded ? 'hidden':''}`}>
                   <div className="mt-4 flex flex-col items-center justify-between">
                                     {(getAvailableHours(item,'normal').length!=0) && <div className="flex mb-5 justify-center flex-col items-center">
                                         <select  onChange={(e)=>{
@@ -227,7 +276,8 @@ function SelectDoctorAvailability({ item, setItem }) {
                     data._closeAllPopUps()
                     data.setPaymentInfo({doctor:item})
                     data.setSelectedDoctorToSchedule({});
-                    navigate(`/add-appointments?scheduled_doctor=${item.id}&scheduled_hours=${selectedDoctors[item.id]}&scheduled_date=${selectedDates[item.id] || new Date().toISOString().split('T')[0]}&scheduled_weekday=${weeks[new Date(selectedDates[item.id] || new Date().toISOString().split('T')).getDay()]}`)
+                    navigate(`/add-appointments?scheduled_doctor=${item.id}&scheduled_hours=${selectedDoctors[item.id]}&scheduled_date=${selectedDates[item.id] || new Date().toISOString().split('T')[0]}&scheduled_weekday=${weeks[new Date(selectedDates[item.id] || new Date().toISOString().split('T')).getDay()]}&canceled_appointment_id=${data.appointmentcancelationData?.consultation?.id || ''}`)
+                    data.setAppointmentcancelationData({})
                 }} class={`inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white ${selectedDoctors[item.id]?.length ? 'bg-honolulu_blue-400':'bg-gray-500 pointer-events-none'} rounded-lg  focus:ring-4 focus:outline-none focus:ring-blue-300`}>
                     {t('common.book')}
                     <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">

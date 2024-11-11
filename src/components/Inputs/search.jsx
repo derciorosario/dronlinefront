@@ -2,7 +2,7 @@ import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
 import { useData } from '../../contexts/DataContext'
 
-function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes}) {
+function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd}) {
 
 
   let input_id=Math.random().toString().replace('.','')
@@ -21,18 +21,13 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes}) {
       setSelectedId(id)
   },[id])
 
-
-  console.log({items,selectId})
-
-
   return (
-
     <div class="flex relative w-[300px] flex-col">
         {label && <label  class="block mb-2 text-sm  text-gray-900">{label} {r && <span className="text-red-500">*</span>}</label>}         
         <div id="dropdown" class="z-10  absolute left-0 top-[100%] bg-white divide-y divide-gray-100 rounded-lg shadow w-full">
             {showOptions && <ul class="py-2 max-h-[200px] overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdown-button">
              
-                {(searched.length!=0 && loaded) && <li className="flex justify-end"> 
+                {((searched.length!=0 && loaded) && canAdd!==false) && <li className="flex justify-end"> 
                         <span onClick={() => {
                             btnAddRes()
                             setInput('')
@@ -66,11 +61,11 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes}) {
             </ul>}
         </div>
         <div class="relative w-full">
-            <div>
+            <div className="flex-1">
                <input id={input_id} onBlur={()=>{
                  setTimeout(()=>setShowOptions(false),300)
-               }} onFocus={()=>setShowOptions(true)}  value={input} onChange={(e)=>setInput(e.target.value)}   class={`${selectId ? 'hidden':''} p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-[0.3rem] border-s-gray-50 border-s-2 border border-gray-300`} placeholder={placeholder}  />  
-               {selectId && <div className={`p-2  w-full text-[13px] z-20 rounded-[0.3rem] border-s-gray-50 border-s-2 border border-gray-300`}>{items.filter(i=>i.id==selectId)[0]?.name}</div>}
+               }} onFocus={()=>setShowOptions(true)}  value={input} onChange={(e)=>setInput(e.target.value)}   class={`${selectId ? 'hidden':''} p-2.5 w-full pr-10 z-20 text-sm text-gray-900 bg-gray-50 rounded-[0.3rem] border-s-gray-50 border-s-2 border border-gray-300`} placeholder={placeholder}  />  
+               {selectId && <div className={`p-2 w-full text-[13px] z-20 rounded-[0.3rem] border-s-gray-50 border-s-2 border border-gray-300`}>{items.filter(i=>i.id==selectId)[0]?.name}</div>}
             </div>
             <div  onClick={()=>{
                   if(selectId){
@@ -80,7 +75,7 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes}) {
                   }else{
                         setTimeout(()=>document.getElementById(input_id).focus(),300)
                   }
-            }} class="absolute cursor-pointer top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-honolulu_blue-500 rounded-[0.3rem] border border-honolulu_blue-500 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300">
+            }} class="absolute  cursor-pointer flex items-center justify-center top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-honolulu_blue-500 rounded-[0.3rem] border border-honolulu_blue-500 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300">
                      {selectId &&  <div>
                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                  </div>}

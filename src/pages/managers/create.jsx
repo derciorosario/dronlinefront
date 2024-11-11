@@ -81,6 +81,10 @@ const default_selected_permissions= {
   payment_management:[],
   doctor_availability:[],
   appointments:[],
+  feedback:[],
+  support:[],
+  app_settings:[],
+  stats:[]
  }
 
 const [selectedPermissions,setSelectedPermissions]=useState(default_selected_permissions)
@@ -98,11 +102,11 @@ const [permissions,setPermissions]=useState([
   },
   {
     "resource":"specialty_categories",
-    "actions":['read','create','update','delete']
+    "actions":['read','create','update']
   },
   {
     "resource":"doctor_requests",
-    "actions":['read','approve','reject']
+    "actions":['read']
   },
   {
     "resource":"payment_management",
@@ -115,6 +119,22 @@ const [permissions,setPermissions]=useState([
   {
     "resource":"appointments",
     "actions":['read','reschedule','cancel']
+  },
+  {
+    "resource":"feedback",
+    "actions":['read','approve','reject']
+  },
+  {
+    "resource":"support",
+    "actions":['read','send-message']
+  },
+  {
+    "resource":"app_settings",
+    "actions":['read','create','update','delete']
+  },
+  {
+    "resource":"stats",
+    "actions":['read']
   }
 ])
 

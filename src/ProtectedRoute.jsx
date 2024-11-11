@@ -5,7 +5,7 @@ import PreLoader from './components/Loaders/preloader';
 import { useAuth } from './contexts/AuthContext';
 
 const ProtectedRoute = ({ children, redirectTo = '/', path }) => {
-  const { isAuthenticated, user, login, loading, token,logout } = useAuth();
+  const { isAuthenticated, user, login, loading, token,logout,serverTime } = useAuth();
  
   const location=useLocation()
 
@@ -17,7 +17,7 @@ const ProtectedRoute = ({ children, redirectTo = '/', path }) => {
   }
 
  
-  if(loading){
+  if(loading || !serverTime){
      return <PreLoader/>
   }
   if(!loading && !user || !token){

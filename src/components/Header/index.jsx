@@ -1,5 +1,5 @@
 import { t } from 'i18next'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import Loader from '../Loaders/loader'
 import ConfirmDialog from '../modals/confirm'
@@ -11,12 +11,30 @@ function Header({pageContent}) {
   const {user,logout} = useAuth()
   const data=useData()
   const navigate=useNavigate()
+  const [unreadNotifications,setUnreadNotifications]=useState(0)
   
   function logout_user(){
       logout()
   }
 
-  const [showUserDialog,setShowUserDialog] = useState(false)
+  async function getUnreadSupportMessages(){
+    try{
+        let r=await data.makeRequest({method:'get',url:`api/unread-notifications`,withToken:true, error: ``},0);
+        setUnreadNotifications(r.unread_count)
+    }catch(e){
+        console.log(e)
+    }
+  }
+
+
+  useEffect(() => {
+    
+    const interval = setInterval(() => {
+        getUnreadSupportMessages()
+    }, 5000)
+    return () => clearInterval(interval);
+
+  }, []);
 
   return (
     <div className="w-full">
@@ -32,16 +50,17 @@ function Header({pageContent}) {
                
                <div className="flex items-center justify-end">
 
-              
-
-               <button type="button" class="text-gray-600 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2">
+               <button onClick={()=>{
+                  data._showPopUp('support_messages')
+               }} type="button" class="text-gray-600 _support_messages focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m480-80-10-120h-10q-142 0-241-99t-99-241q0-142 99-241t241-99q71 0 132.5 26.5t108 73q46.5 46.5 73 108T800-540q0 75-24.5 144t-67 128q-42.5 59-101 107T480-80Zm80-146q71-60 115.5-140.5T720-540q0-109-75.5-184.5T460-800q-109 0-184.5 75.5T200-540q0 109 75.5 184.5T460-280h100v54Zm-101-95q17 0 29-12t12-29q0-17-12-29t-29-12q-17 0-29 12t-12 29q0 17 12 29t29 12Zm-29-127h60q0-30 6-42t38-44q18-18 30-39t12-45q0-51-34.5-76.5T460-720q-44 0-74 24.5T344-636l56 22q5-17 19-33.5t41-16.5q27 0 40.5 15t13.5 33q0 17-10 30.5T480-558q-35 30-42.5 47.5T430-448Zm30-65Z"/></svg>
-                {t('common.support')}
+                {(user?.role=="admin" || user?.role=="manager") ? t('common._support') : t('common.support')}
+                {data.unreadSupportMessages!=0 && <span className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">{data.unreadSupportMessages}</span>}
               </button>
 
               {pageContent?.btn?.onClick && <button onClick={pageContent?.btn?.onClick} type="button" class="text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-2 text-center inline-flex items-center me-2">
                 <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
-                {pageContent?.btn?.text}
+                <div >{pageContent?.btn?.text}</div>
               </button>}
 
                   <div onClick={()=>{
@@ -90,8 +109,9 @@ function Header({pageContent}) {
             
                   <div onClick={()=>{
                        data._showPopUp('notifications')
-                  }} class="relative _notifications cursor-pointer ml-6 inline-flex items-center justify-center w-10 h-10 border border-white rounded-full">
+                  }} class="relative mr-5 _notifications cursor-pointer ml-6 inline-flex items-center justify-center h-10 border border-white rounded-full">
                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/></svg>
+                      {unreadNotifications!=0 && <span className=" bg-honolulu_blue-400 text-white rounded-[0.3rem] px-[0.2rem] h-[20px] flex items-center justify-center absolute top-1 right-[-1rem]">{unreadNotifications}</span>}
                   </div>
 
                   </div>

@@ -15,6 +15,7 @@ import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
 import FormCard from '../../components/Cards/form'
 import Comment from '../../components/modals/comments'
 import SearchInput from '../../components/Inputs/search'
+import _medication_names from '../../assets/medication-names.json'
 
 function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
 
@@ -210,17 +211,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
 
   const [chosenPatient,setChosenPatient]=useState({})
 
-  useEffect(()=>{
-    if(form.patient_id){
-      setChosenPatient(data._patients.filter(i=>i.id==form.patient_id)[0] || {})
-    }else{
-      setChosenPatient({})
-    }
-  },[form])
-
-  console.log({verified_inputs})
-
-
+  
   return (
      <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
 
@@ -240,7 +231,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                 (<button onClick={()=>setShowComment(true)} type="button" class={`text-white ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
                  <span className="ml-2">Chat</span>
-                 {(form.comments.length!=0 && itemToShow.action=="update") && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full w-[20px] h-[20px] flex items-center justify-center">
+                 {(form.comments.length!=0 && itemToShow.action=="update") && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full px-2 flex items-center justify-center">
                      {form.comments.length}
                  </div>}
               </button>)
@@ -315,6 +306,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
         
                   <div className="block w-full p-5 border rounded-[0.3rem] mt-5">
                       {form.medical_prescription_items.map((i,_i)=>(
+
                           <div className={`w-full flex ${_i != form.medical_prescription_items.length - 1 ? 'border-b pb-7':''} flex-wrap gap-x-4`}>
                             
                             {(_i != form.medical_prescription_items.length - 1 || form.medical_prescription_items.length >= 2) && <div className="w-full pt-3 flex items-center">
@@ -327,10 +319,25 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                                 </span>
                             </div>}
 
+                           <div className="w-full">
+
+                           <div className={`w-[360px]`}>
+                                  <label  class="block text-sm  mb-2 mt-7 text-gray-900">
+                                      {t('form.medication-name')} <span className="text-red-500">*</span>
+                                  </label>
+                                  <SearchInput canAdd={false} r={true} placeholder={t('form.medication-name')} id={i.name}  label={''} loaded={true} res={(id) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
+                                       return i.id==f.id ? {...f,name:id} : f
+                                   })})}  items={_medication_names.map(i=>({name:i,id:i}))}/>
+                            </div>
+
+                          </div>
+
+
                             <FormLayout.Input 
                               verified_inputs={verified_inputs} 
                               form={form} 
                               r={true} 
+                              hide={true}
                               ignoreVilidation={true}
                               width={'220px'}
                               onBlur={() => setVerifiedInputs([...verified_inputs, 'medication-name'+i.id])} 

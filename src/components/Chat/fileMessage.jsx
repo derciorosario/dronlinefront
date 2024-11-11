@@ -4,7 +4,15 @@ import { t } from 'i18next'
 
 function ChatFileMessage({comment,hide}) {
 
-  const {user} = useAuth()
+const {user} = useAuth()
+
+function endContent(i){
+   return (
+    <div className="flex items-center justify-center">
+       <span className={`${i.last_ended_status=="done" ? 'bg-green-500' : 'bg-red-500'} text-[14px] my-5 text-white rounded-full px-2 py-1`}>{t('common.support-'+i.last_ended_status)}</span>
+    </div>
+   )
+ }
 
 
    
@@ -20,7 +28,8 @@ const checkFileType = (filename) => {
 
   return (
 
-<div class={`flex ${comment.user_id == user?.id ? 'justify-end':' justify-start'} mb-6 gap-2.5 ${hide ? 'hidden':''}`}>
+     <div>
+      <div class={`flex ${comment.user_id == user?.id ? 'justify-end':' justify-start'} mb-6 gap-2.5 ${hide ? 'hidden':''}`}>
    {comment.user_id != user?.id && <div className="border bg-gray-200 rounded-full w-[40px] h-[40px] flex items-center justify-center">{comment.user?.name?.charAt()?.toUpperCase()}</div>}
    <div class="flex flex-col gap-1">
       <div class="flex items-center space-x-2 rtl:space-x-reverse">
@@ -36,7 +45,7 @@ const checkFileType = (filename) => {
                     :  
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z"/></svg>
                     }
-                  {comment.comment}
+                  {comment.comment || comment.message}
                </span>
                <span class="flex text-xs font-normal text-gray-500 gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="self-center" width="3" height="4" viewBox="0 0 3 4" fill="none">
@@ -57,10 +66,13 @@ const checkFileType = (filename) => {
       </div>
       <span class="text-sm font-normal text-gray-500">{comment.not_sent ? t('common.sending') : comment.created_at.split('T')[0]}</span>
    </div>
-   
-   
+  
    
 </div>
+ 
+{(comment.last_ended!=0 && comment.last_ended) && endContent()}
+
+     </div>
 
   )
 

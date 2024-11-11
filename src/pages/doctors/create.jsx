@@ -20,8 +20,7 @@ function addPatients({ShowOnlyInputs}) {
   const [valid,setValid]=useState(false)
   const [messageType,setMessageType]=useState('red')
   const data = useData()
-  const [searchParams, setSearchParams] = useSearchParams();
-          
+    
 
   const { id } = useParams()
   const {pathname} = useLocation()
@@ -34,6 +33,7 @@ function addPatients({ShowOnlyInputs}) {
   const {user} = useAuth()
 
   let initial_form={
+
     name:'',
     date_of_birth:'',
     main_contact:'',
@@ -60,9 +60,10 @@ function addPatients({ShowOnlyInputs}) {
     long_biography:'',
     years_of_experience:'',
     uploaded_files:[]
+    
   }
-  const [form,setForm]=useState(initial_form)
 
+  const [form,setForm]=useState(initial_form)
   
   useEffect(()=>{
 
@@ -97,12 +98,12 @@ function addPatients({ShowOnlyInputs}) {
 
     setValid(v)
 
-   
  },[form])
 
 
 
  let required_data=['specialty_categories']
+
  useEffect(()=>{
        if(!user) return
        setTimeout(()=>(
@@ -110,8 +111,6 @@ function addPatients({ShowOnlyInputs}) {
        ),500)
 
  },[user,pathname])
-
-
 
  
  useEffect(()=>{
@@ -236,6 +235,15 @@ function addPatients({ShowOnlyInputs}) {
     }
   }
 
+  
+  useEffect(()=>{
+    if(!user) return
+    if(user?.role=="manager" && !user?.data?.permissions?.doctor?.includes('create') && !id){
+           navigate('/') 
+    }
+  },[user])
+
+
 
   
   function handleUploadedFiles(upload){
@@ -243,7 +251,6 @@ function addPatients({ShowOnlyInputs}) {
   }
 
   function handleUploadeduploaded_files(upload){
-
     setForm({...form,uploaded_files:form.uploaded_files.map(i=>{
         if(i.id==upload.key){
           return {...i,filename:upload.filename}
@@ -251,10 +258,10 @@ function addPatients({ShowOnlyInputs}) {
          return i
         }
     })})
-
   }
 
-  
+
+
   return (
      <DefaultLayout hide={ShowOnlyInputs}>
           <AdditionalMessage btnSee={MessageBtnSee} float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
@@ -312,7 +319,9 @@ function addPatients({ShowOnlyInputs}) {
                                     }
                                  })})
                             }}   class={`bg-gray border border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
+                            
                             <FileInput  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
+                           
                             </div>
                               
                             <span onClick={()=>{
@@ -331,12 +340,13 @@ function addPatients({ShowOnlyInputs}) {
                 </div>
             )}
 
-              button={(
-                <div className="mt-[60px] ">
-                  <FormLayout.Button onClick={SubmitForm} valid={valid} loading={loading} label={loading ? t('common.loading') : id ? t('common.update') : t('common.send') }/>
-                </div>
-              )}
-              >
+                  button={(
+                   
+                    <div className={`mt-[60px] ${(user?.role=="manager" && !user?.data?.permissions?.doctor?.includes('update') && id) ? 'hidden':''} `}>
+                      <FormLayout.Button onClick={SubmitForm} valid={valid} loading={loading} label={loading ? t('common.loading') : id ? t('common.update') : t('common.send') }/>
+                    </div>
+                  )}
+                  >
 
                    <div className="mb-10 w-full">
                      <LogoFIle res={handleUploadedFiles} _upload={{key:'profile_picture_filename'}} label={t('common.profile-piture')}/>

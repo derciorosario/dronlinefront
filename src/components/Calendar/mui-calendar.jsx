@@ -4,11 +4,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 
-function MuiCalendar({selectedDate,handleDateChange}) {
+function MuiCalendar({selectedDate,handleDateChange,minDate}) {
   
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DateCalendar value={dayjs(selectedDate).$d.toString() != "Invalid Date" ? dayjs(new Date(selectedDate)) : null} onChange={handleDateChange} />
+      <DateCalendar  minDate={minDate} value={dayjs(selectedDate).$d.toString() != "Invalid Date" ? dayjs(new Date(selectedDate)) : null} onChange={handleDateChange} />
     </LocalizationProvider>
   );
 }

@@ -7,7 +7,6 @@ function SelectPayemntMethod({info}) {
 
   const data=useData()
   
-  console.log({info,a:data._specialty_categories})
  
   return (
     <div>

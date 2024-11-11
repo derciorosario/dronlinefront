@@ -39,15 +39,20 @@ function App() {
     }
  },[data.updateTable])
 
+ useEffect(()=>{
+  if(!user) return
+  if(user?.role=="manager" && !user?.data?.permissions?.specialty_categories?.includes('read')){
+         navigate('/') 
+  }
+},[user])
+
   
 
   return (
    
-         <DefaultLayout pageContent={{title:t('menu.specialty-categories'),desc:t('titles.specialty-categories'),btn:{onClick:()=>{
+         <DefaultLayout pageContent={{title:t('menu.specialty-categories'),desc:t('titles.specialty-categories'),btn:!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.specialty_categories?.includes('create'))) ? null : {onClick:()=>{
                  navigate('/add-specialty-category')
          },text:t('menu.specialty-categories')}}}>
-           
-
             
              <BaiscTable canAdd={user?.role=="admin"} addPath={'/add-specialty-category'} loaded={data._loaded.includes('specialty_categories')} header={[
                         /* <BaiscTable.MainActions options={{

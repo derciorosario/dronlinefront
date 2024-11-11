@@ -5,12 +5,11 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useData } from "../../contexts/DataContext";
 import { useParams } from 'react-router-dom'
 import { useEffect } from "react";
-import i18next, { t } from 'i18next'
+import { t } from 'i18next'
 import Loader from "../Loaders/loader";
 
 
 const Calendar = ({items}) => {
-
   const {user} = useAuth()
   const data=useData()
   const {pathname} = useParams()
@@ -57,16 +56,6 @@ const Calendar = ({items}) => {
   const [currentDate,setCurrentDate]=useState(new Date())
 
   const [_dates,setDates]=useState([])
-
-
-
-
-  
- 
-
-  
-  
-  
   
   useEffect(()=>{
 
@@ -95,7 +84,6 @@ const Calendar = ({items}) => {
         unavailable_dates=Object.keys(_doctorData.availability.unavailable_specific_date)
     }
 
-
     let specific_dates=[]
 
     specificDates.forEach((a,_a)=>{
@@ -115,7 +103,6 @@ const Calendar = ({items}) => {
 
        })
     })
-   
 
     weekdaysAvailability.forEach((a,_a)=>{
 
@@ -134,8 +121,9 @@ const Calendar = ({items}) => {
             })
       })   
     })
-
+    
     setEvents([..._events,...(items || [])])
+
   }else{
     setEvents((items || []))
   }

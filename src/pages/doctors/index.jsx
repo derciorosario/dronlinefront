@@ -94,13 +94,26 @@ function App() {
 
 
 
+ function handleItems({action,id}){
+   if(action=="see-availabilty"){
+      navigate('/consultation-availability/'+id)
+   }
+ }
+
+ useEffect(()=>{
+  if(!user) return
+  if(user?.role=="manager" && !user?.data?.permissions?.doctor?.includes('read')){
+         navigate('/') 
+  }
+},[user])
+
+
+
  
   return (
    
-         <DefaultLayout pageContent={{title:t('common.doctors'),desc:t('titles.doctors'),btn:{onClick:(e)=>{
-                 
+         <DefaultLayout pageContent={{title:t('common.doctors'),desc:t('titles.doctors'),btn:!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor?.includes('create'))) ? null : {onClick:(e)=>{
           navigate('/add-doctors')
-
          },text:t('menu.add-doctors')}}}>
            
             
@@ -116,7 +129,7 @@ function App() {
 
             <div className="absolute w-full">
             <BaiscTable canAdd={user?.role=="admin"} addPath={'/add-doctors'} loaded={data._loaded.includes('doctors')} header={[
-                         <BaiscTable.MainActions options={{
+                         <BaiscTable.MainActions hide={!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor?.includes('delete')))} options={{
                           deleteFunction:'default',
                           deleteUrl:'api/doctors/delete'}
                          } items={data._doctors?.data || []}/>,
@@ -129,6 +142,7 @@ function App() {
                           t('form.address'),
                           t('common.created_at'),
                           t('common.last-update'),
+                          (user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor_availability?.includes('update'))) ? '.' : ''
                         ]
                       }
 
@@ -136,7 +150,7 @@ function App() {
                         
                               <BaiscTable.Tr>
                                 <BaiscTable.Td>
-                                  <BaiscTable.Actions options={{
+                                  <BaiscTable.Actions hide={!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor?.includes('delete')))} options={{
                                        deleteFunction:'default',
                                        deleteUrl:'api/doctors/delete',
                                        id:i.id}
@@ -151,7 +165,9 @@ function App() {
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t(i.address)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                               
+                                <BaiscTable.AdvancedActions hide={!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor_availability?.includes('update')))} w={200} id={i.id} items={[
+                                    {name:t('common.availability'),onClick:()=>{handleItems({action:'see-availabilty',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M580-240q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>)},
+                                ]}/>
                             </BaiscTable.Tr>
                         ))}
 

@@ -54,9 +54,9 @@ function getAvailableHours(item,type){
                     <div className="flex items-center">
                            <div className="py-[2px] px-[3px] mr-1 bg-honolulu_blue-400 rounded-[0.3rem] flex items-center">
                                  <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="16px" viewBox="0 0 24 24" fill="#fff"><g><path d="M0 0h24v24H0V0z" fill="none"/><path d="M0 0h24v24H0V0z" fill="none"/></g><g><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"/></g></svg>
-                                 <label className="text-white text-[0.9rem]">4.6</label>
+                                 <label className="text-white text-[0.9rem]">{item.average_rating.toString().slice(0,3)}</label>
                            </div> 
-                           <label>(20)</label>
+                           <label>({item.reviews.filter(i=>i.rating).length})</label>
                     </div>
                 </div>
 
@@ -161,6 +161,7 @@ function getAvailableHours(item,type){
                 </div>
 
                 <div className="flex gap-3 bg-white py-2 px-1 border-t mb-6">
+
                            <div className="flex flex-col items-center w-full">
                                <div className="flex items-center justify-center w-[40px] h-[40px] bg-gray-200 rounded-full">                                                                                        
                                      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/></svg>
@@ -172,7 +173,7 @@ function getAvailableHours(item,type){
                                <div className="flex items-center justify-center w-[40px] h-[40px] bg-gray-200 rounded-full">                                
                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/></svg>
                                </div>
-                               <span className="text-[13px] flex justify-center flex-wrap">{t('common.rating')} <label className="ml-1">(4.5)</label></span>
+                               <span className="text-[13px] flex justify-center flex-wrap">{t('common.rating')} <label className="ml-1">({item.average_rating.toString().slice(0,3)})</label></span>
                            </div>
      
                            <div className="flex flex-col items-center w-full">
@@ -182,11 +183,13 @@ function getAvailableHours(item,type){
                                <span className="text-[13px] flex justify-center flex-wrap">{t('common.years')} <label className="ml-1">({item.years_of_experience})</label></span>
                            </div>
      
-                           <div className="flex flex-col items-center w-full">
-                               <div className="flex items-center justify-center w-[40px] h-[40px] bg-gray-200 rounded-full">                                            
-                                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m363-390 117-71 117 71-31-133 104-90-137-11-53-126-53 126-137 11 104 90-31 133ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
+                           <div onClick={()=>{
+                                 if(item.reviews.length)  data._showPopUp('reviews',item)
+                            }} className="flex flex-col items-center w-full _reviews">
+                               <div className={`flex items-center justify-center w-[40px] h-[40px] ${item.reviews.length==0 ? 'bg-gray-200':'bg-honolulu_blue-400 cursor-pointer hover:bg-honolulu_blue-500'}  rounded-full`}>                                            
+                                       <svg className={`${item.reviews.length==0 ? ' fill-[#5f6368]':'fill-white'}`} xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m363-390 117-71 117 71-31-133 104-90-137-11-53-126-53 126-137 11 104 90-31 133ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
                                </div>
-                               <span className="text-[13px] flex justify-center flex-wrap">{t('common.reviews')} <label className="ml-1">(0)</label></span>
+                               <span className="text-[13px] flex justify-center flex-wrap">{t('common.reviews')} <label className="ml-1">({item.reviews.length})</label></span>
                            </div>
                     </div>
                 
