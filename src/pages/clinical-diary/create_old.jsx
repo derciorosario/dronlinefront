@@ -110,12 +110,12 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout}) {
       console.log(error)
 
       if(e.message==404){
-         toast.error(t('item-not-found'))
+         toast.error(t('common.item-not-found'))
          navigate('/appointments')
       }else  if(e.message=='Failed to fetch'){
         
       }else{
-        toast.error(t('unexpected-error'))
+        toast.error(t('common.unexpected-error'))
         navigate('/appointments')  
       }
 

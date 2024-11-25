@@ -17,6 +17,7 @@ import managersIcon from '../../assets/images/menu-icons/managers.svg'
 import FeedbackIcon from '../../assets/images/menu-icons/feedback.svg'
 import AppSettingsIcon from '../../assets/images/menu-icons/app-settings.svg'
 import StatsIcon from '../../assets/images/menu-icons/stats.svg'
+import SpecialtyCategoriesIcon from '../../assets/images/menu-icons/specialty-categories.svg'
 
 import { t } from 'i18next';
 import { useAuth } from '../../contexts/AuthContext';
@@ -28,7 +29,8 @@ function SideBar() {
     const {user} = useAuth()
 
     const menuItems = [
-      {name:t('menu.home'),path:'/',paths:['/'],field:'dashboard',icon:'dashboard',access:['all'],manager_access:true},
+
+      {name:t('menu.home'),path:'/dashboard',paths:['/dashboard'],field:'dashboard',icon:'dashboard',access:['all'],manager_access:true},
       {name:t('menu.find-a-specialist'),path:'/specialists',paths:['/specialists'],field:'specialists',icon:'find_doctor',access:['admin','patient']},
      
       {name:t('menu.appointments'),path:'/appointments',field:'appointments',icon:'appointments',sub_menus:[
@@ -49,7 +51,7 @@ function SideBar() {
       {name:t('menu.doctors'),path:'/doctors',field:'doctors',icon:'doctor',sub_menus:[
         {name:t('menu.doctors'),path:'/doctors',paths:['doctors','doctor/:id'],manager_access:{name:'doctor',per:['read']}},
         {name:t('menu.add-doctors'),path:'/add-doctors',paths:['add-doctors'],manager_access:{name:'doctor',per:['create']}},
-        {name:t('menu.specialty-categories'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category'],manager_access:{name:'specialty_categories',per:['read']}},  
+        /* {name:t('menu.specialty-categories'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category'],manager_access:{name:'specialty_categories',per:['read']}},  */
         {name:t('menu.membership-requests'),path:'/membership-requests',paths:['/membership-requests','/membership-requests/:id'],field:'membership-requests',access:['admin'],manager_access:{name:'doctor_requests',per:['read']}},
       ],access:['admin'],manager_access:{name:'doctor',per:['read']},permission_pedendents:['doctor_requests']},
 
@@ -59,41 +61,51 @@ function SideBar() {
       ],access:['admin']},
 
 
-      {name:t('common.stats'),path:'/logs',field:'app-feedback',icon:'logs',sub_menus:[
+      {name:t('menu.specialties-and-prices'),path:'/specialty-categories',icon:'specialty_categories',sub_menus:[
+        {name:t('menu.specialties-and-prices'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category'],manager_access:{name:'specialty_categories',per:['read']}},
+        {name:t('common.cancellation-taxes'),path:'/cancellation-taxes',paths:['cancellation-taxes','cancellation-taxes/:id'],manager_access:{name:'specialty_categories',per:['read']}},    
+      ],access:['admin'],manager_access:{name:'specialty_categories',per:['read']}},
+      
+     
+      {name:'Logs',path:'/logs',field:'app-feedback',icon:'logs',sub_menus:[
         {name:t('common.action-logs'),path:'/logs',paths:['logs'],manager_access:{name:'stats',per:['read']}},
         {name:t('common.duration-logs'),path:'/user-activities',paths:['/user-activities'],manager_access:{name:'stats',per:['read']}},
       ],access:['admin'],manager_access:{name:'stats',per:['read']}},
      
      
-      {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient']},
+     {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient']},
       
-     // {name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
+     //{name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
 
-     {name:t('menu.payment-management'),path:'/payment-management',field:'payment-management',icon:'payment_management',sub_menus:[
-      {name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management'],manager_access:true},
+     {name:user?.role=="patient" ? t('common.payments') : t('menu.payment-management'),path:'/payment-management',field:'payment-management',icon:'payment_management',sub_menus:[
+      {name:t('common.payments'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],manager_access:true},
       {name:t('common.refunds'),path:'/refunds',paths:['/refunds'],manager_access:true},
-     ],access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
+     ],access:['admin','patient'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
     
 
-      {name:'Feedback',path:'/app-feedback',field:'app-feedback',icon:'feedback',sub_menus:[
+     {name:'Feedback',path:'/app-feedback',field:'app-feedback',icon:'feedback',sub_menus:[
         {name:t('menu.app-feedback'),path:'/app-feedback',paths:['app-feedback'],manager_access:{name:'feedback',per:['read']}},
         {name:t('menu.appointment-feedback'),path:'/appointment-feedback',paths:['appointment-feedback'],manager_access:{name:'feedback',per:['read']}},
-      ],access:['admin'],manager_access:{name:'feedback',per:['read']}},
+     ],access:['admin'],manager_access:{name:'feedback',per:['read']}},
     
+     {name:t('menu.app-settings'),path:'/faqs',field:'faq',icon:'app_settings',sub_menus:[
+      {name:'FAQ',path:'/faqs',paths:['faqs','faq/:id','faq'],manager_access:true},
+      {name:t('common.app-settings'),path:'/app-settings',paths:['app-settings'],manager_access:{name:'app_settings',per:['update']}},
+     ],access:['admin'],manager_access:{name:'app_settings',per:['read']}},
+
+
       {name:t('menu.settings'),path:'/profile',field:'settings',icon:'settings',sub_menus:[
         {name:t('menu.profile'),path:'/profile',paths:['profile'],access:['all'],manager_access:true},
         {name:t('menu.consultation-availability'),path:'/consultation-availability',paths:['consultation-availability'],access:['doctor']}, //manager_access:{name:'doctor_availability',per:['read','update']}
       ],access:['patient','doctor','admin'],manager_access:true},
 
-      {name:t('menu.app-settings'),path:'/faqs',field:'faq',icon:'app_settings',sub_menus:[
-        {name:'Faqs',path:'/faqs',paths:['faqs','faq/:id','faq'],manager_access:true},
-      ],access:['admin'],manager_access:{name:'app_settings',per:['read']}},
-
-
+    
+     
   ]
 
 
   let images={
+
       dashboard:DashboardIcon,
       patient:PatientIcon,
       appointments:AppointmentsIcon,
@@ -109,7 +121,9 @@ function SideBar() {
       manager:managersIcon,
       app_settings:AppSettingsIcon,
       feedback:FeedbackIcon,
-      logs:StatsIcon
+      logs:StatsIcon,
+      specialty_categories:SpecialtyCategoriesIcon
+
   }
 
     const [menuOpen, setMenuOpen] = useState([]);
@@ -145,8 +159,7 @@ function SideBar() {
 
     
   function checkAccess(item,isSub){
-
-
+    
       if(!isSub){
 
          if(user?.role=="manager" && user){
@@ -224,8 +237,8 @@ function SideBar() {
     return (
     <div className="min-w-[230px] max-w-[240px] bg-white h-[100vh]">
 
-           <div className="flex justify-center py-[20px] mb-6">
-                <h1 className="text-[25px] font-medium">
+           <div className="flex justify-center py-[20px] mb-6 cursor-pointer">
+                <h1 className="text-[25px] font-medium" onClick={()=>navigate('/')}>
                    <img src={LogoIcon} width={120}/>
                 </h1>
            </div>

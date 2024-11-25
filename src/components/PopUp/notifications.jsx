@@ -3,8 +3,12 @@ import { useData } from '../../contexts/DataContext'
 import { t } from 'i18next'
 import { useAuth } from '../../contexts/AuthContext'
 import BasicPagination from '../Pagination/basic'
+import { useNavigate } from 'react-router-dom'
+import Loader from '../Loaders/loader'
 
 export default function Notifications({show}) {
+
+  const navigate=useNavigate()
 
   const data=useData()
   const {user}=useAuth()
@@ -14,13 +18,13 @@ export default function Notifications({show}) {
   const [updateFilters,setUpdateFilters]=useState(null)
   const [_notifications,setNotifications]=useState([])
   const [updateNots,setUpdateNots]=useState(null)
+  const [nots,setNots]=useState([])
 
   
   useEffect(()=>{ 
-    if(!user) return
-    console.log({a:1})
+    if(!user || !show) return
     data._get(required_data,{notifications:{page:currentPage}}) 
-  },[user,currentPage,updateFilters,updateNots])
+  },[user,currentPage,updateFilters,updateNots,show])
 
   
   async function mark_as_read(id){
@@ -41,20 +45,15 @@ export default function Notifications({show}) {
 
   useEffect(()=>{
     if(!data._notifications?.data?.length) return
-    let last=data._notifications?.data[data._notifications?.data.length - 1]
-    if(last?.id){
-       mark_as_read(last?.id)
+    let first=data._notifications?.data[0]
+    if(first?.id){
+       mark_as_read(first?.id)
     }
-
-    console.log(last.id)
-
-    data._notifications?.data.forEach(i=>{
-
-         console.log(i.id)
-
-    })
-    console.log('----')
+  
+    setNots((data._notifications?.data || []))
 },[data._notifications])
+
+
 
 
 
@@ -78,10 +77,51 @@ function getTitle(type){
     return t('notification-titles.'+type)
 }
 
+function getMessageContent(i){
+  //upcoming-consultation
+  let link=(i.type=="upcoming-consultation" || i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request")  ?  '/appointment/'+i.data.details?.id :  (i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected") ? '/payment-management/'+i.data.details?.id : ''
+  
+  return (
+    <>
+      <div class="ms-3 text-sm font-normal">
+      <div class="text-sm font-semibold text-gray-900">{getTitle(i.type)}</div>
+      <div class="text-sm font-normal">
+        {t('notification-messages.'+i.type)}
+        {(i.type=="upcoming-consultation") && <span>{i.data.details?.scheduled_date} {i.data.details?.scheduled_hours}</span>}
+        {(i.type=="consultation-status" || i.type=="invoice-status") && <span className={`font-medium ${i.data?.status=="rejected" || i.data?.status=="canceled" ? 'text-red-500':i.data?.status=="completed" || i.data?.status=="done"  ? "text-green-500" : i.data?.status =="pending" ? "text-orange-400":"text-honolulu_blue-400"} `}> {t('common.'+i.data?.status)}</span>}
+        {i.type=="new-mpesa-payment"  &&  <span> #{i.data.details?.patient_id}</span>}
+        {(i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request") && <p>{t('common.consultation-timetable')}:   {i.data.details?.scheduled_date} {i.data.details?.scheduled_hours}</p>}
+        {(i.type=="invoice-status" || i.type=="new-pending-invoice" || i.type=="refund-request") && <p>{t('common.reference')}:   #{i.data.details?.ref_id}</p>}
+      </div> 
+
+      {(i.type=="upcoming-consultation" || i.type=="consultation-status" || i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected") && <div className="flex items-center flex-wrap">
+           <div className="w-full">
+              <button onClick={()=>{
+                    navigate(link)
+                    setTimeout(()=>{
+                        data._closeAllPopUps()
+                    },100)
+              }} type="button" class="text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-full mb-2 mt-1 text-sm px-3 py-1 text-center inline-flex items-center me-2">
+                                            <div>{t('common.see')}</div>
+                </button>
+          </div>
+      </div>}
+      
+      <span class="text-xs font-medium text-blue-600">{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</span>   
+      </div>
+    </>
+  )
+
+}
+
 return (
 
 <div style={{zIndex:999}} className={`fixed _notifications ${!show ? 'opacity-0 pointer-events-none':''} transition-all  ease-in left-0 top-0 w-full h-[100vh] flex items-center bg-[rgba(0,0,0,0.6)] justify-end`}>
+<div className="w-full h-full  flex-1" onClick={()=>{
+  data._closeAllPopUps()
+}}>
 
+</div>
 <div className={`w-[400px] flex flex-col border ${!show ? 'translate-x-[100%]' : ''} transition-all ease-in delay-75 rounded-md h-[100vh] bg-white relative`}>
 
        <div className="w-full p-3 border-b">
@@ -101,12 +141,25 @@ return (
 
        <div className="w-full flex-1 overflow-y-auto">
 
- 
+           {((data._notifications?.data || []).length==0 && data._loaded.includes('notifications'))  && <div className="w-full h-[40vh] flex items-center justify-center">
+               <span className="text-gray-400">{t('common.no-notifications')}</span>
+           </div>}
 
-            {(data._notifications?.data || []).map((i,_i)=>(
+
+           {!data._loaded.includes('notifications') && <div className="flex flex-col items-center justify-center py-5">
+                     <Loader/>
+                     <span className="flex mt-2">{t('common.loading')}...</span>
+           </div>}
+
+
+            {data._loaded.includes('notifications')  && <>
+            {nots.map((i,_i)=>(
                 <div  class="w-full p-4 text-gray-900 bg-white rounded-lg shadow" role="alert">
            
-                <div class="flex items-center">
+                <div class="flex items-center relative">
+
+                   {!i.read_at && <span className="flex absolute top-0 right-0 h-full w-[2px] bg-gray-400 rounded-[0.4rem]"></span>}
+                  
                     <div class="relative inline-block shrink-0 hidden">
                         <img class="w-12 h-12 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Jese Leos image"/>
                         <span class="absolute bottom-0 right-0 inline-flex items-center justify-center w-6 h-6 bg-blue-600 rounded-full">
@@ -117,15 +170,15 @@ return (
                             <span class="sr-only">Message icon</span>
                         </span>
                     </div>
-                    <div class="ms-3 text-sm font-normal">
-                        <div class="text-sm font-semibold text-gray-900">{getTitle(i.type)}</div>
-                        <div class="text-sm font-normal">{i.data.message}</div> 
-                        <span class="text-xs font-medium text-blue-600">{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</span>   
-                    </div>
+
+                    {getMessageContent(i)}
+
+                   
                 </div>
               </div>
 
-            ))}  
+            ))}
+            </>  }
 
 
        </div>

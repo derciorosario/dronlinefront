@@ -89,7 +89,7 @@ function AppointmentInvoice({ShowOnlyInputs}) {
       }else  if(e.message=='Failed to fetch'){
         
       }else{
-        toast.error(t('unexpected-error'))
+        toast.error(t('common.unexpected-error'))
         navigate('/appointment-invoices')  
       }
   }
@@ -106,6 +106,40 @@ useEffect(()=>{
 },[data.updateTable])
 
 
+
+
+
+async function handleItems({status,id}){
+  data._closeAllPopUps()
+  toast.remove()
+  toast.loading(t('common.updating'))      
+
+  setLoading(true)
+
+  try{
+
+   await data.makeRequest({method:'post',url:`api/appointment-invoices/${id}/status`,withToken:true,data:{
+     status
+   }, error: ``},0);
+
+   toast.remove()
+   toast.success(t('messages.updated-successfully'))
+   data.setUpdateTable(Math.random())
+   
+
+  }catch(e){
+     setLoading(false)
+     toast.remove()
+     if(e.message==500){
+       toast.error(t('common.unexpected-error'))
+     }else  if(e.message=='Failed to fetch'){
+         toast.error(t('common.check-network'))
+     }else{
+         toast.error(t('common.unexpected-error'))
+     }
+
+  }
+}
 
 
 
@@ -129,7 +163,10 @@ return (
 
   <FormLayout  hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={t('common.payment')} verified_inputs={verified_inputs} form={form}
 
-  topBarContent
+  advancedActions={{hide:!id,id:form.id, items:[
+    {hide:form.status=="approved" || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.payment_management?.includes('approve')) ),name:t('common.approve'),onClick:()=>{handleItems({status:'approved',id:form.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
+    {hide:form.status=="rejected" || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.payment_management?.includes('reject')) ),name:t('common.reject'),onClick:()=>{handleItems({status:'rejected',id:form.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>)}
+] }}
 
   bottomContent={(
     <div></div>
@@ -137,22 +174,27 @@ return (
   
 
   button={(
-    <div className={`mt-[40px]`}>
-
-    
-    </div>
+    <div className={`mt-[40px] `}></div>
   )}
   >
 
 
   <FormCard hide={!id} items={[
     {name:'ID',value:form.id},
-    {name:'Ref',value:form.ref_id},
-    {name:t('common.status'),value:t('common.'+form.status)},
+    {name:t('common.title'),value:form.type=="payment" ? t('common.consultation-payment'): t('common.consultation-refund')},
+    {name:'Ref',value:`#${form.ref_id}`},
+    {name:t('common.status'),value:t('common.'+form.status),color:form.status=="pending" ? '#f97316':form.status=="approved" ? '#0b76ad' : form.status=="rejected" ?  '#dc2626' : '#16a34a'},
     {name:t('form.patient-name'),value:form?.patient?.name},
     {name:t('common.doctor'),value:form.doctor?.name},
-    {name:t('common.amount'),value:form.amount}, 
+    {name:t('common.consultation-price'),value:data.formatNumber(data._cn_op(form.price)),color:'#0b76ad'},
+    {name:t('common.cancelation-tax'),value:data.formatNumber(data._cn_op(form.taxes)),color:'#0b76ad',hide:form.type=="payment"},
+    {name:form.type=="refund" ? t('common.amount-to-refund') : t('common.amount'),value:data.formatNumber(data._cn_op(form.amount)),color:'#0b76ad'}, 
+    {hide:form.type=="refund" || form.amount==0,name:t('common.view-invoice'),value:'',
+      link:!form.type=="refund" ? false : '/invoice/'+form.ref_id
+    },
     {name:t('form.consultation-id'),value:form.appointment_id}, 
+    {name:t('form.insurance_company'),value:form.insurance_company,hide:!form.insurance_company},
+    {name:t('form.policy_number'),value:form.policy_number,hide:!form.policy_number},
     {name:t('common.created_at'),value:form.created_at?.split('T')?.[0] + " "+form.created_at?.split('T')?.[1]?.slice(0,5)}, 
   ]}/>
 

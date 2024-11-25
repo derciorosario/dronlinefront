@@ -9,26 +9,30 @@ function Mpesa({info}) {
 
     const [loading,setLoading]=useState(false)
 
-    async function SubmitForm(){     
+    async function SubmitForm(){
         setLoading(true)
+        data.setPaymentInfo({...info,loading:true})
     
         try{   
            
             let response=await data.makeRequest({method:'post',url:`api/mpesa/c2b`,withToken:true,data:{
                 phone:info.mpesa_number,
-              ...info
+              ...info,
+                doctor:null
               }, error: ``},0);
 
-             data.setPaymentInfo({...info,doctor:null,done:true,appointment:response.appointment})
+             data.setPaymentInfo({...info,doctor:null,done:true,appointment:response.appointment,loading:false})
              setLoading(false)
-
 
         }catch(e){
 
+            data.setPaymentInfo({...info,loading:false})
+
             console.log({e})
             setLoading(false)
-
-           if(e.message==400){
+            if(e.message==401){
+                toast.error(t('messages.transaction-not-authorized'))
+            }else if(e.message==400){
                 toast.error(t('common.invalid-data'))
             }else if(e.message==500){
                 toast.error(t('common.unexpected-error'))
@@ -37,16 +41,12 @@ function Mpesa({info}) {
             }else{
                 toast.error(t('common.unexpected-error'))
             }
-        }
+          }
       }
 
 
     return (
-
-      
-   
         <div>
-    
             <h3 className="mt-3 font-medium text-[20px] mb-2">{t('common.select-your-mpesa-number')}</h3>
     
           

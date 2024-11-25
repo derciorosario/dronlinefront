@@ -69,6 +69,7 @@ function DoctorList({show}) {
 
                     <div class={`flow-root ${showDoctorDetails ? 'hidden':''}`}>
                             <ul role="list" class="divide-y divide-gray-200">
+                              
                                  {searchedData.map((i,_i)=>(
 
                                     <li onClick={()=>setShowDoctorDetails(true)} class="py-3 sm:py-4 hover:bg-gray-100 px-4 rounded-[0.3rem] cursor-pointer">

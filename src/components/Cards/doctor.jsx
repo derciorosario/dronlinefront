@@ -42,7 +42,7 @@ function getAvailableHours(item,type){
         <div  class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm">
             
             <div  className="min-h-[240px] bg-gray-100">
-                <img  class="rounded-t-lg" src="/docs/images/blog/image-1.jpg" alt="" />
+                <img  class="rounded-t-lg" src={item.profile_picture_filename} alt="" />
             </div>
 
             <div class="p-5">
@@ -83,19 +83,7 @@ function getAvailableHours(item,type){
                 
                 <div className={`flex items-center flex-wrap mb-2`}>
 
-                    {/*{getAvailableHours(item,'normal').map((i,_i)=>(
-                        <span onClick={()=>{
-                            handleSelectDoctorAvailability(item,i)
-                        }} className={`flex px-3 cursor-pointer ${selectedDoctors[item.id]?.includes(i) ? 'border-honolulu_blue-300 bg-honolulu_blue-50 text-honolulu_blue-400':'border-transparent bg-honolulu_blue-50 '} border  py-1 mr-2 mb-2 rounded-full`}>{i}</span>
-                    ))}
-
-
-                   {getAvailableHours(item,'urgent').map((i,_i)=>(
-                        <span onClick={()=>{
-                            handleSelectDoctorAvailability(item,i)
-                        }} className={`flex px-3 cursor-pointer ${selectedDoctors[item.id]?.includes(i) ? 'border-orange-400 bg-orange-50 text-orange-400':'border-transparent bg-orange-100 '} border  py-1 mr-2 mb-2 rounded-full `}>{i}</span>
-                    ))}*/}
-
+                 
 
 
                     <div className="mt-4 flex items-center justify-between hidden">

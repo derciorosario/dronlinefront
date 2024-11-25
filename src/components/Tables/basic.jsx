@@ -4,24 +4,28 @@ import { t } from 'i18next'
 import { useNavigate } from 'react-router-dom'
 import { useData } from '../../contexts/DataContext'
 
-function BaiscTable({header,body,loaded,addPath,canAdd}) {
+function BaiscTable({header,body,loaded,addPath,canAdd,notClickable,hide}) {
   const navigate=useNavigate()
 
   return (
-    <div className={``}>
+    <div className={`${notClickable ? '_not_clickable_table':''} ${hide ? 'hidden':''}`}>
      <div class="relative overflow-x-auto shadow-sm sm:rounded-lg">
       <table class={`w-full ${!loaded ? 'hidden':''} text-sm text-left rtl:text-right`}>
           <thead class="text-xs text-gray-700 bg-gray-50">
               <tr>
+
                 {header.filter(i=>i).map((i,_i)=>(
                     <th key={_i} scope="col" class="px-6 py-3">
                       {i}
-                  </th>
+                    </th>
                 ))}
+
               </tr>
           </thead>
           <tbody>
+
                {body}
+
           </tbody>
       </table>
     </div>
@@ -100,7 +104,9 @@ BaiscTable.MainActions = ({items,options,hide}) => {
 
 
 BaiscTable.AdvancedActions=({items,id,w,hide})=>{
+  
     const data=useData()
+
     return (
        <>
        <div></div>

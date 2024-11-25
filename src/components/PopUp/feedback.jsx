@@ -45,7 +45,7 @@ function Feedback() {
         if(options.reviews[0]){
 
           await data.makeRequest({method:'post',url:`api/reviews/${options.reviews[0].id}`,withToken:true,data:{
-            rating:chosenIndex,comment:message
+            rating:(chosenIndex ? chosenIndex + 1 : 0),comment:message || ''
           }, error: ``},0)
 
          }else{
@@ -82,7 +82,7 @@ function Feedback() {
           <div className="w-[600px] bg-white p-4 rounded-[0.3rem] _feedback">
 
            <div class="flex justify-between mb-6">
-                <h2 class="text-[20px] flex-1 mr-3 lg:text-2xl font-bold text-gray-900">{t('common.share-your-option')}</h2>
+                <h2 class="text-[20px] flex-1 mr-3 lg:text-2xl font-bold text-gray-900">{t('common.share-your-option-on-consultation')}</h2>
                 <div onClick={()=>data._closeAllPopUps()} className="bg-honolulu_blue-400 cursor-pointer hover:opacity-90 w-[40px] h-[40px] right-3 top-3 z-30 rounded-full flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
             </div>

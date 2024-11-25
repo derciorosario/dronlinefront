@@ -2,18 +2,54 @@ import { t } from 'i18next'
 import React from 'react'
 import ButtonLoader from '../components/Loaders/button';
 import PopOver from '../components/PopOver';
+import _var from '../assets/vaiables.json'
+import { useData } from '../contexts/DataContext';
 
-function FormLayout({hideInputs,children,title,form, verified_inputs,bottomContent,button,hideTitle,hide,topBarContent}) {
+function FormLayout({advancedActions,hideInputs,children,title,form, verified_inputs,bottomContent,button,hideTitle,hide,topBarContent}) {
 
 const childrenWithProps = React.Children.map(children, child => {
     return React.cloneElement(child, { form, verified_inputs,hideInputs});
 });
 
+function getAdvancedActions(items=[],id=null,w=undefined){
+
+      const data=useData()
+   
+       return (
+        <div className={`relative ${hide ? 'hidden':''}  ${(items || []).filter(i=>!i.hide).length == 0 ? 'hidden':''} flex items-center`}>
+          <span className="_table_options" onClick={()=>{
+               if(!data._openPopUps.table_options){
+                  data._showPopUp('table_options',id)
+               }else{
+                  data._closeAllPopUps()
+               }
+          }}><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#111"><path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/></svg></span>
+          {data._openPopUps.table_options==id && <div id="dropdown" class={`z-10 _table_options bg-white  absolute right-[20px] divide-y divide-gray-100 rounded-lg shadow w-[${w ? w :'130'}px]`}>
+                        <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
+                           {(items || []).filter(i=>!i.hide).map((i,_i)=>(
+                              <li onClick={i.onClick} className="flex items-center px-4 hover:bg-gray-100">
+                                <span className="mr-2">{i.icon}</span>
+                                <a href="#" class="block py-2 text-[14px]">{i.name}</a>
+                              </li>
+                            ))}
+                        </ul>
+          </div>}
+       </div>
+       )
+
+}
+
 return (
     <div className={`bg-white w-full m-3 py-3 rounded-[0.3rem] min-h-[60vh] pb-[30px] ${hide ? 'hidden':''}`}>
         {!hideTitle && <div className="w-full border-b px-3 pb-2 flex justify-between items-center">
              <span className="">{title}</span>
-             {topBarContent}
+            
+             <div className="relative flex items-center">
+               {topBarContent}
+               <div className="cursor-pointer">
+                  {!advancedActions?.hide && getAdvancedActions(advancedActions?.items,advancedActions?.id)}
+               </div>
+             </div>
         </div>}
         
         <div class="px-3 flex flex-wrap gap-x-4">
@@ -33,7 +69,7 @@ return (
  }
 
 
-    FormLayout.Input = ({placeholder,ignoreVilidation,inputStyle,width,hideInputs,confirmContent,popOver,listContent,has_items_to_add,style,label,type,onChange,value,field,verified_inputs,onBlur,onClick,form,r,selectOptions,disabled,errorMsg,noBorder,hide,textarea,custom_invalid_validation,height}) => {
+    FormLayout.Input = ({inputLeftContent,contact_code_field,hideErrorMsg,placeholder,ignoreVilidation,inputStyle,width,hideInputs,confirmContent,popOver,listContent,has_items_to_add,style,label,type,onChange,value,field,verified_inputs,onBlur,onClick,form,r,selectOptions,disabled,errorMsg,noBorder,hide,textarea,custom_invalid_validation,height}) => {
       
         let _id=Math.random()
 
@@ -71,22 +107,27 @@ return (
                         </div>
 
                     ) : !selectOptions ? (
+
+                       <div className="flex items-center">
+                            {inputLeftContent}
+                            <input placeholder={placeholder} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id}  class={`bg-gray ${!noBorder ? 'border':''} border-gray-300 ${disabled ? 'opacity-50':''} text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}/>
+                      
+                       </div>
                         
-                        <input placeholder={placeholder} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id}  class={`bg-gray ${!noBorder ? 'border':''} border-gray-300 ${disabled ? 'opacity-50':''} text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}/>
-                   
+                       
                     ): (
 
                     <select disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id}  class={`bg-gray ${!noBorder ? 'border':''} border-gray-300 ${disabled ? 'opacity-50':''} text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}>
                             <option value={""} selected disabled>{t('common.select-an-option')}</option>
                             {selectOptions.map(i=>(
-                                <option value={i.value}>{i.name}</option>
+                                <option value={i.value} disabled={i.disabled}>{i.name}</option>
                             ))}
                     </select> 
 
                     )}
                     
-                    {errorMsg  && r && !ignoreVilidation && <span className="text-[0.9rem] text-red-600">{errorMsg}</span>}
-                    {((!errorMsg && !ignoreVilidation && verified_inputs.includes(field) && !form[field] && r && custom_invalid_validation==undefined) || custom_invalid_validation) && <span className="text-[0.9rem] text-red-600">{t('common.required-field')}</span>}
+                    {errorMsg  && r && !ignoreVilidation && !hideErrorMsg &&  <span className="text-[0.9rem] text-red-600">{errorMsg}</span>}
+                    {((!errorMsg && !ignoreVilidation && !hideErrorMsg && verified_inputs.includes(field) && !form[field] && r && custom_invalid_validation==undefined) || custom_invalid_validation) && <span className="text-[0.9rem] text-red-600">{t('common.required-field')}</span>}
                     
                     
             </div>

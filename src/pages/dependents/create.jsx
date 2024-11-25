@@ -34,6 +34,8 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
   let initial_form={
     name:'',
     date_of_birth:'',
+    main_contact_code:'258',
+    alternative_contact_code:'258',
     main_contact:'',
     alternative_contact:'',
     gender:'',
@@ -60,11 +62,11 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
     uploaded_files:[],
     chronic_diseases: [],
     surgery_or_relevant_procedures: [],
-    drug_allergy: [],
+    drug_allergies: [],
     continuous_use_of_medications: [],
     has_chronic_diseases:null,
     has_surgery_or_relevant_procedures: null,
-    has_drug_allergy:null,
+    has_drug_allergies:null,
     has_continuous_use_of_medications: null
   }
 
@@ -122,7 +124,7 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
       }else  if(e.message=='Failed to fetch'){
          
       }else{
-        toast.error(t('unexpected-error'))
+        toast.error(t('common.unexpected-error'))
         navigate('/dependents')  
       }
   }
@@ -152,7 +154,7 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
 
     }else{
 
-      if(form.has_chronic_diseases==null || form.has_surgery_or_relevant_procedures==null || form.has_drug_allergy==null ||form. has_continuous_use_of_medications==null){
+      if(form.has_chronic_diseases==null || form.has_surgery_or_relevant_procedures==null || form.has_drug_allergies==null ||form. has_continuous_use_of_medications==null){
         setMessage(t('common.fill-all-required-fills'))
         setMessageType('red')
         setLoading(false)
@@ -286,7 +288,7 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
                       </div>
             </div>
 
-            <PatientForm hideInputs={user?.role!="patient"} setForm={setForm}  form_name={'dependent'} hide={user?.role=="doctor"}  itemsToHide={['password','medical-specialty','order-number','short_biography','long_biography','years_of_experience']} form={form}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
+            <PatientForm hideInputs={user?.role!="patient"} setForm={setForm}  form_name={'dependent'} hide={user?.role=="doctor"}  itemsToHide={['password','medical-specialty','order-number','short_biography','long_biography','years_of_experience','mobile_payment_method_name','mobile_payment_method_number','bank_payment_method_name','bank_payment_method_nib']} form={form}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
 
             </FormLayout>
        </>
@@ -295,7 +297,11 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
 
 
   return (
-     <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
+     <DefaultLayout hide={ShowOnlyInputs || hideLayout} pageContent={{btn:user?.role=="patient" && id ? { onClick:(e)=>{
+                 
+      navigate('/add-dependent')
+
+   },text:t('menu.add-dependents')}:{}}}>
             {pageContent()}
      </DefaultLayout>
   )

@@ -45,11 +45,7 @@ const Calendar = ({items}) => {
     console.log("Deletion prevented for event ID:", eventId);
   };
 
-  const handleViewChange = (view, start, end) => {
-    const currentMonth = start.toLocaleString('default', { month: 'long' });
-    console.log(`Current month being displayed: ${currentMonth}`);
-  };
-
+ 
 
   const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 
@@ -59,7 +55,7 @@ const Calendar = ({items}) => {
   
   useEffect(()=>{
 
-    if(!data._loaded.includes('appointments')) return
+    if(!data._loaded.includes('upcoming_appointments')) return
 
     if(user?.role=="doctor"){
 
@@ -121,8 +117,11 @@ const Calendar = ({items}) => {
             })
       })   
     })
+
     
-    setEvents([..._events,...(items || [])])
+    //setEvents([...(items || []),..._events])
+    setEvents([...(items || [])])
+    
 
   }else{
     setEvents((items || []))
@@ -165,14 +164,14 @@ const Calendar = ({items}) => {
 
     <>
              
-              <div className={`w-full h-[50vh] ${(doctorData || user?.role!="doctor") ? 'hidden':'flex'} items-center justify-center`}>
+              <div className={`w-full h-[50vh] ${((!doctorData && user?.role=="doctor") || !data._loaded.includes('upcoming_appointments')) ? 'flex':'hidden'} items-center justify-center`}>
                   <div className="flex flex-col items-center justify-center">
                       <Loader/>
                       <span className="flex mt-2">{t('common.loading')}...</span>
                   </div>
               </div>
 
-              <div style={{ width: "100%", height: "100vh", opacity:(!doctorData && user?.role=="doctor") || (!data._loaded.includes('appointments') && user?.role=="patient") ? 0 : 1}}>
+              <div style={{ width: "100%", height: "100vh", opacity:((!doctorData && user?.role=="doctor") || !data._loaded.includes('upcoming_appointments')) ? 0 : 1}}>
                   <Scheduler
                     translations={customTranslations}
                     locale={pt}

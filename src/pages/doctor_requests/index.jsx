@@ -50,7 +50,7 @@ function App() {
  },[data.updateTable])
 
 
- console.log({a:data._doctor_requests})
+ 
  
  return (
    

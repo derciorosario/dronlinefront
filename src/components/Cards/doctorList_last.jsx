@@ -75,9 +75,7 @@ function DoctorList({show}) {
 
 
                       {showDoctorDetails && <div>
-
                         <DoctorDetails/>
-
                       </div>}
 
                       {(!searchedData.length && !showDoctorDetails) && <div className="w-full flex justify-center">

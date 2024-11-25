@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import { useData } from '../../contexts/DataContext';
 import toast from 'react-hot-toast';
+import Loader from '../Loaders/loader';
 
 function SendProof({info}) {
 
@@ -36,6 +37,7 @@ function SendProof({info}) {
 
 
   const handleSubmit = async (event) => {
+
     let f = event.target.files[0];
     const formData = new FormData();
     formData.append('file', f);
@@ -44,15 +46,20 @@ function SendProof({info}) {
     formData.append('formdata',JSON.stringify(info))
   
     setFile(f);
-  
+
+    data.setPaymentInfo({...info,loading:true})
+
     const xhr = new XMLHttpRequest();
 
     setUpload(prev=>({...prev,uploading:true}))
+
+   
   
     // Monitor the progress of the upload
     xhr.upload.onprogress = function (event) {
       if (event.lengthComputable) {
         const percentComplete = (event.loaded / event.total) * 100;
+        console.log({percentComplete})
         setUpload(prev=>({...prev,progress:percentComplete}))
       }
     };
@@ -65,7 +72,7 @@ function SendProof({info}) {
       if (xhr.status >= 200 && xhr.status < 300) {
         const result = JSON.parse(xhr.responseText);
         setUpload(prev=>({...prev,filename:result.url,uploading:false}))
-        data.setPaymentInfo({...info,step:3})
+        data.setPaymentInfo({...info,step:3,loading:false})
         clearFileInputs()
       } else {
         toast.error(t('common.error-while-uploading-file'))
@@ -91,9 +98,6 @@ function SendProof({info}) {
 
   return (
 
-
-
-    
    
     <div>
 
@@ -130,9 +134,6 @@ function SendProof({info}) {
       <div class="grid gap-2">
       <h4 class="text-center text-gray-900 text-sm font-medium leading-snug">{t('common.get-proof')}</h4>
    
-
-      
-
         {!upload.uploading  && 
         <div class="flex items-center justify-center">
             <label>
@@ -142,7 +143,9 @@ function SendProof({info}) {
       </div>
         }
 
-        {upload.uploading && <div className="flex justify-center items-center flex-col">
+        {(upload.uploading && upload.progress < 100) && <div className="flex justify-center items-center flex-col relative">
+
+
               <div className="w-[150px] h-[4px] bg-gray-300 rounded-[0.4rem] relative">
                     
                     <div style={{width:`${upload.progress}%`}} className="absolute left-0 top-0  h-full bg-honolulu_blue-400"></div>
@@ -150,6 +153,12 @@ function SendProof({info}) {
               </div>
               <span className="mt-2">{`${upload.progress.toFixed(2)}%`}</span>
         </div>}
+
+        {(upload.uploading && upload.progress >= 100) && <div className="flex items-center  w-full justify-center flex-col">
+                 <Loader/>
+        </div>}
+
+        
 
       </div>
       </div>

@@ -101,7 +101,7 @@ useEffect(()=>{
       }else  if(e.message=='Failed to fetch'){
         
       }else{
-        toast.error(t('unexpected-error'))
+        toast.error(t('common.unexpected-error'))
         navigate('/faq')
       }
   }
@@ -188,7 +188,9 @@ return (
 
 <div>   
 
- <DefaultLayout hide={ShowOnlyInputs}>
+ <DefaultLayout hide={ShowOnlyInputs} pageContent={{btn:!((user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.app_settings?.includes('create'))) && id) ? null : {onClick:(e)=>{
+      navigate('/add-faq')
+     },text:t('common.add-faq')}}}>
 
   {!itemToEditLoaded && id && <div className="mt-10">
     <DefaultFormSkeleton/>
@@ -196,7 +198,7 @@ return (
 
   <div>
 
-  <FormLayout  hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={t('common.payment')} verified_inputs={verified_inputs} form={form}
+  <FormLayout  hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={'FAQ'} verified_inputs={verified_inputs} form={form}
 
   topBarContent
 
@@ -218,11 +220,11 @@ return (
 
                   [
                     { "name": t('common.about-us'), "value": "about-us" },
-                    { "name": t('common.support'), "value": "support" },
+                    { "name": t('common._support'), "value": "support" },
                     { "name": t('common.our-services'), "value": "our-services" } 
                   ]
 
-  } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'type'])} label={t('common.type')} onChange={(e)=>setForm({...form,type:e.target.value})} field={'type'} value={form.type}/>
+  } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'type'])} label={t('common.section')} onChange={(e)=>setForm({...form,type:e.target.value})} field={'type'} value={form.type}/>
                   
 
  <FormLayout.Input 

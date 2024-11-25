@@ -68,7 +68,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
     let v=true
 
     if(
-       form.medical_prescription_items.some(i=>!i.name || !i.prescribed_quantity || !i.treatment_duration || !i.dosage) 
+       form.medical_prescription_items.some(i=>!i.name || !i.prescribed_quantity || !i.treatment_duration || !i.dosage || !i.pharmaceutical_form) 
     ){
       v=false
     }
@@ -111,12 +111,12 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
       return
 
       if(e.message==404){
-         toast.error(t('item-not-found'))
+         toast.error(t('common.item-not-found'))
          navigate('/appointments')
       }else  if(e.message=='Failed to fetch'){
         
       }else{
-        toast.error(t('unexpected-error'))
+        toast.error(t('common.unexpected-error'))
         navigate('/appointments')  
       }
 
@@ -228,7 +228,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
             <FormLayout hideInputs={user?.role=="admin"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={id ? t('common.update-medical-prescription') : t('menu.add-medical-prescription')} verified_inputs={verified_inputs} form={form}
           
             topBarContent={
-                (<button onClick={()=>setShowComment(true)} type="button" class={`text-white ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
+                (<button onClick={()=>setShowComment(true)} type="button" class={`text-white hidden ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
                  <span className="ml-2">Chat</span>
                  {(form.comments.length!=0 && itemToShow.action=="update") && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full px-2 flex items-center justify-center">
@@ -237,56 +237,6 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
               </button>)
             }
 
-            bottomContent={(
-                <div className="mt-20">
-                  <span className="flex mb-5 items-center">
-                    
-                      {t('common.documents')} 
-                    
-                      <button onClick={()=>{
-                          let id=Math.random().toString().replace('.','')
-                          setForm({...form,uploaded_files:[{
-                            name:'',src:'',id
-                          },...form.uploaded_files]})
-                          setTimeout(() => {
-                             document.getElementById(id).focus()
-                          }, 200);
-                      }} type="button" class="text-white ml-4 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
-                        {t('common.add-document')}
-                      </button>
-                  
-                  </span>
-                  <div className="flex gap-x-4 flex-wrap gap-y-4">
-                      
-                      {form.uploaded_files.map(i=>(
-
-                          <div className="flex items-center">
-                            
-                            <div>
-                            <input id={i.id} style={{borderBottom:'0'}} value={i.name} placeholder={t('common.document-name')} onChange={(e)=>{
-                                 setForm({...form,uploaded_files:form.uploaded_files.map(f=>{
-                                    if(f.id==i.id){
-                                      return {...f,name:e.target.value}
-                                    }else{
-                                      return f
-                                    }
-                                 })})
-                            }}   class={`bg-gray border border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
-                             <FileInput  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
-                            </div>
-                              
-                            <span onClick={()=>{
-                                setForm({...form,uploaded_files:form.uploaded_files.filter(f=>f.id!=i.id)})
-                              }} className="ml-2 cursor-pointer hover:opacity-65"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span>
-                           
-
-                            </div>
-                      ))}
-                      
-                  </div>
-                </div>
-            )}
 
             button={(
                <div className={`mt-[40px] ${user?.role=="admin" ? 'hidden':''}`}>
@@ -302,8 +252,6 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                       {name:t('form.gender'),value:chosenPatient.gender ? t('common.'+chosenPatient.gender)  : '-'},
                   ]}/>
  
-                 {/***<SearchInput r={true} label={t('form.patient-name')} loaded={data._loaded.includes('patients')} res={setPatientId} items={data._patients}/> */}
-        
                   <div className="block w-full p-5 border rounded-[0.3rem] mt-5">
                       {form.medical_prescription_items.map((i,_i)=>(
 

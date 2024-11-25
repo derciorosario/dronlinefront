@@ -150,6 +150,8 @@ function index() {
          }
     },[user])
 
+    const [AppSettings,setAppSettings]=useState(null)
+
 
 
 
@@ -164,6 +166,9 @@ function index() {
           try{
 
             let response=await data.makeRequest({method:'get',url:`api/doctor/`+(id || user.data.id),withToken:true, error: ``},100);
+            let app_settings_response=await data.makeRequest({method:'get',url:`api/userdata/`,withToken:true, error: ``},0);
+            setAppSettings(JSON.parse(app_settings_response.app_settings[0].value))
+            
           
             let _data={}
 
@@ -280,6 +285,48 @@ function index() {
             setLoading(false)
         }
       }
+
+
+      function hideOnlyNormalOrUrgent(hour){
+
+      
+            if(AppSettings?.do_not_define_urgent_hours || AppSettings==null) return
+
+            let isUrgent=null
+
+            let start=AppSettings.urgent_consultation_start_hour
+            let end=AppSettings.urgent_consultation_end_hour
+        
+            function toMinutes(time) {
+                let [h, m] = time.split(':').map(Number);
+                return h * 60 + m;
+            }
+        
+            let hourMinutes = toMinutes(hour);
+            let startMinutes = toMinutes(start);
+            let endMinutes = toMinutes(end);
+        
+            if (startMinutes <= endMinutes) {
+                isUrgent=hourMinutes >= startMinutes && hourMinutes <= endMinutes;
+            } else {
+                isUrgent=hourMinutes >= startMinutes || hourMinutes <= endMinutes;
+            }
+
+           
+            if(selectUrgentHours && !isUrgent){
+                return true
+            }
+
+            if(!selectUrgentHours && isUrgent){
+                return true
+            }
+
+            return false
+      }
+
+
+      
+
 
     
 
@@ -454,7 +501,7 @@ function index() {
                                                }
                                           }
    
-                                        }} className={`relative overflow-hidden ${!specificList.includes(date) && dateView=="calendar" ? 'opacity-40 pointer-events-none':''} inline-flex min-w-[100px] justify-center px-3 bg-gray-200 border-transparent py-1  border rounded-full text-[14px] cursor-pointer`}>
+                                        }} className={`relative ${hideOnlyNormalOrUrgent(f) ? 'opacity-30 pointer-events-none':''} overflow-hidden ${!specificList.includes(date) && dateView=="calendar" ? 'opacity-40 pointer-events-none':''} inline-flex min-w-[100px] justify-center px-3 bg-gray-200 border-transparent py-1  border rounded-full text-[14px] cursor-pointer`}>
                                                 <label className="relative cursor-pointer z-10">{f}</label>
                                                 <span className={`absolute cursor-pointer rounded-l-full left-0 top-0 border ${dateView!="calendar" ? (days[selectedWeek].includes(f) ? 'border-honolulu_blue-300 bg-honolulu_blue-50  text-honolulu_blue-400' :' border-transparent') : (availableSpecific[date]?.includes(f) ? 'border-honolulu_blue-300 bg-honolulu_blue-50 text-honolulu_blue-400':'border-transparent')} h-[100%] w-[50%]`}></span>
                                                 <span className={`absolute cursor-pointer rounded-r-full right-0 top-0 border ${dateView!="calendar" ? (urgent_days[selectedWeek].includes(f) ? ' border-orange-400 bg-orange-50  text-orange-400' :'border-transparent') : (urgentAvailableSpecific[date]?.includes(f) ? ' border-orange-400 bg-orange-50  text-orange-400':'border-transparent')} h-[100%] w-[50%]`}></span>
@@ -463,12 +510,7 @@ function index() {
                                  )
                                })}
 
-
-
                           </div>
-
-
-                       
 
                       </div>
 

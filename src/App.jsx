@@ -37,16 +37,41 @@ import Logs from './pages/logs/index.jsx'
 import UserActivities from './pages/user-activities/index.jsx'
 import Refunds from './pages/refunds/index.jsx'
 import CreateRefunds from './pages/refunds/create.jsx'
+import ZoomMeeting from './pages/meetings/zoom/index.jsx';
+import CancellationTaxes from './pages/cancellation-taxes/index.jsx'
+import CreateCancellationTaxes from './pages/cancellation-taxes/create.jsx'
+import AppSettings from './pages/app-settings/create.jsx'
+
+
+import LandingPageHome from './landingpage/pages/home/index.jsx'
+import Privacy from './landingpage/pages/privacy-policy';
+import DoctorList from './landingpage/components/Doctors/index';
+import HowToCancelConsultation from './landingpage/pages/how-to-cancel-my-consultation'
+import LandingPageFaq from './landingpage/pages/faq'
+import Terms from './landingpage/pages/terms-and-conditions';
 
 function App() {
+
+// const {pathname} = useLocation()
+
   return (
     <Router>
 
       <Routes>
+
+
+         <Route path="/terms" element={ <Terms/>} />
+         <Route path="/faq" element={ <LandingPageFaq/>} />
+         <Route path="/privacy" element={ <Privacy/>} />
+         <Route path="/how-to-cancel-my-consultation" element={<HowToCancelConsultation/>}/>
+         <Route path="/doctors-list" element={<DoctorList/>}/>
+         <Route path="/dashboard" element={<ProtectedRoute redirectTo="/login"><Home/></ProtectedRoute>}/>
+         
+      
          <Route path="/register"  element={<Register/>} />
          <Route path="/login"  element={<Login/>} />
          <Route path="/specialists" element={<Specialists/>} />
-         <Route path="/" element={<ProtectedRoute redirectTo="/login"><Home/></ProtectedRoute>}/>
+         <Route path="/" element={<LandingPageHome/>}/>
          <Route path="/appointments" element={<ProtectedRoute redirectTo="/login"><Appointments/></ProtectedRoute>}/>
          <Route path="/add-appointments" element={<ProtectedRoute redirectTo="/login"><CreateAppointments/></ProtectedRoute>}/>
          <Route path="/appointment/:id" element={<ProtectedRoute redirectTo="/login"><CreateAppointments/></ProtectedRoute>}/>
@@ -56,6 +81,11 @@ function App() {
          <Route path="/specialty-categories" element={<ProtectedRoute redirectTo="/login"><SpecialtyCategories/></ProtectedRoute>}/>
          <Route path="/add-specialty-category" element={<ProtectedRoute redirectTo="/login"><CreateSpecialtyCategories/></ProtectedRoute>}/>
          <Route path="/specialty-category/:id" element={<ProtectedRoute redirectTo="/login"><CreateSpecialtyCategories/></ProtectedRoute>}/>
+
+         <Route path="/app-settings" element={<ProtectedRoute redirectTo="/login"><AppSettings/></ProtectedRoute>}/>
+        
+         <Route path="/cancellation-taxes" element={<ProtectedRoute redirectTo="/login"><CancellationTaxes/></ProtectedRoute>}/>
+         <Route path="/cancellation-taxes/:id" element={<ProtectedRoute redirectTo="/login"><CreateCancellationTaxes/></ProtectedRoute>}/>
          
          <Route path="/add-doctors" element={<ProtectedRoute redirectTo="/login"><CreateDoctors/></ProtectedRoute>}/>
          <Route path="/doctor/:id" element={<ProtectedRoute redirectTo="/login"><CreateDoctors/></ProtectedRoute>}/>
@@ -111,6 +141,9 @@ function App() {
 
          <Route path="/logs"  element={<Logs/>} />
          <Route path="/user-activities"  element={<UserActivities/>} />
+         <Route path="/meeting/zoom"  element={<ZoomMeeting/>} />
+
+         
 
          <Route path="*" element={<NotFound />} />
 

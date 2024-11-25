@@ -35,6 +35,8 @@ function addPatients({ShowOnlyInputs}) {
     date_of_birth:'',
     main_contact:'',
     alternative_contact:'',
+    main_contact_code:'258',
+    alternative_contact_code:'258',
     gender:'',
     password:'',
     email:'',
@@ -58,13 +60,15 @@ function addPatients({ShowOnlyInputs}) {
     uploaded_files:[],
     chronic_diseases: [],
     surgery_or_relevant_procedures: [],
-    drug_allergy: [],
+    drug_allergies: [],
     continuous_use_of_medications: [],
 
     has_chronic_diseases:null,
     has_surgery_or_relevant_procedures: null,
-    has_drug_allergy:null,
-    has_continuous_use_of_medications: null
+    has_drug_allergies:null,
+    has_continuous_use_of_medications: null,
+    insurance_company:'',
+    policy_number:''
 
   }
 
@@ -127,12 +131,12 @@ function addPatients({ShowOnlyInputs}) {
 
 
       if(e.message==404){
-         toast.error(t('item-not-found'))
+         toast.error(t('common.item-not-found'))
          navigate('/patients')
       }else  if(e.message=='Failed to fetch'){
         
       }else{
-        toast.error(t('unexpected-error'))
+        toast.error(t('common.unexpected-error'))
         navigate('/patients')  
       }
   }
@@ -164,7 +168,7 @@ function addPatients({ShowOnlyInputs}) {
 
     }else{
 
-      if(form.has_chronic_diseases==null || form.has_surgery_or_relevant_procedures==null || form.has_drug_allergy==null ||form. has_continuous_use_of_medications==null){
+      if(form.has_chronic_diseases==null || form.has_surgery_or_relevant_procedures==null || form.has_drug_allergies==null || form.has_continuous_use_of_medications==null){
         setMessage(t('common.fill-all-required-fills'))
         setMessageType('red')
         setLoading(false)
@@ -275,12 +279,18 @@ function addPatients({ShowOnlyInputs}) {
               {name:t('form.patient-name'),value:form.name},
               {name:'Email',value:form.email},
               {name:t('form.main-contact'),value:form.main_contact},
+              {hide:!form.hospitalization_history,name:t('form.hospitalization_history'),value:form.hospitalization_history},
+              {hide:!form.family_history_of_diseases,name:t('form.family_history_of_diseases'),value:form.family_history_of_diseases},
+              {hide:!form.has_drug_allergies,name:t('form.drug_allergies'),value:form.has_drug_allergies ? form.drug_allergies.map(i=>i.name).join(', ') : ''},
+              {hide:!form.has_chronic_diseases,name:t('form.chronic_diseases'),value:form.has_chronic_diseases ? form.chronic_diseases.map(i=>i.name).join(', ') : ''},
+              {hide:!form.has_continuous_use_of_medications,name:t('form.continuous_use_of_medications'),value: form.has_continuous_use_of_medications ? form.continuous_use_of_medications.map(i=>i.name).join(', ') : ''},
+              {hide:!form.has_surgery_or_relevant_procedures,name:t('form.surgery_or_relevant_procedures'),value: form.has_surgery_or_relevant_procedures ? form.surgery_or_relevant_procedures.map(i=>i.name).join(', ') : ''},
               {name:t('form.gender'),value: t('common.'+form.gender),hide:!form.gender},
             ]}/>
 
              <div className={`${user?.role=="doctor" ? 'hidden':''} w-full`}>
               <div className="mb-10">
-                <LogoFile res={handleUploadedFiles} _upload={{key:'profile_picture_filename'}} label={t('common.profile-piture')}/>
+                <LogoFile res={handleUploadedFiles} _upload={{key:'profile_picture_filename',filename:form.profile_picture_filename}} label={t('common.profile-piture')}/>
               </div>
             </div>
 

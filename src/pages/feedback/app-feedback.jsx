@@ -111,14 +111,17 @@ useEffect(()=>{
    
   <DefaultLayout
     pageContent={{page:'app_feedbacks',title:t('menu.app-feedback'),desc:''}}>
-      <div className="flex items-center mb-4 gap-2">
+      <div className={`flex items-center mb-4 gap-2 ${!data._loaded.includes('app_feedback') ? 'hidden':''}`}>
           {['pending','approved','rejected'].map((i,_i)=>(
-            <div onClick={()=>setSelectedTab(i)} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+            <div onClick={()=>{
+              setSelectedTab(i)
+              data.setUpdateTable(Math.random())
+            }} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
               <span>{getIcon(i,selectedTab==i)}</span>
               <span>{t('common.'+i)}</span>
-              {((data._app_feedback?.data || []).filter(f=>f.status==i).length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
-                  <span>{(data._app_feedback?.data || []).filter(f=>f.status==i).length}</span>
-              </div>}
+                     {data._app_feedback?.status_counts?.[i] && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
+                         <span>{data._app_feedback?.status_counts?.[i]}</span>
+                </div>}
 
             </div>
           ))}
@@ -128,7 +131,7 @@ useEffect(()=>{
       <div className="flex">
         
          <div className="flex-1">
-             <BasicSearch hideFilters={true}  total={data._app_feedback?.total} from={'app_feedback'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+             <BasicSearch hideFilters={true}  total={data._app_feedback?.reviews?.total} from={'app_feedback'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
              <div className="flex w-full relative">
                 <div className="absolute w-full">
@@ -142,7 +145,7 @@ useEffect(()=>{
                  ]
                }
 
-                body={(data._app_feedback?.data || []).filter(i=>i.status==selectedTab || (!i.status && selectedTab=="pending")).map((i,_i)=>(
+                body={(data._app_feedback?.reviews?.data || []).filter(i=>i.status==selectedTab || (!i.status && selectedTab=="pending")).map((i,_i)=>(
                        <BaiscTable.Tr>
                           <BaiscTable.Td>{i.id}</BaiscTable.Td>
                           <BaiscTable.Td>{i.comments}</BaiscTable.Td>
@@ -161,7 +164,7 @@ useEffect(()=>{
                      </BaiscTable.Tr>
                  ))}
              />
-                <BasicPagination show={data._loaded.includes('app_feedback')} from={'app_feedback'} setCurrentPage={setCurrentPage} total={data._app_feedback?.total}  current={data._app_feedback?.current_page} last={data._app_feedback?.last_page}/>
+                <BasicPagination show={data._loaded.includes('app_feedback')} from={'app_feedback'} setCurrentPage={setCurrentPage} total={data._app_feedback?.reviews?.total}  current={data._app_feedback?.reviews?.current_page} last={data._app_feedback?.reviews?.last_page}/>
   
                 </div>
              </div>

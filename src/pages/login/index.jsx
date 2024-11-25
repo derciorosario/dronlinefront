@@ -9,6 +9,7 @@ import Messages from '../messages';
 import ButtonLoader from '../../components/Loaders/button';
 import toast from 'react-hot-toast';
 import DefaultLayout from '../../layout/DefaultLayout';
+import { useAuth } from '../../contexts/AuthContext';
 
 axios.defaults.withCredentials = true;
 
@@ -21,14 +22,47 @@ function Login() {
   const [valid,setValid]=useState(false)
   const [nextpage,setNextPage]=useState(null)
   const [searchParams, setSearchParams] = useSearchParams();
+  const data = useData()
+
+  const {user,check_user} = useAuth()
+  useEffect(()=>{
+
+      if(user){
+          data.setIsLoading(false)
+          if(location.href.includes('nextpage')){
+              if(user?.role=="patient"){
+                let url=data.getScheduledAppointment() || "/dashboard"
+                 navigate(url)
+                 return
+              }else{
+                 return
+              }
+          }
+        
+         navigate('/dashboard')
+      }
+    
+  },[user])
+
+
+  useEffect(()=>{
+      (async()=>{
+        try{
+          if(!await check_user()){
+            data.setIsLoading(false)
+          }
+        }catch(e){
+          data.setIsLoading(false)
+        }
+    })()
+  },[])
 
 
   const [form,setForm]=useState({
-    email:'',
-    password:''
+      email:'',
+      password:''
   })
 
-  const data = useData()
 
   const navigate = useNavigate()
 
@@ -80,32 +114,36 @@ function Login() {
 
 
  useEffect(()=>{
+
       setNextPage(new URLSearchParams(window.location.search).get('nextpage') || null) 
+
  },[])
 
  useEffect(()=>{
 
 
      if(nextpage){
+
         data._showPopUp('basic_popup','login-to-proceed-with-consultation')
         let res=data._sendFilter(searchParams)
         
-        if(res.scheduled_doctor && res.scheduled_hours && res.scheduled_weekday && res.scheduled_date){
-             localStorage.setItem('appointment',JSON.stringify({
-                scheduled_date:res.scheduled_date,
-                scheduled_hours:res.scheduled_hours,
-                scheduled_weekday:res.scheduled_weekday,
-                scheduled_doctor:res.scheduled_doctor
-             }))
-             localStorage.setItem('scheduling',new Date().toISOString())
+        if(res.scheduled_doctor && res.scheduled_hours && res.scheduled_weekday && res.scheduled_date && res.type_of_care){
+            
+            localStorage.setItem('appointment',JSON.stringify({
+                    scheduled_date:res.scheduled_date,
+                    scheduled_hours:res.scheduled_hours,
+                    scheduled_weekday:res.scheduled_weekday,
+                    scheduled_doctor:res.scheduled_doctor,
+                    type_of_care:res.type_of_care
+            }))
+
+            localStorage.setItem('scheduling',new Date().toISOString())
+
         }
 
        }
 
 },[nextpage])
-
-
-
 
 
 
@@ -124,11 +162,12 @@ function Login() {
     setLoading(true)
  
     try{
+
       let response=await data.makeRequest({method:'post',url:`api/login`,data:{...form,email:options?.email || form.email,register_method:options.register_method || 'email'}, error: ``},0);
       console.log(response)
       localStorage.setItem('token',response.token)
       toast.success(t('messages.successfully-loggedin'))
-      let url=data.getScheduledAppointment() || "/"
+      let url=data.getScheduledAppointment() || "/dashboard"
       window.location.href=url
 
     }catch(e){
@@ -136,17 +175,16 @@ function Login() {
         setLoading(false)
         validadeErrors(e)
     }
+
   }
-
-
 
   return (
 
-<DefaultLayout hideAll={true} hide={true} removeMargin={true}>
+<DefaultLayout hideAll={true} hide={true} removeMargin={true} hideSupportBadges={true}>
 
 <div className="flex">
 
-<div className="login-left-bg flex-1 min-h-[100vh]"></div>
+<div className="login-left-bg flex-1 min-h-[100vh] cursor-pointer" onClick={()=>navigate('/')}></div>
 
 <div className="px-[90px] py-[40px] max-sm:px-[20px] flex max-lg:w-full  justify-center items-center">
  
@@ -190,7 +228,8 @@ function Login() {
           <div className="w-full bg-gray-300 h-[1px]"></div>
       </div>
 
-      <GoogleSignIn setMessage={setMessage} signUpWithGoogle={signUpWithGoogle}/>
+       <GoogleSignIn setMessage={setMessage} signUpWithGoogle={signUpWithGoogle}/>
+
       </>}
       
       <p className="mt-6"><span className="italic text-gray-600" >{t('messages.dont-have-acccout-yet')}</span> <span className="text-honolulu_blue-500 font-medium cursor-pointer hover:underline" onClick={()=>{

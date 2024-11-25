@@ -1,12 +1,11 @@
 import { createContext, useContext,useState,useEffect, useRef} from 'react';
-import sign from "jwt-encode";
-import axios from 'axios'
-import qs from 'qs';
 import { useAuth } from './AuthContext';
 import html2pdf from 'html2pdf.js';
-let env="dev"
+import toast from 'react-hot-toast';
+let env="pro"
 import io from 'socket.io-client';
-const socket = io(env!="dev" ? 'https://dronline-node-server.derflash.online' : 'http://localhost:3000')
+import { t } from 'i18next';
+const socket = io(env!="dev" ? 'https://dronline-nodeserver.arsbeta-mz.com' : 'http://localhost:3001')
 let log_id=Math.random().toString()
 const DataContext = createContext();
 
@@ -15,7 +14,6 @@ export const DataProvider = ({ children }) => {
     const [dialogs,setDialogs]=useState({
       
     })
-    
     
     const [isDeleting,setIsDeleting]=useState(false)
 
@@ -144,10 +142,17 @@ export const DataProvider = ({ children }) => {
     const [_user_activities,setUserActivities]=useState([])
     const [_notifications,setNotifications]=useState([])
     const [_users_activity_info,setUsersActivityInfo]=useState([])
-
+    const [_cancellation_taxes,setCancellationTaxes]=useState([])
+    const [_settings,setSettings]=useState([])
+    const [_upcoming_appointments,setUpcomingAppointments]=useState([])
+    const [_admin_dashboard,setAdminDashboard]=useState([])
+    const [_doctor_dashboard,setDoctorDashboard]=useState([])
+    const [_patient_dashboard,setPatientDashboard]=useState([])
     const [updateTable,setUpdateTable]=useState(null)
+    
 
     let dbs=[
+      {name:'settings',update:setSettings,get:_settings},
       {name:'appointments',update:setAppointments,get:_appointments},
       {name:'doctors',update:setDoctors,get:_doctors},
       {name:'patients',update:setPatients,get:_patients},
@@ -168,14 +173,25 @@ export const DataProvider = ({ children }) => {
       {name:'all_managers',update:setAllManagers,get:_all_managers},
       {name:'all_doctors',update:setAllDoctors,get:_all_doctors},
       {name:'all_patients',update:setAllPatients,get:_all_patients},
-      {name:'all_pendents',update:setAllPendents,get:_all_pendents},
       {name:'user_activities',update:setUserActivities,get:_user_activities},
       {name:'notifications',update:setNotifications,get:_notifications},
-      {name:'users_activity_info',update:setUsersActivityInfo,get:_users_activity_info}
+      {name:'users_activity_info',update:setUsersActivityInfo,get:_users_activity_info},
+      {name:'cancellation_taxes',update:setCancellationTaxes,get:_cancellation_taxes},
+      {name:'upcoming_appointments',update:setUpcomingAppointments,get:_upcoming_appointments},
+      {name:'admin_dashboard',update:setAdminDashboard,get:_admin_dashboard},
+      {name:'doctor_dashboard',update:setDoctorDashboard,get:_doctor_dashboard},
+      {name:'patient_dashboard',update:setPatientDashboard,get:_patient_dashboard}
+
     ]
     
 
     function handleLoaded(action,item){
+
+      if(Array.isArray(item) && action=="remove"){
+        setLoaded((prev)=>prev.filter(i=>!item.includes(i)))
+        return
+      }
+
       if(action=='add'){
          setLoaded((prev)=>[...prev.filter(i=>i!=item),item])
       }else{
@@ -212,6 +228,7 @@ export const DataProvider = ({ children }) => {
             selected.update(response)
             _data[items[f]]=response
           }catch(e){
+            console.log(items[f])
             console.log({e})
             _data[items[f]]=[]
           }
@@ -225,16 +242,20 @@ export const DataProvider = ({ children }) => {
 
     const timeRef = useRef(null)
 
+  
 
     useEffect(() => {
-      
 
       if(!timeRef.current) return
       
       const intervalId = setInterval(() => {
+
+        if(localStorage.getItem('changing_doctor_calendar')){
+          return
+        }
         
         timeRef.current = new Date(timeRef.current.getTime() + 3000);
-  
+
         setServerTime({
           week_day: timeRef.current.getDay(),
           month: timeRef.current.getMonth() + 1,
@@ -242,6 +263,7 @@ export const DataProvider = ({ children }) => {
           hour: timeRef.current.toTimeString().slice(0, 5),
           day: timeRef.current.getDate().toString().padStart(2, '0'),
         });
+
 
       }, 3000);
   
@@ -255,6 +277,11 @@ export const DataProvider = ({ children }) => {
     useEffect(()=>{
 
       socket.on('info',({time})=>{
+
+        if(localStorage.getItem('changing_doctor_calendar')){
+          return
+        }
+
          setServerTime(time)
          timeRef.current=new Date(`${time.date}T${time.hour}:00`)
          setUpdatingServerInfo(Math.random())
@@ -263,6 +290,7 @@ export const DataProvider = ({ children }) => {
       socket.emit('info')
 
       socket.on('disconnect', (data) => {
+       
         setOnline(false)
       });
 
@@ -272,19 +300,13 @@ export const DataProvider = ({ children }) => {
 
     },[])
 
-    /** useEffect(() => {
-        const interval = setInterval(() => {
-            //getUnreadSupportMessages()
-        }, 5000)
-        return () => clearInterval(interval);
-    }, []); */
-
    
-
    
     useEffect(() => {
 
-      if(!user || user?.role=="admin" || user?.role=="patient" || user?.role=="doctor") return
+
+      //if(!user || user?.role=="admin" || user?.role=="patient" || user?.role=="doctor") return
+      if(!user || user?.role=="admin") return
 
       const interval = setInterval(() => {
           socket.emit('log-user',{
@@ -308,7 +330,8 @@ export const DataProvider = ({ children }) => {
       scheduled_weekday:'',
       scheduled_date:'',
       scheduled_type_of_care:'',
-      canceled_appointment_id:''
+      canceled_appointment_id:'',
+      type_of_care:''
     }
     
     const [_filters, setFilters] = useState(initial_filters);
@@ -504,32 +527,118 @@ export const DataProvider = ({ children }) => {
     function getScheduledAppointment(){
       if(localStorage.getItem('appointment')){
           try{
-                let {scheduled_date,scheduled_hours,scheduled_weekday,scheduled_doctor} = JSON.parse(localStorage.getItem('appointment'))
+                let {scheduled_date,scheduled_hours,scheduled_weekday,scheduled_doctor,type_of_care} = JSON.parse(localStorage.getItem('appointment'))
                 localStorage.removeItem('appointment')
-                return `/add-appointments?scheduled_doctor=${scheduled_doctor}&scheduled_hours=${scheduled_hours}&scheduled_date=${scheduled_date}&scheduled_weekday=${scheduled_weekday}`
+                return `/add-appointments?scheduled_doctor=${scheduled_doctor}&scheduled_hours=${scheduled_hours}&scheduled_date=${scheduled_date}&scheduled_weekday=${scheduled_weekday}&type_of_care=${type_of_care}`
           }catch(e){
                 return null
           }
       }
     }
 
-    const [unreadSupportMessages,setUnreadSupportMessages]=useState(0)
+   
 
-    async function getUnreadSupportMessages(){
-        try{
-            let r=await makeRequest({method:'get',url:'api/get-unread-messages',withToken:true, error: ``},0);
-            setUnreadSupportMessages(r.unread_messages_count)
-        }catch(e){
-            console.log(e)
-        }
+
+
+
+    const [downloadProgress,setDownloadProgress] = useState(0) 
+
+    const handleDownload = (filename) => {
+      console.log({filename})
+      setDownloadProgress(1)
+      const xhr = new XMLHttpRequest();
+      
+      let url=filename.includes('http://') || filename.includes('https://') ? filename : `${APP_BASE_URL}/api/download/${filename}`
+
+      console.log({url})
+      xhr.open('GET', url, true);
+      
+      xhr.responseType = 'blob'; 
+      
+      // Track download progress
+      xhr.onprogress = (event) => {
+          if (event.lengthComputable) {
+              const percentComplete = (event.loaded / event.total) * 100;
+              console.log(`Download Progress: ${percentComplete.toFixed(2)}%`);
+              // Update your progress state if needed
+              setDownloadProgress(percentComplete.toFixed(2)); // assuming setDownloadProgress is a state setter
+          }
+      };
+  
+      // Handle download completion
+      xhr.onload = () => {
+          if (xhr.status === 200) {
+              const blob = xhr.response;
+              const downloadUrl = window.URL.createObjectURL(blob);
+  
+              const link = document.createElement('a');
+              link.href = downloadUrl;
+              link.download = filename; // Name of the file for download
+              document.body.appendChild(link);
+              link.click();
+  
+              // Clean up
+              link.remove();
+              window.URL.revokeObjectURL(downloadUrl);
+              setDownloadProgress(0); // Reset progress
+          } else {
+              console.error('Download failed:', xhr.statusText);
+              toast.error(t('common.error-downloading'));
+              setDownloadProgress(0)
+          }
+      };
+  
+      // Handle errors
+      xhr.onerror = () => {
+          console.error('Error downloading file:', xhr.statusText);
+          toast.error(t('common.error-downloading'));
+          setDownloadProgress(0)
+          
+      };
+  
+      // Start the request
+      xhr.send();
+    };
+  
+
+   
+   let cancelation_reasons = [
+    "reason-personal-change",
+    "reason-health-issues",
+    "reason-emergency",
+    "reason-solved",
+    "reason-reschedule",
+    "reason-tech-issues",
+    "reason-financial",
+    "reason-preference",
+    "reason-dissatisfaction",
+    "other"
+];
+
+
+  function getDoctorAmountEarned(i,_collected){
+
+    let percentage=i.use_app_gain_percentage ? JSON.parse(user?.app_settings?.[0]?.value)?.gain_percentage : i.gain_percentage
+    percentage=parseInt(percentage || 0)
+    
+    let collected=_collected || parseFloat(i.total_invoice_amount ? i.total_invoice_amount : 0)
+
+    return collected * (percentage / 100)
+    
+  }
+  function getDoctorIRPC(i,_collected){
+
+    let irpc=JSON.parse(user?.app_settings?.[0]?.value)?.irpc || 0
+    let collected=_collected || getDoctorAmountEarned(i,_collected || 0)
+
+    if(!irpc) {
+      return collected
+    }else{
+      return collected * (irpc / 100)
     }
+    
+  }
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            //getUnreadSupportMessages()
-        }, 5000)
-        return () => clearInterval(interval);
-    }, []);
 
 
     const [selectedDoctorToSchedule,setSelectedDoctorToSchedule]=useState({})
@@ -539,7 +648,190 @@ export const DataProvider = ({ children }) => {
 
     const [appointmentcancelationData,setAppointmentcancelationData]=useState({})
 
+
+    function _cn_op(string,allow_negative) {
+
+
+      
+
+      string=string?.toString()?.replaceAll(',','') || ''
+      if(string.startsWith('.')){
+          return string.slice(1,string.length).replaceAll(' ','')
+      }
+  
+       //for now (not allow comma)
+       string=string.replace(',', '')
+  
+       
+      const isNegative = string.startsWith('-');
+      if (isNegative) {
+          string = string.slice(1); 
+      }
+  
+      if (string.length > 1 && string.replace('-','').startsWith('0') && (string.replace('-','').indexOf('.')!=1 && string.replace('-','').indexOf(',')!=1)) {
+          string = string.replace('0', '');
+      }
+  
+      function cleanString(str, separator) {
+          const parts = str.split(separator);
+          if (parts.length > 2 || str.startsWith(separator)) {
+              return str.slice(0, -1); 
+          }
+          return parts[0].replace(/[^0-9]/g, '') + (parts[1] !== undefined ? separator + parts[1].replace(/[^0-9]/g, '') : '');
+      }
+  
+      function removeZeros(string){
+          
+          if(string){
+              if(string.split('').some(i=>i!="0")==false && string.length > 1){
+                string="0"
+               }
+          }
+          return string
+      }
+  
+     
+      const hasDot = string.includes('.');
+      const hasComma = string.includes(',');
+      if (hasDot && hasComma) {
+         if (isNegative && allow_negative) {
+           string = '-' + string;
+         }
+         return removeZeros(string.slice(0, -1));
+      }
+      let cleanedString;
+      if (hasDot) {
+          cleanedString = cleanString(string, '.');
+      } else if (hasComma) {
+          cleanedString = cleanString(string, ',');
+      } else {
+          cleanedString = string.replace(/[^0-9]/g, '');
+      }
+  
+      if (isNegative && allow_negative) {
+          cleanedString = '-' + cleanedString;
+      }
+  
+      
+  
+      return removeZeros(cleanedString) ;
+  }
+
+  function formatNumber(num) {
+    num=num.toString()
+    let cleanNum = num.toString().replace(/[^0-9.]/g, '');
+    let [integerPart, decimalPart] = cleanNum.split('.');
+    let formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    let res=decimalPart ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart.toString()
+    return num.endsWith('.') ? res+'.' : res ;
+ }
+
+ function _fn(num) {
+    return _fn(_cn_op(num))
+}
+
+ function _cc(string){
+  string=string.toString()
+  if (string.startsWith('0')) {
+    string = string.replace('0', '');
+  }
+  return string.replace(/[^0-9.]/g, '')
+}
+
+function _cn(number){
+  return new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(typeof "string" ? parseFloat(number) : number)
+}
+function getTimeDifference(date1, date2) {
+  const diffInMs = Math.abs(date2 - date1);
+  //const totalHours = Math.floor(diffInMs / (1000 * 60 * 60));
+  const totalMinutes = Math.floor(diffInMs / (1000 * 60));
+  return { minutes: totalMinutes };
+}
+
+
+
+async function setGainPerentageForAll(){
+    setIsLoading(true)
+    
+    try{
+      
+      await makeRequest({method:'get',url:`api/set-gain-percentage-for-all/`+localStorage.getItem('gain_percentage'),withToken:true, error: ``},0);
+      _closeAllPopUps()
+      toast.success(t('messages.updated-successfully'))
+
+    }catch(e){
+      console.log(e)
+      if(e.message=='Failed to fetch'){
+        toast.error(t('common.check-network'))
+     }else{
+        toast.error(t('common.unexpected-error'))
+     } 
+    }
+    setIsLoading(false)
+}
+
+
+function isSetAsUrgentHour(hour,AppSettings){
+
+  console.log({AppSettings})
+
+  if(!hour) {
+    return 0
+  }
+
+
+  let isUrgent
+
+  if(AppSettings?.do_not_define_urgent_hours || AppSettings==null) return
+
+  let start=AppSettings.urgent_consultation_start_hour
+  let end=AppSettings.urgent_consultation_end_hour
+
+  if(!end || !start) {
+    return 0
+  }
+
+  function toMinutes(time) {
+      console.log({time})
+      let [h, m] = time.split(':').map(Number);
+      return h * 60 + m;
+  }
+
+  let hourMinutes = toMinutes(hour);
+  let startMinutes = toMinutes(start);
+  let endMinutes = toMinutes(end);
+
+  if (startMinutes <= endMinutes) {
+      isUrgent= hourMinutes >= startMinutes && hourMinutes <= endMinutes
+  } else {
+      isUrgent= hourMinutes >= startMinutes || hourMinutes <= endMinutes;
+  }
+
+  return isUrgent
+
+}
+
+
+
+
+
+
+
+   const [unreadSupportMessages,setUnreadSupportMessages]=useState(0)
+
     const value = {
+      getDoctorAmountEarned,
+      getDoctorIRPC,
+      isSetAsUrgentHour,
+      unreadSupportMessages,
+      setUnreadSupportMessages,
+      getTimeDifference,
+      _cn_op,
+      _cn,
+      _cc,
+      _fn,
+      _upcoming_appointments,
+      formatNumber,
       appointmentcancelationData,
       setAppointmentcancelationData,
       singlePrintContent,
@@ -573,7 +865,6 @@ export const DataProvider = ({ children }) => {
       _updateFilters,
       auth,
       downloadPDF,
-      _cn,
       _logs,
       _cn_n,
       timeAfter30Minutes,
@@ -583,6 +874,10 @@ export const DataProvider = ({ children }) => {
       _get,
       _loaded,
       _app_feedback,
+      _admin_dashboard,
+      _patient_dashboard,
+      _doctor_dashboard,
+      _settings,
       _appointment_feedback,
       _appointments,
       _specialty_categories,
@@ -614,8 +909,13 @@ export const DataProvider = ({ children }) => {
       setDependents,
       _appointment_invoices,
       _doctor_requests,
-      unreadSupportMessages,
-      serverTime
+      serverTime,
+      handleDownload,
+      setDownloadProgress,
+      downloadProgress,
+      cancelation_reasons,
+      _cancellation_taxes,
+      setGainPerentageForAll
     };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

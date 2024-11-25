@@ -14,7 +14,7 @@ import BasicFilter from '../../components/Filters/basic';
 
 function App() { 
   const data=useData()
-  const {user} =  useAuth()
+  const {user,APP_FRONDEND} =  useAuth()
   const { t, i18n } = useTranslation();
 
   const navigate = useNavigate()
@@ -81,7 +81,8 @@ function App() {
       search:'',
       items:[
         {name:t('common.bank-transfer'),id:'bank_transfer'},
-        {name:'M-pesa',id:'mpesa'}
+        {name:'M-pesa',id:'mpesa'},
+        {name:t('common.insurance'),id:'insurance'}
       ],
       param:'payment_method',
       fetchable:false,
@@ -92,12 +93,15 @@ function App() {
   ])
 
 
+  const [selectedTab,setSelectedTab]=useState('pending')
+
+
   useEffect(()=>{ 
     if(!user) return
-    data._get(required_data,{appointment_invoices:{type:'payment',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+    data._get(required_data,{appointment_invoices:{type:'payment',status:selectedTab,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
   },[user,pathname,search,currentPage,updateFilters])
 
-
+  
   useEffect(()=>{
     data.handleLoaded('remove','appointment_invoices')
   },[updateFilters])
@@ -108,12 +112,10 @@ function App() {
          data.handleLoaded('remove','appointment_invoices')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{appointment_invoices:{type:'payment',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+         data._get(required_data,{appointment_invoices:{type:'payment',status:selectedTab,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
 
     }
  },[data.updateTable])
- const [selectedTab,setSelectedTab]=useState('pending')
-
 
  useEffect(()=>{
   if(!user) return
@@ -125,14 +127,19 @@ function App() {
  return (
    
   <DefaultLayout
-    pageContent={{page:'appointment_invoices',title:t('common.payments'),desc:t('titles.payments')}}>
-      <div className="flex items-center mb-4 gap-2">
+    pageContent={{page:'appointment_invoices',title:t('common.payments'),desc:user?.role=="patient" ? t('titles._payments') : t('titles.payments')}}>
+      <div className={`flex items-center mb-4 gap-2 ${!data._loaded.includes('appointment_invoices') ? 'hidden':''}`}>
           {['pending','approved','rejected'].map((i,_i)=>(
-            <div onClick={()=>setSelectedTab(i)} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+            <div onClick={()=>{
+              data.setUpdateTable(Math.random())
+              setSelectedTab(i)
+            }} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
               <span>{getIcon(i,selectedTab==i)}</span>
               <span>{t('common.'+i)}</span>
-              {((data._appointment_invoices?.data || []).filter(f=>f.status==i).length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
-                  <span>{(data._appointment_invoices?.data || []).filter(f=>f.status==i).length}</span>
+
+              {data._appointment_invoices?.status_counts?.[i] && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
+                  <span>{data._appointment_invoices?.status_counts?.[i]}</span>
+                  
               </div>}
 
             </div>
@@ -144,7 +151,7 @@ function App() {
          <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
           
          <div className="flex-1">
-             <BasicSearch hideSearch={true} total={data._appointment_invoices?.total} from={'appointment_invoices'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+             <BasicSearch hideSearch={true} total={data._appointment_invoices?.invoices?.total} from={'appointment_invoices'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
              <div className="flex w-full relative">
                 <div className="absolute w-full">
@@ -152,34 +159,47 @@ function App() {
                    'ID',
                    'Ref',
                    t('common.status'),
-                   t('common.payment-method'),
                    t('common.amount'),
+                   t('common.consultation-price'),
+                   t('common.payment-method'),
                    t('common.patient'),
                    t('common.doctor'),
                    t('form.consultation-id'),
+                   t('form.insurance_company_name'),
+                   t('form.policy_number'),
+                   t('common.invoice'),
                    t('common.created_at'),
                    t('common.last-update'),
                    '.'
                  ]
                }
 
-                body={(data._appointment_invoices?.data || []).filter(i=>i.status==selectedTab || (!i.status && selectedTab=="pending")).map((i,_i)=>(
+                body={(data._appointment_invoices?.invoices?.data || []).filter(i=>i.status==selectedTab || (!i.status && selectedTab=="pending")).map((i,_i)=>(
                        <BaiscTable.Tr>
                           <BaiscTable.Td url={`/payment-management/`+i.id}>{i.id}</BaiscTable.Td>
                           <BaiscTable.Td url={`/payment-management/`+i.id}>{i.ref_id}</BaiscTable.Td>
 
                           <BaiscTable.Td url={`/payment-management/`+i.id}>
                            <button type="button" class={`text-white  ml-4 ${!i.status || i.status=="pending" ?"bg-orange-300": i.status=="rejected" ? ' bg-red-500' : "bg-green-500"}  focus:outline-none  font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center`}>
-                              {!i.status ? t('common.pending') : i.status=="paid" ? t('common.waiting-for-consultation') : t('common.'+i.status)}
+                              {t('common.'+i.status)}
                            </button>
                           </BaiscTable.Td>
 
-                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.amount}</BaiscTable.Td>
-
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{data._cn(i.amount)}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{data._cn(i.price)}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.payment_method=="mpesa" ? 'M-pesa' : t('common.bank-transfer')}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.patient?.name}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.doctor?.name}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.appointment?.id}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.insurance_company || '-'}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.policy_number || '-'}</BaiscTable.Td>
+                         <BaiscTable.Td>
+                                    <span onClick={()=>{
+                                        window.open(APP_FRONDEND+"/invoice/"+i.ref_id, '_blank')
+                                    }}>
+                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
+                                    </span>
+                         </BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                          <BaiscTable.AdvancedActions id={i.id} items={[
@@ -189,7 +209,7 @@ function App() {
                      </BaiscTable.Tr>
                  ))}
              />
-                 <BasicPagination show={data._loaded.includes('appointment_invoices')} from={'appointment_invoices'} setCurrentPage={setCurrentPage} total={data._appointment_invoices?.total}  current={data._appointment_invoices?.current_page} last={data._appointment_invoices?.last_page}/>
+                 <BasicPagination show={data._loaded.includes('appointment_invoices')} from={'appointment_invoices'} setCurrentPage={setCurrentPage} total={data._appointment_invoices?.invoices?.total}  current={data._appointment_invoices?.invoices?.current_page} last={data._appointment_invoices?.invoices?.last_page}/>
  
                 </div>
              </div>

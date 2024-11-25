@@ -17,8 +17,11 @@ function DoctorList({show}) {
           <div class="flex items-center justify-between mb-4">
 
           <h5 class="text-xl font-bold leading-none text-gray-900 ">{t('titles.doctors')}</h5>
-
-          <div onClick={()=>data._closeAllPopUps()} className="w-[30px] cursor-pointer h-[30px] absolute right-1 top-1 rounded-full bg-gray-300 flex items-center justify-center">
+          
+          <div onClick={()=>{
+            data._closeAllPopUps()
+            data.setAppointmentcancelationData({})
+          }} className="w-[30px] cursor-pointer h-[30px] absolute right-1 top-1 rounded-full bg-gray-300 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
           </div>         
 

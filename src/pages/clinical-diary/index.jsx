@@ -77,7 +77,32 @@ function globalOnclick(id){
 
            <div className="flex-1">
           
-           <BasicSearch hideFilters={true} total={data._clinical_diary?.total} from={'clinical_diary'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+           <BasicSearch hideFilters={true}   printAction={()=>{
+
+                data.setSinglePrintContent({
+                    patient: itemToShow.appointment.patient,
+                    doctor:itemToShow.appointment.doctor,
+                    title: t('menu.clinical-diary'),
+                    content: (data._clinical_diary?.data || []).map(i=>{
+                      return [
+                        {name: t('form.main-complaint'), value: i.main_complaint},
+                        {name: t('form.current-illness-history'), value: i.current_illness_history},
+                        {name: t('form.past-medical-history'), value: i.past_medical_history},
+                        {name: t('form.psychosocial-history'), value: i.psychosocial_history},
+                        {name: t('form.family-history'), value: i.family_history},
+                        {name: t('form.gynecological-history'), value: i.gynecological_history},
+                        {name: t('form.physical-exam'), value: i.physical_exam},
+                        {name: t('form.complementary-exams'), value: i.complementary_exams},
+                        {name: t('form.diagnoses'), value: i.diagnoses},
+                        {name: t('form.therapeutic-plan'), value: i.therapeutic_plan},
+                        {name: t('form.prescribed-medications'), value: i.prescribed_medications},
+                        {name: t('form.therapeutic-recommendations'), value: i.therapeutic_recommendations},
+                        {name: t('form.other-instructions'), value: i.other_instructions},
+                      ]
+                    })
+                })
+
+        }} total={data._clinical_diary?.total} from={'clinical_diary'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
            <div className="flex w-full relative">
 
@@ -119,10 +144,11 @@ function globalOnclick(id){
                                 </BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>{
                                     data.setSinglePrintContent({
-                                      patient: itemToShow.appointment.user,
+                                      patient: itemToShow.appointment.patient,
+                                      doctor:itemToShow.appointment.doctor,
                                       title: t('menu.clinical-diary'),
                                       content: [
-                                          {name: t('form.main-complaint'), value: i.main_complaint},
+                                          [{name: t('form.main-complaint'), value: i.main_complaint},
                                           {name: t('form.current-illness-history'), value: i.current_illness_history},
                                           {name: t('form.past-medical-history'), value: i.past_medical_history},
                                           {name: t('form.psychosocial-history'), value: i.psychosocial_history},
@@ -134,7 +160,7 @@ function globalOnclick(id){
                                           {name: t('form.therapeutic-plan'), value: i.therapeutic_plan},
                                           {name: t('form.prescribed-medications'), value: i.prescribed_medications},
                                           {name: t('form.therapeutic-recommendations'), value: i.therapeutic_recommendations},
-                                          {name: t('form.other-instructions'), value: i.other_instructions},
+                                          {name: t('form.other-instructions'), value: i.other_instructions},]
                                       ]
                                     })
                                  }}>

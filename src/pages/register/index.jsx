@@ -31,7 +31,7 @@ function Login() {
     password:'',
     main_contact:'',
     name:'',
-    contact_code:'258',
+    main_contact_code:'258',
     confirm_password:''
   })
 
@@ -213,7 +213,7 @@ async function VerifyCode(){
         let response=await data.makeRequest({method:'post',url:`api/verify_code`,data:{...form,register:true,register_method:data.auth.type || 'email'}, error: ``},0);
         localStorage.setItem('token',response.token)
         toast.success(t('messages.successfully-registered'))
-        window.location.href=data.getScheduledAppointment() || "/"
+        window.location.href=data.getScheduledAppointment() || "/dashboard"
 
     }catch(e){
 
@@ -243,15 +243,32 @@ async function VerifyCode(){
 
             <VerifyRegisterEmail success={success} resendCode={resendCode} message={message} setMessage={setMessage} setForm={setForm} loading={loading} SubmitForm={VerifyCode} form={form} setShow={setShowConfirmDialog} show={showConfirmDialog}/>
 
-            <div className="login-left-bg flex-1 min-h-[100vh] max-lg:hidden">
+            <div className="login-left-bg flex-1 min-h-[100vh] max-lg:hidden cursor-pointer" onClick={()=>navigate('/')}>
 
             </div>
 
             <div className="px-[90px] py-[40px] max-sm:px-[20px] flex max-lg:w-full  justify-center items-center">
              
-              <div class="w-[400px]  max-lg:w-full">
-                  <h2 className="font-medium text-[22px] mb-2">{t('common.register')}</h2>
-                  <p className="text-gray-600 mb-4 text-[0.9rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+              <div class="w-[450px]  max-lg:w-full">
+
+                 <div className="flex items-center justify-between mb-10">
+
+                     <div>
+                     <h2 className="font-medium text-[22px] mb-2 mr-3">{t('common.register-as-patient')}</h2>
+                     <p className="text-gray-600 text-[0.9rem]">{t('common.insert-your-info-to-initiate-consulting')} </p>
+                
+                     </div>
+                  
+                     <span onClick={() => {
+                         localStorage.setItem('show_work_with_us_popup',1)
+                         navigate('/')
+                    }} className="inline-flex text-center justify-center px-2 bg-gray-200 py-1 text-[14px] rounded-full cursor-pointer hover:bg-gray-300">
+                      {t('common.register-as-doctor')}
+                    </span>
+                 
+                 
+
+                 </div>
                 
                   {!showConfirmDialog &&  <Messages  id={'_login_msg'} type={messageType} setMessage={setMessage} message={message}/>}
 
@@ -308,9 +325,9 @@ async function VerifyCode(){
                     <div class="mb-3">
                         <label for="contact" class="block mb-2 text-sm font-medium">{t('form.contact')}</label>
                         <div className="flex items-center">
-                              <select  onChange={(e)=>setForm({...form,contact_code:e.target.value})} value={form.contact_code} class={`bg-gray w-[90px] mr-1 border border-gray-300  text-gray-900 text-sm rounded-[0.4rem] focus:ring-blue-500 focus:border-blue-500 block p-2.5`}>
+                              <select  onChange={(e)=>setForm({...form,main_contact_code:e.target.value})} value={form.main_contact_code} class={`bg-gray w-[90px] mr-1 border border-gray-300  text-gray-900 text-sm rounded-[0.4rem] focus:ring-blue-500 focus:border-blue-500 block p-2.5`}>
                                   {_var.contry_codes.map(i=>(
-                                    <option selected={form.contact_code==i.code ? true : false}  value={i.code}>+{i.code}</option>
+                                    <option selected={form.main_contact_code==i.code ? true : false}  value={i.code}>+{i.code}</option>
                                   ))}
                               </select> 
                               <input onKeyPress={(e)=>{

@@ -81,7 +81,8 @@ function App() {
       search:'',
       items:[
         {name:t('common.bank-transfer'),id:'bank_transfer'},
-        {name:'M-pesa',id:'mpesa'}
+        {name:'M-pesa',id:'mpesa'},
+        {name:t('common.insurance'),id:'insurance'}
       ],
       param:'payment_method',
       fetchable:false,
@@ -92,9 +93,13 @@ function App() {
   ])
 
 
+
+  const [selectedTab,setSelectedTab]=useState('pending')
+
+
   useEffect(()=>{ 
     if(!user) return
-    data._get(required_data,{appointment_invoices:{type:'refund',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+    data._get(required_data,{appointment_invoices:{type:'refund',status:selectedTab,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
   },[user,pathname,search,currentPage,updateFilters])
 
 
@@ -108,11 +113,10 @@ function App() {
          data.handleLoaded('remove','appointment_invoices')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{appointment_invoices:{type:'refund',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+         data._get(required_data,{appointment_invoices:{type:'refund',status:selectedTab,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
 
     }
  },[data.updateTable])
- const [selectedTab,setSelectedTab]=useState('pending')
 
 
  useEffect(()=>{
@@ -126,13 +130,16 @@ function App() {
    
   <DefaultLayout
     pageContent={{page:'appointment_invoices',title:t('common.refunds')}}>
-      <div className="flex items-center mb-4 gap-2">
+      <div className={`flex items-center mb-4 gap-2 ${!data._loaded.includes('appointment_invoices') ? 'hidden':''}`}>
         {['pending','approved','rejected'].map((i,_i)=>(
-            <div onClick={()=>setSelectedTab(i)} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+            <div onClick={()=>{
+              setSelectedTab(i)
+              data.setUpdateTable(Math.random())
+            }} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
               <span>{getIcon(i,selectedTab==i)}</span>
               <span>{t('common.'+i)}</span>
-              {((data._appointment_invoices?.data || []).filter(f=>f.status==i).length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
-                  <span>{(data._appointment_invoices?.data || []).filter(f=>f.status==i).length}</span>
+              {data._appointment_invoices?.status_counts?.[i] && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
+                  <span>{data._appointment_invoices?.status_counts?.[i]}</span>
               </div>}
 
             </div>
@@ -144,7 +151,7 @@ function App() {
          <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
           
          <div className="flex-1">
-             <BasicSearch hideSearch={true} total={data._appointment_invoices?.total} from={'appointment_invoices'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+             <BasicSearch hideSearch={true} total={data._appointment_invoices?.data?.total} from={'appointment_invoices'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
              <div className="flex w-full relative">
                 <div className="absolute w-full">
@@ -152,35 +159,43 @@ function App() {
                    'ID',
                    'Ref',
                    t('common.status'),
-                   t('common.payment-method'),
                    t('common.amount'),
+                   t('common.consultation-price'),
+                   t('common.taxes'),
+                   t('common.payment-method'),
                    t('common.patient'),
                    t('common.doctor'),
                    t('form.consultation-id'),
+                   t('form.insurance_company_name'),
+                   t('form.policy_number'),
                    t('common.created_at'),
                    t('common.last-update'),
                    '.'
                  ]
                }
 
-                body={(data._appointment_invoices?.data || []).filter(i=>i.status==selectedTab || (!i.status && selectedTab=="pending")).map((i,_i)=>(
+                body={(data._appointment_invoices?.invoices?.data || []).filter(i=>i.status==selectedTab || (!i.status && selectedTab=="pending")).map((i,_i)=>(
                        <BaiscTable.Tr>
                           <BaiscTable.Td url={`/payment-management/`+i.id}>{i.id}</BaiscTable.Td>
                           <BaiscTable.Td url={`/payment-management/`+i.id}>{i.ref_id}</BaiscTable.Td>
 
                           <BaiscTable.Td url={`/payment-management/`+i.id}>
                            <button type="button" class={`text-white  ml-4 ${!i.status || i.status=="pending" ?"bg-orange-300": i.status=="rejected" ? ' bg-red-500' : "bg-green-500"}  focus:outline-none  font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center`}>
-                              {!i.status ? t('common.pending') : i.status=="paid" ? t('common.waiting-for-consultation') : t('common.'+i.status)}
+                              {!i.status ? t('common.pending') : i.status=="approved" ? t('common.waiting-for-consultation') : t('common.'+i.status)}
                            </button>
                           </BaiscTable.Td>
 
-                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.amount}</BaiscTable.Td>
-
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{data.formatNumber(data._cn_op(i.amount))}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{data._cn(i.price)}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{data.formatNumber(data._cn_op(i.taxes))}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.payment_method=="mpesa" ? 'M-pesa' : t('common.bank-transfer')}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.patient?.name}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.doctor?.name}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.appointment?.id}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.insurance_company || '-'}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.policy_number || '-'}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
+
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                          <BaiscTable.AdvancedActions id={i.id} items={[
                              {hide:i.status=="approved" || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.payment_management?.includes('approve')) ),name:t('common.approve'),onClick:()=>{handleItems({status:'approved',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
@@ -189,7 +204,8 @@ function App() {
                      </BaiscTable.Tr>
                  ))}
              />
-                 <BasicPagination show={data._loaded.includes('appointment_invoices')} from={'appointment_invoices'} setCurrentPage={setCurrentPage} total={data._appointment_invoices?.total}  current={data._appointment_invoices?.current_page} last={data._appointment_invoices?.last_page}/>
+
+            <BasicPagination show={data._loaded.includes('appointment_invoices')} from={'appointment_invoices'} setCurrentPage={setCurrentPage} total={data._appointment_invoices?.invoices?.total}  current={data._appointment_invoices?.invoices?.current_page} last={data._appointment_invoices?.invoices?.last_page}/>
  
                 </div>
              </div>

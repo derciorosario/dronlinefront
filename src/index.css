@@ -16,8 +16,16 @@
   background-size: cover;
 }
 
-._remove_bar::-webkit-scrollbar{
+._remove_bar::-webkit-scrollbar,
+._invoice_table::-webkit-scrollbar,
+._invoice_table *::-webkit-scrollbar
+{
  display: none;
+}
+
+/* Hide scrollbar for all child elements (if needed) */
+._invoice_table *::-webkit-scrollbar {
+  display: none;
 }
 
 iframe{
@@ -34,7 +42,15 @@ iframe{
   display: none !important;
   width: 0;
 }
+._not_clickable_table tr,._not_clickable_table td
+{
+  background-color: #fff !important;
+  cursor: default !important;
+}
 
+._not_clickable_table tr:active,._not_clickable_table td:active{
+  opacity: 1 !important;
+}
 /*.rs__popper_actions .css-nl6has{
   display: none !important;
 }
@@ -46,7 +62,23 @@ iframe{
 }
 
 
+._download_box{
+  animation: flash 1s linear infinite;
+}
 
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+  
+  100% {
+    opacity: 1;
+  }
+}
 
 
 
@@ -62,6 +94,7 @@ iframe{
       padding: 0px;
       margin: 0;
       background: #fff;
+      width: 100%;
   }
 
 
@@ -69,6 +102,7 @@ iframe{
       visibility: hidden;
       padding: 0;
       margin: 0;
+      height: auto;
       
   }
 
@@ -88,6 +122,16 @@ iframe{
   {
     visibility: visible;
   }
+  * {
+    page-break-inside: auto;
+  }
+  * {
+      page-break-inside: avoid;
+      page-break-after: auto;
+  }
+
+  ._print,* { page-break-after:always; }
+
 }
 
 
@@ -137,5 +181,20 @@ iframe{
 .full-text{
   padding:4rem 2rem;
 
+}
+
+
+
+
+/***lading page***/
+
+
+._menu_item:hover ._menu_dropdown{
+  opacity: 1 !important;
+  pointer-events: visible;
+  transform: translateY(0) !important;
+}
+._menu_item:hover svg {
+  transform: rotate(180deg);
 }
 

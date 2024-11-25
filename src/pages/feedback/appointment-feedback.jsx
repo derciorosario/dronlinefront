@@ -105,14 +105,17 @@ useEffect(()=>{
   <DefaultLayout
 
     pageContent={{page:'appointment_feedbacks',title:t('menu.appointment-feedback'),desc:''}}>
-      <div className="flex items-center mb-4 gap-2">
+      <div className={`flex items-center mb-4 gap-2 ${!data._loaded.includes('appointment_feedback') ? 'hidden':''}`}>
           {['pending','approved','rejected'].map((i,_i)=>(
-            <div onClick={()=>setSelectedTab(i)} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+            <div onClick={()=>{
+              setSelectedTab(i)
+              data.setUpdateTable(Math.random())
+            }} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
               <span>{getIcon(i,selectedTab==i)}</span>
               <span>{t('common.'+i)}</span>
-              {((data._appointment_feedback?.data || []).filter(f=>f.status==i).length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
-                  <span>{(data._appointment_feedback?.data || []).filter(f=>f.status==i).length}</span>
-              </div>}
+                     {data._appointment_feedback?.status_counts?.[i] && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
+                         <span>{data._appointment_feedback?.status_counts?.[i]}</span>
+                </div>}
 
             </div>
           ))}
@@ -122,7 +125,7 @@ useEffect(()=>{
       <div className="flex">
         
          <div className="flex-1">
-             <BasicSearch hideFilters={true}  total={data._appointment_feedback?.total} from={'appointment_feedback'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+             <BasicSearch hideFilters={true}  total={data._appointment_feedback?.reviews?.total} from={'appointment_feedback'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
              <div className="flex w-full relative">
                 <div className="absolute w-full">
                 <BaiscTable canAdd={false}  loaded={data._loaded.includes('appointment_feedback') && !loading} header={[
@@ -137,10 +140,10 @@ useEffect(()=>{
                  ]
                }
 
-                body={(data._appointment_feedback?.data || []).filter(i=>i.status==selectedTab || (!i.status && selectedTab=="pending")).map((i,_i)=>(
+                body={(data._appointment_feedback?.reviews?.data || []).filter(i=>i.status==selectedTab || (!i.status && selectedTab=="pending")).map((i,_i)=>(
                        <BaiscTable.Tr>
                           <BaiscTable.Td>{i.id}</BaiscTable.Td>
-                          <BaiscTable.Td>{i.user.name}</BaiscTable.Td>
+                          <BaiscTable.Td>{i.user?.name}</BaiscTable.Td>
                           <BaiscTable.Td>{i.comment}</BaiscTable.Td>
                           <BaiscTable.Td>{i.rating}</BaiscTable.Td>
 
@@ -158,7 +161,7 @@ useEffect(()=>{
                      </BaiscTable.Tr>
                  ))}
              />
-                <BasicPagination show={data._loaded.includes('appointment_feedback')} from={'appointment_feedback'} setCurrentPage={setCurrentPage} total={data._appointment_feedback?.total}  current={data._appointment_feedback?.current_page} last={data._appointment_feedback?.last_page}/>
+                <BasicPagination show={data._loaded.includes('appointment_feedback')} from={'appointment_feedback'} setCurrentPage={setCurrentPage} total={data._appointment_feedback?.reviews?.total}  current={data._appointment_feedback?.reviews?.current_page} last={data._appointment_feedback?.reviews?.last_page}/>
   
                 </div>
              </div>

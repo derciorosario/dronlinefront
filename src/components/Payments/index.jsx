@@ -6,15 +6,17 @@ import SelectPayemntMethod from './selectPayemntMethod';
 import SendProof from './proof';
 import Mpesa from './m-pesa';
 import toast from 'react-hot-toast';
+import InsurancePayment from './insurance';
 
 function PaymentProcess({ info }) {
 
-  const data=useData()
+  const data=useData();
 
   return (
     <div className={`w-full h-[100vh] bg-[rgba(0,0,0,0.2)]  ease-in _doctor_list ${(!info?.type_of_care || info.done) ? 'opacity-0 pointer-events-none translate-y-[100px]' : ''} ease-in transition-all delay-75 fixed flex items-center justify-center z-50`}>
-      <div id="payment_popup" className="w-full  max-h-[90vh] overflow-y-auto p-4 relative bg-white border border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">
-        <div className="flex absolute mb-3 top-1 left-2">
+      <div id="payment_popup" className="w-full max-h-[90vh] overflow-y-auto p-4 relative bg-white border border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">
+               
+        <div className={`flex absolute mb-3 top-1 ${info.loading ? 'opacity-0 pointer-events-none':''} left-2`}>
           <span onClick={() => {
                if(info.step==3){
                  data.setPaymentInfo({done:true,is_proof:true})
@@ -26,13 +28,14 @@ function PaymentProcess({ info }) {
           </span>
         </div>
 
-        {info.step!=3 && <div className="flex absolute mb-3 top-1 right-2">
+        {info.step!=3 && <div className={`flex absolute mb-3 top-1 ${info.loading ? 'opacity-0 pointer-events-none':''} right-2`}>
             <span onClick={() => {
                 localStorage.setItem('saved_appointment_url',window.location.search)
                 toast.success(t('messages.successfully-saved'))
             }} className="table px-2 bg-honolulu_blue-500 text-white right-1 top-1 py-1 text-[14px] rounded-full cursor-pointer hover:bg-gray-300">
               {t('common.close-and-save')}
             </span>
+
         </div>}
 
 
@@ -65,13 +68,18 @@ function PaymentProcess({ info }) {
 
 
       <div className="justify-between mb-4 mt-5">
-                {info.step==2 && <span onClick={()=>{
+                {info.step==2 && <div className="flex justify-end">
+
+                  <span onClick={()=>{
                     data.setPaymentInfo(({...info,step:1,payment_method:null}))
                     document.querySelector('#payment_popup').scrollTo(0,0)
-                }} className="flex cursor-pointer underline justify-end text-[14px]">{t('common.select-another-payment-method')}</span>}
+                }} className="cursor-pointer  underline  text-[14px]">{t('common.select-another-payment-method')}</span>
+                  
+                  </div>}
                 {(!info.step || info.step==1) && <SelectPayemntMethod info={info}/>}
                 {(info.step==2 && info.payment_method=='bank_transfer') && <SendProof info={info}/>}
                 {(info.step==2 && info.payment_method=='mpesa') && <Mpesa info={info}/>}
+                {(info.step==2 && info.payment_method=="insurance") && <InsurancePayment info={info}/>}
 
                 {(info.step==3 && info.payment_method=='bank_transfer') && <div>
                      <h3 className="mt-3 font-medium text-[20px] mb-2">{t('common.proof-sent')}</h3>

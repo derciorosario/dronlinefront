@@ -1,26 +1,30 @@
 import React from 'react'
 
-export default function DashboardCard({items}) {
+export default function DashboardCard({items,topContent}) {
   return (
-    <div className="w-full p-5 bg-honolulu_blue-500 rounded-[0.3rem]">
-                 <div className="">
-                     <div className="flex justify-between">
-                           <span className="text-white text-[18px] font-medium">You have a new appointment</span>
-                           <button type="button" class="text-white bg-green-600 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Default</button>
-                     </div>
-                 </div>
-                 <div className="">
-                    {items.map((i,_i)=>(
-                        <div className="w-full flex items-center">
+    <div className="w-full p-5 bg-honolulu_blue-500 rounded-[0.3rem] relative">
+                 {topContent}
+                 <div className="flex items-center flex-wrap">
+                    {items.filter(i=>!i.hide).map((i,_i)=>{
+
+                       let values=Array.isArray(i.value) ? i.value : [i.value]
+                       
+                       return (
+                        <div className="flex items-center w-[33%] mt-5 pr-2">
                                 <div className="w-[60px] bg-[rgba(255,255,255,0.2)] h-[60px] rounded-full flex items-center justify-center">
                                     {i.icon}
                                 </div>
                                 <div className="flex flex-col ml-3">
-                                    <span className="text-white text-[20px]">{i.name}</span>
-                                    <span className="text-[17px] text-white">{i.value}</span>
+                                     <span className="text-white text-[17px]">{i.name}</span>
+                                     <div className="flex">
+                                        {values.map(f=>(
+                                            <span className="text-[14px] mr-2  text-gray-300">{f}</span>
+                                        ))}
+                                      </div>
                                 </div>
                         </div>
-                    ))}
+                      )
+                    })}
                  </div>
     </div>
   )

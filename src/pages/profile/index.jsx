@@ -10,6 +10,7 @@ import ConfirmDialog from '../../components/modals/confirm'
 import FormLayout from '../../layout/DefaultFormLayout'
 import toast from 'react-hot-toast'
 import Loader from '../../components/Loaders/loader'
+import SystemPage from './pages/system'
 
 function index() {
 
@@ -31,12 +32,13 @@ function index() {
             return
         }
         (async()=>{
+
           try{
            let response=await data.makeRequest({method:'get',url:`api/userdata/`,withToken:true, error: ``},0);
-           setForm({...form,...user,...response})
+           setForm({...form,...user,...response.data,app_settings:{...response.app_settings[0],value:JSON.parse(response.app_settings[0].value)}})
            setLoading(false)
            setItemToEditLoaded(true)
-      
+          
           }catch(e){
               console.log({e})
               toast.error(t('common.unexpected-error'))
@@ -53,6 +55,7 @@ function index() {
             <>
               { name=="login-and-password" ? <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill={active ? '#fff':'#5f6368'}><path d="M280-400q-33 0-56.5-23.5T200-480q0-33 23.5-56.5T280-560q33 0 56.5 23.5T360-480q0 33-23.5 56.5T280-400Zm0 160q-100 0-170-70T40-480q0-100 70-170t170-70q67 0 121.5 33t86.5 87h352l120 120-180 180-80-60-80 60-85-60h-47q-32 54-86.5 87T280-240Zm0-80q56 0 98.5-34t56.5-86h125l58 41 82-61 71 55 75-75-40-40H435q-14-52-56.5-86T280-640q-66 0-113 47t-47 113q0 66 47 113t113 47Z"/></svg>
               : name=="personal-info" ? <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill={active ? '#fff':'#5f6368'}><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/></svg>
+              : name=="system-info" ? <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill={active ? '#fff':'#5f6368'}><path d="M440-280h80l12-60q12-5 22.5-10.5T576-364l58 18 40-68-46-40q2-14 2-26t-2-26l46-40-40-68-58 18q-11-8-21.5-13.5T532-620l-12-60h-80l-12 60q-12 5-22.5 10.5T384-596l-58-18-40 68 46 40q-2 14-2 26t2 26l-46 40 40 68 58-18q11 8 21.5 13.5T428-340l12 60Zm40-120q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/></svg>
               : name=="dependents" ? <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill={active ? '#fff':'#5f6368'}><path d="M160-160v-280 280Zm640 0v-280 280Zm-40-480q17 0 28.5-11.5T800-680q0-17-11.5-28.5T760-720q-17 0-28.5 11.5T720-680q0 17 11.5 28.5T760-640Zm0 80q-51 0-85.5-34.5T640-680q0-50 34.5-85t85.5-35q50 0 85 35t35 85q0 51-35 85.5T760-560ZM480-680q25 0 42.5-17t17.5-43q0-25-17.5-42.5T480-800q-26 0-43 17.5T420-740q0 26 17 43t43 17Zm0 80q-59 0-99.5-40.5T340-740q0-58 40.5-99t99.5-41q58 0 99 41t41 99q0 59-41 99.5T480-600ZM320-425q0 30 32 70t128 127q94-85 127-125t33-72q0-23-15-39t-37-16q-14 0-26.5 6T541-457l-48 57h-27l-48-57q-8-11-20.5-17t-25.5-6q-23 0-37.5 16T320-425Zm-80 0q0-53 36-94t96-41q31 0 59.5 14t48.5 38q20-24 48-38t60-14q60 0 96 41.5t36 93.5q0 53-38.5 104.5T524-160l-44 40-44-40Q315-270 277.5-321T240-425Zm-40-215q17 0 28.5-11.5T240-680q0-17-11.5-28.5T200-720q-17 0-28.5 11.5T160-680q0 17 11.5 28.5T200-640ZM483-80v-80h317v-280H682v-80h118q33 0 56.5 23.5T880-440v360H483Zm-323-80h323v80H80v-360q0-33 23-56.5t57-23.5h118v80H160v280Zm40-400q-51 0-85.5-34.5T80-680q0-50 34.5-85t85.5-35q50 0 85 35t35 85q0 51-35 85.5T200-560Zm280-180Zm-280 60Zm560 0Z"/></svg> 
               : <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill={active ? '#fff':'#5f6368'}><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>}
             </>
@@ -65,6 +68,7 @@ function index() {
         {t_label:'personal-info',name:'personal-info'},
         //{t_label:'dependents',name:'dependents'},
         {t_label:'login-and-password',name:'login-and-password'},
+        {t_label:'system-info',name:'system-info'},
         {t_label:'logout',name:'logout'},
     ]
 
@@ -99,12 +103,12 @@ function index() {
       uploaded_files:[],
       chronic_diseases: [],
       surgery_or_relevant_procedures: [],
-      drug_allergy: [],
+      drug_allergies: [],
       continuous_use_of_medications: [],
       new_password:'',
       has_chronic_diseases:null,
       has_surgery_or_relevant_procedures: null,
-      has_drug_allergy:null,
+      has_drug_allergies:null,
       has_continuous_use_of_medications: null
     }
   
@@ -163,9 +167,38 @@ function index() {
        }
    },[user])
 
+
+
+async function updateSystemSettings() {
+    setLoading(true)
+
+    try{
+
+      let r=await data.makeRequest({method:'post',url:`api/settings/`+form.app_settings.id,withToken:true,data:{...form.app_settings,value:JSON.stringify(form.app_settings.value)}, error: ``},0);
+      setLoading(false)
+      toast.success(t('messages.updated-successfully'))
+
+    }catch(e){
+
+      setLoading(false)
+
+      console.log({e})
+      
+      if(e.message==500){
+        toast.error(t('common.unexpected-error'))
+      }else  if(e.message=='Failed to fetch'){
+        toast.error(t('common.check-network'))
+      }else{
+        toast.error(t('common.unexpected-error'))
+      }
+
+    }
+  
+}
+
    
 
- async   function updateCredentials(){
+ async function updateCredentials(){
 
        setLoading(true)
 
@@ -219,19 +252,15 @@ function index() {
       setLoading(true)
     
       try{
-    
-
-
           if(formStep==2){
 
-            if(form.has_chronic_diseases==null || form.has_surgery_or_relevant_procedures==null || form.has_drug_allergy==null ||form. has_continuous_use_of_medications==null){
+            if(form.has_chronic_diseases==null || form.has_surgery_or_relevant_procedures==null || form.has_drug_allergies==null ||form. has_continuous_use_of_medications==null){
               toast.error(t('common.fill-all-required-fills'))
               setLoading(false)
               return
             }
           }
        
-        
     
           let r=await data.makeRequest({method:'post',url:`api/patient/`+user?.data.id,withToken:true,data:{
             ...form
@@ -267,6 +296,9 @@ function index() {
       setForm({...form,[upload.key]:upload.filename})
     }
 
+
+    
+
     return (
 
       <DefaultLayout>
@@ -301,18 +333,20 @@ function index() {
                     </div>
 
                     <div className="mt-4 px-3 gap-y-2">
-                        {pages.filter(i=>i.name!="personal-info" || (user?.role=="patient" || user?.role=="doctor")).map(i=>(
+
+                        {pages.filter(i=>(i.name!="personal-info" || (user?.role=="patient" || user?.role=="doctor"))).map(i=>(
                             <div onClick={()=>{
                                   if(i.name=="logout"){
                                     data._showPopUp('confim_message',t('common.sure-to-logout'))
                                   }else{
                                     setCurrentPage(i.name)
                                   }
-                            }} className={`flex _confim_message mb-2 items-center cursor-pointer hover:bg-honolulu_blue-400 _profile_left_item ${currentPage==i.name ? 'bg-honolulu_blue-400 text-white':''} p-2 rounded-[0.3rem]`}>
+                            }} className={`flex ${i.name=="system-info" && user?.role!="admin" ? 'hidden':''} _confim_message mb-2 items-center cursor-pointer hover:bg-honolulu_blue-400 _profile_left_item ${currentPage==i.name ? 'bg-honolulu_blue-400 text-white':''} p-2 rounded-[0.3rem]`}>
                                 <Icon name={i.name} active={currentPage==i.name}/>
                                 <span className="ml-3">{t('common.'+i.t_label)}</span>
                             </div>
                         ))}
+                        
                     </div>
 
              </div>
@@ -344,7 +378,6 @@ function index() {
                           </svg>
                           {formStep == 2 && <span className="w-full bg-honolulu_blue-400 h-[1px] rounded absolute top-[100%] translate-y-[15px] left-0"></span>}
                       </li>
-                     
                   </ol>}
 
                   <div className="p-3 rounded-[0.3rem] bg-white flex-1 min-h-[100vh]">
@@ -352,16 +385,19 @@ function index() {
                     {currentPage!= "personal-info" && <h2 className="text-[20px] font-medium">{t('common.'+currentPage)}</h2>}
                     <div className={`flex flex-wrap ${currentPage=="personal-info" && user?.role=="doctor" ? 'opacity-70 pointer-events-none':''} gap-x-2`}>
                         {currentPage=="personal-info" && <PersonalPage handleUploadedFiles={handleUploadedFiles} formStep={formStep} setFormStep={setFormStep} form={form} setForm={setForm}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>}
+                        {currentPage=="system-info" && <SystemPage handleUploadedFiles={handleUploadedFiles} formStep={formStep} setFormStep={setFormStep} form={form} setForm={setForm}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>}
                         {currentPage=="login-and-password" && <LoginPage setForm={setForm} form={form} verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>}
                     </div>
 
                      
-                   {(user?.role=="patient" || currentPage=="login-and-password") && <div className={`${user?.role=="doctor" ? 'hidden':''} mt-10`}>
+                   {(user?.role=="patient" || currentPage=="login-and-password" || currentPage=="system-info") && <div className={`mt-10`}>
                           <FormLayout.Button onClick={()=>{
                              if(currentPage=="personal-info"){
-                              SubmitForm()
+                                 SubmitForm()
+                             }else if(currentPage=="system-info"){
+                                 updateSystemSettings()
                              }else{
-                              updateCredentials()
+                                 updateCredentials()
                              }
                           }} valid={valid} loading={loading} label={loading ? t('common.loading') : t('common.update') }/>
                   </div>}

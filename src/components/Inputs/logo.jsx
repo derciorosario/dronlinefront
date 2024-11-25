@@ -21,6 +21,7 @@ function LogoFile({disabled,label,res,_upload}) {
       if(fileInputRef_1.current) fileInputRef_1.current.value=""
   }
 
+  
  
   useEffect(()=>{
     res(upload)
@@ -92,13 +93,15 @@ function LogoFile({disabled,label,res,_upload}) {
   }
 
 
+  //console.log({_upload,upload})
+
   return (
 
     <div class="col-span-full mt-6">
     <label for="photo" class="block text-sm font-medium leading-6 text-gray-900">{label} {!disabled && <span className="font-[12px] text-gray-400">({t('common.optional')})</span>}</label>
      <div class="mt-2 flex items-center gap-x-3">
      
-     <div style={{backgroundRepeat:'no-repeat',backgroundSize:"contain",backgroundPosition:"center",backgroundImage:`url("${data.APP_BASE_URL+"/"+data.SERVER_FILE_STORAGE_PATH+"/"+upload.filename?.replaceAll(' ','%20')}")`}} className="w-[60px] h-[60px] border overflow-hidden rounded-full bg-gray-200 flex items-center justify-center">
+     <div style={{backgroundRepeat:'no-repeat',backgroundSize:"contain",backgroundPosition:"center",backgroundImage:`url("${_upload.filename}")`}} className="w-[60px] h-[60px] border overflow-hidden rounded-full bg-gray-200 flex items-center justify-center">
         {!upload.filename &&  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z"/></svg>}
      </div>
 

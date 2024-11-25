@@ -8,7 +8,7 @@ import TopAlert from '../components/Alerts/topAlert.jsx'
 import { useAuth } from '../contexts/AuthContext.jsx'
 import BasicPopUp from '../components/PopUp/basic.jsx'
 import { t } from 'i18next'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import DoctorList from '../components/Cards/doctorList.jsx'
 import Delete from '../components/modals/delete.jsx'
@@ -22,20 +22,28 @@ import SupportChat from '../components/modals/support-chat.jsx'
 import Feedback from '../components/PopUp/feedback.jsx'
 import Reviews from '../components/PopUp/reviews.jsx'
 import CancelAppointmentModel from '../components/modals/cancel-appointments.jsx'
+import DownloadProgress from '../components/Loaders/download-progress.jsx'
+import SupportBadge from '../components/Badges/support-badge.jsx'
+import WorkWithUsForm from '../../../landingpage/src/components/Form/work-with-us.jsx'
 
-function DefaultLayout({children,hide,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate}) {
+function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate,hideSupportBadges,startDate,endDate,setStartDate,setEndDate}) {
     
 
   const data=useData()
-  const {user,setIsLoading} = useAuth()
+  const {user,setIsLoading,setPathName} = useAuth()
   const navigate=useNavigate()
 
-  
+  const {pathname} = useLocation()
+  useEffect(()=>{
+    setPathName(pathname)
+  },[pathname])
+
 
   return (
 
     <div id={'top'} className={`flex ${!hide ? 'bg-[#F9F9F9]':''} w-full`}>
       
+            
                <Reviews show={data._openPopUps.reviews}/>
                <Feedback show={data._openPopUps.feedback}/>
                <Notifications show={data._openPopUps.notifications}/>
@@ -44,7 +52,8 @@ function DefaultLayout({children,hide,pageContent,removeMargin,hideAll,disableUp
                <PaymentProcess info={data.paymentInfo}/>
                <SelectDoctorAvailability  item={data.selectedDoctorToSchedule}/>
                <CancelAppointmentModel show={data._openPopUps.cancel_appointment}/>
-               
+
+               <DownloadProgress progress={data.downloadProgress}/>
               
                <Delete show={data._openPopUps.delete}/>
 
@@ -54,27 +63,36 @@ function DefaultLayout({children,hide,pageContent,removeMargin,hideAll,disableUp
 
                <AddDependentPopUp show={data._openPopUps.add_dependent}/>
                
-               <BasicPopUp show={data._openPopUps.basic_popup} title={
+               <BasicPopUp show={data._openPopUps.basic_popup && !(user?.role=="patient" && data._openPopUps.basic_popup=="login-to-proceed-with-consultation")} title={
                 
-                data._openPopUps.basic_popup=="wait-for-refund" ?  t('messages.wait-for-refund'): data._openPopUps.basic_popup=="appointment-no-longer-available" ? t('messages.appointment-no-longer-available') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('common.draft-saved') : data._openPopUps.basic_popup=="conclude_patient_info" ?
+                data._openPopUps.basic_popup=="define-same-gain-perentage-for-all" ? t('common.sure-to-continue') :  data._openPopUps.basic_popup=="consultation-is-already-canceled" ? t('messages.consultation-is-already-canceled') : data._openPopUps.basic_popup=="unable-to-load-consultation-items" ? t('messages.unable-to-load-consultation-items') :  data._openPopUps.basic_popup=="wait-for-refund" ?  t('messages.wait-for-refund'): data._openPopUps.basic_popup=="appointment-no-longer-available" ? t('messages.appointment-no-longer-available') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('common.draft-saved') : data._openPopUps.basic_popup=="conclude_patient_info" ?
+               
                 t('common.add-info'): data._openPopUps.basic_popup=="contact-us-if-delay" ? t('common.info') : t('common.info')}
 
-                btnConfirm={{text:data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('common.ignore') : data._openPopUps.basic_popup=="conclude_patient_info" ? t('common.do-it-later')  : t('common.understood'),onClick:()=>{
+                btnConfirm={{text:data._openPopUps.basic_popup=="define-same-gain-perentage-for-all" ? t('common.cancel') : data._openPopUps.basic_popup=="unable-to-load-consultation-items" ? t('common.cancel') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('common.ignore') : data._openPopUps.basic_popup=="conclude_patient_info" ? t('common.do-it-later')  : t('common.understood'),onClick:()=>{
                   data._closeAllPopUps()
                   if(data._openPopUps.basic_popup=="you-have-saved-appointment"){
                     localStorage.removeItem('saved_appointment_url')
                   }
                 }}}
+                
 
-                link={data._openPopUps.basic_popup=="you-have-saved-appointment" ?  {text:t('common.use-saved-draft'),onClick:()=>{
+                 link={data._openPopUps.basic_popup=="define-same-gain-perentage-for-all" ? {text:t('common.continue'),onClick:()=>{
+                      data.setGainPerentageForAll()
+                 }} : data._openPopUps.basic_popup=="unable-to-load-consultation-items" ?  {
+                   text:t('common.try-again'),onClick:()=>{
+
+                    window.location.reload()
+
+                  }}:data._openPopUps.basic_popup=="you-have-saved-appointment" ?  {text:t('common.use-saved-draft'),onClick:()=>{
                     data._closeAllPopUps()
                     data.setIsLoading(true)
                     window.location.href=`add-appointments`+localStorage.getItem('saved_appointment_url')
                     localStorage.removeItem('saved_appointment_url')
-                }} : data._openPopUps.basic_popup=="conclude_patient_info" ? {text:t('common.view-profile'),onClick:()=>{
+                 }} : data._openPopUps.basic_popup=="conclude_patient_info" ? {text:t('common.view-profile'),onClick:()=>{
                    navigate('/profile')
                    data._closeAllPopUps()
-                }}: {}}
+                 }}: {}}
                 
               message={
                 data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('messages.you-have-saved-appointment') : data._openPopUps.basic_popup=="conclude_patient_info" ?
@@ -86,6 +104,9 @@ function DefaultLayout({children,hide,pageContent,removeMargin,hideAll,disableUp
 
 
           <div id="center-content" className={`flex-1 h-[100vh] ${hide!="register" ? 'overflow-y-auto':''} relative`}>
+
+                 {(!hideSupportBadges &&  ((user?.role=="manager" && user?.data?.permissions?.support?.includes('read')) || user?.role=="admin")) && <SupportBadge/>}
+                 
                  {user?.role=="patient" && !user?.data?.date_of_birth && !hideAll && <TopAlert/>}
                  {!hide && <Header pageContent={pageContent}/>}
 
@@ -112,7 +133,27 @@ function DefaultLayout({children,hide,pageContent,removeMargin,hideAll,disableUp
                               <p className="text-gray-600">{pageContent.desc}</p>
                           )}
                       </div>
+
+                     
                       {!disableUpdateButton && <div className="flex-1 flex justify-end items-end">
+                        {showDates && <div className="flex items-center flex-1 justify-end mr-3">
+
+                            <div className="items-center mr-1">
+                              <h6 className="text-[0.8rem] font-medium text-gray-900 mr-2">
+                                  {t('common.start')}
+                              </h6>
+                              <input onChange={(e)=>setStartDate(e.target.value)} value={startDate} type="date" className="w-full py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+                            </div>
+
+                            <div className="items-center">
+                              <h6 className="text-[0.8rem] font-medium text-gray-900 mr-2">
+                                  {t('common.end')}
+                              </h6>
+                              <input onChange={(e)=>setEndDate(e.target.value)} value={endDate} type="date" className="block w-full py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+                            </div>
+
+                          </div>}
+
                                       <div onClick={() => {
 
                                           if(refreshOnUpdate){

@@ -4,12 +4,12 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useData } from '../../contexts/DataContext'
 import Loader from '../Loaders/loader'
 
-export default function BasicFilter({filterOptions,setFilterOptions,setUpdateFilters,show,end,start,setEnd,setStart}) {
+export default function BasicFilter({dateFilters,setDateFilter,filterOptions,setFilterOptions,setUpdateFilters,show,end,start,setEnd,setStart}) {
 
   const data=useData()
   
   useEffect(()=>{
-   
+
      (async()=>{
         let required_data = filterOptions.filter(i => i.fetchable).map(i => i.field);
         const d = await data._get(required_data);
@@ -43,8 +43,36 @@ export default function BasicFilter({filterOptions,setFilterOptions,setUpdateFil
                  setFilterOptions(prev=>prev.map(i=>({...i,selected_ids:[]})))
                  setUpdateFilters(Math.random())
             }} className=" text-gray-500 mb-4 text-[13px] hover:text-honolulu_blue-500 cursor-pointer flex justify-center">{t('common.clear-all-filters')}</span>
-}
+        }
 
+
+        
+          {dateFilters?.map((i,_i)=>(
+              <div id="dropdown" className="z-10  p-3 bg-white rounded-lg shadow  w-full mb-2">
+              <h6 className="mb-2 text-sm font-medium text-gray-900">
+                  {i.start_name}
+              </h6>
+
+              <input onChange={(e)=>{
+                  setDateFilter([...dateFilters.filter(f=>f.field!=i.field),{
+                    ...i,start:e.target.value
+                  }])
+                  setUpdateFilters(Math.random())
+              }} value={i.start} type="date" className="block w-full mb-2 py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+            
+              <h6 className="mb-2 text-sm font-medium text-gray-900">
+                   {i.end_name}
+              </h6>
+
+              <input onChange={(e)=>{
+                 setDateFilter([...dateFilters.filter(f=>f.field!=i.field),{
+                  ...i,end:e.target.value
+                }])
+                setUpdateFilters(Math.random())
+              }} value={i.end} type="date" className="block w-full py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+          </div>
+          ))}
+          
 
             {(end!=undefined && start!=undefined) && <div id="dropdown" className="z-10  p-3 bg-white rounded-lg shadow  w-full mb-2">
                 <h6 className="mb-2 text-sm font-medium text-gray-900">
@@ -104,7 +132,7 @@ export default function BasicFilter({filterOptions,setFilterOptions,setUpdateFil
                         const newOptions = [...prev];
                         if (optionsIndex !== -1) {
                             newOptions[optionsIndex] = { ...newOptions[optionsIndex], search: e.target.value };
-                        }
+                        } 
                         return newOptions;
                         });
                     }}   id="default-search" className="block w-full px-2 py-1 ps-10 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50" placeholder={t('common.search')}/>

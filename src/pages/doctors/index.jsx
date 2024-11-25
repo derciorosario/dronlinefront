@@ -25,6 +25,9 @@ function App() {
   const [updateFilters,setUpdateFilters]=useState(null)
   const [search,setSearch]=useState('')
 
+  const [dateFilters,setDateFilter]=useState([
+    {field:'invoice',start:'',end:'',start_name:t('common.start_payment_date'),end_name:t('common.end_payment_date')}
+  ])
   
   let required_data=['doctors','specialty_categories']
 
@@ -74,8 +77,11 @@ function App() {
   
   useEffect(()=>{ 
     if(!user) return
-    data._get(required_data,{doctors:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
-  },[user,pathname,search,currentPage,updateFilters])
+    data._get(required_data,{doctors:{name:search,page:currentPage,
+    invoice_start_date:dateFilters.filter(i=>i.field=="invoice")[0].start,
+    invoice_end_date:dateFilters.filter(i=>i.field=="invoice")[0].end,
+    ...data.getParamsFromFilters(filterOptions)}}) 
+  },[user,pathname,search,currentPage,updateFilters,dateFilters])
 
 
   useEffect(()=>{
@@ -87,7 +93,10 @@ function App() {
          data.setUpdateTable(null)
          data.handleLoaded('remove','doctors')
          setCurrentPage(1)
-         data._get(required_data,{doctors:{name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
+         data._get(required_data,{doctors:{name:search,page:1,
+           invoice_start_date:dateFilters.filter(i=>i.field=="invoice")[0].start,
+           invoice_end_date:dateFilters.filter(i=>i.field=="invoice")[0].end,
+          ...data.getParamsFromFilters(filterOptions)}}) 
 
     }
  },[data.updateTable])
@@ -108,7 +117,20 @@ function App() {
 },[user])
 
 
+ 
 
+function getDoctorAmountEarned(i){
+
+  let percentage=i.use_app_gain_percentage ? JSON.parse(user?.app_settings?.[0]?.value)?.gain_percentage : i.gain_percentage
+  percentage=parseInt(percentage || 0)
+  
+  let collected=parseFloat((i.total_payment_amount || 0) - (i.total_refund_amount || 0))
+
+  return collected * (percentage / 100)
+  
+}
+
+ 
  
   return (
    
@@ -119,7 +141,7 @@ function App() {
             
         <div className="flex">
 
-           <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
+           <BasicFilter dateFilters={dateFilters} setDateFilter={setDateFilter} setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
           
            <div className="flex-1">
           
@@ -138,6 +160,10 @@ function App() {
                           t('form.medical-specialty'),
                           'Email',
                           t('form.main-contact'),
+                          t('common.gain_percentage'),
+                          t('common.total_amount_collected'),
+                          t('common.amount_earned'),
+                         // `IRPC (${JSON.parse(user?.app_settings?.[0]?.value)?.irpc || 0}%)`,
                           t('form.gender'),
                           t('form.address'),
                           t('common.created_at'),
@@ -159,8 +185,13 @@ function App() {
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.name}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.pt_name}</BaiscTable.Td>
+                                
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.email}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.main_contact}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{(i.use_app_gain_percentage ? JSON.parse(user?.app_settings?.[0]?.value)?.gain_percentage : i.gain_percentage) || 0}{'%'}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{(i.total_payment_amount || 0) - (i.total_refund_amount || 0)}</BaiscTable.Td>
+                                 <BaiscTable.Td url={`/doctor/`+i.id}>{getDoctorAmountEarned(i)}</BaiscTable.Td>
+                                {/** <BaiscTable.Td url={`/doctor/`+i.id}>{data.getDoctorIRPC(i)}</BaiscTable.Td> */}
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t('common.'+i.gender)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t(i.address)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>

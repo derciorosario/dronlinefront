@@ -1,13 +1,11 @@
 import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
-import { useData } from '../../contexts/DataContext'
 
 function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd}) {
 
 
   let input_id=Math.random().toString().replace('.','')
 
-  const data=useData()
   const [input,setInput]=useState('')
   const [searched,setSearched]=useState([])
   const [selectId,setSelectedId]=useState(id)
@@ -65,7 +63,9 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd})
                <input id={input_id} onBlur={()=>{
                  setTimeout(()=>setShowOptions(false),300)
                }} onFocus={()=>setShowOptions(true)}  value={input} onChange={(e)=>setInput(e.target.value)}   class={`${selectId ? 'hidden':''} p-2.5 w-full pr-10 z-20 text-sm text-gray-900 bg-gray-50 rounded-[0.3rem] border-s-gray-50 border-s-2 border border-gray-300`} placeholder={placeholder}  />  
-               {selectId && <div className={`p-2 w-full text-[13px] z-20 rounded-[0.3rem] border-s-gray-50 border-s-2 border border-gray-300`}>{items.filter(i=>i.id==selectId)[0]?.name}</div>}
+               {selectId && <div className={`p-2 w-full text-[13px] z-20 rounded-[0.3rem] border-s-gray-50 border-s-2 border border-gray-300`}>
+                   <span className="flex mr-[40px]">{items.filter(i=>i.id==selectId)[0]?.name}</span>
+                </div>}
             </div>
             <div  onClick={()=>{
                   if(selectId){

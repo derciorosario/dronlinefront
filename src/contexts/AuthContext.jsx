@@ -1,11 +1,17 @@
-import axios from 'axios';
 import { t } from 'i18next';
 import { createContext, useContext, useState, useEffect} from 'react';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
 
-
+/***
+ * const config = {
+  public_key: 'MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAyrOP7fgXIJgJyp6nP/Vtlu8kW94Qu+gJjfMaTNOSd/mQJChqXiMWsZPH8uOoZGeR/9m7Y8vAU83D96usXUaKoDYiVmxoMBkfmw8DJAtHHt/8LWDdoAS/kpXyZJ5dt19Pv+rTApcjg7AoGczT+yIU7xp4Ku23EqQz70V5Rud+Qgerf6So28Pt3qZ9hxgUA6lgF7OjoYOIAKPqg07pHp2eOp4P6oQW8oXsS+cQkaPVo3nM1f+fctFGQtgLJ0y5VG61ZiWWWFMOjYFkBSbNOyJpQVcMKPcfdDRKq+9r5DFLtFGztPYIAovBm3a1Q6XYDkGYZWtnD8mDJxgEiHWCzog0wZqJtfNREnLf1g2ZOanTDcrEFzsnP2MQwIatV8M6q/fYrh5WejlNm4ujnKUVbnPMYH0wcbXQifSDhg2jcnRLHh9CF9iabkxAzjbYkaG1qa4zG+bCidLCRe0cEQvt0+/lQ40yESvpWF60omTy1dLSd10gl2//0v4IMjLMn9tgxhPp9c+C2Aw7x2Yjx3GquSYhU6IL41lrURwDuCQpg3F30QwIHgy1D8xIfQzno3XywiiUvoq4YfCkN9WiyKz0btD6ZX02RRK6DrXTFefeKjWf0RHREHlfwkhesZ4X168Lxe9iCWjP2d0xUB+lr10835ZUpYYIr4Gon9NTjkoOGwFyS5ECAwEAAQ==',
+  api_key: 'v9cmahazr4ojcle2bsrgk0lxyhfaxvms',
+  env: 'live', // or 'sandbox'
+  service_provider_code: '901817'
+}
+ */
 
 export const AuthProvider = ({ children }) => {
 
@@ -15,10 +21,12 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [serverTime,setServerTime]=useState(null)
+  const [pathname,setPathName]=useState(null)
   
-  let env="dev"
-  const APP_BASE_URL = env =="pro" ? "https://dronline-server.derflash.online": 'http://127.0.0.1:8000'
+  let env="pro"
+  const APP_BASE_URL = env =="pro" ? "https://dronline-server.arsbeta-mz.com": 'http://127.0.0.1:8000'
   const SERVER_FILE_STORAGE_PATH=`storage/uploads`
+  const APP_FRONDEND=env == "dev" ? "http://localhost:5173" : "https://dronline-one.netlify.app" 
      
   const login = (userData, authToken) => {
     setUser(userData);
@@ -43,8 +51,8 @@ export const AuthProvider = ({ children }) => {
 
      
       if(!window.location.href.includes('/login')) {
-        setIsLoading(true)
-     }
+          setIsLoading(true)
+      }
 
 
      if(localStorage.getItem('token')){
@@ -60,9 +68,10 @@ export const AuthProvider = ({ children }) => {
 
     
     localStorage.removeItem('token');
+    
 
 
-    if(!window.location.href.includes('/login')) {
+    if(!window.location.href.includes('/login') && pathname!="/" && pathname && !window.location.href.includes('/register')) {
        window.location.href="/login"
     }
   };
@@ -73,13 +82,22 @@ export const AuthProvider = ({ children }) => {
 
 
 
+   async function check_user(){
+       try{
+          await makeRequest({method:'get',url:`api/user`, error: ``,withToken:true},0);
+          return true
+       }catch(e){
+          return false
+       }
+   }
+
     useEffect(() => {
 
 
       const fetchUserData = async () => {
         try {
          
-          let response=await makeRequest({method:'get',url:`api/user`, error: ``,withToken:true},5);
+          let response=await makeRequest({method:'get',url:`api/user`, error: ``,withToken:true},1);
           login(response, localStorage.getItem('token'));
           setAuth(true)
         } catch (error) {
@@ -133,9 +151,9 @@ export const AuthProvider = ({ children }) => {
       return formData.toString();
     }
 
+  
 
-
-  async function makeRequest(options = { data: {}, method: 'get', url: '' ,withToken:false}, maxRetries = 200, retryDelay = 3000) {
+    async function makeRequest(options = { data: {}, method: 'get', url: '' ,withToken:false}, maxRetries = 200, retryDelay = 3000) {
     
      let { data = {}, method = 'get', url = '' } = options;
     
@@ -177,7 +195,7 @@ export const AuthProvider = ({ children }) => {
        
         Object.keys(result).forEach(f=>{
         
-          if(result[f]==="null"){
+          if(result[f]=="null"){
              result[f]=""
           }
          
@@ -193,11 +211,24 @@ export const AuthProvider = ({ children }) => {
         return  result;
     
       } catch (error) {
+
         console.error('Error making request:', error);
 
-        if(error.message=="401"){
-           //toast.error(t('common.session-expired'))
-           //setTimeout(()=>logout(),100)
+        if(error.message=="401" && !url.includes('login') && !url.includes('api/user')){
+
+          return
+
+
+           toast.remove()
+           if(!await check_user() && user){
+              toast.error(t('common.user-not-authorized'))
+              localStorage.removeItem('token');
+              setTimeout(()=>{
+                window.location.href="/login"
+              },500)
+              setIsLoading(true)
+              return
+            }
         }
     
         if (maxRetries > 0) {
@@ -209,10 +240,12 @@ export const AuthProvider = ({ children }) => {
       }
   }
 
+  
+
 
 
   return (
-    <AuthContext.Provider value={{isLoading,serverTime,setServerTime, setIsLoading,APP_BASE_URL, user, login,SERVER_FILE_STORAGE_PATH, makeRequest,logout, isAuthenticated , loading, setUser, setLoading, token,auth}}>
+    <AuthContext.Provider value={{check_user,APP_FRONDEND,setPathName,isLoading,serverTime,setServerTime, setIsLoading,APP_BASE_URL, user, login,SERVER_FILE_STORAGE_PATH, makeRequest,logout, isAuthenticated , loading, setUser, setLoading, token,auth}}>
       {children}
     </AuthContext.Provider>
   );

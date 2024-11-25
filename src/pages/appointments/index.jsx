@@ -45,33 +45,31 @@ function App() {
   
   async function handleItems({status,id,payment_confirmed,invoice_id,appointment}){
 
+       
+
        data._closeAllPopUps()
        toast.remove()
 
-
        if(status=="canceled"){
           data.setAppointmentcancelationData({consultation:appointment})
+          data.setUpdateTable(Math.random())
           return
        }
 
-       toast.loading(t('common.updating'))      
-
+       toast.loading(t('common.updating')) 
        setLoading(true)
       
        try{
 
         if(payment_confirmed){
-
           await data.makeRequest({method:'post',url:`api/appointment-invoices/${invoice_id}/status`,withToken:true,data:{
             status:'approved'
           }, error: ``},0);
 
         }else{
-
           await data.makeRequest({method:'post',url:`api/appointments/${id}/status`,withToken:true,data:{
             status
           }, error: ``},0);
-         
         }
 
         toast.remove()
@@ -80,23 +78,26 @@ function App() {
         
 
        }catch(e){
+
           setLoading(false)
           toast.remove()
           if(e.message==500){
             toast.error(t('common.unexpected-error'))
           }else  if(e.message=='Failed to fetch'){
-              setMessage(t('common.check-network'))
+            toast.error(t('common.check-network'))
           }else{
-              setMessage(t('common.unexpected-error'))
+            toast.error(t('common.unexpected-error'))
           }
 
        }
   }
 
-  
+  const [selectedTab,setSelectedTab]=useState('pending')
+
+
   useEffect(()=>{ 
     if(!user) return
-    data._get(required_data,{appointments:{name:search,page:currentPage}}) 
+    data._get(required_data,{appointments:{name:search,page:currentPage,status:selectedTab}}) 
   },[user,pathname,search,currentPage,updateFilters])
 
 
@@ -110,12 +111,11 @@ function App() {
          data.handleLoaded('remove','appointments')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{appointments:{name:search,page:1}}) 
+         data._get(required_data,{appointments:{name:search,page:1,status:selectedTab}}) 
 
     }
  },[data.updateTable])
 
- const [selectedTab,setSelectedTab]=useState('pending')
 
  useEffect(()=>{
   if(!user) return
@@ -137,13 +137,17 @@ function App() {
 
          }: null,text:t('menu.add-appointments')}}}>
 
-             <div className="flex items-center mb-4 gap-2">
-                 {['pending','paid','in-progress','completed','canceled'].map((i,_i)=>(
-                   <div onClick={()=>setSelectedTab(i)} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+             <div className={`flex items-center mb-4 gap-2 ${!data._loaded.includes('appointments') ? 'hidden':''}`}>
+                 {/**['pending','paid','in-progress','completed','canceled'] */}
+                 {['pending','approved','canceled','completed'].map((i,_i)=>(
+                   <div onClick={()=>{
+                      data.setUpdateTable(Math.random())
+                      setSelectedTab(i)
+                   }} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
                      <span>{getIcon(i,selectedTab==i)}</span>
                      <span>{t('common.'+i)}</span>
-                     {((data._appointments?.data || []).filter(f=>f.status==i).length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
-                         <span>{(data._appointments?.data || []).filter(f=>f.status==i).length}</span>
+                     {data._appointments?.status_counts?.[i] && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
+                         <span>{data._appointments?.status_counts?.[i]}</span>
                      </div>}
 
                    </div>
@@ -152,10 +156,11 @@ function App() {
              
 
              <BaiscTable canAdd={user?.role=="patient"} addPath={'/add-appointments'} loaded={data._loaded.includes('appointments') && !loading} header={[
-                        <BaiscTable.MainActions options={{
+                        
+                         /***<BaiscTable.MainActions options={{
                             deleteFunction:'default',
                             deleteUrl:'api/delete/appointments'}
-                        } items={data._appointments?.data || []}/>,
+                        } items={data._appointments?.appointments?.data || []}/> */,
                           t('form.consultation-id'),
                           t('common.this-is-for'),
                           t('form.consultation-status'),
@@ -171,53 +176,57 @@ function App() {
                           t('common.created_at'),
                           t('common.last-update'),
                           t('common.meeting-link'),
+                          selectedTab=="canceled" ? t('common.reason-for-cancelation') : null,
                           '.'
-                         
                         ]
                       }
 
-                       body={(data._appointments?.data || []).map(i=>{
-                            const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':')
+                       body={(data._appointments?.appointments?.data || []).map(i=>{
+                            /*const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':')
                             if(i.status=="paid" && data.serverTime){
+                              
                               const currentTime = new Date(`${data.serverTime.date}T${formatTime(data.serverTime.hour)}:00`);
                               const consultationTime = new Date(`${i.scheduled_date}T${formatTime(i.scheduled_hours)}:00`);
                               
                               if(currentTime > consultationTime){
                                 i.status="in-progress"
                               }
-                              
-                            }
+                            } */   
                             return i
                             
                        }).filter(i=>i.status==selectedTab).map((i,_i)=>(
                               <BaiscTable.Tr>
-                                <BaiscTable.Td>
+                                {/** <BaiscTable.Td>
                                   <BaiscTable.Actions options={{
                                        deleteFunction:'default',
                                        deleteUrl:'api/delete/appointments',
                                        id:i.id}
                                   }/>
-                                </BaiscTable.Td>
+                                </BaiscTable.Td> */}
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.id}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.is_for_dependent ? `${i.dependent?.name} (${t('common.'+i.dependent?.relationship)})`:t('common.for-me')}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.is_for_dependent ? `${i.dependent?.name} (${t('common.'+i.dependent?.relationship)})`:user?.role=="patient" ? t('common.for-me') : i.patient.name}</BaiscTable.Td>
+                                
                                 <BaiscTable.Td url={`/appointment/`+i.id}>
                                   <button type="button" class={`text-white  ml-4 ${!i.status || i.status=="pending" ?"bg-orange-300": i.status=="canceled" ? ' bg-red-500' : i.status=="completed" ? "bg-green-500" : "bg-honolulu_blue-300"}  focus:outline-none  font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center`}>
                                      {!i.status ? t('common.pending') : i.status=="paid" ? t('common.waiting-for-consultation') : t('common.'+i.status)}
                                   </button>
                                 </BaiscTable.Td>
+
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.consultation_date}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.scheduled_hours}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.pt_name}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{t('common.types_of_care.'+i.type_of_care)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{t('common.'+i.consultation_method)}</BaiscTable.Td>
+                               
                                 <BaiscTable.Td url={`/appointment/`+i.id}>
                                   <button type="button" class={`text-white cursor-default ml-4 ${i.payment_confirmed ? "bg-honolulu_blue-500": "bg-gray-400"}  focus:outline-none  font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center`}>
                                      {i.payment_confirmed ? t('common.yes') : t('common.no')}
                                   </button>
                                 </BaiscTable.Td>
+
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.doctor?.name}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.reason_for_consultation.slice(0,40) + (i.reason_for_consultation.length > 40 ? '...':'')}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.additional_observations ? (i.additional_observations?.slice(0,40) + (i.additional_observations?.length > 40 ? '...':'')) : '-'}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.reason_for_consultation?.length > 40 ? i.reason_for_consultation?.slice(0,40)+"..." : i.reason_for_consultation}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.additional_observations?.length > 40 ? i.additional_observations?.slice(0,40)+"..." : i.additional_observations}</BaiscTable.Td>
                                
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
@@ -228,19 +237,24 @@ function App() {
                                          <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
                                     </div>}
                                 </BaiscTable.Td>
+                               
+                                <BaiscTable.Td hide={selectedTab!="canceled"} url={`/appointment/`+i.id}>{i.cancelation_reason ? (t('common.'+i.cancelation_reason)?.length > 40 ? t('common.'+i.cancelation_reason).slice(0,40)+"..." : t('common.'+i.cancelation_reason)):''}</BaiscTable.Td>
                                 <BaiscTable.AdvancedActions  id={i.id} items={[
-                                    {hide:0==0 || i.payment_confirmed==true || !(user?.role=="admin" || user?.role=="patient" || (user?.role=="manager" && user?.data?.permissions?.appointments?.includes('cancel'))),name:t('common.approve-payment'),onClick:()=>{handleItems({payment_confirmed:true,id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M440-200h80v-40h40q17 0 28.5-11.5T600-280v-120q0-17-11.5-28.5T560-440H440v-40h160v-80h-80v-40h-80v40h-40q-17 0-28.5 11.5T360-520v120q0 17 11.5 28.5T400-360h120v40H360v80h80v40ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-560v-160H240v640h480v-480H520ZM240-800v160-160 640-640Z"/></svg>)},
-                                    {hide:i.status=="canceled" || !(user?.role=="admin" || user?.role=="patient" || (user?.role=="manager" && user?.data?.permissions?.appointments?.includes('cancel'))),name:t('common.cancel'),onClick:()=>{handleItems({status:'canceled',id:i.id,appointment:i})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m388-212-56-56 92-92-92-92 56-56 92 92 92-92 56 56-92 92 92 92-56 56-92-92-92 92ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>)},
-                                    {hide:i.status=="completed" || !i.confirmed,name:t('common.complete') || user?.role!="doctor",onClick:()=>{handleItems({status:'completed',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
-                                    {hide:i.status=="rescheduled" || !i.confirmed || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.appointments?.includes('reschedule'))),name:t('common.reschedule'),onClick:()=>{handleItems({status:'rescheduled',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960"  fill="#5f6368"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v240h-80v-80H200v400h280v80H200ZM760 0q-73 0-127.5-45.5T564-160h62q13 44 49.5 72T760-60q58 0 99-41t41-99q0-58-41-99t-99-41q-29 0-54 10.5T662-300h58v60H560v-160h60v57q27-26 63-41.5t77-15.5q83 0 141.5 58.5T960-200q0 83-58.5 141.5T760 0ZM200-640h560v-80H200v80Zm0 0v-80 80Z"/></svg>)}
+                                    //{hide:0==0 || i.payment_confirmed==true || !(user?.role=="admin" || user?.role=="patient" || (user?.role=="manager" && user?.data?.permissions?.appointments?.includes('cancel'))),name:t('common.approve-payment'),onClick:()=>{handleItems({payment_confirmed:true,id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M440-200h80v-40h40q17 0 28.5-11.5T600-280v-120q0-17-11.5-28.5T560-440H440v-40h160v-80h-80v-40h-80v40h-40q-17 0-28.5 11.5T360-520v120q0 17 11.5 28.5T400-360h120v40H360v80h80v40ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-560v-160H240v640h480v-480H520ZM240-800v160-160 640-640Z"/></svg>)},
+                                    {hide:user?.role!="doctor" || i.status!="completed",name:t('common.set-as-approved'),onClick:()=>{handleItems({status:'approved',id:i.id})},icon:(<svg  xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M438-226 296-368l58-58 84 84 168-168 58 58-226 226ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>)},
+                                    {hide:(i.status=="completed" && (user?.role!="admin" && user?.role!="manager")) || i.status=="canceled" || !(user?.role=="admin" || user?.role=="patient" || (user?.role=="manager" && user?.data?.permissions?.appointments?.includes('cancel')) || (i.status=="completed" && user?.role=="doctor")),name:t('common.cancel'),onClick:()=>{handleItems({status:'canceled',id:i.id,appointment:i})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m388-212-56-56 92-92-92-92 56-56 92 92 92-92 56 56-92 92 92 92-56 56-92-92-92 92ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>)},
+                                    {hide:i.status=="completed" || !i.payment_confirmed || user?.role!="doctor",name:t('common.complete'),onClick:()=>{handleItems({status:'completed',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
+                                   
                                 ]}/>
 
+           
                             </BaiscTable.Tr>
                         ))}
 
+
                       
                     />
-              <BasicPagination show={data._loaded.includes('appointments')} from={'appointments'} setCurrentPage={setCurrentPage} total={data._appointments?.total}  current={data._appointments?.current_page} last={data._appointments?.last_page}/>
+              <BasicPagination show={data._loaded.includes('appointments')} from={'appointments'} setCurrentPage={setCurrentPage} total={data._appointments?.appointments?.total}  current={data._appointments?.appointments?.current_page} last={data._appointments?.appointments?.last_page}/>
     
 
          </DefaultLayout>

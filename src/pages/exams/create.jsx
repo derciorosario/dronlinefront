@@ -109,12 +109,12 @@ const [form,setForm]=useState(initial_form)
       return
 
       if(e.message==404){
-         toast.error(t('item-not-found'))
+         toast.error(t('common.item-not-found'))
          navigate('/appointment')
       }else  if(e.message=='Failed to fetch'){
         
       }else{
-        toast.error(t('unexpected-error'))
+        toast.error(t('common.unexpected-error'))
         navigate('/appointments')  
       }
 
@@ -159,6 +159,8 @@ const [form,setForm]=useState(initial_form)
           appointment_id:itemToShow.appointment.id,
           user_id:user.id
         }, error: ``},0);
+
+      
   
         setForm({...initial_form})
         setMessageType('green')
@@ -174,7 +176,9 @@ const [form,setForm]=useState(initial_form)
      
 
     }catch(e){
+
       setMessageType('red')
+
       data._scrollToSection('_register_msg')
       if(e.message==401){
         setMessage(t('common.email-exists'))
@@ -192,7 +196,8 @@ const [form,setForm]=useState(initial_form)
       
     }
 
-
+    data.setUpdateTable(Math.random())
+    
   }
 
   
@@ -228,7 +233,7 @@ const [form,setForm]=useState(initial_form)
            <FormLayout hideInputs={user?.role!="doctor"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-exams') : t('common.add-exam')} verified_inputs={verified_inputs} form={form}
           
             topBarContent={
-                (<button onClick={()=>setShowComment(true)} type="button" class={`text-white ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
+                (<button onClick={()=>setShowComment(true)} type="button" class={`text-white hidden ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
                  <span className="ml-2">Chat</span>
                  {(form.comments.length!=0 && id) && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full px-2 flex items-center justify-center">

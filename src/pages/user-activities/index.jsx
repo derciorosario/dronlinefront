@@ -85,6 +85,7 @@ function App() {
     if(data.updateTable){
          data.setUpdateTable(null)
          data.handleLoaded('remove','user_activities')
+         data.handleLoaded('remove','users_activity_info')
          setCurrentPage(1)
          setLoading(false)
          data._get(required_data,{user_activities:{user_id:selectedManager?.id || '',name:search,page:currentPage,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
@@ -106,12 +107,59 @@ function selectManager(u){
 }
 
 
+function convertSeconds(seconds) {
+  if(!seconds){
+    seconds=0
+  }
+
+  seconds=parseInt(seconds)
+
+  const MINUTE = 60;
+  const HOUR = 60 * MINUTE;
+  const DAY = 24 * HOUR;
+  const MONTH = 30 * DAY; // Approximate month length
+  const YEAR = 12 * MONTH; // Approximate year length
+
+  const years = Math.floor(seconds / YEAR);
+  seconds %= YEAR;
+
+  const months = Math.floor(seconds / MONTH);
+  seconds %= MONTH;
+
+
+  const days = Math.floor(seconds / DAY);
+  seconds %= DAY;
+
+  const hours = Math.floor(seconds / HOUR);
+  seconds %= HOUR;
+
+  const minutes = Math.floor(seconds / MINUTE);
+  seconds %= MINUTE;
+
+
+
+  if (years) {
+      return `${years} ${years === 1 ? t('common.year') : t('common.years')}`;
+  } else if (months) {
+      return `${months} ${months === 1 ? t('common.month') : t('common.months')}`;
+  } else if (days) {
+      return `${days} ${days === 1 ? t('common.day') : t('common.days')}`;
+  } else if (hours) {
+      return `${hours} ${hours === 1 ? t('common.hour') : t('common.hours')}`;
+  } else if (minutes) {
+      return `${minutes} ${minutes === 1 ? t('common.minute') : t('common.minutes')}`;
+  } else {
+      return `${seconds} ${seconds === 1 ? t('common.second') : t('common.seconds')}`;
+  }
+}
+
+
 function ManagersList(){
 
     return (
       <div>
 
-        <BaiscTable canAdd={false}  loaded={data._loaded.includes('users_activity_info') && !loading} header={[
+        <BaiscTable   canAdd={false}  loaded={data._loaded.includes('users_activity_info') && !loading} header={[
                   'ID',
                   t('common.user'),
                   t('common.role'),
@@ -126,7 +174,7 @@ function ManagersList(){
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.userId}</BaiscTable.Td>
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.user.name}</BaiscTable.Td>
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{t('common.'+i.role)}</BaiscTable.Td>
-                        <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.duration ? (parseInt(i.duration) / 60).toFixed(2) : 0} min</BaiscTable.Td>
+                        <BaiscTable.Td onClick={()=>selectManager(i.user)}>{convertSeconds(i.totalDuration)}</BaiscTable.Td>
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.lastLoginTime?.split('T')?.[0]}</BaiscTable.Td>
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.lastLogoutTime?.split('T')?.[0]}</BaiscTable.Td>
                     </BaiscTable.Tr>
@@ -157,22 +205,23 @@ return (
 <BasicFilter end={endDate} start={startDate} setEnd={setEndDate} setStart={setStartDate} setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
  
 <div className="flex-1">
-    <BasicSearch hideSearch={true} total={data._user_activities?.activities?.total} from={'user_activities'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+    <BasicSearch  hideSearch={true} total={data._user_activities?.activities?.total} from={'user_activities'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
    
      
      {data._loaded.includes('user_activities') && <FormCard hide={!selectedManager}  items={[
          {name:t('common.manager'),value:selectedManager?.name},
-         {name:t('common.duration'),value:(data._user_activities?.totalDuration ? (parseInt(data._user_activities?.totalDuration) / 60).toFixed(2) : 0)+" min"}
+         {name:t('common.duration'),value:convertSeconds(data._user_activities?.totalDuration)}
      ]}/>}
 
     <div className="flex w-full relative">
 
        <div className="absolute w-full">
-       <BaiscTable canAdd={false}  loaded={data._loaded.includes('user_activities') && !loading} header={[
+       <BaiscTable notClickable={true} canAdd={false}  loaded={data._loaded.includes('user_activities') && !loading} header={[
           'ID',
           t('common.user'),
           t('common.role'),
           t('common.duration'),
+          t('common.minutes'),
           t('common.login-time'),
           t('common.logout-time')
         ]
@@ -183,7 +232,8 @@ return (
                  <BaiscTable.Td >{i.id}</BaiscTable.Td>
                  <BaiscTable.Td >{i.user.name}</BaiscTable.Td>
                  <BaiscTable.Td >{t('common.'+i.role)}</BaiscTable.Td>
-                 <BaiscTable.Td >{i.duration ? (parseInt(i.duration) / 60).toFixed(2) : 0} min</BaiscTable.Td>
+                 <BaiscTable.Td >{convertSeconds(i.duration)}</BaiscTable.Td>
+                 <BaiscTable.Td >{i.duration ? (i.duration / 60 ).toFixed(2) : 0} min</BaiscTable.Td>
                  <BaiscTable.Td >{i.loginTime?.split('T')?.[0]}</BaiscTable.Td>
                  <BaiscTable.Td >{i.logoutTime?.split('T')?.[0]}</BaiscTable.Td>
              

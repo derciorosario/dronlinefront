@@ -62,7 +62,9 @@ const [showChooseFile,setShowChooseFile]=useState('')
 
 
  async function update_comments(){
+
     (async()=>{
+
         try{
             let r=await data.makeRequest({method:'get',url:`api/appointments/${form.id}/comments`,withToken:true, error: ``},0);
             let sent_ids=r.map(i=>i.generated_id)
@@ -71,12 +73,15 @@ const [showChooseFile,setShowChooseFile]=useState('')
                 comments:[...prev.comments.filter(i=>i.not_sent && sent_ids.includes(i.generated_id)),...r].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
             }))
         }catch(e){
-          console.log(e)
+             console.log(e)
          }
-    
+
     })()
 
+
  }
+
+
 
  
  useEffect(()=>{
@@ -171,16 +176,16 @@ const [showChooseFile,setShowChooseFile]=useState('')
             <div className="flex items-center gap-2 w-full">
             
             <input  onKeyPress={(e)=>{
-                 if (e.key == 'Enter') {
+                 if (e.key == 'Enter' && !comments.some(i=>i.not_sent)) {
                     if(commentText)  add_comment()
                  }
             }}  onChange={(e)=>{
                  setCommentText(e.target.value)
-            }} value={commentText} className={`${showChooseFile ?'opacity-0 pointer-events-none':''} grow shrink w-full basis-0 text-black text-xs font-medium leading-4 focus:outline-none`} placeholder={t('common.write-a-comment')}/>
+            }} value={commentText} className={`${showChooseFile  || comments.some(i=>i.not_sent) ?'opacity-0 pointer-events-none':''} grow shrink w-full basis-0 text-black text-xs font-medium leading-4 focus:outline-none`} placeholder={t('common.write-a-comment')}/>
             </div>
 
 
-            <div onClick={()=>{
+            {!comments.some(i=>i.not_sent) && <div onClick={()=>{
 
                setShowChooseFile(!showChooseFile)
 
@@ -194,14 +199,14 @@ const [showChooseFile,setShowChooseFile]=useState('')
                                </g>
                              </g>
              </svg>
-            </div>
+            </div>}
 
 
             <div className="flex items-center gap-2">
            
             <button onClick={()=>{
-              if(commentText)  add_comment()
-            }} className={`items-center  ${showChooseFile ? ' opacity-0 pointer-events-none w-0':'transition-all ease-in'}   overflow-hidden  flex px-3 py-2 ${commentText ? 'bg-honolulu_blue-500':'bg-gray-400'} rounded-full shadow `}>
+              if(commentText && !comments.some(i=>i.not_sent))  add_comment()
+            }} className={`items-center  ${showChooseFile || comments.some(i=>i.not_sent) ? ' opacity-0 pointer-events-none w-0':'transition-all ease-in'}   overflow-hidden  flex px-3 py-2 ${commentText && !comments.some(i=>i.not_sent) ? 'bg-honolulu_blue-500':'bg-gray-400'} rounded-full shadow `}>
                 
                 <h3 className={`text-white text-xs font-semibold leading-4 px-2`}>{t('common.send')}</h3>
             </button>

@@ -89,7 +89,7 @@ function AppointmentInvoice({ShowOnlyInputs}) {
       }else  if(e.message=='Failed to fetch'){
         
       }else{
-        toast.error(t('unexpected-error'))
+        toast.error(t('common.unexpected-error'))
         navigate('/appointment-invoices')  
       }
   }

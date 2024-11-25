@@ -6,12 +6,13 @@ import { t } from 'i18next'
 import FileInput from '../../components/Inputs/file'
 import PatientForm from '../../components/Patient/form'
 import { useData } from '../../contexts/DataContext'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import AdditionalMessage from '../messages/additional'
 import { useAuth } from '../../contexts/AuthContext'
 import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
 import LogoFIle from '../../components/Inputs/logo'
 import toast from 'react-hot-toast'
+import _var from '../../assets/vaiables.json'
 
 function addPatients({ShowOnlyInputs}) {
 
@@ -32,11 +33,15 @@ function addPatients({ShowOnlyInputs}) {
 
   const {user} = useAuth()
 
+  
+
   let initial_form={
 
     name:'',
     date_of_birth:'',
     main_contact:'',
+    main_contact_code:'258',
+    alternative_contact_code:'258',
     alternative_contact:'',
     gender:'',
     password:'',
@@ -59,6 +64,7 @@ function addPatients({ShowOnlyInputs}) {
     short_biography:'',
     long_biography:'',
     years_of_experience:'',
+    use_app_gain_percentage:false,
     uploaded_files:[]
     
   }
@@ -126,11 +132,8 @@ function addPatients({ShowOnlyInputs}) {
     try{
 
       let response=await data.makeRequest({method:'get',url:`api/doctor/`+id,withToken:true, error: ``},0);
-
       setForm({...form,...response})
-
       setLoading(false)
-
       setItemToEditLoaded(true)
 
     }catch(e){
@@ -161,6 +164,14 @@ function addPatients({ShowOnlyInputs}) {
 
     setLoading(true)
 
+    
+    if(form.uploaded_files.some(i=>i.filename && !i.name)){
+      setMessage(t('common.add-document-name'))
+      setMessageType('red')
+      setLoading(false)
+      return
+   }
+
     try{
       if(id){
         
@@ -181,12 +192,6 @@ function addPatients({ShowOnlyInputs}) {
           return
         }
 
-        if(form.uploaded_files.some(i=>i.filename && !i.name)){
-           setMessage(t('common.add-document-name'))
-           setMessageType('red')
-           setLoading(false)
-           return
-        }
      
         let response=await data.makeRequest({method:'post',url:`api/register-doctor`,withToken:true,data:{
           ...form,uploaded_files:form.uploaded_files.filter(i=>i.filename)
@@ -247,8 +252,11 @@ function addPatients({ShowOnlyInputs}) {
 
   
   function handleUploadedFiles(upload){
+
     setForm({...form,[upload.key]:upload.filename})
+    
   }
+
 
   function handleUploadeduploaded_files(upload){
     setForm({...form,uploaded_files:form.uploaded_files.map(i=>{
@@ -261,10 +269,18 @@ function addPatients({ShowOnlyInputs}) {
   }
 
 
+  console.log({form})
+
+
+
 
   return (
-     <DefaultLayout hide={ShowOnlyInputs}>
-          <AdditionalMessage btnSee={MessageBtnSee} float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
+
+     <DefaultLayout hide={ShowOnlyInputs} pageContent={{btn:!((user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor?.includes('create'))) && id) ? null : {onClick:(e)=>{
+      navigate('/add-doctors')
+     },text:t('menu.add-doctors')}}}>
+
+            <AdditionalMessage btnSee={MessageBtnSee} float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
           
             {!itemToEditLoaded && id && <div className="mt-10">
               <DefaultFormSkeleton/>
@@ -274,8 +290,10 @@ function addPatients({ShowOnlyInputs}) {
            
             bottomContent={(
                 <div className="mt-5">
+
                 
                   <span className="flex mb-5 items-center hidden">{t('common.documents')}  <label className="text-[0.9rem] ml-2">({t('messages.add-atleast-one-document')})</label> <span className="text-red-500">*</span></span>
+                  
                   
                   <div className="flex gap-x-4 flex-wrap gap-y-8">
                       {form.identification_document=="identification_number" &&  <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-doc')} r={true}/>}
@@ -283,17 +301,38 @@ function addPatients({ShowOnlyInputs}) {
                       {form.identification_document=="passport_number" &&  <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport')} r={true}/>}
                   </div>
 
+                  
+                  <div>
+                     <FormLayout.Input disabled={form.use_app_gain_percentage} ignoreVilidation={form.use_app_gain_percentage} r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'gain_percentage'])} label={t('common.gain_percentage')} onChange={(e)=>setForm({...form,gain_percentage:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'gain_percentage'} value={form.gain_percentage}/>
+                
+                     <div className="flex items-center mt-2 mb-10">
+                           <label>
+                            <input onClick={()=>{
+                              setForm({...form,
+                                use_app_gain_percentage:!Boolean(form.use_app_gain_percentage),
+                                gain_percentage:form.use_app_gain_percentage ? form.gain_percentage : 0,
+                              })
+                            }} checked={form.use_app_gain_percentage} type="checkbox" className="mr-2"/>
+                            <span>{t('common.use-app-gain-percentage')}</span>
+                           </label>
+                        </div>
+                    </div>
+
                   <span className="flex mb-5 items-center mt-8">
                     
                       {t('common.other-documents')} 
                     
                       <button onClick={()=>{
                           let id=Math.random().toString().replace('.','')
-                          setForm({...form,uploaded_files:[{
-                            name:'',filename:'',id
-                          },...form.uploaded_files]})
+                          setForm({...form,uploaded_files:[...form.uploaded_files,{
+                            name:'',filename:'', id
+                          }]})
                           setTimeout(() => {
-                             document.getElementById(id).focus()
+                              try{
+                                document.getElementById(id).focus()
+                              }catch(e){
+                                console.log({id})
+                              }
                           }, 200);
                       }} _ type="button" class="text-white ml-4 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
@@ -337,11 +376,43 @@ function addPatients({ShowOnlyInputs}) {
                   </div>
 
 
+                  <div className="w-full">
+
+                     
+                      <div className="gap-x-4 flex-wrap mt-4">
+                                    {(form.id || !id) && <FileInput _upload={{key:'signature_filename',filename:form.signature_filename}} res={handleUploadedFiles} label={t('common.signature')} r={true}/>}
+                                    <div className="w-[300px] flex items-center justify-center bg-gray-300 h-[100px] rounded-[0.3rem]">
+                                        {!form.signature_filename && <svg class="w-8 h-8 stroke-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M20.5499 15.15L19.8781 14.7863C17.4132 13.4517 16.1808 12.7844 14.9244 13.0211C13.6681 13.2578 12.763 14.3279 10.9528 16.4679L7.49988 20.55M3.89988 17.85L5.53708 16.2384C6.57495 15.2167 7.09388 14.7059 7.73433 14.5134C7.98012 14.4396 8.2352 14.4011 8.49185 14.3993C9.16057 14.3944 9.80701 14.7296 11.0999 15.4M11.9999 21C12.3154 21 12.6509 21 12.9999 21C16.7711 21 18.6567 21 19.8283 19.8284C20.9999 18.6569 20.9999 16.7728 20.9999 13.0046C20.9999 12.6828 20.9999 12.3482 20.9999 12C20.9999 11.6845 20.9999 11.3491 20.9999 11.0002C20.9999 7.22883 20.9999 5.34316 19.8283 4.17158C18.6568 3 16.7711 3 12.9998 3H10.9999C7.22865 3 5.34303 3 4.17145 4.17157C2.99988 5.34315 2.99988 7.22877 2.99988 11C2.99988 11.349 2.99988 11.6845 2.99988 12C2.99988 12.3155 2.99988 12.651 2.99988 13C2.99988 16.7712 2.99988 18.6569 4.17145 19.8284C5.34303 21 7.22921 21 11.0016 21C11.3654 21 11.7021 21 11.9999 21ZM7.01353 8.85C7.01353 9.84411 7.81942 10.65 8.81354 10.65C9.80765 10.65 10.6135 9.84411 10.6135 8.85C10.6135 7.85589 9.80765 7.05 8.81354 7.05C7.81942 7.05 7.01353 7.85589 7.01353 8.85Z" stroke="stroke-current" stroke-width="1.6" stroke-linecap="round"></path>
+                                        </svg>}
+                                        {form.signature_filename && <img className="object-cover border w-auto h-full" src={form.signature_filename}/>}
+                                    </div>
+                      </div>
+
+
+                      <div className="gap-x-4 flex-wrap mt-4">
+                                     {(form.id || !id) && <FileInput _upload={{key:'stamp_filename',filename:form.stamp_filename}} res={handleUploadedFiles} label={t('common.stamp')} r={true}/>}
+                                    <div className="w-[300px] flex items-center justify-center bg-gray-300 h-[100px] rounded-[0.3rem]">
+                                        {!form.stamp_filename && <svg class="w-8 h-8 stroke-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M20.5499 15.15L19.8781 14.7863C17.4132 13.4517 16.1808 12.7844 14.9244 13.0211C13.6681 13.2578 12.763 14.3279 10.9528 16.4679L7.49988 20.55M3.89988 17.85L5.53708 16.2384C6.57495 15.2167 7.09388 14.7059 7.73433 14.5134C7.98012 14.4396 8.2352 14.4011 8.49185 14.3993C9.16057 14.3944 9.80701 14.7296 11.0999 15.4M11.9999 21C12.3154 21 12.6509 21 12.9999 21C16.7711 21 18.6567 21 19.8283 19.8284C20.9999 18.6569 20.9999 16.7728 20.9999 13.0046C20.9999 12.6828 20.9999 12.3482 20.9999 12C20.9999 11.6845 20.9999 11.3491 20.9999 11.0002C20.9999 7.22883 20.9999 5.34316 19.8283 4.17158C18.6568 3 16.7711 3 12.9998 3H10.9999C7.22865 3 5.34303 3 4.17145 4.17157C2.99988 5.34315 2.99988 7.22877 2.99988 11C2.99988 11.349 2.99988 11.6845 2.99988 12C2.99988 12.3155 2.99988 12.651 2.99988 13C2.99988 16.7712 2.99988 18.6569 4.17145 19.8284C5.34303 21 7.22921 21 11.0016 21C11.3654 21 11.7021 21 11.9999 21ZM7.01353 8.85C7.01353 9.84411 7.81942 10.65 8.81354 10.65C9.80765 10.65 10.6135 9.84411 10.6135 8.85C10.6135 7.85589 9.80765 7.05 8.81354 7.05C7.81942 7.05 7.01353 7.85589 7.01353 8.85Z" stroke="stroke-current" stroke-width="1.6" stroke-linecap="round"></path>
+                                        </svg>}
+                                        {form.stamp_filename && <img className="object-cover border w-auto h-full" src={form.stamp_filename}/>}
+                                    </div>
+                      </div>
+
+
+                     
+                  </div>
+
+
+                  
+
+
                 </div>
             )}
 
+
                   button={(
-                   
                     <div className={`mt-[60px] ${(user?.role=="manager" && !user?.data?.permissions?.doctor?.includes('update') && id) ? 'hidden':''} `}>
                       <FormLayout.Button onClick={SubmitForm} valid={valid} loading={loading} label={loading ? t('common.loading') : id ? t('common.update') : t('common.send') }/>
                     </div>
@@ -349,14 +420,13 @@ function addPatients({ShowOnlyInputs}) {
                   >
 
                    <div className="mb-10 w-full">
-                     <LogoFIle res={handleUploadedFiles} _upload={{key:'profile_picture_filename'}} label={t('common.profile-piture')}/>
+                     <LogoFIle res={handleUploadedFiles} _upload={{key:'profile_picture_filename',filename:form.profile_picture_filename}} label={t('common.profile-piture')}/>
                   </div>
 
           
-              <PatientForm form_name={'doctors'} itemsToHide={['password','hospitalization_history','family_history_of_diseases']} form={form} setForm={setForm} verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
+              <PatientForm form_name={'doctors'} itemsToHide={['password','hospitalization_history','family_history_of_diseases','insurance_company','policy_number']} form={form} setForm={setForm} verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
 
             </FormLayout>
-
 
      </DefaultLayout>
   )

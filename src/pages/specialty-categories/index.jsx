@@ -10,7 +10,6 @@ import { useAuth } from '../../contexts/AuthContext';
 
 function App() {
 
- 
   const data=useData()
   const {user} =  useAuth()
   const { t, i18n } = useTranslation();
@@ -24,9 +23,9 @@ function App() {
   useEffect(()=>{
         
         if(!user) return
-        setTimeout(()=>(
-          data._get(required_data) 
-        ),500)
+        data.handleLoaded('remove','specialty_categories')
+        data._get(required_data) 
+
 
   },[user,pathname])
 
@@ -61,8 +60,13 @@ function App() {
                          } items={data._specialty_categories}/>,*/
                          'ID',
                           t('form.name'),
+                          t('common.normal_consultation_price'),
+                          t('common.urgent_consultation_price'),
+                          t('common.home_consultation_price'),
                           t('form.english-name'),
                           t('form.description'),
+                          t('common.created_at'),
+                          t('common.last-update'),
                         ]
                       }
 
@@ -78,6 +82,9 @@ function App() {
                                 </BaiscTable.Td>*/}
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.pt_name}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{data.formatNumber(data._cn_op(i.normal_consultation_price))} {'MT'}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{data.formatNumber(data._cn_op(i.urgent_consultation_price))} {'MT'}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{data.formatNumber(data._cn_op(i.home_consultation_price))}   {'MT'}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.en_name}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.description}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>

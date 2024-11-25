@@ -24,11 +24,11 @@ function FileInput({_upload,label,res,r}) {
     })
 
  
-
     useEffect(()=>{
              res(upload)
     },[upload])
 
+    console.log({upload,_upload})
 
 
     const [file,setFile]=useState({name:_upload.filename?.replace(data.APP_BASE_URL+"/"+data.SERVER_FILE_STORAGE_PATH+"/",'')})
@@ -115,9 +115,10 @@ function FileInput({_upload,label,res,r}) {
              
              {upload.uploading && <div style={{width:`${upload.progress.toString().split('.')[0]}%`}} className="bg-[rgba(0,0,0,0.3)] h-full left-0 top-0 absolute"></div>}
 
-             <span className="ml-3 text-[0.8rem] truncate">{file.name ? file.name : t('common.no-file-selected')}</span>
-             {upload.filename && <div className="flex-1 justify-end w-full flex px-2">
+             <span className="ml-3 text-[0.8rem] truncate">{file.name ? file.name : _upload.filename ? ' ' : t('common.no-file-selected')}</span>
+             {(upload.filename) && <div className="flex-1 justify-end w-full flex px-2">
                     <svg className="opacity-30" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
+                    <span onClick={()=>data.handleDownload(file.name)} className="ml-2 cursor-pointer hover:opacity-70"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg></span>
                     <span onClick={()=>{
                         setFile({})
                         setUpload({

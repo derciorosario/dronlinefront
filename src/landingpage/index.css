@@ -1,0 +1,236 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.lato-thin {
+  font-family: "Lato", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.lato-light {
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.lato-regular {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.lato-bold {
+  font-family: "Lato", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.lato-black {
+  font-family: "Lato", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.lato-thin-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.lato-light-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.lato-regular-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.lato-bold-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.lato-black-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+
+
+
+.mt-thin {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+  
+}
+
+.mt-light {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.mt-regular {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.mt-medium {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.mt-semibold {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.mt-bold {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.mt-bold {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.mt-black {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.mt-thin-italic {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.mt-light-italic {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.mt-regular-italic {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.mt-bold-italic {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.mt-black-italic {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  scroll-behavior: smooth;
+}
+
+.login-left-bg{
+  background-image: url(../src/assets/images/bg-login.png);
+  background-position: right;
+  background-size: cover;
+}
+
+._remove_bar::-webkit-scrollbar{
+ display: none;
+}
+
+iframe{
+  width: 100% !important;
+}
+
+
+.rs__popper_actions .css-nl6has{
+  display: none !important;
+}
+
+
+._profile_left_item:hover *{
+  color: #fff;
+  fill: #fff;
+}
+
+
+._menu_item:hover ._menu_dropdown{
+  opacity: 1 !important;
+  pointer-events: visible;
+  transform: translateY(0) !important;
+}
+._menu_item:hover svg {
+  transform: rotate(180deg);
+}
+
+
+
+
+
+.divide{
+  display: flex;
+}
+.divide .right{
+  padding: 2rem;
+  max-width: 1200px;
+}
+
+.divide .right .section-item h2{
+  font-size: 1.4rem;
+  margin-top: 2rem;
+  margin-bottom: 0.8rem;
+}
+.divide .right .section-item p{
+  color: #374151;
+  margin-bottom: 1rem;
+}
+.divide .right .section-item a{
+  text-decoration: underline;
+}
+.divide ul,.divide ol{
+  list-style: initial;
+  list-style-type: initial;
+  padding-left: 2rem;
+  margin:1.2rem 0;
+
+}
+.divide ul li{
+  margin-bottom: 0.8rem;
+}
+
+.divide strong{
+  opacity: 0.7;
+}
+
+.full-text{
+  padding:4rem 2rem;
+
+}

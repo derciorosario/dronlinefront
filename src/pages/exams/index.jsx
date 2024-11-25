@@ -69,13 +69,31 @@ function globalOnclick(id){
 
            <div className="flex-1">
           
-           <BasicSearch hideFilters={true} total={data._clinical_diary?.total} from={'exams'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+           <BasicSearch printAction={()=>{
+
+              data.setSinglePrintContent({
+                  patient: itemToShow.appointment.patient,
+                  doctor:itemToShow.appointment.doctor,
+                  title: t('menu.exams'),
+                  content: (data._exams?.data || []).map(f=>{
+                    return [
+                      {name:t('form.clinical-information'),value:f.clinical_information},
+                      {name:t('form.requested-exams'),value:f.requested_exams},
+                      {name:t('form.results-report'),value:f.results_report},
+                      {name:t('form.requested-on'),value:f.requested_at}
+                    ]
+                  })
+              })
+
+           }} hideFilters={true} total={data._clinical_diary?.total} from={'exams'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
-           <div className="flex w-full relative">
+            <div className="flex w-full relative">
 
             <div className="absolute w-full">
+
             <BaiscTable canAdd={false} loaded={data._loaded.includes('exams')} header={[
-                         <BaiscTable.MainActions options={{
+                       
+                       <BaiscTable.MainActions options={{
                           deleteFunction:'default',
                           deleteUrl:'api/delete/exams'}
                          } items={data._exams?.data || []}/>,
@@ -101,16 +119,22 @@ function globalOnclick(id){
                                
                                 </BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>{
+
                                     data.setSinglePrintContent({
-                                      patient: itemToShow.appointment.user,
-                                      title: t('menu.clinical-diary'),
+                                      patient: itemToShow.appointment.patient,
+                                      doctor:itemToShow.appointment.doctor,
+                                      title: t('menu.exam'),
+
                                       content: [
-                                        {name:t('form.clinical-information'),value:i.clinical_information},
-                                        {name:t('form.requested-exams'),value:i.requested_exams},
-                                        {name:t('form.results-report'),value:i.results_report},
-                                        {name:t('form.requested-on'),value:i.requested_at}
+                                         [{name:t('form.clinical-information'),value:i.clinical_information},
+                                          {name:t('form.requested-exams'),value:i.requested_exams},
+                                          {name:t('form.results-report'),value:i.results_report},
+                                          {name:t('form.requested-on'),value:i.requested_at}
+                                        ]
                                       ]
+
                                     })
+
                                  }}>
 
                                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
@@ -127,13 +151,10 @@ function globalOnclick(id){
                       
               />
 
-<BasicPagination show={data._loaded.includes('clinical_diary')} from={'clinical_diary'} setCurrentPage={setCurrentPage} total={data._clinical_diary?.total}  current={data._clinical_diary?.current_page} last={data._clinical_diary?.last_page}/>
+             <BasicPagination show={data._loaded.includes('clinical_diary')} from={'clinical_diary'} setCurrentPage={setCurrentPage} total={data._clinical_diary?.total}  current={data._clinical_diary?.current_page} last={data._clinical_diary?.last_page}/>
           
 
             </div>
-
-            
-           
 
            </div>
 

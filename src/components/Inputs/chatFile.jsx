@@ -106,7 +106,7 @@ function ChatFile({show,setShow,_upload,res}) {
   return (
 
 
- <div className=" absolute w-full  z-30 _support_messages">
+ <div className={`absolute w-full ${show ? 'z-30':' opacity-0 pointer-events-none'} _support_messages`}>
 
        
     {show && !upload.uploading && <div className="flex justify-center mb-3">

@@ -52,9 +52,9 @@ function VerifyRegisterEmail({form,show,success,setShow,loading,SubmitForm,setFo
                                 <label for="_contact" class="block mb-2 text-sm font-medium text-gray-900">{t('form.contact')}</label>
                                
                                 <div className="flex items-center">
-                                    <select  onChange={(e)=>setForm({...form,contact_code:e.target.value})} value={form.contact_code} class={`bg-gray w-[90px] mr-1 border border-gray-300  text-gray-900 text-sm rounded-[0.4rem] focus:ring-blue-500 focus:border-blue-500 block p-2.5`}>
+                                    <select  onChange={(e)=>setForm({...form,main_contact_code:e.target.value})} value={form.main_contact_code} class={`bg-gray w-[90px] mr-1 border border-gray-300  text-gray-900 text-sm rounded-[0.4rem] focus:ring-blue-500 focus:border-blue-500 block p-2.5`}>
                                     {_var.contry_codes.map(i=>(
-                                        <option selected={form.contact_code==i.code ? true : false}  value={i.code}>+{i.code}</option>
+                                        <option selected={form.main_contact_code==i.code ? true : false}  value={i.code}>+{i.code}</option>
                                     ))}
                                     </select> 
                                     <input value={form.main_contact} onChange={(e)=>setForm({...form,main_contact:e.target.value.replace(/[^0-9]/g, '')})} type="text" name="_contact" id="_contact" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="" required />

@@ -193,6 +193,7 @@ useEffect(()=>{
 
 
 
+
     try{
 
         let _permissions=[]
@@ -206,6 +207,9 @@ useEffect(()=>{
             )
           }
        })
+
+       
+
 
        if(id){
         
@@ -270,7 +274,10 @@ useEffect(()=>{
   
   return (
 
-     <DefaultLayout hide={ShowOnlyInputs}>
+     <DefaultLayout hide={ShowOnlyInputs} pageContent={{btn:!id ? null : {onClick:()=>{ 
+         navigate('/add-managers')
+     },text:t('menu.add-managers')}}}>
+
           <AdditionalMessage btnSee={MessageBtnSee} float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
           
             {!itemToEditLoaded && id && <div className="mt-10">
