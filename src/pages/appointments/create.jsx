@@ -121,8 +121,6 @@ const [dependents,setDependents]=useState([])
 const [dependensLoaded,setDependesLoaded]=useState([])
 const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':')
 
-
-
  useEffect(()=>{
   if(!user || !id){
       return
@@ -640,6 +638,12 @@ return (
 
     <div className="mt-4">
 
+            {(form.status=="approved" && form.zoom_link) && <div onClick={()=>{
+               window.open(form.zoom_meeting.meeting_data[`${user?.role=="patient" ? 'join':'start'}_url`], '_blank')
+            }} className="cursor-pointer hover:opacity-85 active:opacity-65">
+              <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>                 
+            </div>}
+
             {(form.status!="pending" && form.status!="canceled" && id) && <div className={`flex _feedback items-center gap-x-2  ${user?.role=="admin" || user?.role=="manager" ? 'hidden':''}  ${!id || !itemToEditLoaded ? 'hidden':''}`}>
                 
                 {form.status!="completed" && <button onClick={()=>setShowComment(true)} type="button" class={`text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
@@ -669,7 +673,7 @@ return (
       link:(form.is_for_dependent ? '/dependent/'+form.dependent?.id : '/patient/'+form.patient?.id)
     },
     {name:t('common.doctor'),value:form.doctor?.name},
-    {name:t('form.medical-specialty'),value:data._specialty_categories.filter(i=>i.id==form.medical_specialty)?.[0]?.pt_name},
+    {name:t('form.medical-specialty'),value:data._specialty_categories.filter(i=>i.id==form.medical_specialty)?.[0]?.[i18next.language+"_name"]},
     {name:t('form.consultation-date'),value:`${form.consultation_date} (${t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})`,hide:user?.role=="patient",color:'#0b76ad'},
     {name:t('form.consultation-hour'),value:form.scheduled_hours,hide:user?.role=="patient",color:'#0b76ad'},
     {name:t('form.estimated-consultation-duration'),value:form.estimated_consultation_duration,hide:true},
@@ -769,7 +773,7 @@ return (
               data._showPopUp('doctor_list')
 
           }
-        }} class={`bg-gray w-[400px] ${(selectedDoctor.status=="loading" || id) ? ' pointer-events-none':''} hover:bg-gray-100 cursor-pointer  h-[43px] border-gray-300  active:opacity-75  text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 border items-center flex justify-between p-2.5`}>    
+        }} class={`bg-gray max-md:w-full w-[400px] ${(selectedDoctor.status=="loading" || id) ? ' pointer-events-none':''} hover:bg-gray-100 cursor-pointer max-md:h-auto  h-[43px] border-gray-300  active:opacity-75  text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 border items-center flex justify-between p-2.5`}>    
         
             {selectedDoctor.status=="not_selected" && <>
 
@@ -789,21 +793,21 @@ return (
 
             {selectedDoctor.status=="selected" && <>
               <div className="">
-                <span>{form.name} <label className="text-[13px] text-gray-500">({data._specialty_categories.filter(f=>f.id==form.medical_specialty)[0]?.pt_name})</label></span>
-                <div className="flex items-center">
+                <span>{form.name} <label className="text-[13px] text-gray-500">({data._specialty_categories.filter(f=>f.id==form.medical_specialty)[0]?.[i18next.language+"_name"]})</label></span>
+                <div className="flex items-center max-md:flex-col max-md:items-start">
                     <span className="text-[13px]">{form.consultation_date} ({t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})</span>
-                    <span className="mx-2">-</span>
+                    <span className="mx-2 max-md:hidden">-</span>
                     {form.scheduled_hours.split(',').map((i,_i)=>(
                       <span className="mr-1">{i}{_i!=form.scheduled_hours.split(',').length - 1 ? ',':''}</span>
                     ))}
-                    <span className="mx-2">-</span>
+                    <span className="mx-2 max-md:hidden">-</span>
                     <span  className="text-[13px]">{form.type_of_care=="urgent" ? t('common.urgent') : 'Normal'}</span>
                 </div>
             </div>
             {!id && <span onClick={()=>{
                 data._showPopUp('doctor_list')
                 data.setSelectedDoctors({})
-              }} className="text-honolulu_blue-400 hover:opacity-60 underline cursor-pointer">{t('common.change')}</span>
+              }} className="text-honolulu_blue-400 ml-2 hover:opacity-60 underline cursor-pointer">{t('common.change')}</span>
             }
             </>}
           
@@ -820,7 +824,7 @@ return (
                   hide={form.type_of_care!="requested"}
                   selectOptions={
                     data._specialty_categories.map((i,_i)=>({
-                       name:i[i18next.language+"_name"] ? i[i18next.language+"_name"] : i.pt_name,
+                       name:i[i18next.language+"_name"] ? i[i18next.language+"_name"] : i[i18next.language+"_name"],
                        value:i.id
                     }))
                   }

@@ -4,7 +4,7 @@ function CardSkeleton({replicate}) {
   return (
     <div className="flex gap-2 flex-wrap">
     {Array.from({ length: replicate || 1 }, () => []).map(()=>(
-        <div role='status' class='max-w-sm border border-gray-300 rounded-lg p-4'>
+        <div role='status' class='md:max-w-sm w-full border border-gray-300 rounded-lg p-4'>
         <div class="animate-pulse w-full bg-gray-300 h-48 rounded-lg mb-5 flex justify-center items-center">
          
         </div>

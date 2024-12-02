@@ -81,12 +81,12 @@ function App() {
                                   }/>
                                 </BaiscTable.Td>*/}
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.id}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.pt_name}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i[`${i18n.language}_name`]}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{data.formatNumber(data._cn_op(i.normal_consultation_price))} {'MT'}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{data.formatNumber(data._cn_op(i.urgent_consultation_price))} {'MT'}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{data.formatNumber(data._cn_op(i.home_consultation_price))}   {'MT'}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.en_name}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.description}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.en_name=="null" ? "" : i.en_name}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.description=="null" ? "" : i.description}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                

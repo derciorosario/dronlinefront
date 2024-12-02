@@ -11,12 +11,14 @@ import FormLayout from '../../layout/DefaultFormLayout'
 import toast from 'react-hot-toast'
 import Loader from '../../components/Loaders/loader'
 import SystemPage from './pages/system'
+import LogoFile from '../../components/Inputs/logo'
 
 function index() {
 
     const data=useData()
     const {user,logout,isLoading,setIsLoading,setUser}=useAuth()
     const [itemToEditLoaded,setItemToEditLoaded]=useState(false)
+    const [updatingProfile,setUpdatingProfile]=useState(false)
 
     function logout_user(){
         logout()
@@ -292,13 +294,62 @@ async function updateSystemSettings() {
       }
     }
 
-    function handleUploadedFiles(upload){
-      setForm({...form,[upload.key]:upload.filename})
+  async  function handleUploadedFiles(upload){
+
+
+       setForm({...form,[upload.key]:upload.filename})
+
+      if(upload.key=="profile_picture_filename" && upload.filename && upload.filename!=user?.profile_picture_filename){
+
+        setUpdatingProfile(true)
+        setLoading(true)
+        toast.remove()
+
+        toast.loading(t('common.updating-company-profile'))
+
+        try{
+
+         
+
+          await data.makeRequest({method:'post',url:`api/update-profile-picture`,withToken:true,data:{
+            profile_picture_filename:upload.filename
+          }, error: ``},3);
+
+          toast.remove()
+
+          setUpdatingProfile(false)
+          toast.success(t('messages.updated-successfully'))
+          setUser({...user,profile_picture_filename:upload.filename})
+          setLoading(false)
+
+
+        }catch(e){
+
+         toast.remove()
+
+         setUpdatingProfile(false)
+         setLoading(false)
+
+         
+          
+        if(e.message==500){
+          toast.error(t('common.unexpected-error'))
+        }else  if(e.message=='Failed to fetch'){
+          toast.error(t('common.check-network'))
+        }else{
+          toast.error(t('common.unexpected-error'))
+        }
+
+        }
+
+       
+      }
+
+     
     }
 
 
     
-
     return (
 
       <DefaultLayout>
@@ -317,14 +368,8 @@ async function updateSystemSettings() {
           
              <div className="w-[300px] p-3 rounded-[0.3rem] bg-white">
                   
-                    <div onClick={()=>{
-                       alert('Still in development!')
-                    }} className="w-[170px] flex items-center justify-center h-[170px] rounded-full bg-gray-200 relative mx-auto">                
-                           <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960"  fill="#5f6368"><path d="M480-260q75 0 127.5-52.5T660-440q0-75-52.5-127.5T480-620q-75 0-127.5 52.5T300-440q0 75 52.5 127.5T480-260Zm0-80q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM160-120q-33 0-56.5-23.5T80-200v-480q0-33 23.5-56.5T160-760h126l74-80h240l74 80h126q33 0 56.5 23.5T880-680v480q0 33-23.5 56.5T800-120H160Zm0-80h640v-480H638l-73-80H395l-73 80H160v480Zm320-240Z"/></svg> 
-                           <div className="absolute cursor-pointer active:opacity-50 right-0 bottom-6 rounded-full w-[30px] h-[30px] bg-honolulu_blue-400 flex items-center justify-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"  fill="#fff"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
-                           </div>
-                    </div>
+
+                   {user && <LogoFile isUserProfile={true} _loading={updatingProfile} res={handleUploadedFiles} _upload={{key:'profile_picture_filename',filename:user?.profile_picture_filename}} label={t('common.profile-piture')}/>}
 
                     <div className="my-4 flex-col flex justify-center items-center">
                            <span className="font-medium">{user?.name}</span>

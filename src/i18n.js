@@ -16,7 +16,7 @@ i18n
         translation: ptTranslation
       }
     },
-    lng:'pt', //localStorage.getItem('lang') ? localStorage.getItem('lang'): 'pt', // Default language
+    lng:localStorage.getItem('lang') ? localStorage.getItem('lang'): 'pt', // Default language
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false // React already escapes by default

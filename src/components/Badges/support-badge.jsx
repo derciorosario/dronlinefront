@@ -50,9 +50,7 @@ export default function SupportBadge() {
 
 
  useEffect(()=>{
-
        data.setUnreadSupportMessages(badgesCount.canceled+badgesCount.done+badgesCount.open)
-
  },[badgesCount])
 
  useEffect(() => {
@@ -68,7 +66,8 @@ export default function SupportBadge() {
         if(!expand) {
           setExpand(true)
         }
-    }} className="border fixed bottom-1 right-3 rounded-[0.3rem] _support_messages p-2 mb-5 flex items-center bg-white shadow">
+        
+    }} className="border fixed bottom-1 right-3 max-md:bottom-20 rounded-[0.3rem] _support_messages p-2 mb-5 flex items-center bg-white shadow">
       {expand && <div>
 
           <div className={`flex items-center ${data._openPopUps.support_messages ? 'opacity-0 pointer-events-none':''} cursor-pointer hover:opacity-75`} onClick={()=>setTimeout(()=>data._showPopUp('support_messages'),200)}>

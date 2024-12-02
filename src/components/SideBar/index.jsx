@@ -18,25 +18,31 @@ import FeedbackIcon from '../../assets/images/menu-icons/feedback.svg'
 import AppSettingsIcon from '../../assets/images/menu-icons/app-settings.svg'
 import StatsIcon from '../../assets/images/menu-icons/stats.svg'
 import SpecialtyCategoriesIcon from '../../assets/images/menu-icons/specialty-categories.svg'
+import MoreIcon from '../../assets/images/menu-icons/more.svg'
 
 import { t } from 'i18next';
 import { useAuth } from '../../contexts/AuthContext';
+import { useData } from '../../contexts/DataContext';
 
 function SideBar() {
 
     const {pathname}=useLocation()
     const navigate = useNavigate()
     const {user} = useAuth()
+    const data=useData()
+    const [openMobileMenu,setOpenMobileMenu]=useState(false)
+
+
 
     const menuItems = [
 
-      {name:t('menu.home'),path:'/dashboard',paths:['/dashboard'],field:'dashboard',icon:'dashboard',access:['all'],manager_access:true},
+      {name:t('menu.home'),path:'/dashboard',paths:['/dashboard'],field:'dashboard',icon:'dashboard',access:['all'],manager_access:true,showInMobile:true},
       {name:t('menu.find-a-specialist'),path:'/specialists',paths:['/specialists'],field:'specialists',icon:'find_doctor',access:['admin','patient']},
      
       {name:t('menu.appointments'),path:'/appointments',field:'appointments',icon:'appointments',sub_menus:[
           {name:t('menu.all-appointments'),path:'/appointments',paths:['appointments','appointment/:id'],manager_access:true},
           {name:t('menu.add-appointments'),path:'/add-appointments',paths:['add-appointments'],access:['patient']},
-      ],access:['all'],manager_access:{name:'appointments',per:['read']}},
+      ],access:['all'],manager_access:{name:'appointments',per:['read']},showInMobile:true},
 
       {name:t('menu.family'),path:'/dependents',field:'dependents',icon:'dependent',sub_menus:[
         {name:t('menu.all-family'),path:'/dependents',paths:['dependents','dependent/:id']},
@@ -46,7 +52,7 @@ function SideBar() {
       {name:user?.role=="doctor" ? t('menu.my-patients') : t('menu.patients'),path:'/patients',field:'patients',icon:'patient',sub_menus:[
         {name:t('menu.all-patients'),path:'/patients',paths:['patients','patient/:id'],manager_access:{name:'patient',per:['read']}},
         {name:t('menu.add-patients'),path:'/add-patient',paths:['add-patient'],access:['admin'],manager_access:{name:'patient',per:['create']}},
-      ],access:['admin','doctor'],manager_access:{name:'patient',per:['read']}},
+      ],access:['admin','doctor'],manager_access:{name:'patient',per:['read']},showInMobile:true},
 
       {name:t('menu.doctors'),path:'/doctors',field:'doctors',icon:'doctor',sub_menus:[
         {name:t('menu.doctors'),path:'/doctors',paths:['doctors','doctor/:id'],manager_access:{name:'doctor',per:['read']}},
@@ -73,14 +79,14 @@ function SideBar() {
       ],access:['admin'],manager_access:{name:'stats',per:['read']}},
      
      
-     {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient']},
+     {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient'],showInMobile:true},
       
      //{name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
 
-     {name:user?.role=="patient" ? t('common.payments') : t('menu.payment-management'),path:'/payment-management',field:'payment-management',icon:'payment_management',sub_menus:[
+     {name:user?.role=="patient" || data.isMobile ? t('common.payments') : t('menu.payment-management'),path:'/payment-management',field:'payment-management',icon:'payment_management',sub_menus:[
       {name:t('common.payments'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],manager_access:true},
       {name:t('common.refunds'),path:'/refunds',paths:['/refunds'],manager_access:true},
-     ],access:['admin','patient'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
+     ],access:['admin','patient'],manager_access:{name:'payment_management',per:['read','reject','approve']},showInMobile:true},
     
 
      {name:'Feedback',path:'/app-feedback',field:'app-feedback',icon:'feedback',sub_menus:[
@@ -93,14 +99,12 @@ function SideBar() {
       {name:t('common.app-settings'),path:'/app-settings',paths:['app-settings'],manager_access:{name:'app_settings',per:['update']}},
      ],access:['admin'],manager_access:{name:'app_settings',per:['read']}},
 
-
       {name:t('menu.settings'),path:'/profile',field:'settings',icon:'settings',sub_menus:[
         {name:t('menu.profile'),path:'/profile',paths:['profile'],access:['all'],manager_access:true},
         {name:t('menu.consultation-availability'),path:'/consultation-availability',paths:['consultation-availability'],access:['doctor']}, //manager_access:{name:'doctor_availability',per:['read','update']}
       ],access:['patient','doctor','admin'],manager_access:true},
-
-    
-     
+      
+      {name:t('menu.more'),path:'/more',paths:['/more'],field:'more',icon:'more',access:['all'],manager_access:true,showInMobile:true},
   ]
 
 
@@ -122,20 +126,50 @@ function SideBar() {
       app_settings:AppSettingsIcon,
       feedback:FeedbackIcon,
       logs:StatsIcon,
-      specialty_categories:SpecialtyCategoriesIcon
+      specialty_categories:SpecialtyCategoriesIcon,
+      more:MoreIcon
 
   }
 
     const [menuOpen, setMenuOpen] = useState([]);
 
-    function closeAndOpen(path){
+    function closeAndOpen(path,isMobile){
         if(menuOpen.includes(path)){
           setMenuOpen(menuOpen.filter(i=>i!=path))
         }else{
-          setMenuOpen([...menuOpen,path])
+
+          if(isMobile && !openMobileMenu){
+            data._showPopUp('mobile_menu')
+            setMenuOpen([path])
+          }else{
+            setMenuOpen([...menuOpen,path])
+          }
+          
         }
     }
 
+  
+    function handleResize(){
+      data.setIsMobile(window.innerWidth <= 768)
+    }
+
+      useEffect(() => {
+      window.addEventListener("resize", handleResize);
+      return () => {
+          document.removeEventListener("resize", handleResize);
+      };
+    }, []);
+    
+
+    useEffect(()=>{
+         if(data.isMobile && data._openPopUps.mobile_menu==false){
+          setMenuOpen([])
+         }
+    },[data._openPopUps])
+
+
+
+   
     useEffect(()=>{
        let mainPath=pathname.split('/')[1]
 
@@ -143,13 +177,13 @@ function SideBar() {
              if(i.sub_menus) {
                   i.sub_menus.map(f=>{
 
-                   if(f.path.includes(mainPath) && mainPath){
+                   if(f.path.includes(mainPath) && mainPath && !data.isMobile){
                       setMenuOpen([i.path])
                    }
 
                   })
              }else{
-                  if(i.path.includes(mainPath) && mainPath){
+                  if(i.path.includes(mainPath) && mainPath && !data.isMobile){
                     setMenuOpen([i.path])
                   }
              }
@@ -174,8 +208,6 @@ function SideBar() {
                      }
                 })
               }
-
-              
 
               return show || user.data.permissions[item.manager_access?.name]?.some(i=>item.manager_access?.per?.includes(i)) || item.manager_access==true
          }
@@ -232,60 +264,148 @@ function SideBar() {
     }
 
 
+    const [openPopUps,setOpenPopUps]=useState([])
+
+   
+
+    useEffect(()=>{
+
+       let _open=[]
+       let _full_w_popups=['support_messages','cancel_appointment','doctor_list']
+       Object.keys(data._openPopUps).forEach(i=>{
+          if(data._openPopUps[i] && _full_w_popups.includes(i)){
+            _open.push(i)
+          }
+       })
+
+       setOpenPopUps(_open)
+    },[data._openPopUps])
+
+
+    
 
 
     return (
-    <div className="min-w-[230px] max-w-[240px] bg-white h-[100vh]">
+      <>
+      
+      <div className={`${openPopUps.length!=0 || data.paymentInfo?.type_of_care ? 'hidden':'fixed'}  -bottom-2 md:hidden _mobile_menu  left-0 w-full bg-white flex items-center border-t border-t-gray-200 rounded-t-[15px] cursor-pointer shadow-sm`} style={{zIndex:999}}>
+             <div className="w-full px-2 py-4 flex items-center justify-around relative">
 
-           <div className="flex justify-center py-[20px] mb-6 cursor-pointer">
-                <h1 className="text-[25px] font-medium" onClick={()=>navigate('/')}>
-                   <img src={LogoIcon} width={120}/>
-                </h1>
-           </div>
+                {menuItems.filter(i=>i.showInMobile).map((item, index)=>(
+                   <div>
+                        {item.sub_menus && <div className={`absolute shadow bottom-[100%] border-t-gray-200 rounded-t-[15px] w-full left-0 ${item.path} ${menuOpen.includes(item.path) && !openMobileMenu ? '':'hidden'}`}>
+                                <div className={`rounded-[0.3rem]  bg-gray-100 p-[10px] flex flex-col`}>
+                                    {item.sub_menus.map(i=>(
+                                      <span onClick={()=>{
+                                        setMenuOpen([])
+                                        navigate(i.path)
+                                      }}
+                                          className={`text-[1rem]  py-2 flex ${!checkAccess(i,'isSub') ? 'hidden':''}  ${checkActive(i,true) ? 'text-honolulu_blue-500 font-medium':' opacity-80'} hover:text-honolulu_blue-500`}
+                                      >
+                                          {i.name} 
+                                      </span>
+                                    ))}
+                                </div>
+                       </div>}
 
-           <div className="">
-                    {menuItems.map((item, index) => (
-                        <div key={index} className={`mb-4 ${!checkAccess(item) ? 'hidden':''}`}>
-                              <div className={`px-[20px] flex relative hover:*:cursor-pointer hover:*:text-honolulu_blue-500`} onClick={()=>{
-                                 if(item.sub_menus){
-                                    closeAndOpen(item.path)
-                                 }
-                              }}>
-                                  {checkActive(item) && <span className="bg-honolulu_blue-500 w-[3px]  rounded-[0.3rem] h-full flex absolute left-0 top-0"></span>}
-                                  <img onClick={()=>navigate(item.path)} src={images[item.icon]} className="mr-4"/>
-                                  <div className="flex justify-between flex-1">
-                                       <a onClick={()=>{
-                                         if(!item.sub_menus) navigate(item.path)
-                                       }}
-                                          className={`${checkActive(item) ? 'text-honolulu_blue-500 font-medium':''} hover:text-honolulu_blue-500`}
-                                       >
-                                          {item.name}
-                                       </a>
+                    <div  onClick={()=>{
 
-                                      {item.sub_menus && <div className={`${menuOpen.includes(item.path) ? 'rotate-180':''} transition-all duration-100`}>
-                                              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
-                                      </div>}
+                            data._closeAllPopUps()
+                            data.setShowFilters(false)
+                            if(item.field=="more"){
+                              setOpenMobileMenu(!openMobileMenu)
+                              setMenuOpen([])
+                              return
+                            }
+
+                            setOpenMobileMenu(false)
+                            if(item.sub_menus){
+                              closeAndOpen(item.path,'data.isMobile')
+                            }else{
+                              navigate(item.path)
+                            }
+                            
+                    }} key={index} className={`flex-col flex items-center ${!checkAccess(item) ? 'hidden':''}`}  >
+
+                        <img width={25} src={images[item.icon]} className=""/>
+                        <span className={`${((checkActive(item) && !openMobileMenu) || (openMobileMenu && item.field=="more")) ? 'text-honolulu_blue-500 font-medium':''} text-[0.8rem]`}> {item.name}</span>
+                    </div>
+                    </div>
+                ))}
+             </div>
+      </div>
+
+      <div className={`min-w-[230px]  md:max-w-[240px] max-md:${openMobileMenu ? 'w-full':'hidden'} max-md:flex flex-col bg-white h-[100vh] max-md:fixed max-md:z-50  left-0 top-0`}>
+
+      <div className="flex justify-center max-md:justify-around py-[20px] mb-6 cursor-pointer items-center">
+          <h1 className="text-[25px] font-medium" onClick={()=>navigate('/')}>
+              <img src={LogoIcon} width={120} />
+          </h1>
+          <div onClick={()=>{
+            setOpenMobileMenu(false)
+            setMenuOpen([])
+          }}  className="w-[30px] md:hidden cursor-pointer h-[30px] right-1 top-1 rounded-full bg-gray-300 flex items-center justify-center">
+
+              <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+              </svg>
+
+          </div>
+      </div>
+
+      <div className="overflow-auto max-md:mb-28">
+              {menuItems.filter(i=>i.field!="more").map((item, index) => (
+                  <div key={index} className={`mb-4 ${!checkAccess(item) ? 'hidden':''}`}>
+                        <div className={`px-[20px] flex relative hover:*:cursor-pointer hover:*:text-honolulu_blue-500`} onClick={()=>{
+                            if(item.sub_menus){
+                              closeAndOpen(item.path)
+                            }
+                        }}>
+                            {checkActive(item) && <span className="bg-honolulu_blue-500 w-[3px]  rounded-[0.3rem] h-full flex absolute left-0 top-0"></span>}
+                            <img onClick={()=>navigate(item.path)} src={images[item.icon]} className="mr-4"/>
+                            <div className="flex justify-between flex-1">
+                                  <a onClick={()=>{
+                                    if(!item.sub_menus) {
+                                      navigate(item.path)
+                                      setOpenMobileMenu(false)
+                                    }
                                       
-                                  </div>
-                              </div>
+                                  }}
+                                    className={`${checkActive(item) ? 'text-honolulu_blue-500 font-medium':''} hover:text-honolulu_blue-500`}
+                                  >
+                                    {item.name}
+                                  </a>
 
-                              {item.sub_menus && <div className={`p-[15px] ${item.path} ${menuOpen.includes(item.path) ? '':'hidden'}`}>
-                                      <div className={`rounded-[0.3rem]  bg-gray-100 p-[10px] flex flex-col gap-y-2 ml-2`}>
-                                          {item.sub_menus.map(i=>(
-                                            <NavLink
-                                                to={i.path} 
-                                                className={`text-[0.9rem] ${!checkAccess(i,'isSub') ? 'hidden':''}  ${checkActive(i,true) ? 'text-honolulu_blue-500 font-medium':' opacity-80'} hover:text-honolulu_blue-500`}
-                                            >
-                                                {i.name} 
-                                            </NavLink>
-                                          ))}
-                                      </div>
-                              </div>}
+                                {item.sub_menus && <div className={`${menuOpen.includes(item.path) ? 'rotate-180':''} transition-all duration-100`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+                                </div>}
+                                
+                            </div>
                         </div>
-                    ))}
-           </div>
 
-    </div>
+                        {item.sub_menus && <div className={`p-[15px] ${item.path} ${menuOpen.includes(item.path) ? '':'hidden'}`}>
+                                <div className={`rounded-[0.3rem]  bg-gray-100 p-[10px] flex flex-col gap-y-2 ml-2`}>
+                                    {item.sub_menus.map(i=>(
+                                      <span onClick={()=>{
+                                        setOpenMobileMenu(false)
+                                        navigate(i.path)
+                                      }}
+                                     
+                                          className={`text-[0.9rem] ${!checkAccess(i,'isSub') ? 'hidden':''}  ${checkActive(i,true) ? 'text-honolulu_blue-500 font-medium':' opacity-80'} hover:text-honolulu_blue-500  cursor-pointer`}
+                                      >
+                                          {i.name} 
+                                      </span>
+                                    ))}
+                                </div>
+                        </div>}
+                  </div>
+              ))}
+      </div>
+
+      </div>
+
+      
+      </>
   )
 }
 

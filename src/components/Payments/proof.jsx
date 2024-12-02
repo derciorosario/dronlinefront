@@ -35,10 +35,20 @@ function SendProof({info}) {
       setFile({})
     }
 
+  const handleDrop = (e) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      handleSubmit(file)
+  
+  };
 
-  const handleSubmit = async (event) => {
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
 
-    let f = event.target.files[0];
+
+  const handleSubmit = async (f) => {
+
     const formData = new FormData();
     formData.append('file', f);
     let fileName = uuidv4();
@@ -75,6 +85,7 @@ function SendProof({info}) {
         data.setPaymentInfo({...info,step:3,loading:false})
         clearFileInputs()
       } else {
+        data.setPaymentInfo({...info,loading:false})
         toast.error(t('common.error-while-uploading-file'))
         reset()
         console.error('File upload error:', xhr.statusText);
@@ -85,6 +96,7 @@ function SendProof({info}) {
     // Handle error
     xhr.onerror = function () {
       toast.error(t('common.error-while-uploading-file'))
+      data.setPaymentInfo({...info,loading:false})
       reset()
       console.error('File upload error:', xhr.statusText);
     };
@@ -124,26 +136,29 @@ function SendProof({info}) {
 
 
          
-      <div class="w-full py-9 bg-gray-50 rounded-2xl border border-gray-300 gap-3 grid border-dashed">
-      <div class="grid gap-1">
+      <div  onDrop={handleDrop}
+                        onDragOver={handleDragOver} class="w-full py-9 bg-gray-50 rounded-2xl border border-gray-300 gap-3 grid border-dashed">
+      
+      {!upload.uploading && <div class="grid gap-1">
       <div className="flex justify-center">
              <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960"  fill="#5f6368"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
       </div>
       <h2 class="text-center text-gray-400   text-xs leading-4">PNG, JPG, PDF</h2>
-      </div>
+      </div>}
       <div class="grid gap-2">
-      <h4 class="text-center text-gray-900 text-sm font-medium leading-snug">{t('common.get-proof')}</h4>
+      <h4 class={`text-center ${upload.uploading ? 'hidden':''} text-gray-900 text-sm font-medium leading-snug`}>{t('common.get-proof')}</h4>
    
         {!upload.uploading  && 
         <div class="flex items-center justify-center">
             <label>
-              <input accept={acceptedFileTypes} ref={fileInputRef_1} onChange={handleSubmit} type="file" hidden />
+              <input accept={acceptedFileTypes} ref={fileInputRef_1} onChange={(event)=>handleSubmit(event.target.files[0])} type="file" hidden />
               <div class="flex  h-9 px-2 flex-col bg-honolulu_blue-500 rounded-full shadow text-white text-xs font-semibold leading-4 items-center  cursor-pointer justify-center focus:outline-none">{upload.filename ? t('common.change') : t('common.choose-file')}</div>
             </label>
-      </div>
+        </div>
+
         }
 
-        {(upload.uploading && upload.progress < 100) && <div className="flex justify-center items-center flex-col relative">
+        {/**(upload.uploading && upload.progress < 100) && <div className="flex justify-center items-center flex-col relative">
 
 
               <div className="w-[150px] h-[4px] bg-gray-300 rounded-[0.4rem] relative">
@@ -152,9 +167,9 @@ function SendProof({info}) {
       
               </div>
               <span className="mt-2">{`${upload.progress.toFixed(2)}%`}</span>
-        </div>}
+        </div>**/}
 
-        {(upload.uploading && upload.progress >= 100) && <div className="flex items-center  w-full justify-center flex-col">
+        {(upload.uploading) && <div className="flex items-center  w-full justify-center flex-col">
                  <Loader/>
         </div>}
 

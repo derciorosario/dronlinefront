@@ -25,6 +25,7 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd})
         <div id="dropdown" class="z-10  absolute left-0 top-[100%] bg-white divide-y divide-gray-100 rounded-lg shadow w-full">
             {showOptions && <ul class="py-2 max-h-[200px] overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdown-button">
              
+             
                 {((searched.length!=0 && loaded) && canAdd!==false) && <li className="flex justify-end"> 
                         <span onClick={() => {
                             btnAddRes()

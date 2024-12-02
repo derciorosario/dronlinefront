@@ -11,6 +11,7 @@ import DepImg4 from '../../assets/images/depart/pediatrics.jpg'
 import DepImg5 from '../../assets/images/depart/orthopedics.jpg'
 import DepImg6 from '../../assets/images/depart/psychiatry.jpg'
 import DepImg7 from '../../assets/images/depart/radiology.jpg'
+import i18next from 'i18next';
 
 
 
@@ -105,12 +106,12 @@ const DepartamentSilder = ({setActiveSlide}) => {
         {data._specialty_categories.map((i,_i)=>{
             return (
                 <div onClick={()=>{
-                  window.location.href='/doctors/?medical_specialty='+i.id
+                  window.location.href='/doctors-list/?medical_specialty='+i.id
                 }}  className="w-[300px] h-[300px] p-3 relative cursor-pointer hover:scale-105 hover:rounded-lg delay-75  ease-in transition-all overflow-hidden">
                     <div className="w-full h-full relative">
                         <div className="absolute w-full h-full left-0 top-0 bg-honolulu_blue-400 opacity-15"></div>
                         <img src={i.image_filename} className="w-full h-full object-cover"/>
-                        <span className="text-white mt-bold z-10 absolute text-[30px] max-md:text-[20px] flex bottom-[50px] left-[50px]">{i.pt_name}</span>
+                        <span className="text-white mt-bold z-10 absolute text-[30px] max-md:text-[20px] flex bottom-[50px] left-[50px]">{i[i18next.language+"_name"]}</span>
                     </div>
                 </div>
             )

@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   const [serverTime,setServerTime]=useState(null)
   const [pathname,setPathName]=useState(null)
   
-  let env="pro"
+  let env="dev"
   const APP_BASE_URL = env =="pro" ? "https://dronline-server.arsbeta-mz.com": 'http://127.0.0.1:8000'
   const SERVER_FILE_STORAGE_PATH=`storage/uploads`
   const APP_FRONDEND=env == "dev" ? "http://localhost:5173" : "https://dronline-one.netlify.app" 
@@ -87,7 +87,12 @@ export const AuthProvider = ({ children }) => {
           await makeRequest({method:'get',url:`api/user`, error: ``,withToken:true},0);
           return true
        }catch(e){
-          return false
+          if(e.message==401){
+            return false
+          }else{
+            return true
+          }
+          
        }
    }
 
@@ -215,9 +220,6 @@ export const AuthProvider = ({ children }) => {
         console.error('Error making request:', error);
 
         if(error.message=="401" && !url.includes('login') && !url.includes('api/user')){
-
-          return
-
 
            toast.remove()
            if(!await check_user() && user){

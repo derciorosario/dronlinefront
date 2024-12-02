@@ -8,6 +8,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import BasicFilter from '../../components/Filters/basic';
 import BasicSearch from '../../components/Search/basic';
 import BasicPagination from '../../components/Pagination/basic';
+import i18next from 'i18next';
 
 
 
@@ -184,7 +185,7 @@ function getDoctorAmountEarned(i){
                                 </BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.name}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/doctor/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.pt_name}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
                                 
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.email}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.main_contact}</BaiscTable.Td>

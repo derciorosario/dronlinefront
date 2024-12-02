@@ -62,7 +62,7 @@ let initial_form={
     let v=true
 
     if(
-       !form.pt_name || !form.image_filename || !form.normal_consultation_price || !form.urgent_consultation_price || !form.home_consultation_price
+       !form.pt_name || !form.en_name || !form.image_filename || !form.normal_consultation_price || !form.urgent_consultation_price || !form.home_consultation_price
     ){
       v=false
     }
@@ -272,6 +272,7 @@ let initial_form={
                         label={t('form.english-name')} 
                         onChange={(e) => setForm({...form, en_name: e.target.value})} 
                         field={'en_name'} 
+                        r={true}
                         value={form.en_name}
                     />
 

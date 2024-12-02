@@ -61,7 +61,8 @@ function addPatients({ShowOnlyInputs}) {
     country_of_residence: "",
     province_of_residence: "",
     residential_address: "",
-    short_biography:'',
+    pt_short_biography:'',
+    en_short_biography:'',
     long_biography:'',
     years_of_experience:'',
     use_app_gain_percentage:false,
@@ -81,7 +82,8 @@ function addPatients({ShowOnlyInputs}) {
        !form.medical_specialty ||
        !form.gender ||
        !form.main_contact ||
-       !form.short_biography  ||
+       !form.pt_short_biography  ||
+       !form.en_short_biography  ||
        !form.date_of_birth ||
        !form.identification_document ||
 

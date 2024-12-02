@@ -6,7 +6,7 @@ export default function DashboardSkeleton() {
      <>
         <div className="w-full flex items-center mb-2">
             {Array.from({ length: 3 }, () => []).map(i=>(
-                <div class="border shadow rounded-md p-4 max-w-sm w-full m-1">
+                <div class={`border shadow rounded-md p-4 max-w-sm w-full m-1 max-md:${i==2 ? 'hidden':''}`}>
                     <div class="animate-pulse flex space-x-4">
                     <div class="rounded-full bg-gray-300 h-10 w-10"></div>
                     <div class="flex-1 space-y-6 py-1">

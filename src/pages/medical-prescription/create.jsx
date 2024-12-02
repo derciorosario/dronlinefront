@@ -16,7 +16,7 @@ import FormCard from '../../components/Cards/form'
 import Comment from '../../components/modals/comments'
 import SearchInput from '../../components/Inputs/search'
 import _medication_names from '../../assets/medication-names.json'
-
+import _medications from '../../assets/medications.json'
 function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
 
   const [message,setMessage]=useState('')
@@ -273,13 +273,14 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                                   <label  class="block text-sm  mb-2 mt-7 text-gray-900">
                                       {t('form.medication-name')} <span className="text-red-500">*</span>
                                   </label>
+                                  
                                   <SearchInput canAdd={false} r={true} placeholder={t('form.medication-name')} id={i.name}  label={''} loaded={true} res={(id) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
                                        return i.id==f.id ? {...f,name:id} : f
-                                   })})}  items={_medication_names.map(i=>({name:i,id:i}))}/>
+                                   })})}  items={_medications.map(i=>({...i,id:i.ITEM}))}/>
+
                             </div>
 
                           </div>
-
 
                             <FormLayout.Input 
                               verified_inputs={verified_inputs} 

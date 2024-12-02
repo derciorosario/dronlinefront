@@ -1,4 +1,4 @@
-import { t } from 'i18next'
+import i18next, { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
 import { useData } from '../../contexts/DataContext'
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -39,17 +39,16 @@ function getAvailableHours(item,type){
 
   return (
 
-        <div  class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm">
-            
-            <div  className="min-h-[240px] bg-gray-100">
-                <img  class="rounded-t-lg" src={item.profile_picture_filename} alt="" />
+        <div  class="md:max-w-sm max-md:w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+            <div  className="h-[300px] bg-gray-100">
+                <img  class="rounded-t-lg object-cover w-full h-full" src={item.profile_picture_filename} alt="" />
             </div>
 
             <div class="p-5">
                 <div className="flex items-center mb-4 justify-between">
                     <a href="#">
                         <h5 class=" text-2xl font-bold tracking-tight text-gray-900">{item.name}</h5>
-                        <span className="text-[0.9rem] flex">{data._specialty_categories.filter(i=>i.id==item.medical_specialty)[0]?.pt_name}</span>
+                        <span className="text-[0.9rem] flex">{data._specialty_categories.filter(i=>i.id==item.medical_specialty)[0]?.[`${i18next.language}_name`]}</span>
                     </a>
                     <div className="flex items-center">
                            <div className="py-[2px] px-[3px] mr-1 bg-honolulu_blue-400 rounded-[0.3rem] flex items-center">
@@ -60,7 +59,7 @@ function getAvailableHours(item,type){
                     </div>
                 </div>
 
-                <p class="mb-3 font-normal text-gray-700">{item.short_biography}</p>
+                <p class="mb-3 font-normal text-gray-700">{item[`${i18next.language}_short_biography`]}</p>
                 <div className="flex items-center mb-2 hidden">
                    
                         <span className="text-[0.9rem] font-medium flex w-full">{t('common.available-hours')}</span>
@@ -80,7 +79,6 @@ function getAvailableHours(item,type){
 
                        <span className="text-[14px] ml-2 text-honolulu_blue-400">({t(`common.weeks.`+weeks[new Date(selectedDates[item.id] || new Date().toISOString().split('T')).getDay()].toLowerCase())})</span>
                 </div>
-                
                 <div className={`flex items-center flex-wrap mb-2`}>
 
                  

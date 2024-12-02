@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import DashboardCard from '../../../components/Cards/dashboardCard'
-import { t } from 'i18next'
+import i18next, { t } from 'i18next'
 import { useData } from '../../../contexts/DataContext'
 import { useAuth } from '../../../contexts/AuthContext'
 import DashboardSkeleton from '../../../components/Skeleton/dashboad'
@@ -162,7 +162,6 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
 
 
                  <div className="w-full">
-
                         <div className="w-full mt-8">
                             <span className="font-medium">{t('common.appointments')}</span>
                             <span className="text-gray-500 ml-2">({upcomingAppointments.length})</span>
@@ -216,7 +215,7 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
                                           </BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{i.consultation_date}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{i.scheduled_hours}</BaiscTable.Td>
-                                          <BaiscTable.Td url={`/appointment/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.pt_name}</BaiscTable.Td>
+                                          <BaiscTable.Td url={`/appointment/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[i18next.language+"_name"]}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{t('common.types_of_care.'+i.type_of_care)}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{t('common.'+i.consultation_method)}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>

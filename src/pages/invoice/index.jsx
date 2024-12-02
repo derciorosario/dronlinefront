@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import DefaultLayout from '../../layout/DefaultLayout'
-import { t } from 'i18next'
+import i18next, { t } from 'i18next'
 import { useLocation, useParams } from 'react-router-dom';
 import { useData } from '../../contexts/DataContext';
 import Loader from '../../components/Loaders/loader';
@@ -176,7 +176,7 @@ if(loading){
            
             <tr class="bg-white  hover:bg-gray-50">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900">
-                     {t('common.consultation-scheduling',{medical_specialty:data._specialty_categories.filter(i=>i.id==invoice?.doctor?.medical_specialty)[0]?.pt_name})}
+                     {t('common.consultation-scheduling',{medical_specialty:data._specialty_categories.filter(i=>i.id==invoice?.doctor?.medical_specialty)[0]?.[i18next.language+"_name"]})}
                 </th>
                 
                 <td class="px-6 py-4">

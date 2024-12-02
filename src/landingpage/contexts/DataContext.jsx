@@ -4,6 +4,7 @@ import axios from 'axios'
 import qs from 'qs';
 import { useHomeAuth } from './AuthContext';
 import { t } from 'i18next';
+import i18next from 'i18next';
 
 const HomeDataContext = createContext();
 
@@ -157,7 +158,7 @@ export const HomeDataProvider = ({ children }) => {
 
     useEffect(()=>{
      
-     setSpecialty(_specialty_categories.filter(i=>_medical_specialities.some(id=>id==i.id)).map(i=>({name:i.pt_name,id:i.id})))
+     setSpecialty(_specialty_categories.filter(i=>_medical_specialities.some(id=>id==i.id)).map(i=>({name:i[i18next.language+"_name"],id:i.id})))
 
     },[_medical_specialities,_specialty_categories])
 

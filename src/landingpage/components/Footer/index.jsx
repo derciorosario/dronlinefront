@@ -43,11 +43,11 @@ function Footer({serviceItems}) {
                 <div className="w-full max-md:w-[33%] max-sm:w-full">
                    
                     <img className="w-[140px]" src={Logo}/>
-                    <span className="text-white opacity-90 my-3 flex">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                    <span className="text-white opacity-90 my-3 flex">{t('common.dronline-short-desc')}</span>
                    
                     <div className="w-full flex items-center mt-4">
                        <svg className="fill-white mr-2" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-640v400h640v-400L480-440Zm0-80 320-200H160l320 200ZM160-640v-80 480-400Z"/></svg> 
-                       <a className="text-white" href="mailto:help@dronline.com">help@dronline.com</a>                  
+                       <a className="text-white" href="mailto:info@dronlinemz.com">info@dronlinemz.com</a>                  
                     </div>
 
                     <div className="w-full flex items-center mt-2">
@@ -111,6 +111,12 @@ function Footer({serviceItems}) {
                       <span onClick={()=>{
                                  navigate('/how-to-cancel-my-consultation')                
                        }} className="text-white opacity-90  mt-light cursor-pointer hover:opacity-100">{t('common.how-to-cancel-my-consultation')}</span>
+
+                       <span onClick={()=>{
+                                 navigate('/appointment-cancelation-terms')                
+                       }} className="text-white opacity-90  mt-light cursor-pointer hover:opacity-100">{t('appointment-cancelation.t')}</span>
+
+
                                               
 
                         <span onClick={()=>{

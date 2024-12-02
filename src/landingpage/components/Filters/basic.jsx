@@ -1,4 +1,4 @@
-import { t } from 'i18next'
+import i18next, { t } from 'i18next'
 import React, { useEffect } from 'react'
 import { useHomeData } from '../../contexts/DataContext'
 import Loader from '../Loaders/loader'
@@ -96,7 +96,7 @@ export default function BasicFilter({filterOptions,setFilterOptions,setUpdateFil
 
                 <ul className={`space-y-2 overflow-y-auto max-h-[140px] text-sm ${!f.loaded ? 'hidden':''}`} aria-labelledby="dropdownDefault">
                 
-                {f.items.filter(i=>(i.name || i.pt_name).toLowerCase().includes(f.search.toLowerCase())).map((i,_i)=>(
+                {f.items.filter(i=>(i.name || i[i18next.language+"_name"]).toLowerCase().includes(f.search.toLowerCase())).map((i,_i)=>(
                     <li className="flex items-center px-[1px] cursor-pointer" onClick={() => {
                         const optionsIndex = filterOptions.findIndex(i => i.field === f.field);
                         setFilterOptions(prev => {
@@ -118,7 +118,7 @@ export default function BasicFilter({filterOptions,setFilterOptions,setUpdateFil
                         <input  checked={f.selected_ids.includes(i.id)} type="checkbox" value="" className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 focus:ring-2" />
 
                         <span  className="ml-2 text-sm font-medium text-gray-900 cursor-pointer">
-                          {i.name || i.pt_name}
+                          {i.name || i[`${i18next.language}_name`]}
                         </span>
                    </li>
                 ))}

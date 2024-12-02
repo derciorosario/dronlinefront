@@ -13,7 +13,7 @@ function PaymentProcess({ info }) {
   const data=useData();
 
   return (
-    <div className={`w-full h-[100vh] bg-[rgba(0,0,0,0.2)]  ease-in _doctor_list ${(!info?.type_of_care || info.done) ? 'opacity-0 pointer-events-none translate-y-[100px]' : ''} ease-in transition-all delay-75 fixed flex items-center justify-center z-50`}>
+    <div className={`w-full px-4 h-[100vh] bg-[rgba(0,0,0,0.2)]  ease-in _doctor_list ${(!info?.type_of_care || info.done) ? 'opacity-0 pointer-events-none translate-y-[100px]' : ''} ease-in transition-all delay-75 fixed flex items-center justify-center z-50`}>
       <div id="payment_popup" className="w-full max-h-[90vh] overflow-y-auto p-4 relative bg-white border border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">
                
         <div className={`flex absolute mb-3 top-1 ${info.loading ? 'opacity-0 pointer-events-none':''} left-2`}>
@@ -39,13 +39,13 @@ function PaymentProcess({ info }) {
         </div>}
 
 
-      <ol class="items-center mt-3 border-b pb-4 flex w-full max-w-2xl text-center text-sm font-medium text-gray-500  sm:text-base">
+      <ol class="items-center mt-6 border-b pb-4 flex w-full max-w-2xl text-center text-sm font-medium text-gray-500  sm:text-base">
         <li class="after:border-1 flex items-center text-primary-700 after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200  sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10">
             <span class="flex items-center after:mx-2 after:text-gray-200 after:content-['/']  sm:after:hidden">
             <svg class={`me-2 h-4 w-4 sm:h-5 sm:w-5 ${(info.step==1 || !info.step) ? '':' fill-green-500'}`} aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"  viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
-            <label className={`flex-1 ${(info.step==1 || !info.step) ? 'font-medium text-black':'font-normal text-green-500'}`}>{t('common.payment-method')}</label>
+            <label className={`flex-1 max-md:text-[12px] ${(info.step==1 || !info.step) ? 'font-medium text-black':'font-normal text-green-500'}`}>{t('common.payment-method')}</label>
             </span>
         </li>
 
@@ -54,7 +54,7 @@ function PaymentProcess({ info }) {
             <svg class={`me-2 h-4 w-4 sm:h-5 sm:w-5 ${info.step == 3 ? 'fill-green-500':''}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
-            <label className={`flex-1 ${info.step==2 ? 'font-medium text-black':info.step >= 2 ? 'font-normal text-green-500':''}`}>{t('common.payment')}</label>
+            <label className={`flex-1 max-md:text-[12px]  ${info.step==2 ? 'font-medium text-black':info.step >= 2 ? 'font-normal text-green-500':''}`}>{t('common.payment')}</label>
             </span>
         </li>
 
@@ -62,7 +62,7 @@ function PaymentProcess({ info }) {
             <svg class={`me-2 h-4 w-4 sm:h-5 sm:w-5 ${info.step == 3 ? 'fill-green-500':''}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
-            <label className={`flex-1 ${info.step == 3 ? 'font-normal text-green-500':''}`}>{t('common.completion')}</label>
+            <label className={`flex-1 max-md:text-[12px]  ${info.step == 3 ? 'font-normal text-green-500':''}`}>{t('common.completion')}</label>
         </li>
       </ol>
 

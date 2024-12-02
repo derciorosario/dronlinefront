@@ -1,6 +1,6 @@
 import React from 'react'
 import DoctorImg1 from '../../assets/images/doctors/1.png'
-import { t } from 'i18next'
+import i18next, { t } from 'i18next'
 import { useHomeData } from '../../contexts/DataContext'
 import { useState } from 'react'
 import toast from 'react-hot-toast';
@@ -90,9 +90,9 @@ function DoctorList({max,items,animate}) {
      
              <div className="flex flex-col w-full max-xl:w-full">
                      <span className="text-honolulu_blue-300 text-[17px] uppercase mt-bold">{item.name}</span>
-                     <span className="text-honolulu_blue-500 mt-bold text-[20px] uppercase">{data._specialty_categories.filter(i=>i.id==item.medical_specialty)[0]?.pt_name}</span>
+                     <span className="text-honolulu_blue-500 mt-bold text-[20px] uppercase">{data._specialty_categories.filter(i=>i.id==item.medical_specialty)[0]?.[i18next.language+"_name"]}</span>
                      <p className="text-justify mt-5 text-gray-500 mb-4">
-                      {item.short_biography}
+                       {item[`${i18next.language}_short_biography`]}
                      </p>
 
 

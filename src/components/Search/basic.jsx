@@ -14,7 +14,7 @@ export default function BasicSearch({setSearch,setCurrentPage,show,from,total,hi
         {!hideFilters && <div className={`${data.showFilters ? 'hidden':''}  mr-4`}>
             <button onClick={()=>data.setShowFilters(true)} type="button" className="text-white w-full bg-honolulu_blue-500 font-medium rounded-full text-sm px-5 py-2.5 flex items-center  focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z"/></svg>
-                <span className="ml-1">{t('common.filters')}</span>
+                <span className="ml-1 max-md:hidden">{t('common.filters')}</span>
             </button>
         </div>}
         {!hideSearch && <div className="relative flex items-center">
@@ -33,7 +33,8 @@ export default function BasicSearch({setSearch,setCurrentPage,show,from,total,hi
 
         <div className="ml-2">
             <div type="button" class={`py-[13px] px-5 me-2  text-sm font-medium text-gray-900 focus:outline-none rounded-lg border border-gray-200`}>
-                {total ? total +" "+ t('common.results') :  t('common.no-data-found')}
+                <span className="max-md:hidden">{total ? total +" "+ t('common.results') :  t('common.no-data-found')}</span>
+                <span className={"md:hidden"}>{total}</span>
             </div>
         </div>
     </div>

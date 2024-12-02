@@ -171,7 +171,7 @@ export default function CancelAppointmentModel({}) {
 <div id="select-modal" tabindex="-1" aria-hidden="true" class={`overflow-y-auto ${(data.appointmentcancelationData?.consultation?.id && !data.appointmentcancelationData?.hide) ? '':'pointer-events-none opacity-0 translate-y-[100px]'} ease-in transition-all delay-75 bg-[rgba(0,0,0,0.3)] flex overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full`}>
    
    
-    <div class={`relative p-4 w-full ${showReasons ? 'max-w-[500px]' :'max-w-md'} max-h-[75vh]`}>
+    <div class={`relative p-4 w-full ${showReasons ? 'max-w-[500px]' :'max-w-md'}`}>
 
          
        
@@ -210,7 +210,7 @@ export default function CancelAppointmentModel({}) {
 
                 </div>
 
-                {!selectReason && <ul class="text-sm font-medium  text-gray-900 bg-white border border-gray-200 rounded-lg">
+                {!selectReason && <ul style={{height:'calc(100vh - 300px)'}} class="text-sm font-medium overflow-auto  text-gray-900 bg-white border border-gray-200 rounded-lg">
                     {data.cancelation_reasons.map((i,_i)=>(
                         <li onClick={()=>setSelectedReason(i)} class="w-full border-b border-gray-200 rounded-t-lg">
                             <div class="flex items-center ps-3">
@@ -255,7 +255,7 @@ export default function CancelAppointmentModel({}) {
 
              <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('common.consult')}</dt>
-              <dd class="text-base font-medium text-gray-900">{data._specialty_categories.filter(i=>i.id==data.appointmentcancelationData?.consultation?.medical_specialty)[0]?.pt_name}</dd>
+              <dd class="text-base font-medium text-gray-900">{data._specialty_categories.filter(i=>i.id==data.appointmentcancelationData?.consultation?.medical_specialty)[0]?.[`${i18next.language}_name`]}</dd>
             </dl>
 
             <dl class="flex items-center justify-between gap-4 py-3">

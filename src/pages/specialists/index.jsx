@@ -312,7 +312,6 @@ useEffect(()=>{
 
     return   (
       <>
-            
             <div className="flex">
                 <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>
                 <div className="flex-1">
@@ -325,6 +324,7 @@ useEffect(()=>{
                   {!data._loaded.includes('doctors') && <CardSkeleton replicate={3}/>}
                 </div>
              </div>
+             
              <BasicPagination show={data._loaded.includes('doctors')} from={'doctors'} setCurrentPage={setCurrentPage} total={data._doctors?.total}  current={data._doctors?.current_page} last={data._doctors?.last_page}/>
           
       </>

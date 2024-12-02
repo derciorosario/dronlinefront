@@ -204,7 +204,7 @@ function App() {
                   <div className="flex justify-center mb-[140px]">
 
                     <button onClick={()=>{
-                      navigate('/doctors')
+                      navigate('/doctors-list')
                     }} className="px-5 py-4 whitespace-nowrap flex items-center bg-honolulu_blue-400 hover:bg-honolulu_blue-300 text-white  uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">
                     {t('common.find-more')} 
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg>

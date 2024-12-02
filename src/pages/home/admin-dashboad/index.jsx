@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import DashboardCard from '../../../components/Cards/dashboardCard'
-import { t } from 'i18next'
+import i18next, { t } from 'i18next'
 import { useData } from '../../../contexts/DataContext'
 import { useAuth } from '../../../contexts/AuthContext'
 import DashboardSkeleton from '../../../components/Skeleton/dashboad'
@@ -282,7 +282,7 @@ export default function AdminDashboard({startDate,endDate,setStartDate,setEndDat
                                             <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.name}</BaiscTable.Td>
                                             <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.email}</BaiscTable.Td>
                                             <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.appointment_count}</BaiscTable.Td>
-                                            <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.medical_specialties.map(c=>data._specialty_categories.filter(f=>f.id==c)[0]?.pt_name).filter(f=>f).join(', ')}</BaiscTable.Td>
+                                            <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.medical_specialties.map(c=>data._specialty_categories.filter(f=>f.id==c)[0]?.[i18next.language+"_name"]).filter(f=>f).join(', ')}</BaiscTable.Td>
                                         
                                         </BaiscTable.Tr>
                                     ))}

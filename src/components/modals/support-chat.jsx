@@ -271,6 +271,32 @@ useEffect(()=>{
 
     }
 
+
+    function getLeftPages(){
+
+        return (
+             <>
+              {leftPages.map(i=>(
+                          <span onClick={()=>{
+                              selectedUser.current=null
+                              setCurretLeftPage(i)
+                              setSelectedSubjectId(null)
+                              setSeeHostory(false)
+                          }} className={`text-[15px] font-medium flex justify-between cursor-pointer hover:text-honolulu_blue-500 ${curretLeftPage==i && users.filter(i=>i.id==selectedUser.current).length==0  ? 'text-honolulu_blue-500':' text-gray-700'} px-2 flex py-2`}>
+                            
+                            <label className="cursor-pointer">{t('common.'+i+"s")} ({users.filter(f=>f.role==i).length})</label>
+
+                            {users.filter(f=>f.role==i && f.unread_messages_count).length!= 0 && <div className={`ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center`}>
+                                  <span>{users.filter(f=>f.role==i && f.unread_messages_count).length}</span>
+                            </div>}
+                            
+                            </span>
+                ))}
+             </>
+        )
+
+    }
+
     return (
     <div id="authentication-modal" tabindex="-1" aria-hidden="true" class={`bg-[rgba(0,0,0,0.4)] overflow-y-auto _support_messages overflow-x-hidden ${show ? '' :'translate-y-10 opacity-0 pointer-events-none'} transition-all delay-75 ease-linear flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
     
@@ -310,36 +336,17 @@ useEffect(()=>{
 
          <div className={`w-full h-[80vh]  bg-white  left-0 top-0 flex`}>
          
-            <div className={`w-[300px]  ${(user?.role=="admin" || user?.role=="manager") ? '':' hidden'}`}>
+            <div className={`w-[300px]  max-lg:hidden  ${(user?.role=="admin" || user?.role=="manager") ? '':' hidden'}`}>
                    
                    <div className="flex-col flex border-b relative mt-6">
                        
                         <span className="text-[10px] p-[0.1rem] bg-gray-100 rounded-[0.3rem] mr-2 text-gray-500 absolute right-1 -top-4">{t('common.users')}</span>
                         
-                        {leftPages.map(i=>(
-                          <span onClick={()=>{
-
-                              selectedUser.current=null
-                              setCurretLeftPage(i)
-                              setSelectedSubjectId(null)
-                              setSeeHostory(false)
-
-                          }} className={`text-[15px] font-medium flex justify-between cursor-pointer hover:text-honolulu_blue-500 ${curretLeftPage==i && users.filter(i=>i.id==selectedUser.current).length==0  ? 'text-honolulu_blue-500':' text-gray-700'} px-2 flex py-2`}>
-                            
-                            <label className="cursor-pointer">{t('common.'+i+"s")} ({users.filter(f=>f.role==i).length})</label>
-
-                            {users.filter(f=>f.role==i && f.unread_messages_count).length!= 0 && <div className={`ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center`}>
-                                  <span>{users.filter(f=>f.role==i && f.unread_messages_count).length}</span>
-                            </div>}
-                            
-                            </span>
-                        ))}
+                        {getLeftPages()}
                    </div>
             </div>
 
             <div id="scroll_comment" class="relative flex-1 shadow h-[80vh] bg-white rounded-b-[0.4rem] overflow-x-hidden  overflow-y-scroll py-3 px-2">
-
-
             <div className={`w-full absolute bg-white  h-full z-40 top-0 left-0 ${seeHistory && !selectedSubjectId && !loading && !deleting && (user?.role=="admin" || user?.role=="manager") ? '':'hidden'}`}>
                    
                    <div className="mt-2 px-2 font-medium">{t('common.history')} - <span>{users.filter(i=>i.id==selectedUser.current)[0]?.name}</span></div>
@@ -418,7 +425,9 @@ useEffect(()=>{
 
 
                 <div className={`w-full absolute h-full z-10 top-0 left-0 ${users.length!=0 && users.filter(i=>i.id==selectedUser.current).length==0 && (user?.role=="admin" || user?.role=="manager") ? '':'hidden'}`}>
-                     
+                      <div className="w-full md:hidden flex justify-around border-b border-gray-300">
+                           {getLeftPages()}
+                      </div>
                       <div className="flex items-center mb-4 gap-2 mt-2 px-2">
 
                         {statusPages.map((i,_i)=>(
@@ -486,7 +495,10 @@ useEffect(()=>{
                    {users.filter(i=>i.status==status && i.role==curretLeftPage).length==0 && <span className="flex justify-center pt-5 text-gray-600">{t('common.no-users')}</span>}
                 </div>
 
+                {/*** */}
+
                 {((!loading && !deleting) && ((user?.role=="patient" || user?.role=="doctor") || users.filter(i=>i.id==selectedUser.current).length!=0))  &&  <div className="flex px-1 py-1 bg-gray-200 justify-between rounded-full mb-5 items-center">
+                  
                   
                     {((user?.role=="patient" || user?.role=="doctor") && messages.filter(i=>!i.not_sent).length!=0) && <div className="">
                     
@@ -501,7 +513,13 @@ useEffect(()=>{
                     </div>
                     }
 
-                    {users.filter(i=>i.id==selectedUser.current).length!=0 && <span><label className="opacity-80">{users.filter(i=>i.id==selectedUser.current)[0]?.name}</label> - <label className="opacity-50 text-[14px]">{users.filter(i=>i.id==selectedUser.current)[0]?.email} </label></span>}
+                    {users.filter(i=>i.id==selectedUser.current).length!=0 && <span className="flex items-center">
+                      <div onClick={()=>{
+                        setSelectedSubjectId(null)
+                        selectedUser.current=null
+                        setSeeHostory(false)
+                      }} className="table px-2 bg-gray-300 py-1 text-[13px] rounded-full mr-2 cursor-pointer hover:bg-gray-500">{t('common.go-back')}</div> 
+                    <label className="opacity-80"> {users.filter(i=>i.id==selectedUser.current)[0]?.name}</label> - <label className="opacity-50 text-[14px]">{users.filter(i=>i.id==selectedUser.current)[0]?.email} </label></span>}
 
                      <button onClick={()=>{
 

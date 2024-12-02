@@ -3,6 +3,7 @@ import { useData } from '../../contexts/DataContext'
 import { t } from 'i18next'
 import Loader from '../Loaders/loader'
 import toast from 'react-hot-toast'
+import i18next from 'i18next'
 
 function SelectPayemntMethod({info}) {
 
@@ -210,7 +211,7 @@ function SelectPayemntMethod({info}) {
           <div class="-my-3 divide-y divide-gray-200">
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('common.consult')}</dt>
-              <dd class="text-base font-medium text-gray-900">{data._specialty_categories.filter(i=>i.id==info?.medical_specialty)[0]?.pt_name}</dd>
+              <dd class="text-base font-medium text-gray-900">{data._specialty_categories.filter(i=>i.id==info?.medical_specialty)[0]?.[i18next.language+"_name"]}</dd>
             </dl>
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('form.type-of-care')}</dt>

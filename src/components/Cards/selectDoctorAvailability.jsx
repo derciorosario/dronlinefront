@@ -123,6 +123,8 @@ function SelectDoctorAvailability({ item }) {
 
   }
 
+  
+
 
 
  
@@ -271,9 +273,6 @@ function SelectDoctorAvailability({ item }) {
 
   },[item])
 
-  console.log({settings})
-
-
   return (
     <div className={`w-full h-[100vh] bg-[rgba(0,0,0,0.2)] ease-in  overflow-y-auto _doctor_list ${!item?.id ? 'opacity-0 pointer-events-none translate-y-[100px]' : 'z-[60]'} ease-in transition-all delay-75 fixed flex items-center justify-center`}>
       <div className="w-full  p-4 relative bg-white  max-h-[90vh] border overflow-y-auto border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">
@@ -284,11 +283,13 @@ function SelectDoctorAvailability({ item }) {
             homeData.setSelectedDoctorToSchedule({});
 
           }} className="table px-2 bg-gray-200 py-1 text-[14px] rounded-full cursor-pointer hover:bg-gray-300">
+             
              {t('common.go-back')}
+
           </span>
         </div>
 
-        <div className="justify-between mb-4 mt-5">
+        <div className="justify-between mb-4 mt-10">
           
                  <h5 className="text-[17px] font-bold mb-5 leading-none text-gray-900 ">
                     {t('common.select-day-and-hour')}
@@ -301,7 +302,7 @@ function SelectDoctorAvailability({ item }) {
                     <span className="ml-2 text-[13px] text-orange-500">{(urgentLimits.minutes && urgentLimits.hours) ? t('messages.urgent-consultation-limit-with-hours-and-minutes',{minutes:urgentLimits.minutes,hours:urgentLimits.hours}) : urgentLimits.minutes ? t('messages.urgent-consultation-limit-with-minutes',{minutes:urgentLimits.minutes}) : t('messages.urgent-consultation-limit-with-hours',{hours:urgentLimits.hours})}</span>
                  </div>}
                  
-          <div className="w-full flex">
+          <div className="w-full flex max-md:flex-col">
               <div>
                  <h5 className="text-[17px] font-medium leading-none text-gray-900 ">
                     {t('common.date')}

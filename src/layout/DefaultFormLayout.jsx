@@ -40,7 +40,7 @@ function getAdvancedActions(items=[],id=null,w=undefined){
 }
 
 return (
-    <div className={`bg-white w-full m-3 py-3 rounded-[0.3rem] min-h-[60vh] pb-[30px] ${hide ? 'hidden':''}`}>
+    <div className={`bg-white w-full md:m-3 py-3 rounded-[0.3rem] min-h-[60vh] pb-[30px] ${hide ? 'hidden':''}`}>
         {!hideTitle && <div className="w-full border-b px-3 pb-2 flex justify-between items-center">
              <span className="">{title}</span>
             
@@ -74,7 +74,7 @@ return (
         let _id=Math.random()
 
         return (   
-            <div style={style ? {...style} : {}} className={`mt-7 ${width ? `w-[${width}]` : textarea ? 'w-full':'w-[300px]'} ${hide || hideInputs ? 'hidden':''}`}>
+            <div style={style ? {...style} : {}} className={`mt-7 ${width ? `w-[${width}]` : textarea ? 'w-full':'w-[300px] max-md:w-full'} ${hide || hideInputs ? 'hidden':''}`}>
                     <label for={_id} class="flex items-center mb-2 text-sm  text-gray-900">{label} {r && <span className="text-red-500">*</span>} {popOver && <div>
                          <PopOver items={popOver}/>
                     </div>}</label>
@@ -136,11 +136,11 @@ return (
 
     FormLayout.Button = ({label,loading,valid,onClick}) => {
         return (    
-             <button onClick={onClick}   class={`text-white ${loading ? 'pointer-events-none':''} flex items-center ${valid ? 'bg-honolulu_blue-400 hover:bg-blue-500':'bg-gray-400 pointer-events-none'} focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-[0.3rem] text-sm w-full sm:w-auto px-5 py-2.5 text-center`}>
+             <button onClick={onClick}   class={`text-white ${loading ? 'pointer-events-none':''} flex justify-center items-center ${valid ? 'bg-honolulu_blue-400 hover:bg-blue-500':'bg-gray-400 pointer-events-none'} focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-[0.3rem]  text-sm w-full sm:w-auto px-5 py-2.5 text-center`}>
              
              {loading && <ButtonLoader/>}
 
-             <span>{loading ? t('common.loading') : label}</span>
+             <span className=" ">{loading ? t('common.loading') : label}</span>
 
             </button>
         )

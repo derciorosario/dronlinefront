@@ -31,16 +31,14 @@ function Reviews() {
 
           <div>
 
-
-        
-
-
-
           {details?.reviews?.filter(i=>i.comment)?.map((i,_i)=>(
 
             <article class="p-6 text-base bg-white border-t border-gray-200">
             <footer class="flex justify-between items-center mb-2">
                 <div class="flex items-center">
+                    <div style={{backgroundRepeat:'no-repeat',backgroundSize:"contain",backgroundPosition:"center",backgroundImage:`url("${i.user?.profile_picture_filename}")`}} class="relative inline-flex items-center justify-center w-8 h-8  bg-gray-200 rounded-full mr-3">
+                        {!i.user?.profile_picture_filename && <span class="font-medium text-gray-600">{i.user?.name?.charAt()?.toLocaleUpperCase()}</span>}
+                    </div>
                     <p class="inline-flex items-center mr-3 text-sm text-gray-900 font-semibold">{i?.user?.name}</p>
                     <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-06-23"
                             title="June 23rd, 2022">{i.created_at.split('T')[0]}</time></p>

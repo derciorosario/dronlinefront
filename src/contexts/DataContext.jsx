@@ -2,7 +2,7 @@ import { createContext, useContext,useState,useEffect, useRef} from 'react';
 import { useAuth } from './AuthContext';
 import html2pdf from 'html2pdf.js';
 import toast from 'react-hot-toast';
-let env="pro"
+let env="dev"
 import io from 'socket.io-client';
 import { t } from 'i18next';
 const socket = io(env!="dev" ? 'https://dronline-nodeserver.arsbeta-mz.com' : 'http://localhost:3001')
@@ -30,12 +30,14 @@ export const DataProvider = ({ children }) => {
       support_messages:false,
       feedback:false,
       reviews:false,
-      cancel_appointment:true,
-      
+      cancel_appointment:false,
+      mobile_menu:false,
+      lang:false
     }
     let not_closing_popups=[
       'support_messages'
     ]
+
   
     const [_openPopUps, _setOpenPopUps] = useState(initial_popups);
   
@@ -48,7 +50,8 @@ export const DataProvider = ({ children }) => {
     }
 
     const handleOutsideClick = (event) => {
-     // if(isDeleting) return
+     // if(isDeleting) 
+
 
       let close=true
       Object.keys(initial_popups).forEach(f=>{
@@ -812,14 +815,28 @@ function isSetAsUrgentHour(hour,AppSettings){
 }
 
 
+  function hasConsultationTimePassed(i) {
+      const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':')
+      if(serverTime){
+        const currentTime = new Date(`${serverTime.date}T${formatTime(serverTime.hour)}:00`);
+        const consultationTime = new Date(`${i.scheduled_date}T${formatTime(i.scheduled_hours)}:00`);
+        if(currentTime > consultationTime){
+          return true
+        }
+      } 
+  }
 
+    const [unreadSupportMessages,setUnreadSupportMessages]=useState(0)
 
+    
+    const [isMobile,setIsMobile]=useState(window.innerWidth <= 768)
 
-
-
-   const [unreadSupportMessages,setUnreadSupportMessages]=useState(0)
+  
+   
 
     const value = {
+      isMobile,setIsMobile,
+      hasConsultationTimePassed,
       getDoctorAmountEarned,
       getDoctorIRPC,
       isSetAsUrgentHour,

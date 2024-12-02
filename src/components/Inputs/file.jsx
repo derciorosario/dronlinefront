@@ -28,13 +28,15 @@ function FileInput({_upload,label,res,r}) {
              res(upload)
     },[upload])
 
-    console.log({upload,_upload})
-
-
     const [file,setFile]=useState({name:_upload.filename?.replace(data.APP_BASE_URL+"/"+data.SERVER_FILE_STORAGE_PATH+"/",'')})
    
     const handleSubmit = async (event) => {
       let f = event.target.files[0];
+
+      if((f.size/1024/1024) > 2){
+          toast.error('common.only-files-less-than-2MB')
+      }
+
       const formData = new FormData();
       formData.append('file', f);
       let fileName = uuidv4();
@@ -64,7 +66,7 @@ function FileInput({_upload,label,res,r}) {
           const result = JSON.parse(xhr.responseText);
           //console.log({ url: result.url });
           setUpload(prev=>({...prev,filename:result.url,uploading:false}))
-          
+          setFile({...file,name:result.url.split('/')[result.url.split('/').length - 1]})
           clearFileInputs()
         } else {
           toast.error(t('common.error-while-uploading-file'))
@@ -106,7 +108,7 @@ function FileInput({_upload,label,res,r}) {
         <div className={`flex items-center w-full text-sm h-[40px] text-gray-900 border overflow-hidden border-gray-300 rounded-[0.3rem]   bg-gray-50`}>
              
              <label className={`h-full relative ${upload.uploading ? 'pointer-events-none':''}  hover:bg-gray-500 cursor-pointer bg-gray-400 text-white inline-flex justify-center items-center px-2`}>
-                 <span className={`${upload.uploading ? 'opacity-0':''}`}>{t('common.upload-file')}</span>
+                 <span className={`${upload.uploading ? 'opacity-0':''}`}>{(file.name || _upload.filename) ? t('common.upload-another-file') : t('common.upload-file')}</span>
                  <input ref={fileInputRef_1} onChange={handleSubmit} type="file" hidden/>
                  {upload.uploading && <div className="flex items-center justify-center absolute w-full top-0 left-0 h-full">{`${upload.progress.toString().split('.')[0]}%`}</div>}
              </label>
@@ -115,7 +117,8 @@ function FileInput({_upload,label,res,r}) {
              
              {upload.uploading && <div style={{width:`${upload.progress.toString().split('.')[0]}%`}} className="bg-[rgba(0,0,0,0.3)] h-full left-0 top-0 absolute"></div>}
 
-             <span className="ml-3 text-[0.8rem] truncate">{file.name ? file.name : _upload.filename ? ' ' : t('common.no-file-selected')}</span>
+             {/** <span className="ml-3 text-[0.8rem] truncate">{file.name ? file.name : _upload.filename ? ' ' : t('common.no-file-selected')}</span> */}
+             {!(file.name || _upload.filename) && <span className="ml-3 text-[0.8rem] truncate">{t('common.no-file-selected')}</span>}
              {(upload.filename) && <div className="flex-1 justify-end w-full flex px-2">
                     <svg className="opacity-30" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
                     <span onClick={()=>data.handleDownload(file.name)} className="ml-2 cursor-pointer hover:opacity-70"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg></span>

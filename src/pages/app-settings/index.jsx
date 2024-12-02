@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import DefaultLayout from '../../layout/DefaultLayout';
 import BaiscTable from '../../components/Tables/basic';
 import { useAuth } from '../../contexts/AuthContext';
+import i18next from 'i18next';
 
 
 
@@ -83,7 +84,7 @@ function App() {
                                   }/>
                                 </BaiscTable.Td>*/}
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.id}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i.pt_name}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/specialty-category/`+i.id}>{i[i18next.language+"_name"]}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{data.formatNumber(data._cn_op(i.normal_consultation_price))} {'MT'}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{data.formatNumber(data._cn_op(i.urgent_consultation_price))} {'MT'}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/specialty-category/`+i.id}>{data.formatNumber(data._cn_op(i.home_consultation_price))}   {'MT'}</BaiscTable.Td>

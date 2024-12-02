@@ -122,7 +122,7 @@ return (
 }}>
 
 </div>
-<div className={`w-[400px] flex flex-col border ${!show ? 'translate-x-[100%]' : ''} transition-all ease-in delay-75 rounded-md h-[100vh] bg-white relative`}>
+<div className={`w-[400px] max-lg:w-full flex flex-col border ${!show ? 'translate-x-[100%]' : ''} transition-all ease-in delay-75 rounded-md h-[100vh] bg-white relative`}>
 
        <div className="w-full p-3 border-b">
 

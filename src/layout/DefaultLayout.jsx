@@ -110,10 +110,10 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
                  {user?.role=="patient" && !user?.data?.date_of_birth && !hideAll && <TopAlert/>}
                  {!hide && <Header pageContent={pageContent}/>}
 
-                 <div className={`${!removeMargin ? 'mx-[20px]':''} relative`}>
-                    {(pageContent) && <div className="py-[20px] flex">
+                 <div className={`${!removeMargin ? 'mx-[20px] ':''} relative mb-24`}>
+                    {(pageContent) && <div className="py-[20px] md:flex">
                          <div>
-                                  <div className="flex items-center">
+                                  <div className="flex items-center max-md:mb-5">
                                       {(pageContent.btnGoBack &&  !pageContent.btnGoBack?.hide) && <button onClick={pageContent?.btnGoBack?.onClick} type="button" class="text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-2 text-center inline-flex items-center me-2">
                                         <div>{pageContent?.btnGoBack?.text || t('common.go-back')}</div>
                                       </button>}
@@ -136,7 +136,7 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
 
                      
                       {!disableUpdateButton && <div className="flex-1 flex justify-end items-end">
-                        {showDates && <div className="flex items-center flex-1 justify-end mr-3">
+                        {showDates && <div className="flex items-center flex-1 md:justify-end mr-3">
 
                             <div className="items-center mr-1">
                               <h6 className="text-[0.8rem] font-medium text-gray-900 mr-2">
@@ -158,13 +158,13 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
 
                                           if(refreshOnUpdate){
                                              setIsLoading(true)
-                                             window.location.reload()
+                                             window.locationPaymentProcessload()
                                           }else{
                                             data.setUpdateTable(Math.random())
                                           }
-                                      }} className="px-2 _refresh_btn inline-flex bg-gray-200 text-gray-400 py-1 items-center text-[12px] rounded-full cursor-pointer hover:bg-honolulu_blue-500">         
+                                      }} className="px-2 mt-2 _refresh_btn inline-flex bg-gray-200 text-gray-400 py-1 items-center text-[12px] rounded-full cursor-pointer hover:bg-honolulu_blue-500">         
                                       <svg className="fill-gray-400" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"/></svg>
-                                      <span>{t('common.refresh')}</span>
+                                      <span className="max-md:hidden">{t('common.refresh')}</span>
                                       </div>
                       </div>}
                     </div>}

@@ -49,6 +49,7 @@ import DoctorList from './landingpage/components/Doctors/index';
 import HowToCancelConsultation from './landingpage/pages/how-to-cancel-my-consultation'
 import LandingPageFaq from './landingpage/pages/faq'
 import Terms from './landingpage/pages/terms-and-conditions';
+import AppointmentCancelationTerms from './landingpage/pages/appointment-cancelation-terms';
 
 function App() {
 
@@ -66,7 +67,8 @@ function App() {
          <Route path="/how-to-cancel-my-consultation" element={<HowToCancelConsultation/>}/>
          <Route path="/doctors-list" element={<DoctorList/>}/>
          <Route path="/dashboard" element={<ProtectedRoute redirectTo="/login"><Home/></ProtectedRoute>}/>
-         
+
+         <Route path="/appointment-cancelation-terms" element={ <AppointmentCancelationTerms/>} />
       
          <Route path="/register"  element={<Register/>} />
          <Route path="/login"  element={<Login/>} />
