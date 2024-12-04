@@ -4,12 +4,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { useData } from '../../contexts/DataContext';
 import toast from 'react-hot-toast';
 import Loader from '../Loaders/loader';
+import { useAuth } from '../../contexts/AuthContext';
 
 function SendProof({info}) {
 
     let id=Math.random()
 
     const fileInputRef_1 = React.useRef(null);
+    const {user} = useAuth()
 
     function clearFileInputs(){
         if(fileInputRef_1.current) fileInputRef_1.current.value=""
@@ -53,7 +55,7 @@ function SendProof({info}) {
     formData.append('file', f);
     let fileName = uuidv4();
     formData.append('filename', fileName);
-    formData.append('formdata',JSON.stringify(info))
+    formData.append('formdata',JSON.stringify({...info,patient_id:user.data?.id}))
   
     setFile(f);
 

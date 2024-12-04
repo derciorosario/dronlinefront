@@ -39,13 +39,11 @@ export default function SupportBadge() {
   }
 
  useEffect(()=>{
-
   setBagesCount({
     open:users.filter(i=>i.status=="open").map(i=>i.unread_messages_count).reduce((acc, curr) => acc + curr, 0),
     done:users.filter(i=>i.status=="done").map(i=>i.unread_messages_count).reduce((acc, curr) => acc + curr, 0),
     canceled:users.filter(i=>i.status=="canceled").map(i=>i.unread_messages_count).reduce((acc, curr) => acc + curr, 0)
   })
-
  },[users])
 
 
@@ -62,12 +60,12 @@ export default function SupportBadge() {
 
   return (
     <div style={{zIndex:999}} 
+
     onClick={()=>{
         if(!expand) {
           setExpand(true)
         }
-        
-    }} className="border fixed bottom-1 right-3 max-md:bottom-20 rounded-[0.3rem] _support_messages p-2 mb-5 flex items-center bg-white shadow">
+    }} className="border fixed max-md:left-3 max-md:right-auto bottom-1 right-3 max-md:bottom-20 rounded-[0.3rem] _support_messages p-2 mb-5 flex items-center bg-white shadow">
       {expand && <div>
 
           <div className={`flex items-center ${data._openPopUps.support_messages ? 'opacity-0 pointer-events-none':''} cursor-pointer hover:opacity-75`} onClick={()=>setTimeout(()=>data._showPopUp('support_messages'),200)}>

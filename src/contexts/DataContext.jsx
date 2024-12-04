@@ -551,7 +551,7 @@ export const DataProvider = ({ children }) => {
       setDownloadProgress(1)
       const xhr = new XMLHttpRequest();
       
-      let url=filename.includes('http://') || filename.includes('https://') ? filename : `${APP_BASE_URL}/api/download/${filename}`
+      let url=filename.includes('storage/uploads') ? `${APP_BASE_URL}/api/download/${filename.split('/')[filename.split('/').length - 1]}` :  filename.includes('http://') || filename.includes('https://') ? filename : `${APP_BASE_URL}/api/download/${filename}`
 
       console.log({url})
       xhr.open('GET', url, true);

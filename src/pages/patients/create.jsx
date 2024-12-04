@@ -294,7 +294,7 @@ function addPatients({ShowOnlyInputs}) {
               </div>
             </div>
 
-            <PatientForm setForm={setForm}  form_name={'patient'} hide={user?.role=="doctor"}  itemsToHide={['password','medical-specialty','order-number','short_biography','long_biography','years_of_experience']} form={form}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
+            <PatientForm setForm={setForm}  form_name={'patient'} hide={user?.role=="doctor"}  itemsToHide={['password','medical-specialty','order-number','pt_short_biography','pt_long_biography','en_short_biography','en_long_biography','years_of_experience']} form={form}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
 
             </FormLayout>
      </DefaultLayout>

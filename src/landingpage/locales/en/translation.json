@@ -182,7 +182,10 @@
         "_payments": "View completed consultation payments"
     },
     "form":{
-
+        "pt_short_biography": "Short Biography (pt)",
+        "pt_long_biography": "Long Biography (pt)",
+        "en_short_biography": "Short Biography (en)",
+        "en_long_biography": "Long Biography (en)",
         "insurance_company": "Insurance Company",
         "insurance_company_name": "Insurance Company Name",
         "policy_number": "Policy Number",
@@ -330,8 +333,9 @@
     },
 
     "messages":{
- 
-        "unable-to-load-consultation-items": "Unable to load all the necessary resources for the consultation",
+        "password-recovered":"Your password has been updated successfully. The new password has been sent to your email",
+        "recover-password-msg": "Enter your email to receive a new password if you are registered.",
+       "unable-to-load-consultation-items": "Unable to load all the necessary resources for the consultation",
         "consultation-is-already-canceled": "Consultation has already been canceled",
         "services-title": "Explore Our Services",
         "services-sub": "Everything We Offer for Your Comfort and Health",
@@ -412,6 +416,7 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+            "add-manager": "Add manager",
             "login-msg":"Please enter your credentials to access your account.",
             "dronline-short-desc": "Dr.Online, Lda. provides telemedicine services aimed at facilitating access to medical care through digital technologies.",
             "updating-company-profile": "Updating profile",
@@ -594,6 +599,7 @@
 
 
             "dronline-support": "Dr.online Support",
+            "dronline-team":"Dr.Online Team",
             "chat-history": "Chat history",
             "about-us": "About us",
             "our-services": "Our services",

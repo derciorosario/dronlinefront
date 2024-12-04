@@ -102,7 +102,7 @@ function Header({pageContent}) {
                    {pageContent?.loading==true && <Loader/>}
                    
 
-                  {pageContent?.btn?.onClick && <button onClick={pageContent?.btn?.onClick} type="button" class={`text-white ${user?.role=="doctor" || user?.role=="patient" ? 'max-md:right-3':''}  max-md:fixed max-md:shadow bottom-[100px] z-30 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-2 text-center inline-flex items-center me-2`}>
+                  {pageContent?.btn?.onClick && <button onClick={pageContent?.btn?.onClick} type="button" class={`text-white max-md:right-3  max-md:fixed max-md:shadow bottom-[100px] z-30 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-2 text-center inline-flex items-center me-2`}>
                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                     <div className="max-lg:hidden">{pageContent?.btn?.text}</div>
                   </button>}
@@ -192,9 +192,8 @@ function Header({pageContent}) {
                        data._showPopUp('notifications')
                   }} class="relative mr-5 _notifications cursor-pointer  inline-flex items-center justify-center h-10 border border-white rounded-full">
                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/></svg>
-                      {unreadNotifications!=0 && <span className=" bg-honolulu_blue-400 text-white rounded-[0.3rem] px-[0.2rem] h-[20px] flex items-center justify-center absolute top-1 right-[-1rem]">{unreadNotifications}</span>}
+                      {unreadNotifications!=0 && <span className=" bg-honolulu_blue-400 text-white rounded-[0.3rem] px-[0.2rem] h-[20px] min-w-[20px] flex items-center justify-center absolute top-1 right-[-1rem]">{unreadNotifications}</span>}
                   </div>
-
                   </div>
          </div>
           

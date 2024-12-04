@@ -96,7 +96,7 @@ export default function BasicFilter({filterOptions,setFilterOptions,setUpdateFil
 
                 <ul className={`space-y-2 overflow-y-auto max-h-[140px] text-sm ${!f.loaded ? 'hidden':''}`} aria-labelledby="dropdownDefault">
                 
-                {f.items.filter(i=>(i.name || i[i18next.language+"_name"]).toLowerCase().includes(f.search.toLowerCase())).map((i,_i)=>(
+                {f.items.filter(i=>(i.name || i[i18next.language+"_name"] || '').toLowerCase().includes(f.search.toLowerCase())).map((i,_i)=>(
                     <li className="flex items-center px-[1px] cursor-pointer" onClick={() => {
                         const optionsIndex = filterOptions.findIndex(i => i.field === f.field);
                         setFilterOptions(prev => {

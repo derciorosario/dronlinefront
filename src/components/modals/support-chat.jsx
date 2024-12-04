@@ -113,19 +113,21 @@ function SupportChat({show}) {
             let r=await data.makeRequest({method:'get',url:selectedUser.current ? `api/messages/?search=${search}&&start_date=${startDate}&&end_date=${endDate}&&selected_user_id=${selectedUser.current}&include_hidden=${localStorage.getItem('history')!=null ? 'true':''}` : `api/messages/?search=${search}&&start_date=${startDate}&&end_date=${endDate}&&include_hidden=${localStorage.getItem('history')!=null ? 'true':''}`,withToken:true, error: ``},0);
           
             if (!selected_id || selectedUser.current == selected_id) {
+
               setMessages((prev) => {
                 const messagesMap = new Map();
                 r.forEach(msg => {
                     messagesMap.set(msg.generated_id, msg);
                 });
-                prev.forEach(msg => {
+                
+                 (prev.some(i=>i.not_sent) ? prev : []).forEach(msg => {
                     if (!messagesMap.has(msg.generated_id)) {
                         messagesMap.set(msg.generated_id, msg);
                     }
                 });
                 return Array.from(messagesMap.values())
                     .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-            });
+               });
           
               setLoading(false);
           }
@@ -172,17 +174,14 @@ useEffect(()=>{
                         receiver_id:selectedUser.current
                      }, error: ``},0);
                 })
-                
             }catch(e){
-             
-              console.log(e)
+               console.log(e)
              }
         })()
  },[messages])
 
 
  async function mark_as_read(id){
-      
         try{
             await data.makeRequest({method:'get',url:`api/mask-messages-as-read/`+id,withToken:true, error: ``},0);
         }catch(e){
@@ -202,6 +201,8 @@ useEffect(()=>{
         let _messages=messages.filter(i=>i.read==false && (i.user_id==selectedUser.current || i.receiver_id==selectedUser.current))
         last=_messages[_messages.length - 1]
      }
+
+     console.log({last,c:selectedUser.current,messages})
 
      if(last){
         mark_as_read(last.id)
@@ -242,7 +243,6 @@ const [status,setStatus]=useState(statusPages[0])
 const [selectedSubjects,setSelectedSubjects]=useState([])
 
 useEffect(()=>{
-
   let _messages=messages.filter(i=>i.is_subject)
   if(startDate){
     _messages=_messages.filter(i=>new Date(i.created_at.split('T')[0]) >= new Date(startDate))
@@ -298,9 +298,9 @@ useEffect(()=>{
     }
 
     return (
-    <div id="authentication-modal" tabindex="-1" aria-hidden="true" class={`bg-[rgba(0,0,0,0.4)] overflow-y-auto _support_messages overflow-x-hidden ${show ? '' :'translate-y-10 opacity-0 pointer-events-none'} transition-all delay-75 ease-linear flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
+    <div id="authentication-modal" tabindex="-1" aria-hidden="true" class={`bg-[rgba(0,0,0,0.4)] max-md:bg-white overflow-y-auto _support_messages overflow-x-hidden ${show ? '' :'translate-y-10 opacity-0 pointer-events-none'} transition-all delay-75 ease-linear flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
     
-    <div class={`relative p-4  ${(user?.role=="admin" || user?.role=="manager") ? 'w-[95%]':'w-[600px]'}`}>
+    <div class={`relative max-md:w-full  ${(user?.role=="admin" || user?.role=="manager") ? 'w-[95%]':'w-[600px]'}`}>
 
         <div className="w-full border-b px-3 pb-2 flex justify-between items-center bg-white  rounded-t-lg">
              <span>{t('common._support')}</span>
@@ -334,7 +334,7 @@ useEffect(()=>{
 
          }
 
-         <div className={`w-full h-[80vh]  bg-white  left-0 top-0 flex`}>
+         <div className={`w-full h-[80vh] max-md:h-[85vh]  bg-white  left-0 top-0 flex`}>
          
             <div className={`w-[300px]  max-lg:hidden  ${(user?.role=="admin" || user?.role=="manager") ? '':' hidden'}`}>
                    
@@ -351,7 +351,9 @@ useEffect(()=>{
                    
                    <div className="mt-2 px-2 font-medium">{t('common.history')} - <span>{users.filter(i=>i.id==selectedUser.current)[0]?.name}</span></div>
 
-                    <div className="flex items-end pb-2 border-b">
+                    <div className="flex items-end max-md:flex-col pb-2 border-b">
+
+                    <div className="flex items-center max-md:w-full">
 
                     {<button onClick={()=>{
                       setSelectedSubjectId(null)
@@ -361,7 +363,8 @@ useEffect(()=>{
                                         <div>{t('common.go-back')}</div>
                     </button>}
 
-                   <div className="relative p-2 mr-1 translate-y-2">
+                    
+                    <div className="relative p-2 md:mr-1 md:translate-y-2 w-full max-md:mb-2 max-md:mt-2">
                           
                           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                               <svg className="text-gray-500 dark:text-gray-400" height={16} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -374,8 +377,13 @@ useEffect(()=>{
                           }}   id="default-search"  className="block w-full px-2 py-2 ps-7 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50" placeholder={t('common.search')}/> 
                  
                    </div>
+                   </div>
 
-                   <div className="items-center mr-1">
+                  
+
+                    <div className="flex items-center ml-3 max-md:p-2">
+
+                    <div className="items-center mr-1">
                       <h6 className="text-[0.8rem] font-medium text-gray-900 mr-2">
                           {t('common.start')}
                       </h6>
@@ -389,9 +397,16 @@ useEffect(()=>{
                       <input onChange={(e)=>setEndDate(e.target.value)} value={endDate} type="date" className="block w-full py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
                    </div>
 
+
+                    </div>
+
+
+                   
+
                 </div> 
 
-                   <table class={`w-full text-sm text-left rtl:text-right px-1`}>
+                  <div className="overflow-x-auto relative w-full">
+                  <table class={`w-full text-sm text-left rtl:text-right px-1`}>
                    <thead class="text-xs text-gray-700 bg-gray-50">
                        <tr>
                            <th scope="col" class="px-6 py-3">{t('common.subject')}</th>
@@ -419,6 +434,7 @@ useEffect(()=>{
                            ))}
                        </tbody>
                   </table>
+                  </div>
                   {messages.length==0 && <span className="flex justify-center pt-5 text-gray-600">{t('common.no-messages')}</span>}
                </div>
 
@@ -443,16 +459,17 @@ useEffect(()=>{
 
                         </div>
 
-                    <table class={`w-full text-sm text-left rtl:text-right px-1`}>
+                        <div className="overflow-x-auto relative w-full">
+                        <table class={`w-full text-sm text-left rtl:text-right px-1 overflow-x-auto`}>
 
-                       <thead class="text-xs text-gray-700 bg-gray-50">
+                        <thead class="text-xs text-gray-700 bg-gray-50">
                           <tr>
                               <th scope="col" class="px-6 py-3">{t('common.client')}</th>
                               <th scope="col" class="px-6 py-3">{t('common.subject')}</th>
                               <th scope="col" class="px-6 py-3">Status</th>
                               <th scope="col" class="px-6 py-3">{t('common.last-message')}</th>
                           </tr>
-                       </thead>
+                        </thead>
 
                         <tbody className="px-2">
                             {users.filter(i=>i.status==status && i.role==curretLeftPage).map(i=>(
@@ -477,7 +494,7 @@ useEffect(()=>{
                                           </div>
                                       </div>
                                   </td>
-                                 
+                                  
                                   <td scope="col" class="px-6 py-3">
                                       <span>{i?.last_subject_message?.message}</span>
                                   </td>
@@ -491,13 +508,18 @@ useEffect(()=>{
                               </tr>
                             ))}
                         </tbody>
-                   </table>
+                        </table>
+
+                        </div>
+
+                   
                    {users.filter(i=>i.status==status && i.role==curretLeftPage).length==0 && <span className="flex justify-center pt-5 text-gray-600">{t('common.no-users')}</span>}
+               
                 </div>
 
                 {/*** */}
 
-                {((!loading && !deleting) && ((user?.role=="patient" || user?.role=="doctor") || users.filter(i=>i.id==selectedUser.current).length!=0))  &&  <div className="flex px-1 py-1 bg-gray-200 justify-between rounded-full mb-5 items-center">
+                {((!loading && !deleting) && ((user?.role=="patient" || user?.role=="doctor") || users.filter(i=>i.id==selectedUser.current).length!=0))  && !showChooseFile &&  <div className="flex px-1 py-1 bg-gray-200 justify-between rounded-full mb-5 items-center">
                   
                   
                     {((user?.role=="patient" || user?.role=="doctor") && messages.filter(i=>!i.not_sent).length!=0) && <div className="">
@@ -515,11 +537,13 @@ useEffect(()=>{
 
                     {users.filter(i=>i.id==selectedUser.current).length!=0 && <span className="flex items-center">
                       <div onClick={()=>{
-                        setSelectedSubjectId(null)
-                        selectedUser.current=null
-                        setSeeHostory(false)
+                          setTimeout(()=>{
+                          setSelectedSubjectId(null)
+                          selectedUser.current=null
+                          setSeeHostory(false)
+                         },100)
                       }} className="table px-2 bg-gray-300 py-1 text-[13px] rounded-full mr-2 cursor-pointer hover:bg-gray-500">{t('common.go-back')}</div> 
-                    <label className="opacity-80"> {users.filter(i=>i.id==selectedUser.current)[0]?.name}</label> - <label className="opacity-50 text-[14px]">{users.filter(i=>i.id==selectedUser.current)[0]?.email} </label></span>}
+                    <label className="opacity-80"> {users.filter(i=>i.id==selectedUser.current)[0]?.name}</label>  <label className="opacity-50 text-[14px] max-md:hidden max-md:text-[12px]"> -  {users.filter(i=>i.id==selectedUser.current)[0]?.email} </label></span>}
 
                      <button onClick={()=>{
 

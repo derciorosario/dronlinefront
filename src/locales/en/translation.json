@@ -334,7 +334,8 @@
     },
 
     "messages":{
- 
+        "password-recovered":"Your password has been updated successfully. The new password has been sent to your email",
+        "recover-password-msg": "Enter your email to receive a new password if you are registered.",
         "unable-to-load-consultation-items": "Unable to load all the necessary resources for the consultation",
         "consultation-is-already-canceled": "Consultation has already been canceled",
         "services-title": "Explore Our Services",

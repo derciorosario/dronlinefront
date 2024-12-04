@@ -288,7 +288,7 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
                       </div>
             </div>
 
-            <PatientForm hideInputs={user?.role!="patient"} setForm={setForm}  form_name={'dependent'} hide={user?.role=="doctor"}  itemsToHide={['password','medical-specialty','order-number','short_biography','long_biography','years_of_experience','mobile_payment_method_name','mobile_payment_method_number','bank_payment_method_name','bank_payment_method_nib']} form={form}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
+            <PatientForm hideInputs={user?.role!="patient"} setForm={setForm}  form_name={'dependent'} hide={user?.role=="doctor"}  itemsToHide={['password','medical-specialty','order-number','pt_short_biography','pt_long_biography','en_short_biography','en_long_biography','years_of_experience','mobile_payment_method_name','mobile_payment_method_number','bank_payment_method_name','bank_payment_method_nib']} form={form}  verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>
 
             </FormLayout>
        </>

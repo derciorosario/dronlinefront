@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [serverTime,setServerTime]=useState(null)
   const [pathname,setPathName]=useState(null)
+  const [recoveringPassword,setRecoveringPassword]=useState(false)
   
   let env="dev"
   const APP_BASE_URL = env =="pro" ? "https://dronline-server.arsbeta-mz.com": 'http://127.0.0.1:8000'
@@ -48,6 +49,8 @@ export const AuthProvider = ({ children }) => {
     }
 
     const logout =  async() => {
+
+      if(recoveringPassword) return
 
      
       if(!window.location.href.includes('/login')) {
@@ -221,6 +224,8 @@ export const AuthProvider = ({ children }) => {
 
         if(error.message=="401" && !url.includes('login') && !url.includes('api/user')){
 
+           if(recoveringPassword) return
+
            toast.remove()
            if(!await check_user() && user){
               toast.error(t('common.user-not-authorized'))
@@ -242,12 +247,10 @@ export const AuthProvider = ({ children }) => {
       }
   }
 
-  
-
 
 
   return (
-    <AuthContext.Provider value={{check_user,APP_FRONDEND,setPathName,isLoading,serverTime,setServerTime, setIsLoading,APP_BASE_URL, user, login,SERVER_FILE_STORAGE_PATH, makeRequest,logout, isAuthenticated , loading, setUser, setLoading, token,auth}}>
+    <AuthContext.Provider value={{setRecoveringPassword,check_user,APP_FRONDEND,setPathName,isLoading,serverTime,setServerTime, setIsLoading,APP_BASE_URL, user, login,SERVER_FILE_STORAGE_PATH, makeRequest,logout, isAuthenticated , loading, setUser, setLoading, token,auth}}>
       {children}
     </AuthContext.Provider>
   );

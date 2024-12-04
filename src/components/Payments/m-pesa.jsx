@@ -3,11 +3,13 @@ import React, { useState } from 'react'
 import { useData } from '../../contexts/DataContext'
 import Loader from '../Loaders/loader'
 import toast from 'react-hot-toast'
+import { useAuth } from '../../contexts/AuthContext'
 
 function Mpesa({info}) {
     const data=useData()
 
     const [loading,setLoading]=useState(false)
+    const {user} = useAuth()
 
     async function SubmitForm(){
         setLoading(true)
@@ -18,7 +20,8 @@ function Mpesa({info}) {
             let response=await data.makeRequest({method:'post',url:`api/mpesa/c2b`,withToken:true,data:{
                 phone:info.mpesa_number,
               ...info,
-                doctor:null
+                doctor:null,
+                patient_id:user.data?.id
               }, error: ``},0);
 
              data.setPaymentInfo({...info,doctor:null,done:true,appointment:response.appointment,loading:false})

@@ -275,7 +275,7 @@ function SelectDoctorAvailability({ item }) {
 
   return (
     <div className={`w-full h-[100vh] bg-[rgba(0,0,0,0.2)] ease-in  overflow-y-auto _doctor_list ${!item?.id ? 'opacity-0 pointer-events-none translate-y-[100px]' : 'z-[60]'} ease-in transition-all delay-75 fixed flex items-center justify-center`}>
-      <div className="w-full  p-4 relative bg-white  max-h-[90vh] border overflow-y-auto border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">
+      <div className="w-full  p-4 relative bg-white  max-h-[90vh] max-md:max-h-[100vh] border overflow-y-auto border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">
         <div className="flex absolute mb-3 top-1 left-2">
           <span onClick={() => {
 
@@ -318,7 +318,7 @@ function SelectDoctorAvailability({ item }) {
                 </LocalizationProvider>
 
               </div>
-              <div className="flex-1">
+              <div className="flex-1 max-md:mb-5">
 
                   <h5 className="text-[17px] font-medium leading-none text-gray-900 ">
                     {t('common.hour')}

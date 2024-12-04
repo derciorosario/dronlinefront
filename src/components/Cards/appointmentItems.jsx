@@ -16,7 +16,6 @@ function AppointmentItems({show,itemToShow,setItemToShow}) {
  const {user} = useAuth()
 
   return (
-
      <div  className={`w-full  h-[100vh] bg-[rgba(0,0,0,0.4)] ease-in _doctor_list ${!show ? 'opacity-0 pointer-events-none translate-y-[100px]':''} ease-in transition-all delay-75 fixed flex items-center justify-center z-50`}>   
          
             <div class="w-full h-[90vh] overflow-y-auto  p-4 relative bg-white border border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[950px]">    
@@ -38,7 +37,7 @@ function AppointmentItems({show,itemToShow,setItemToShow}) {
           <div className="w-full  flex items-center">
 
 
-             {((itemToShow?.name=="all-clinical-diary" || itemToShow?.name=="all-exams" || itemToShow?.name=="all-medical-prescription") && user?.role=="doctor") && <button onClick={()=>{
+             {((itemToShow?.name=="all-clinical-diary" || itemToShow?.name=="all-exams" || itemToShow?.name=="all-medical-prescription") && (user?.role=="doctor" || (!itemToShow?.appointment?.doctor_id && user?.role=="admin" || user?.role=="manager"))) && <button onClick={()=>{
                 setItemToShow({
                  ...show,
                  action:'create',

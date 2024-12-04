@@ -184,7 +184,7 @@ function SideBar() {
                   })
              }else{
                   if(i.path.includes(mainPath) && mainPath && !data.isMobile){
-                    setMenuOpen([i.path])
+                       setMenuOpen([i.path])
                   }
              }
        })
@@ -197,8 +197,6 @@ function SideBar() {
       if(!isSub){
 
          if(user?.role=="manager" && user){
-
-
                let show=false
               
               if(item.permission_pedendents){
@@ -282,19 +280,17 @@ function SideBar() {
     },[data._openPopUps])
 
 
-    
-
-
+  
     return (
       <>
       
-      <div className={`${openPopUps.length!=0 || data.paymentInfo?.type_of_care ? 'hidden':'fixed'}  -bottom-2 md:hidden _mobile_menu  left-0 w-full bg-white flex items-center border-t border-t-gray-200 rounded-t-[15px] cursor-pointer shadow-sm`} style={{zIndex:999}}>
+      <div className={`${openPopUps.length!=0 || data.paymentInfo?.type_of_care || (data.appointmentcancelationData?.consultation?.id && !data.appointmentcancelationData?.hide) || data.selectedDoctorToSchedule?.id ? 'hidden':'fixed'}  -bottom-2 md:hidden _mobile_menu  left-0 w-full bg-white flex items-center border-t border-t-gray-200 rounded-t-[15px] cursor-pointer shadow-sm`} style={{zIndex:999}}>
              <div className="w-full px-2 py-4 flex items-center justify-around relative">
 
                 {menuItems.filter(i=>i.showInMobile).map((item, index)=>(
                    <div>
                         {item.sub_menus && <div className={`absolute shadow bottom-[100%] border-t-gray-200 rounded-t-[15px] w-full left-0 ${item.path} ${menuOpen.includes(item.path) && !openMobileMenu ? '':'hidden'}`}>
-                                <div className={`rounded-[0.3rem]  bg-gray-100 p-[10px] flex flex-col`}>
+                                <div className={`rounded-[0.3rem]  bg-gray-300 p-[10px] flex flex-col`}>
                                     {item.sub_menus.map(i=>(
                                       <span onClick={()=>{
                                         setMenuOpen([])

@@ -85,12 +85,12 @@ function AppointmentInvoice({ShowOnlyInputs}) {
    
       if(e.message==404){
          toast.error(t('common.item-not-found'))
-         navigate('/appointment-invoices')
+         navigate('/payment-management')
       }else  if(e.message=='Failed to fetch'){
         
       }else{
         toast.error(t('common.unexpected-error'))
-        navigate('/appointment-invoices')  
+        navigate('/payment-management')  
       }
   }
   
@@ -185,7 +185,7 @@ return (
     {name:'Ref',value:`#${form.ref_id}`},
     {name:t('common.status'),value:t('common.'+form.status),color:form.status=="pending" ? '#f97316':form.status=="approved" ? '#0b76ad' : form.status=="rejected" ?  '#dc2626' : '#16a34a'},
     {name:t('form.patient-name'),value:form?.patient?.name},
-    {name:t('common.doctor'),value:form.doctor?.name},
+    {name:t('common.doctor'),value:form.doctor?.name || t('common.dronline-team')},
     {name:t('common.consultation-price'),value:data.formatNumber(data._cn_op(form.price)),color:'#0b76ad'},
     {name:t('common.cancelation-tax'),value:data.formatNumber(data._cn_op(form.taxes)),color:'#0b76ad',hide:form.type=="payment"},
     {name:form.type=="refund" ? t('common.amount-to-refund') : t('common.amount'),value:data.formatNumber(data._cn_op(form.amount)),color:'#0b76ad'}, 

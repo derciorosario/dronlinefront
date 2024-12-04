@@ -134,7 +134,7 @@ function App() {
               data.setUpdateTable(Math.random())
               setSelectedTab(i)
             }} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
-              <span>{getIcon(i,selectedTab==i)}</span>
+              <span className="max-md:hidden">{getIcon(i,selectedTab==i)}</span>
               <span>{t('common.'+i)}</span>
 
               {data._appointment_invoices?.status_counts?.[i] && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
@@ -189,7 +189,7 @@ function App() {
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{data._cn(i.price)}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.payment_method=="mpesa" ? 'M-pesa' : t('common.bank-transfer')}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.patient?.name}</BaiscTable.Td>
-                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.doctor?.name}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.appointment?.id}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.insurance_company || '-'}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.policy_number || '-'}</BaiscTable.Td>

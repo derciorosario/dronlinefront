@@ -311,7 +311,7 @@
         "new-mpesa-payment":"Novo pagamento via M-pesa",
         "new-consultation-added":"Nova consulta marcada",
         "new-consultation-request":"Nova consula pendente",
-        "new-pending-invoice":"Pagamento pedendete por ser avaliado",
+        "new-pending-invoice":"Pagamento pendente por ser avaliado",
         "refund-request":"Pedido de reembolso da consulta",
         "refund-rejected":"Pedido de reembolso rejeitado",
         "refund-approved":"Pedido de reembolso aprovado"
@@ -331,6 +331,8 @@
     },
 
     "messages":{
+        "password-recovered":"Sua senha foi actualizada com sucesso. A nova senha foi envida para seu email",
+        "recover-password-msg":"Informe seu email para receber uma nova senha caso esteja registrado.",
         "unable-to-load-consultation-items":"Não foi possivel carregar todos os recursos necessários para a consulta",
         "consultation-is-already-canceled":"Consulta já foi cancelada",
         "services-title":"Explore Nossos Serviços",

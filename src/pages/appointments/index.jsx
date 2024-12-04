@@ -203,7 +203,7 @@ function App() {
                                   }/>
                                 </BaiscTable.Td> */}
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.id}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.is_for_dependent ? `${i.dependent?.name} (${t('common.'+i.dependent?.relationship)})`:user?.role=="patient" ? t('common.for-me') : i.patient.name}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.is_for_dependent ? `${i.dependent?.name} (${t('common.'+i.dependent?.relationship)})`:user?.role=="patient" ? t('common.for-me') : i.patient?.name}</BaiscTable.Td>
                                 
                                 <BaiscTable.Td url={`/appointment/`+i.id}>
                                   <button type="button" class={`text-white  ml-4 ${!i.status || i.status=="pending" ?"bg-orange-300": i.status=="canceled" ? ' bg-red-500' : i.status=="completed" ? "bg-green-500" : "bg-honolulu_blue-300"}  focus:outline-none  font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center`}>
@@ -215,7 +215,7 @@ function App() {
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.scheduled_hours}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[i18next.language+"_name"]}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{t('common.types_of_care.'+i.type_of_care)}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/appointment/`+i.id}>{t('common.'+i.consultation_method)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/appointment/`+i.id}>{'Plataforma Zoom'}</BaiscTable.Td>
                                
                                 <BaiscTable.Td url={`/appointment/`+i.id}>
                                   <button type="button" class={`text-white cursor-default ml-4 ${i.payment_confirmed ? "bg-honolulu_blue-500": "bg-gray-400"}  focus:outline-none  font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center`}>
@@ -223,7 +223,7 @@ function App() {
                                   </button>
                                 </BaiscTable.Td>
 
-                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.doctor?.name}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.reason_for_consultation?.length > 40 ? i.reason_for_consultation?.slice(0,40)+"..." : i.reason_for_consultation}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.additional_observations?.length > 40 ? i.additional_observations?.slice(0,40)+"..." : i.additional_observations}</BaiscTable.Td>
                                

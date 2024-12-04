@@ -10,6 +10,7 @@ import ButtonLoader from '../../components/Loaders/button';
 import toast from 'react-hot-toast';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useAuth } from '../../contexts/AuthContext';
+import RecoverPasswordModal from '../../components/modals/recover-password';
 
 axios.defaults.withCredentials = true;
 
@@ -22,9 +23,13 @@ function Login() {
   const [valid,setValid]=useState(false)
   const [nextpage,setNextPage]=useState(null)
   const [searchParams, setSearchParams] = useSearchParams();
+  const [showRecoverPasswordDialog,setShowRecoverPasswordDialog]=useState(false)
+  const [success,setSuccess] = useState(false)
+  const [recoverPasswordStatus,setRecoverPasswordStatus]=useState('code_not_sent')
+
   const data = useData()
 
-  const {user,check_user} = useAuth()
+  const {user,check_user,setRecoveringPassword} = useAuth()
   useEffect(()=>{
 
       if(user){
@@ -148,11 +153,39 @@ function Login() {
 
 
 
+async function VerifyCode(){
+  setMessage('')
+  setLoading(true)
 
-  async function SubmitForm(options){
- 
+  try{
+      let response=await data.makeRequest({method:'post',url:`api/verify_code_for_password_recovery`,data:{...form}, error: ``},0);
+      localStorage.setItem('token',response.token)
+      //toast.success(t('messages.updated-successfully'))
+      setShowRecoverPasswordDialog(false)
+      setRecoveringPassword(true)
+      data._showPopUp('basic_popup','password-recovered')
+      
+  }catch(e){
+      setLoading(false)
+      data._scrollToSection('top')
+      if(e.message==400){
+        setMessage(t('common.invalid-code'))
+      }else if(e.message==500){
+        setMessage(t('common.unexpected-error'))
+      }else  if(e.message=='Failed to fetch'){
+          setMessage(t('common.check-network'))
+      }else{
+          setMessage(t('common.unexpected-error'))
+      }
+  }
+
+}
+
+
+async function SubmitForm(options){
+
     setMessage('')
-    
+
     if(!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) && options?.register_method!="google"){
        setMessage(t('common.invalid-email'))
        document.querySelector('#_login_msg').scrollTop=0
@@ -178,11 +211,63 @@ function Login() {
 
   }
 
+
+
+  async function SendCode(){
+   
+    setMessage('')
+  
+    if(!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))){
+       setMessage(t('common.invalid-email'))
+       data._scrollToSection('top')
+       return
+    }
+  
+    setLoading(true)
+
+    setForm({...form,code:''})
+  
+  
+    try{
+
+      await data.makeRequest({method:'post',url:`api/send_verification_code`,data:{email:form.email,validate_existing_email:true}, error: ``},0);
+      setLoading(false)
+      setRecoverPasswordStatus('code_sent')
+    }catch(e){
+       data._scrollToSection('top')
+       setLoading(false)
+      if(e.message==404){
+        setMessage(t('common.user-not-found'))
+      }else if(e.message==500){
+        setMessage(t('common.unexpected-error'))
+      }else  if(e.message=='Failed to fetch'){
+          setMessage(t('common.check-network'))
+      }else{
+          setMessage(t('common.unexpected-error'))
+      }
+    }
+
+  }
+
+
+  function recoverPasswordSubmit(){
+        if(recoverPasswordStatus=="code_not_sent"){
+                    SendCode()
+        }
+        if(recoverPasswordStatus=="code_sent"){
+                   VerifyCode()
+        }
+  }
+
+
+
   return (
 
 <DefaultLayout hideAll={true} hide={true} removeMargin={true} hideSupportBadges={true}>
 
 <div className="flex">
+
+<RecoverPasswordModal status={recoverPasswordStatus} setStatus={setRecoverPasswordStatus} success={success} resendCode={SendCode}  message={message} setMessage={setMessage} setForm={setForm} loading={loading} SubmitForm={recoverPasswordSubmit} form={form} setShow={setShowRecoverPasswordDialog} show={showRecoverPasswordDialog}/>
 
 <div className="login-left-bg flex-1 min-h-[100vh] cursor-pointer" onClick={()=>navigate('/')}></div>
 
@@ -190,8 +275,8 @@ function Login() {
  
 <div class="w-[400px]  max-lg:w-full">
       <h2 className="font-medium text-[22px] mb-2">Login</h2>
-      <p className="text-gray-600 mb-4 text-[0.9rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-      <Messages  id={'_login_msg'} type={messageType} setMessage={setMessage} message={message}/>
+      <p className="text-gray-600 mb-4 text-[0.9rem]">{t('common.login-msg')}</p>
+      {!showRecoverPasswordDialog && <Messages  id={'_login_msg'} type={messageType} setMessage={setMessage} message={message}/>}
       <div class="mb-5">
           <label for="email" class="block mb-2 text-sm font-medium">Email</label>
           <input onChange={(e)=>setForm({...form,email:e.target.value})} type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder=""/>
@@ -202,11 +287,16 @@ function Login() {
               
       </div>
 
+      {!loading && <div className="flex justify-end">
 
-      {!loading && <p onClick={()=>alert('In development!')} className="text-sm font-normal text-right mb-5 cursor-pointer hover:underline  text-gray-500 ">
-                   {t('common.recover-password')}
-      </p>}
+          <p onClick={()=>{
+              setShowRecoverPasswordDialog(true)
+              setMessage('')
+          }} className="text-sm font-normal mb-5 cursor-pointer hover:underline  text-gray-500 ">
+              {t('common.recover-password')}
+          </p>
 
+      </div>}
 
       <div style={{display:'none'}} class="flex items-start mb-5">
           <div class="flex items-center h-5">

@@ -29,22 +29,21 @@ function VerifyRegisterEmail({form,show,success,setShow,loading,SubmitForm,setFo
             <div class="p-4 md:p-5">
                 <div class="space-y-4" action="#">
                     {(data.auth.type!="google" && !success) && <div>
+
                          <p className="text-gray-600">{t('common.email-sent')} <span className="text-honolulu_blue-500">{form.email}.</span> 
-                         
-                         {!loading && <button onClick={()=>{
-                            setShow(false)
-                            document.querySelector('#email').focus()
-                         }} className="text-[0.8rem] underline border text-honolulu_blue-500 px-1 py-[2px] rounded-[0.3rem]">{t('common.change-email')}</button>}
-                         
+                            {!loading && <button onClick={()=>{
+                                setShow(false)
+                                document.querySelector('#email').focus()
+                            }} className="text-[0.8rem] underline border text-honolulu_blue-500 px-1 py-[2px] rounded-[0.3rem]">{t('common.change-email')}</button>}
                          </p>
-                  
+
                     </div>}
 
                     {(data.auth.type=="google" && !success) && <div>
                          <p className="text-gray-600">{t('common.add-your-contact')}</p> 
                     </div>}
 
-                     <Messages type={'red'} setMessage={setMessage} message={message}/>
+                    <Messages type={'red'} setMessage={setMessage} message={message}/>
 
                     <div>
                             {data.auth.type=="google" ? (

@@ -5,10 +5,10 @@ import { t } from 'i18next'
 import { useHomeData } from '../../contexts/DataContext'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import BasicFilter from '../Filters/basic'
-import BasicSearch from '../Search/basic'
 import BasicPagination from '../Pagination/basic'
 import Loader from '../Loaders/loader'
+import BasicFilter from '../../../components/Filters/basic'
+import BasicSearch from '../../../components/Search/basic'
 
 export default function Doctors() {
     const data=useHomeData()
@@ -94,13 +94,12 @@ export default function Doctors() {
      <DefaultLayout>
            <div className="mt-[40px]">
 
-           <div className="mx-[50px]" id="our-specialists">
+           <div className="mx-[50px] max-lg:mx-[20px]" id="our-specialists">
                        <h2 className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>          
            </div>
 
 
-
-           <div className="flex px-[50px]">
+           <div className="flex px-[50px] max-lg:px-[20px]">
            <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>
                 
             <div className="flex-1">

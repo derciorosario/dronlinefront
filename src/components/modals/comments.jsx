@@ -11,13 +11,15 @@ function Comment({show,setShow,comments,form,setForm}) {
 
  
   useEffect(() => {
+
+    if(!show) return
     
     const interval = setInterval(() => {
      if(show) update_comments()
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [show]);
 
 
 const {user} = useAuth()
@@ -138,16 +140,7 @@ const [showChooseFile,setShowChooseFile]=useState('')
 
     <ChatFile res={handleUploadeduploaded_files} show={showChooseFile} setShow={setShowChooseFile}/>
 
-
-
-
-     <ChatMessages hide={showChooseFile} messages={comments}/>
-
-
-
-
-
-
+     <ChatMessages hide={showChooseFile} messages={comments.map(i=>({...i,costum_name:i.user?.role!="doctor" && user?.role=="patient" ? t('common.dronline-team')  : i.user.name}))}/>
 
 
 

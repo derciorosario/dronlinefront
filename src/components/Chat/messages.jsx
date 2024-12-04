@@ -25,7 +25,7 @@ function ChatMessages({messages,hide}) {
          <>
     {i.is_subject ?  <div className="mb-3">
 
-      <div className="w-full bg-gray-200 flex flex-col rounded-[0.6rem] p-2 mb-2">
+      <div className={`w-full bg-gray-200 flex flex-col rounded-[0.6rem] p-2 mb-2 ${hide ? 'opacity-0':''}`}>
         <span>{t('common.subject')}</span>
         <p className="text-[14px] text-gray-500">{i.message}</p>
      </div>

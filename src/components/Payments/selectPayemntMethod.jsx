@@ -25,6 +25,7 @@ function SelectPayemntMethod({info}) {
     try{
 
         let response=await data.makeRequest({method:'get',url:`api/get-invoice-by-appointment-id/`+info.canceled_appointment_id,withToken:true, error: ``},0);
+        console.log({response})
         setInvoice(response)
      }catch(e){
          console.log(e)
@@ -108,7 +109,7 @@ function SelectPayemntMethod({info}) {
        if(info?.canceled_appointment_id){
      
           //calc 
-          let invoice_amount=parseFloat(invoice.amount)
+          let invoice_amount=parseFloat(invoice.price) /// let invoice_amount=parseFloat(invoice.amount)
 
           let amount_to_pay=price > invoice_amount ? price - invoice_amount : 0
 
@@ -231,12 +232,12 @@ function SelectPayemntMethod({info}) {
 
               <dl class="flex items-center justify-between gap-4 py-3">
                 <dt class="text-base font-normal text-gray-500">{t('common.paid-before')}</dt>
-                <dd class="text-base font-medium text-gray-900">{data.formatNumber(data._cn_op(invoice?.amount))} MT</dd>
+                <dd class="text-base font-medium text-gray-900">{data.formatNumber(data._cn_op(invoice?.price))} MT</dd>
               </dl>
 
 
              {invoice?.amount!=getAmount().consultation_price && <>
-                <dl class="flex items-center justify-between gap-4 py-3">
+                <dl class="flex items-center justify-between gap-4 py-3 hidden">
                 <dt class="text-base font-normal text-gray-500">{t('common.cancelation-tax')}</dt>
                 <dd class="text-base font-medium text-gray-900">{data.formatNumber(data._cn_op(getAmount().taxes))} MT</dd>
                 </dl>
@@ -261,7 +262,7 @@ function SelectPayemntMethod({info}) {
              
               <dl class="flex items-center justify-between gap-4 py-3">
                 <dt class="text-base font-normal text-gray-500">{t('common.paid-before')}</dt>
-                <dd class="text-base font-medium text-gray-900">{data.formatNumber(data._cn_op(invoice?.amount))} MT</dd>
+                <dd class="text-base font-medium text-gray-900">{data.formatNumber(data._cn_op(invoice?.price))} MT</dd>
               </dl>
 
               <dl class="flex items-center justify-between gap-4 py-3">

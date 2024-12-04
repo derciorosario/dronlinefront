@@ -90,7 +90,6 @@ function addAppointments({ShowOnlyInputs}) {
 
 
   const [form,setForm]=useState(initial_form)
-
   
   useEffect(()=>{
     let v=true
@@ -107,6 +106,7 @@ function addAppointments({ShowOnlyInputs}) {
     }
     setValid(v)
     console.log({form})
+
  },[form])
 
 
@@ -163,18 +163,6 @@ useEffect(()=>{
 },[data.updateTable])
 
 
-
-useEffect(()=>{
- 
-    if(form.type_of_care=="requested"){
-
-     
-           
-                     alert('Consultas ao domicilio não estão completamento emplementados no sistema')
-                     setForm({...form,type_of_care:'online'})
-          
-    }
-},[form])
 
 
 useEffect(()=>{
@@ -237,8 +225,6 @@ useEffect(()=>{
           if(isUrgentByLimit(res.scheduled_hours,res.scheduled_date) || data.isSetAsUrgentHour(res.scheduled_hours,JSON.parse(user?.app_settings?.[0]?.value))){
             new_form.type_of_care='urgent'
           }
-          console.log(res.scheduled_hours,JSON.parse(user?.app_settings?.[0]?.value))
-        
          
   
           if(!available_hours.includes(res.scheduled_hours)){
@@ -307,11 +293,6 @@ function isUrgentByLimit(hour,date){
 }
 
 
-
-
-
-
-
  async function SubmitForm(){
     setLoading(true)
 
@@ -331,9 +312,12 @@ function isUrgentByLimit(hour,date){
       }else{
 
         let response=await data.makeRequest({method:'post',url:`api/appointments`,withToken:true,data:{
+
           ...form,
           scheduled_date:form.type_of_care=="requested" ? form.consultation_date : form.scheduled_date,
           dependent_id:form.is_for_dependent ? form.dependent_id : null,
+          patient_id:user.data?.id
+
         }, error: ``},0);
 
         localStorage.removeItem('saved_appointment_url')
@@ -389,7 +373,6 @@ function isUrgentByLimit(hour,date){
 
 
   useEffect(()=>{
-
              if(data.paymentInfo.done){
                   setForm({...initial_form})
                   setMessageType('green')
@@ -534,6 +517,7 @@ function isUrgentByLimit(hour,date){
   }
 }
 
+  const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 return (
 
@@ -632,19 +616,17 @@ return (
   )}
   >
 
-
  <div className={`flex justify-between w-full`}>
+
     <div className="flex flex-wrap"></div>
-
-    <div className="mt-4">
-
+    <div className="mt-4 items-center flex">
             {(form.status=="approved" && form.zoom_link) && <div onClick={()=>{
                window.open(form.zoom_meeting.meeting_data[`${user?.role=="patient" ? 'join':'start'}_url`], '_blank')
-            }} className="cursor-pointer hover:opacity-85 active:opacity-65">
+            }} className="cursor-pointer hover:opacity-85 active:opacity-65 mr-4">
               <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>                 
             </div>}
 
-            {(form.status!="pending" && form.status!="canceled" && id) && <div className={`flex _feedback items-center gap-x-2  ${user?.role=="admin" || user?.role=="manager" ? 'hidden':''}  ${!id || !itemToEditLoaded ? 'hidden':''}`}>
+            {(form.status!="pending" && form.status!="canceled" && id) && <div className={`flex _feedback items-center gap-x-2  ${(user?.role=="admin" || user?.role=="manager") && form.doctor_id ? 'hidden':''}  ${!id || !itemToEditLoaded ? 'hidden':''}`}>
                 
                 {form.status!="completed" && <button onClick={()=>setShowComment(true)} type="button" class={`text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
@@ -666,18 +648,17 @@ return (
  </div>
 
   <FormCard hide={!id} items={[
-
     {name:t('form.consultation-id'),value:id ? form.id : '-'},
     {name:t('form.consultation-status'),value:t('common.'+form.status),color:form.status=="pending" ? '#f97316':form.status=="approved" ? '#0b76ad' : form.status=="rejected" || form.status=="canceled" ?  '#dc2626' : '#16a34a'},
     {name:t('form.patient-name'),value:form.is_for_dependent ? form.dependent?.name : form?.user?.name,hide:user?.role=="patient",
       link:(form.is_for_dependent ? '/dependent/'+form.dependent?.id : '/patient/'+form.patient?.id)
     },
-    {name:t('common.doctor'),value:form.doctor?.name},
+    {name:t('common.doctor'),value:form.doctor?.name || t('common.dronline-team')},
     {name:t('form.medical-specialty'),value:data._specialty_categories.filter(i=>i.id==form.medical_specialty)?.[0]?.[i18next.language+"_name"]},
-    {name:t('form.consultation-date'),value:`${form.consultation_date} (${t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})`,hide:user?.role=="patient",color:'#0b76ad'},
-    {name:t('form.consultation-hour'),value:form.scheduled_hours,hide:user?.role=="patient",color:'#0b76ad'},
+    {name:t('form.consultation-date'),value:`${form.consultation_date} (${t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})`,color:'#0b76ad'},
+    {name:t('form.consultation-hour'),value:form.scheduled_hours,color:'#0b76ad'},
     {name:t('form.estimated-consultation-duration'),value:form.estimated_consultation_duration,hide:true},
-    {name:t('form.type-of-care'),value:t(`form.${form.type_of_care}-c`),hide:user?.role=="patient"},
+    {name:t('form.type-of-care'),value:t(`form.${form.type_of_care}-c`)},
     {name:t('form.reason-for-consultation'),value:form.reason_for_consultation,hide:user?.role=="patient"},
     {name:t('form.additional-observations'),value:form.additional_observations,hide:user?.role=="patient"}  
 
@@ -722,7 +703,6 @@ return (
       }
 
       popOver={[
-
         //{title:t('form.urgent-care'),text:t('form.urgent-care-info')},
         //{title:t('form.scheduled-consultation'),text:t('form.scheduled-consultation-info')},
         {title: t('form.virtual-consultation'), text: t('form.online-consultation-info')},
@@ -731,7 +711,7 @@ return (
       ]}
 
       form={form} r={true}
-      hide={user?.role!="patient"}
+      hide={user?.role!="patient" || id}
       onBlur={()=>setVerifiedInputs([...verified_inputs,'type_of_care'])}
       label={t('form.type-of-care')}
       onChange={(e)=>{
@@ -760,18 +740,17 @@ return (
         onChange={(e) => setForm({...form, estimated_consultation_duration: e.target.value})} 
         field={'estimated_consultation_duration'} 
         value={form.estimated_consultation_duration}
+
       />
 
-      <div className={`flex ${id ? 'opacity-60 pointer-events-none':''} mt-7 ${user?.role!="patient" || form.type_of_care=="requested" || (!form.type_of_care && selectedDoctor.status!="loading") ? 'hidden':''} justify-end flex-col  _doctor_list`}>
+      <div className={`flex ${id ? 'opacity-60 pointer-events-none':''} mt-7 ${user?.role!="patient" || form.type_of_care=="requested" || id || (!form.type_of_care && selectedDoctor.status!="loading") ? 'hidden':''} justify-end flex-col  _doctor_list`}>
         
         <label class="mb-2 text-sm  text-gray-900">{t('common.doctor')}</label>
 
         <div onClick={()=>{
           if(selectedDoctor.status!="loading") {
-
               data.setUpdateTable(Math.random())
               data._showPopUp('doctor_list')
-
           }
         }} class={`bg-gray max-md:w-full w-[400px] ${(selectedDoctor.status=="loading" || id) ? ' pointer-events-none':''} hover:bg-gray-100 cursor-pointer max-md:h-auto  h-[43px] border-gray-300  active:opacity-75  text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 border items-center flex justify-between p-2.5`}>    
         
@@ -810,18 +789,15 @@ return (
               }} className="text-honolulu_blue-400 ml-2 hover:opacity-60 underline cursor-pointer">{t('common.change')}</span>
             }
             </>}
-          
         </div>
         
       </div>
-
-
 
       <FormLayout.Input 
                   verified_inputs={verified_inputs} 
                   form={form} 
                   r={true} 
-                  hide={form.type_of_care!="requested"}
+                  hide={form.type_of_care!="requested" || id}
                   selectOptions={
                     data._specialty_categories.map((i,_i)=>({
                        name:i[i18next.language+"_name"] ? i[i18next.language+"_name"] : i[i18next.language+"_name"],
@@ -835,8 +811,6 @@ return (
                   value={form.medical_specialty}
       />
 
-      
-
          
     <FormLayout.Input 
         verified_inputs={verified_inputs} 
@@ -845,9 +819,9 @@ return (
         type={'date'}
         onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-date'])} 
         label={t('form.consultation-date')} 
-        onChange={(e) => setForm({...form, consultation_date: e.target.value})} 
+        onChange={(e) => setForm({...form, consultation_date: e.target.value,scheduled_date:e.target.value,scheduled_weekday:weeks[new Date(e.target.value).getDay()]})} 
         field={'consultation_date'} 
-        hide={form.type_of_care!="requested"}
+        hide={form.type_of_care!="requested" || id}
         value={form.consultation_date}
       />
 
@@ -856,7 +830,7 @@ return (
         form={form} 
         r={true} 
         type={'time'}
-        hide={form.type_of_care!="requested"}
+        hide={form.type_of_care!="requested" || id}
         onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-hour'])} 
         label={t('form.consultation-hour')} 
         onChange={(e) => setForm({...form, scheduled_hours: e.target.value})} 
@@ -865,7 +839,6 @@ return (
       />
 
 
-      
     <FormLayout.Input 
         verified_inputs={verified_inputs} 
         form={form} 

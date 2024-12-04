@@ -12,7 +12,7 @@ function DoctorJoinAppointment() {
   <div class="container px-5 py-24 mx-auto flex flex-wrap">
     <div class="lg:w-1/2 w-full mb-10 lg:mb-0 rounded-lg overflow-hidden relative">
       <div className="absolute left-0 top-0 bg-[rgba(0,0,0,0.5)] flex-col h-full w-full flex items-center justify-center">
-                <h2 className="text-white text-[45px] font-bold  mb-2">{t('common.how-does-it-work')}</h2>
+                <h2 className="text-white text-[45px] font-bold max-md:text-[30px]  mb-2">{t('common.how-does-it-work')}</h2>
                 <p className="text-white text-[25px] opacity-70">{t('common.consultation-steps')}</p>
       </div>
       <img src={LeftImage} alt="feature" class="object-cover object-center h-full w-full"/>

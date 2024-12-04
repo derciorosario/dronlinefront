@@ -225,7 +225,7 @@ export default function AdminDashboard({startDate,endDate,setStartDate,setEndDat
                                             <BaiscTable.Td url={`/payment-management/`+i.id}>{data._cn(i.amount)+"MT"}</BaiscTable.Td>
                                             <BaiscTable.Td url={`/payment-management/`+i.id}>{i.payment_method=="mpesa" ? 'M-pesa' : t('common.bank-transfer')}</BaiscTable.Td>
                                             <BaiscTable.Td url={`/payment-management/`+i.id}>{i.patient?.name}</BaiscTable.Td>
-                                            <BaiscTable.Td url={`/payment-management/`+i.id}>{i.doctor?.name}</BaiscTable.Td>
+                                            <BaiscTable.Td url={`/payment-management/`+i.id}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
                                             <BaiscTable.Td url={`/payment-management/`+i.id}>{i.policy_number || '-'}</BaiscTable.Td>
                                             <BaiscTable.Td>
                                                         <span onClick={()=>{

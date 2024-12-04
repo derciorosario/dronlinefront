@@ -63,13 +63,21 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
 
                <AddDependentPopUp show={data._openPopUps.add_dependent}/>
                
-               <BasicPopUp show={data._openPopUps.basic_popup && !(user?.role=="patient" && data._openPopUps.basic_popup=="login-to-proceed-with-consultation")} title={
+               <BasicPopUp show={data._openPopUps.basic_popup && !(user?.role=="patient" && data._openPopUps.basic_popup=="login-to-proceed-with-consultation")} title={data._openPopUps.basic_popup=="password-recovered" ? t('messages.password-recovered') :
                 
                 data._openPopUps.basic_popup=="define-same-gain-perentage-for-all" ? t('common.sure-to-continue') :  data._openPopUps.basic_popup=="consultation-is-already-canceled" ? t('messages.consultation-is-already-canceled') : data._openPopUps.basic_popup=="unable-to-load-consultation-items" ? t('messages.unable-to-load-consultation-items') :  data._openPopUps.basic_popup=="wait-for-refund" ?  t('messages.wait-for-refund'): data._openPopUps.basic_popup=="appointment-no-longer-available" ? t('messages.appointment-no-longer-available') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('common.draft-saved') : data._openPopUps.basic_popup=="conclude_patient_info" ?
                
                 t('common.add-info'): data._openPopUps.basic_popup=="contact-us-if-delay" ? t('common.info') : t('common.info')}
 
-                btnConfirm={{text:data._openPopUps.basic_popup=="define-same-gain-perentage-for-all" ? t('common.cancel') : data._openPopUps.basic_popup=="unable-to-load-consultation-items" ? t('common.cancel') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('common.ignore') : data._openPopUps.basic_popup=="conclude_patient_info" ? t('common.do-it-later')  : t('common.understood'),onClick:()=>{
+                btnConfirm={{text:data._openPopUps.basic_popup=="password-recovered" ? t('common.understood') : data._openPopUps.basic_popup=="define-same-gain-perentage-for-all" ? t('common.cancel') : data._openPopUps.basic_popup=="unable-to-load-consultation-items" ? t('common.cancel') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('common.ignore') : data._openPopUps.basic_popup=="conclude_patient_info" ? t('common.do-it-later')  : t('common.understood'),onClick:()=>{
+                  
+                  if(data._openPopUps.basic_popup=="password-recovered"){
+                    data.setIsLoading(true)
+                    let url=data.getScheduledAppointment() || "/dashboard"
+                    window.location.href=url
+                    return
+                  }
+                  
                   data._closeAllPopUps()
                   if(data._openPopUps.basic_popup=="you-have-saved-appointment"){
                     localStorage.removeItem('saved_appointment_url')
