@@ -228,9 +228,10 @@ const [form,setForm]=useState(initial_form)
            {!itemToEditLoaded && itemToShow.action=="update" && <div className="mt-10">
               <DefaultFormSkeleton/>
             </div>}
+            
            
 
-           <FormLayout hideInputs={user?.role!="doctor"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-exams') : t('common.add-exam')} verified_inputs={verified_inputs} form={form}
+           <FormLayout hideInputs={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-exams') : t('common.add-exam')} verified_inputs={verified_inputs} form={form}
           
             topBarContent={
                 (<button onClick={()=>setShowComment(true)} type="button" class={`text-white hidden ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
@@ -295,7 +296,7 @@ const [form,setForm]=useState(initial_form)
             )}
 
             button={(
-               <div className={`mt-[40px] ${user?.role!="doctor" ? 'hidden':''}`}>
+               <div className={`mt-[40px] ${(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient" ? 'hidden':''}`}>
                  <FormLayout.Button onClick={()=>{
                      SubmitForm()
                  }} valid={valid} loading={loading} label={itemToShow.action=="update" ? t('common.update') :t('common.send')}/>
@@ -305,7 +306,7 @@ const [form,setForm]=useState(initial_form)
 
 
 
-            <FormCard  hide={itemToShow.action!="update" || user?.role=="doctor"} items={[
+            <FormCard  hide={itemToShow.action!="update" || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
                 {name:t('form.consultation-id'),value:form.id},
                 {name:t('form.clinical-information'),value:form.clinical_information},
                 {name:t('form.requested-exams'),value:form.requested_exams},
@@ -319,7 +320,7 @@ const [form,setForm]=useState(initial_form)
                     verified_inputs={verified_inputs} 
                     form={form} 
                     r={true} 
-                    hide={user?.role!="doctor"}
+                    hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
                     type={'date'}
                     onBlur={() => setVerifiedInputs([...verified_inputs, 'requested-on'])} 
                     label={t('form.requested-on')} 
@@ -332,7 +333,7 @@ const [form,setForm]=useState(initial_form)
                   verified_inputs={verified_inputs} 
                   form={form} 
                   r={true} 
-                  hide={user?.role!="doctor"}
+                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
                   textarea={true}
                   onBlur={() => setVerifiedInputs([...verified_inputs, 'clinical_information'])} 
                   label={t('form.clinical-information')} 
@@ -344,7 +345,7 @@ const [form,setForm]=useState(initial_form)
                 <FormLayout.Input 
                   verified_inputs={verified_inputs} 
                   form={form} 
-                  hide={user?.role!="doctor"}
+                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
                   r={true} 
                   textarea={true}
                   onBlur={() => setVerifiedInputs([...verified_inputs, 'requested_exams'])} 
@@ -359,7 +360,7 @@ const [form,setForm]=useState(initial_form)
                   verified_inputs={verified_inputs} 
                   form={form} 
                   r={true} 
-                  hide={user?.role!="doctor"}
+                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
                   textarea={true}
                   onBlur={() => setVerifiedInputs([...verified_inputs, 'results_report'])} 
                   label={t('form.results-report')} 

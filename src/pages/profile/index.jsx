@@ -117,6 +117,7 @@ function index() {
     const [form,setForm]=useState(initial_form)
 
 
+
     useEffect(()=>{
       let v=true
 
@@ -139,7 +140,6 @@ function index() {
            !form.marital_status ||
            !form.country_of_residence || 
            !form.occupation ||
-           !form.residential_address ||
            !form.nationality ||
            !form.marital_status ||
            !form.country_of_residence 
@@ -158,7 +158,6 @@ function index() {
 
      
       setValid(v)
-      console.log({form})
    },[form,currentPage])
 
 
@@ -251,6 +250,8 @@ async function updateSystemSettings() {
 
     async function SubmitForm(){
 
+      console.log({form})
+
       setLoading(true)
     
       try{
@@ -261,8 +262,8 @@ async function updateSystemSettings() {
               setLoading(false)
               return
             }
+
           }
-       
     
           let r=await data.makeRequest({method:'post',url:`api/patient/`+user?.data.id,withToken:true,data:{
             ...form
@@ -277,6 +278,7 @@ async function updateSystemSettings() {
       
     
       }catch(e){
+
         console.log({e})
     
         if(e.message==409){
@@ -364,9 +366,9 @@ async function updateSystemSettings() {
 
         <ConfirmDialog res={logout_user} show={data._openPopUps.confim_message} />
        
-        <div className={`w-full ${!itemToEditLoaded ? 'hidden':''} p-5 gap-x-2 flex`}>
+        <div className={`w-full ${!itemToEditLoaded ? 'hidden':''} p-5 gap-x-2 flex max-lg:flex-col`}>
           
-             <div className="w-[300px] p-3 rounded-[0.3rem] bg-white">
+             <div className="w-[300px] p-3 rounded-[0.3rem] bg-white max-lg:w-full max-lg:mb-3">
                   
 
                    {user && <LogoFile isUserProfile={true} _loading={updatingProfile} res={handleUploadedFiles} _upload={{key:'profile_picture_filename',filename:user?.profile_picture_filename}} label={t('common.profile-piture')}/>}

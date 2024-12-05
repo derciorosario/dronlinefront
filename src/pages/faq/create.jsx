@@ -219,7 +219,9 @@ return (
   <FormLayout.Input verified_inputs={verified_inputs} form={form} selectOptions={
 
                   [
-                    { "name": t('common.about-us'), "value": "about-us" },
+                    { "name": t('common.general'), "value": "general" },
+                    { "name": t('common.consultations'), "value": "consultations" },
+                   // { "name": t('common.about-us'), "value": "about-us" },
                     { "name": t('common._support'), "value": "support" },
                     { "name": t('common.our-services'), "value": "our-services" } 
                   ]

@@ -218,6 +218,7 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
 }
 
   function handleUploadedFiles(upload){
+    console.log({upload})
     setForm({...form,[upload.key]:upload.filename})
   }
 
@@ -282,7 +283,7 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
                <PatientForm.Stepper formStep={formStep} setFormStep={setFormStep}/>
             </div>
 
-            <div className={`${user?.role!="patient" ? 'hidden':''} w-full`}>
+            <div className={`${user?.role!="patient" ? 'hidden':''} hidden w-full`}>
                       <div className="mb-10">
                         <LogoFile res={handleUploadedFiles} _upload={{key:'profile_picture_filename'}} label={t('common.profile-piture')}/>
                       </div>

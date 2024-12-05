@@ -94,7 +94,6 @@ function addPatients({ShowOnlyInputs}) {
        !form.marital_status ||
        !form.country_of_residence || 
        !form.occupation ||
-       !form.residential_address ||
        !form.nationality ||
        !form.marital_status ||
        !form.country_of_residence 

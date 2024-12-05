@@ -128,7 +128,7 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
 
               <FormLayout.Input hide={formStep && formStep==2 || hideInputs || form_name=="dependent"} verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'occupation'])} label={t('form.occupation')} onChange={(e)=>setForm({...form,occupation:e.target.value})} field={'occupation'} value={form.occupation}/>
               <FormLayout.Input hide={formStep && formStep==2 || hideInputs || form_name=="dependent"} verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'province_of_residence'])} label={t('form.province_of_residence')} onChange={(e)=>setForm({...form,province_of_residence:e.target.value})} field={'province-of-residence'} value={form.province_of_residence}/>
-              <FormLayout.Input hide={formStep && formStep==2 || hideInputs} verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'residential_address'])} label={t('form.residential_address')} onChange={(e)=>setForm({...form,residential_address:e.target.value})} field={'residential-address'} value={form.residential_address}/>
+              {/**<FormLayout.Input hide={formStep && formStep==2 || hideInputs} verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'residential_address'])} label={t('form.residential_address')} onChange={(e)=>setForm({...form,residential_address:e.target.value})} field={'residential-address'} value={form.residential_address}/> **/}
               <FormLayout.Input hide={formStep && formStep==2 || hideInputs || form_name=="dependent"} verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'nationality'])} label={t('form.nationality')} onChange={(e)=>setForm({...form,nationality:e.target.value})} field={'residential-address'} value={form.nationality}/>
               <FormLayout.Input hide={formStep && formStep==2 || hideInputs} verified_inputs={verified_inputs} form={form} selectOptions={
                [
@@ -369,7 +369,7 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
 
              
 
-              <FormLayout.Input hide={(formStep && formStep==2) || hideInputs} verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'address'])} label={t('form.address')} onChange={(e)=>setForm({...form,address:e.target.value})} field={'address'} value={form.address}/>
+              <FormLayout.Input hide={(formStep && formStep==2) || hideInputs} verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'address'])} label={t('form.residential_address')} onChange={(e)=>setForm({...form,address:e.target.value})} field={'address'} value={form.address}/>
               <FormLayout.Input hide={itemsToHide?.includes('order-number') || hideInputs || (formStep && formStep==2)} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'order_number'])} label={t('form.order-number')} onChange={(e)=>setForm({...form,order_number:e.target.value})} field={'order-number'} value={form.order_number}/>
 
                 

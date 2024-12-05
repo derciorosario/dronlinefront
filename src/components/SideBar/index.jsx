@@ -32,8 +32,6 @@ function SideBar() {
     const data=useData()
     const [openMobileMenu,setOpenMobileMenu]=useState(false)
 
-
-
     const menuItems = [
 
       {name:t('menu.home'),path:'/dashboard',paths:['/dashboard'],field:'dashboard',icon:'dashboard',access:['all'],manager_access:true,showInMobile:true},
@@ -162,12 +160,10 @@ function SideBar() {
     
 
     useEffect(()=>{
-         if(data.isMobile && data._openPopUps.mobile_menu==false){
+         if(data.isMobile && data._openPopUps.mobile_menu==false && !openMobileMenu){
           setMenuOpen([])
          }
     },[data._openPopUps])
-
-
 
    
     useEffect(()=>{
@@ -316,7 +312,7 @@ function SideBar() {
 
                             setOpenMobileMenu(false)
                             if(item.sub_menus){
-                              closeAndOpen(item.path,'data.isMobile')
+                              closeAndOpen(item.path,'isMobile')
                             }else{
                               navigate(item.path)
                             }

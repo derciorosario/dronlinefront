@@ -223,7 +223,7 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
             </div>}
            
 
-           <FormLayout hideInputs={user?.role!="doctor"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-clinical-diary') : t('menu.add-clinical-diary')} verified_inputs={verified_inputs} form={form}
+           <FormLayout hideInputs={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-clinical-diary') : t('menu.add-clinical-diary')} verified_inputs={verified_inputs} form={form}
           
             topBarContent={
 
@@ -289,7 +289,7 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
             )}
 
             button={(
-               <div className={`mt-[40px] ${user?.role!="doctor" ? 'hidden':''}`}>
+               <div className={`mt-[40px] ${(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient" ? 'hidden':''}`}>
                  <FormLayout.Button onClick={()=>{
                      SubmitForm()
                  }} valid={valid} loading={loading} label={itemToShow.action=="update" ? t('common.update') :t('common.send')}/>
@@ -297,7 +297,7 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
             )}
             >
 
-          <FormCard hide={itemToShow.action == "create" || user?.role=="doctor"} items={[
+          <FormCard hide={itemToShow.action == "create" || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
               {name: t('form.consultation-id'), value: form.id},
               {name: t('form.main-complaint'), value: form.main_complaint},
               {name: t('form.current-illness-history'), value: form.current_illness_history},

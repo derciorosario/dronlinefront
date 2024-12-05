@@ -16,8 +16,8 @@ function Faq() {
     data._get(required_data) 
   },[])
 
-  const pages=['support','about-us','our-services']
-  const [currentPage,setCurrentPage]=useState('support')
+  const pages=['general','our-services','consultations','support'] //'about-us'
+  const [currentPage,setCurrentPage]=useState('general')
 
   
   return (

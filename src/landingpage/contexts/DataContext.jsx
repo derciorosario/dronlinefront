@@ -373,6 +373,65 @@ export const HomeDataProvider = ({ children }) => {
 
   }
 
+  const [downloadProgress,setDownloadProgress] = useState(0) 
+
+  const handleDownload = (filename) => {
+    console.log({filename})
+    setDownloadProgress(1)
+    const xhr = new XMLHttpRequest();
+    
+    let url=filename.includes('storage/uploads') ? `${APP_BASE_URL}/api/download/${filename.split('/')[filename.split('/').length - 1]}` :  filename.includes('http://') || filename.includes('https://') ? filename : `${APP_BASE_URL}/api/download/${filename}`
+
+    console.log({url})
+    xhr.open('GET', url, true);
+    
+    xhr.responseType = 'blob'; 
+    
+    // Track download progress
+    xhr.onprogress = (event) => {
+        if (event.lengthComputable) {
+            const percentComplete = (event.loaded / event.total) * 100;
+            console.log(`Download Progress: ${percentComplete.toFixed(2)}%`);
+            // Update your progress state if needed
+            setDownloadProgress(percentComplete.toFixed(2)); // assuming setDownloadProgress is a state setter
+        }
+    };
+
+    // Handle download completion
+    xhr.onload = () => {
+        if (xhr.status === 200) {
+            const blob = xhr.response;
+            const downloadUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = filename; // Name of the file for download
+            document.body.appendChild(link);
+            link.click();
+
+            // Clean up
+            link.remove();
+            window.URL.revokeObjectURL(downloadUrl);
+            setDownloadProgress(0); // Reset progress
+        } else {
+            console.error('Download failed:', xhr.statusText);
+            toast.error(t('common.error-downloading'));
+            setDownloadProgress(0)
+        }
+    };
+
+    // Handle errors
+    xhr.onerror = () => {
+        console.error('Error downloading file:', xhr.statusText);
+        toast.error(t('common.error-downloading'));
+        setDownloadProgress(0)
+        
+    };
+
+    // Start the request
+    xhr.send();
+  };
+
     
     const value = {
       showFilters,
@@ -394,6 +453,7 @@ export const HomeDataProvider = ({ children }) => {
       SERVER_FILE_STORAGE_PATH,
       _get,
       _loaded,
+      handleDownload,
       _all_faqs,
       _appointments,
       _patients,

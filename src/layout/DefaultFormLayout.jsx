@@ -69,7 +69,7 @@ return (
  }
 
 
-    FormLayout.Input = ({inputLeftContent,contact_code_field,hideErrorMsg,placeholder,ignoreVilidation,inputStyle,width,hideInputs,confirmContent,popOver,listContent,has_items_to_add,style,label,type,onChange,value,field,verified_inputs,onBlur,onClick,form,r,selectOptions,disabled,errorMsg,noBorder,hide,textarea,custom_invalid_validation,height}) => {
+    FormLayout.Input = ({max,min,inputLeftContent,contact_code_field,hideErrorMsg,placeholder,ignoreVilidation,inputStyle,width,hideInputs,confirmContent,popOver,listContent,has_items_to_add,style,label,type,onChange,value,field,verified_inputs,onBlur,onClick,form,r,selectOptions,disabled,errorMsg,noBorder,hide,textarea,custom_invalid_validation,height}) => {
       
         let _id=Math.random()
 
@@ -93,7 +93,7 @@ return (
                            
                              {has_items_to_add==true &&  <> <div className="w-full flex">
 
-                                <input placeholder={placeholder} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id}  class={`bg-gray ${!noBorder ? 'border':''} border-gray-300 ${disabled ? 'opacity-50':''} text-gray-900 text-sm rounded-tr-none rounded-[0.3rem] focus:ring-blue-500 rounded-b-none focus:border-blue-500 block w-full p-1.5`}/>
+                                <input min={min} placeholder={placeholder} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id}  class={`bg-gray ${!noBorder ? 'border':''} border-gray-300 ${disabled ? 'opacity-50':''} text-gray-900 text-sm rounded-tr-none rounded-[0.3rem] focus:ring-blue-500 rounded-b-none focus:border-blue-500 block w-full p-1.5`}/>
 
                                 <button onClick={onClick} class={`text-white ${form[field] ? 'bg-honolulu_blue-400':'bg-gray-400 pointer-events-none'} hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none  font-medium rounded-[0.3rem] text-sm w-full sm:w-auto px-2 py-1.5 text-center rounded-b-none rounded-tl-none`}>
                                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
@@ -110,7 +110,7 @@ return (
 
                        <div className="flex items-center">
                             {inputLeftContent}
-                            <input placeholder={placeholder} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id}  class={`bg-gray ${!noBorder ? 'border':''} border-gray-300 ${disabled ? 'opacity-50':''} text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}/>
+                            <input min={min} placeholder={placeholder} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id}  class={`bg-gray ${!noBorder ? 'border':''} border-gray-300 ${disabled ? 'opacity-50':''} text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}/>
                       
                        </div>
                         

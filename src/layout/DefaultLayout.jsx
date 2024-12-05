@@ -25,6 +25,7 @@ import CancelAppointmentModel from '../components/modals/cancel-appointments.jsx
 import DownloadProgress from '../components/Loaders/download-progress.jsx'
 import SupportBadge from '../components/Badges/support-badge.jsx'
 import WorkWithUsForm from '../../../landingpage/src/components/Form/work-with-us.jsx'
+import ChangePasswordModal from '../components/modals/change-password.jsx'
 
 function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate,hideSupportBadges,startDate,endDate,setStartDate,setEndDate}) {
     
@@ -38,12 +39,13 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
     setPathName(pathname)
   },[pathname])
 
+  const [showDateFilters,setShowDateFilters]=useState(false)
 
   return (
 
     <div id={'top'} className={`flex ${!hide ? 'bg-[#F9F9F9]':''} w-full`}>
       
-            
+               <ChangePasswordModal/>
                <Reviews show={data._openPopUps.reviews}/>
                <Feedback show={data._openPopUps.feedback}/>
                <Notifications show={data._openPopUps.notifications}/>
@@ -144,7 +146,9 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
 
                      
                       {!disableUpdateButton && <div className="flex-1 flex justify-end items-end">
-                        {showDates && <div className="flex items-center flex-1 md:justify-end mr-3">
+                        {showDates && <div className="flex items-end">
+
+                          {showDateFilters && <div className="flex items-center flex-1 md:justify-end mr-3">
 
                             <div className="items-center mr-1">
                               <h6 className="text-[0.8rem] font-medium text-gray-900 mr-2">
@@ -159,8 +163,20 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
                               </h6>
                               <input onChange={(e)=>setEndDate(e.target.value)} value={endDate} type="date" className="block w-full py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
                             </div>
+                          </div>}
+
+                           <button onClick={()=>setShowDateFilters(!showDateFilters)} type="button" className="text-white w-full mr-3 bg-honolulu_blue-500 font-medium rounded-full text-sm px-3 py-1.5 flex items-center  focus:outline-none">
+                            {showDateFilters && <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff">
+                              <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                            </svg>}
+                            {!showDateFilters && <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z"/></svg>}
+                            
+                            <span className="ml-1 max-md:hidden">{t('common.filters')}</span>
+                           </button>
 
                           </div>}
+
+                      
 
                                       <div onClick={() => {
 

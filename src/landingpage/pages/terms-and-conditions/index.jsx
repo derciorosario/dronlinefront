@@ -31,7 +31,7 @@ function Terms() {
   <div className="left"></div>
   <div className="right">
     <div className="section-item">
-      <span><strong>Última atualização:</strong> 1 de Dezembro de 2024</span>
+      <span><strong>{t('last_updated')}</strong> {t('last_updated_period')}</span>
       <br/><br/>
       
       <h2>{t('terms.t-1')}</h2>

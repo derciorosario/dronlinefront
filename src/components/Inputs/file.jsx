@@ -34,7 +34,8 @@ function FileInput({_upload,label,res,r}) {
       let f = event.target.files[0];
 
       if((f.size/1024/1024) > 2){
-          toast.error('common.only-files-less-than-2MB')
+          toast.error(t('common.only-files-less-than'))
+          return
       }
 
       const formData = new FormData();
@@ -101,7 +102,7 @@ function FileInput({_upload,label,res,r}) {
 
   return (
 
-    <div className="w-[500px]">
+    <div className="w-[500px] max-md:w-full">
       
        {label &&   <span class="block mb-2 text-sm text-gray-900" for={id}>{label} {r && <span className="text-red-500">*</span>}</span>}
         

@@ -107,6 +107,7 @@ function App() {
                          } items={data._dependents?.data || []}/>,
                          'ID',
                           t('form.full-name'),
+                          t('form.relationship'),
                           'Email',
                           t('form.main-contact'),
                           t('form.gender'),
@@ -130,6 +131,7 @@ function App() {
                                 </BaiscTable.Td>
                                 <BaiscTable.Td url={`/dependent/`+i.id}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/dependent/`+i.id}>{i.name}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/dependent/`+i.id}>{t('common.'+i.relationship)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/dependent/`+i.id}>{i.email}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/dependent/`+i.id}>{i.main_contact}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/dependent/`+i.id}>{i.gender ? t('common.'+i.gender) : '-'}</BaiscTable.Td>

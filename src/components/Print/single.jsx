@@ -18,8 +18,8 @@ export default function SinglePrint({item,setItem}) {
 
          if(item){
 
-          setDoctorSignature(item.doctor.signature_filename)
-          setDoctorStamp(item.doctor.stamp_filename)
+          setDoctorSignature(item.doctor?.signature_filename)
+          setDoctorStamp(item.doctor?.stamp_filename)
 
         
           if(!localStorage.getItem('print_single'))  {
@@ -29,8 +29,8 @@ export default function SinglePrint({item,setItem}) {
 
              
           preloadImages([
-            item.doctor.signature_filename,
-            item.doctor.stamp_filename,
+            item.doctor?.signature_filename,
+            item.doctor?.stamp_filename,
             JSON.parse(user?.app_settings?.[0]?.value).stamp_filename
           ].filter(i=>i))
 
@@ -171,9 +171,9 @@ export default function SinglePrint({item,setItem}) {
   
                           <div>
                             <div className="flex">
-                                <span className="min-w-[100px] flex border-black border-b border-dashed  items-center" >{item?.doctor?.name}</span>
+                                <span className="min-w-[100px] flex border-black border-b border-dashed  items-center" >{item?.doctor?.name || t('common.dronline-team')}</span>
                             </div>
-                            <img width={100} className="h-auto" src={doctorSignature}/>
+                            {item?.doctor && <img width={100} className="h-auto" src={doctorSignature}/>}
                           </div>
                          
                     </div>
@@ -181,9 +181,7 @@ export default function SinglePrint({item,setItem}) {
                       <span className="flex w-full justify-center my-5">Dr Online</span>
 
                       <div className="mt-2 flex justify-between">
-                          <img onLoad={()=>{
-
-                          }} width={100}  className="h-auto" src={doctorStamp}/>
+                          {item?.doctor && <img width={100}  className="h-auto" src={doctorStamp}/>}
                       </div>
                  </div>
 

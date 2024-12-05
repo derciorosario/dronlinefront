@@ -99,8 +99,6 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
 
 
 
-  console.log({_upload})
-  
   return (
 
 

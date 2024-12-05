@@ -68,14 +68,14 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
     let v=true
 
     if(
-       form.medical_prescription_items.some(i=>!i.name || !i.prescribed_quantity || !i.treatment_duration || !i.dosage || !i.pharmaceutical_form) 
+       form.medical_prescription_items.some(i=>(!i.name && !i.custom_name) || !i.prescribed_quantity || !i.treatment_duration || !i.dosage || !i.pharmaceutical_form) 
     ){
       v=false
     }
 
-
     setValid(v)
     console.log({form})
+
  },[form])
 
 
@@ -188,6 +188,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
       
     }
 
+    data.setUpdateTable(Math.random())
 
   }
 
@@ -209,8 +210,16 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
     setForm({...form,patient_id:id})
   }
 
+
+  console.log({form})
+
   const [chosenPatient,setChosenPatient]=useState({})
 
+  const [cannotEdit,setCannotEdit]=useState(false)
+
+  useEffect(()=>{
+      setCannotEdit(((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"))
+  })
   
   return (
      <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
@@ -225,7 +234,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                 <DefaultFormSkeleton/>
             </div>}
 
-            <FormLayout hideInputs={user?.role=="admin"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={id ? t('common.update-medical-prescription') : t('menu.add-medical-prescription')} verified_inputs={verified_inputs} form={form}
+            <FormLayout hideInputs={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={id ? t('common.update-medical-prescription') : t('menu.add-medical-prescription')} verified_inputs={verified_inputs} form={form}
           
             topBarContent={
                 (<button onClick={()=>setShowComment(true)} type="button" class={`text-white hidden ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
@@ -239,7 +248,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
 
 
             button={(
-               <div className={`mt-[40px] ${user?.role=="admin" ? 'hidden':''}`}>
+               <div className={`mt-[40px] ${(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient" ? 'hidden':''}`}>
                  <FormLayout.Button onClick={()=>{
                      SubmitForm()
                  }} valid={valid} loading={loading} label={itemToShow.action=="update" ? t('common.update') :t('common.send')}/>
@@ -269,17 +278,26 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
 
                            <div className="w-full">
 
-                           <div className={`w-[360px]`}>
-                                  <label  class="block text-sm  mb-2 mt-7 text-gray-900">
-                                      {t('form.medication-name')} <span className="text-red-500">*</span>
-                                  </label>
-                                  
-                                  <SearchInput canAdd={false} r={true} placeholder={t('form.medication-name')} id={i.name}  label={''} loaded={true} res={(id) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
-                                       return i.id==f.id ? {...f,name:id} : f
-                                   })})}  items={_medications.map(i=>({...i,id:i.ITEM}))}/>
+                           <div className={`w-[360px] ${cannotEdit ? 'opacity-40 pointer-events-none':''}`}>
+                                  <SearchInput canAdd={false} r={true} placeholder={t('form.medication-name')} id={i.name}  label={t('form.medication-name')} loaded={true}
+                                   res={(id) => {
+                                       setTimeout(()=>{
+                                        setForm(prev=>({...prev,medical_prescription_items:form.medical_prescription_items.map(f=>{
+                                          return i.id==f.id ? {...f,name:id,custom_name:null} : f
+                                         })}))
+                                       },200)
+                                   }}
+                                   disabled={cannotEdit}
+
+                                   defaultInput={i.custom_name}
+
+                                   inputRes={(input) => setForm(prev=>({...prev,medical_prescription_items:form.medical_prescription_items.map(f=>{
+                                    return i.id==f.id ? {...f,custom_name:input,name:null} : f
+                                   })}))}             
+                                   
+                                   items={_medications.map(i=>({...i,id:i.ITEM,name:`${i.name} (${i.active_substance})`}))}/>
 
                             </div>
-
                           </div>
 
                             <FormLayout.Input 
@@ -294,6 +312,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                               onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
                                  return i.id==f.id ? {...f,name:e.target.value} : f
                               })})} 
+                              disabled={cannotEdit}
                               custom_invalid_validation={verified_inputs.includes('medication-name'+i.id) && !i.medication_name}
                               field={'medication-name'+i.id} 
                               value={i.name}
@@ -309,6 +328,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                               onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
                                 return i.id==f.id ? {...f,dosage:e.target.value} : f
                               })})} 
+                              disabled={cannotEdit}
                               ignoreVilidation={true}
                               field={'dosage'+i.id} 
                               value={i.dosage}
@@ -325,6 +345,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                                 return i.id==f.id ? {...f,pharmaceutical_form:e.target.value} : f
                               })})}
                               ignoreVilidation={true}
+                              disabled={cannotEdit}
                               field={'pharmaceutical-form'+i.id} 
                               value={i.pharmaceutical_form}
                             />
@@ -335,6 +356,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                               width={'220px'}
                               ignoreVilidation={true}
                               r={true} 
+                              disabled={cannotEdit}
                               onBlur={() => setVerifiedInputs([...verified_inputs, 'treatment-duration'+i.id])} 
                               label={t('form.treatment-duration')} 
                               onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
@@ -354,6 +376,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                               onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
                                 return i.id==f.id ? {...f,prescribed_quantity:e.target.value.replace(/[^0-9]/g, '')} : f
                               })})} 
+                              disabled={cannotEdit}
                               field={'prescribed_quantity'+i.id} 
                               value={i.prescribed_quantity}
                             />
@@ -362,6 +385,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                               <FormLayout.Input 
                                 verified_inputs={verified_inputs} 
                                 form={form} 
+                                disabled={cannotEdit}
                                 ignoreVilidation={true}
                                 textarea={true}
                                 height={'100%'}
@@ -382,12 +406,12 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
                   </div>
 
                   <div className="w-full mt-5">
-                      <button onClick={()=>{
+                     {!cannotEdit && <button onClick={()=>{
                           setForm({...form,medical_prescription_items:[...form.medical_prescription_items,{...initial_form.medical_prescription_items[0],id:Math.random()}]})
                       }} type="button" class="text-white ml-4 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                         {t('common.add-form')}
-                      </button>
+                      </button>}
 
                   </div>
 

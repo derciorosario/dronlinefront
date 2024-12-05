@@ -43,11 +43,12 @@ function DoctorList({max,items,animate}) {
            {items.filter((i,_i)=>_i <= max || !max).map(item=>(
              <div className="flex w-[46%] max-md:w-full gap-2 flex-col max-lg:w-full">
     
-             <div style={{backgroundImage:`url(${item.profile_picture_filename})`,backgroundPosition:'top',backgroundSize:'cover'}} className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem]">
+              <div>
      
-              {<img style={{opacity:0}} src={item.profile_picture_filename} className="h-[300px] w-full object-cover"/> }
+              <div className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden">
+                  <img style={{opacity:0}} src={item.profile_picture_filename} className="h-[300px] w-full object-cover"/> 
+              </div>
      
-
 
                <div className="flex gap-3 bg-white py-4 px-1">
 

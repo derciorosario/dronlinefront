@@ -12,7 +12,7 @@ import AboutImage2 from '../../assets/images/slider/2.jpg'
 import AboutImage3 from '../../assets/images/slider/3.jpg'
 import AboutImage4 from '../../assets/images/slider/4.jpg'
 import AboutImage5 from '../../assets/images/slider/5.jpg'
-import ServicesImage from '../../assets/images/services.png'
+import ServicesImage from '../../assets/images/services.jpg'
 import DepartamentSilder from '../../components/Slider/departments';
 import Footer from '../../components/Footer';
 import AOS from 'aos';
@@ -110,8 +110,6 @@ function App() {
   }
 
   useEffect(()=>{
-
-
  
     setBenefitItems([
       t('common.platform-benefit-1'),
@@ -123,7 +121,6 @@ function App() {
       t('common.platform-benefit-7'),
       t('common.platform-benefit-8')
     ])
-
 
     setServiceItems([
       {name:t('common.service-1'),desc:t('common.service-1-desc')},
@@ -163,7 +160,55 @@ function App() {
 
                    <FindSpecialist/>
 
-                   <div className="w-full flex min-h-[400px] mt-[50px] relative mb-[70px]">
+                   <div className="w-full flex min-h-[400px] mt-[50px] relative mb-[70px] px-10">
+
+                  <div className="bg-[rgba(255,255,255,0.5)] hidden max-lg:flex z-10 absolute left-0 top-0 w-full h-full"></div>
+
+                  <img src={ServicesImage} className="h-full max-lg:absolute  object-cover max-lg:blur rounded-[1rem]"/>
+
+                  <div className="absolute max-lg:relative z-20 right-0 top-0 min-h-full w-full py-[100px] px-[80px]   max-md:pr-0">
+                            <p className="mb-3 text-[20px] text-white max-w-[300px]">{t('messages.services-sub')}</p>      
+                            <h2 className="mt-bold uppercase text-white mb-10 text-[25px] mb-10">{t('messages.services-title')}</h2>
+
+
+                            <div  className="flex flex-wrap gap-x-2 justify-between w-full">
+                              
+
+                                <div>
+                                    {benefitItems.filter((_,_i)=>_i<=3).map(i=>(
+                                      <div data-aos="fade-left" className="flex items-center mb-3">
+                                          <span className="w-[10px]  h-[10px] bg-white flex mr-3"></span>
+                                          <span className="flex-1 text-white">{i}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div>
+                                    {benefitItems.filter((_,_i)=>_i > 3).map(i=>(
+                                      <div data-aos="fade-left" className="flex items-center mb-3">
+                                          <span className="w-[10px] h-[10px] bg-white flex mr-3"></span>
+                                          <span className="flex-1 text-white">{i}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+
+                            </div>
+
+                                <button data-aos="fade-top" onClick={()=>{
+
+                                    navigate('/?contact')
+                                    let c=document.getElementById('contact');
+                                    c.scrollIntoView();
+
+                                }} className="px-5 py-4 mt-8 whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('common.contact-us')}</button>
+                            
+                           
+                  </div>
+                  </div>
+
+
+                  {/*** <div className="w-full flex min-h-[400px] mt-[50px] relative mb-[70px]">
 
                   <div className="bg-[rgba(255,255,255,0.5)] hidden max-lg:flex z-10 absolute left-0 top-0 w-full h-full"></div>
 
@@ -189,7 +234,7 @@ function App() {
                             
                             </div>
                   </div>
-                  </div>
+                  </div> */}
 
                 
                   
@@ -225,7 +270,11 @@ function App() {
                                     <p className="mb-3 text-[20px] text-honolulu_blue-300">{t('titles.about-us')}</p>
                                     <p className="text-gray-600">{t('messages.about-us')}</p>
                                     <div className="flex items-center mt-8 max-lg:flex-col">
-                                       <button className="px-5 max-lg:mb-4 max-lg:w-full py-4 whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('common.contact-us')}</button>
+                                       <button onClick={()=>{
+                                        navigate('/?contact')
+                                        let c=document.getElementById('contact');
+                                        c.scrollIntoView();
+                                       }} className="px-5 max-lg:mb-4 max-lg:w-full py-4 whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('common.contact-us')}</button>
                                        <div className="flex flex-col ml-3">
                                           <p  className="text-[13px] uppercase text-honolulu_blue-400 mt-bold">{t('common.central-info')}</p>
                                           <span className="text-[25px] font-medium text-honolulu_blue-500">+258 856462304</span>

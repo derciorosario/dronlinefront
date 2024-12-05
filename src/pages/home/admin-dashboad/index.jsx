@@ -278,9 +278,9 @@ export default function AdminDashboard({startDate,endDate,setStartDate,setEndDat
 
                                     body={topClients.filter(i=>i.role==selectedTab2).map((i,_i)=>(
                                         <BaiscTable.Tr>
-                                            <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.id}</BaiscTable.Td>
-                                            <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.name}</BaiscTable.Td>
-                                            <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.email}</BaiscTable.Td>
+                                            <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.id || '-'}</BaiscTable.Td>
+                                            <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.name || t('common.dronline-team')}</BaiscTable.Td>
+                                            <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.email || '-'}</BaiscTable.Td>
                                             <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.appointment_count}</BaiscTable.Td>
                                             <BaiscTable.Td url={`/${selectedTab2}/`+i.id}>{i.medical_specialties.map(c=>data._specialty_categories.filter(f=>f.id==c)[0]?.[i18next.language+"_name"]).filter(f=>f).join(', ')}</BaiscTable.Td>
                                         

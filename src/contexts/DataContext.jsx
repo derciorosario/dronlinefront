@@ -2,7 +2,7 @@ import { createContext, useContext,useState,useEffect, useRef} from 'react';
 import { useAuth } from './AuthContext';
 import html2pdf from 'html2pdf.js';
 import toast from 'react-hot-toast';
-let env="dev"
+let env="pro"
 import io from 'socket.io-client';
 import { t } from 'i18next';
 const socket = io(env!="dev" ? 'https://dronline-nodeserver.arsbeta-mz.com' : 'http://localhost:3001')
@@ -77,11 +77,9 @@ export const DataProvider = ({ children }) => {
     const  _showPopUp = (option,value) => {
         setTimeout(()=>document.addEventListener('click', handleOutsideClick),200)
         _setOpenPopUps({...initial_popups,[option]:value || true})
-      
     }
 
     function _search(search,array){
-
         function search_from_object(object,text){
              text=search
              let add=false
@@ -91,7 +89,6 @@ export const DataProvider = ({ children }) => {
                       add=true
                 }
              })
-    
              return add
         }
 

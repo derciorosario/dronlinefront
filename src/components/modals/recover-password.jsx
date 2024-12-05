@@ -67,7 +67,7 @@ function RecoverPasswordModal({form,show,status,setShow,loading,SubmitForm,setFo
 
 
                     {(status=="code_sent" && !loading) && <div class="text-sm font-medium text-gray-500 text-center">
-                        <a onClick={resendCode} href="#" class="text-blue-700   hover:underline">{t('common.resend-code')}</a>
+                        <a onClick={resendCode} href="#" class="text-honolulu_blue-500   hover:underline">{t('common.resend-code')}</a>
                     </div>}
                 </div>
             </div>

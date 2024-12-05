@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useAuth } from '../../contexts/AuthContext';
 import RecoverPasswordModal from '../../components/modals/recover-password';
+import ConfirmUserByEmailCode from '../../components/modals/confirm-by-email-code';
 
 axios.defaults.withCredentials = true;
 
@@ -24,13 +25,20 @@ function Login() {
   const [nextpage,setNextPage]=useState(null)
   const [searchParams, setSearchParams] = useSearchParams();
   const [showRecoverPasswordDialog,setShowRecoverPasswordDialog]=useState(false)
+  const [showConfirmCodeByEmailDialog,setShowConfirmCodeByEmailDialog]=useState(false)
   const [success,setSuccess] = useState(false)
   const [recoverPasswordStatus,setRecoverPasswordStatus]=useState('code_not_sent')
+  const [confirmCodeByEmailStatus,setConfirmCodeByEmailStatus]=useState('code_not_sent')
 
   const data = useData()
-
   const {user,check_user,setRecoveringPassword} = useAuth()
+
   useEffect(()=>{
+   if(new URLSearchParams(window.location.search).get('recover-password')){
+     setShowRecoverPasswordDialog(true)
+     return
+   }
+    
 
       if(user){
           data.setIsLoading(false)
@@ -153,6 +161,38 @@ function Login() {
 
 
 
+function codeVerificationErrors(e){
+  if(e.message==400){
+    setMessage(t('common.invalid-code'))
+  }else if(e.message==500){
+    setMessage(t('common.unexpected-error'))
+  }else  if(e.message=='Failed to fetch'){
+      setMessage(t('common.check-network'))
+  }else{
+      setMessage(t('common.unexpected-error'))
+  }
+}
+
+async function VerifyCodeForLogin() {
+  setMessage('')
+  setLoading(true)
+
+  try{
+      let response=await data.makeRequest({method:'post',url:`api/verify_code_for_login`,data:{...form}, error: ``},0);
+      localStorage.setItem('token',response.token)
+      toast.success(t('messages.successfully-loggedin'))
+      let url=data.getScheduledAppointment() || "/dashboard"
+      window.location.href=url
+  }catch(e){
+      setLoading(false)
+      data._scrollToSection('top')
+      codeVerificationErrors(e)
+  }
+
+
+}
+
+
 async function VerifyCode(){
   setMessage('')
   setLoading(true)
@@ -160,23 +200,16 @@ async function VerifyCode(){
   try{
       let response=await data.makeRequest({method:'post',url:`api/verify_code_for_password_recovery`,data:{...form}, error: ``},0);
       localStorage.setItem('token',response.token)
-      //toast.success(t('messages.updated-successfully'))
+
       setShowRecoverPasswordDialog(false)
       setRecoveringPassword(true)
       data._showPopUp('basic_popup','password-recovered')
+     
       
   }catch(e){
       setLoading(false)
       data._scrollToSection('top')
-      if(e.message==400){
-        setMessage(t('common.invalid-code'))
-      }else if(e.message==500){
-        setMessage(t('common.unexpected-error'))
-      }else  if(e.message=='Failed to fetch'){
-          setMessage(t('common.check-network'))
-      }else{
-          setMessage(t('common.unexpected-error'))
-      }
+      codeVerificationErrors(e)
   }
 
 }
@@ -198,10 +231,9 @@ async function SubmitForm(options){
 
       let response=await data.makeRequest({method:'post',url:`api/login`,data:{...form,email:options?.email || form.email,register_method:options.register_method || 'email'}, error: ``},0);
       console.log(response)
-      localStorage.setItem('token',response.token)
-      toast.success(t('messages.successfully-loggedin'))
-      let url=data.getScheduledAppointment() || "/dashboard"
-      window.location.href=url
+      setShowConfirmCodeByEmailDialog(true)
+      setConfirmCodeByEmailStatus('code_sent')
+      setLoading(false)
 
     }catch(e){
         console.log({e})
@@ -210,6 +242,9 @@ async function SubmitForm(options){
     }
 
   }
+
+
+  
 
 
 
@@ -232,7 +267,9 @@ async function SubmitForm(options){
 
       await data.makeRequest({method:'post',url:`api/send_verification_code`,data:{email:form.email,validate_existing_email:true}, error: ``},0);
       setLoading(false)
-      setRecoverPasswordStatus('code_sent')
+      if(showRecoverPasswordDialog){
+        setRecoverPasswordStatus('code_sent')
+      }
     }catch(e){
        data._scrollToSection('top')
        setLoading(false)
@@ -266,17 +303,26 @@ async function SubmitForm(options){
 <DefaultLayout hideAll={true} hide={true} removeMargin={true} hideSupportBadges={true}>
 
 <div className="flex">
-
-<RecoverPasswordModal status={recoverPasswordStatus} setStatus={setRecoverPasswordStatus} success={success} resendCode={SendCode}  message={message} setMessage={setMessage} setForm={setForm} loading={loading} SubmitForm={recoverPasswordSubmit} form={form} setShow={setShowRecoverPasswordDialog} show={showRecoverPasswordDialog}/>
+ <ConfirmUserByEmailCode status={confirmCodeByEmailStatus} setStatus={setConfirmCodeByEmailStatus} success={success} resendCode={SendCode}  message={message} setMessage={setMessage} setForm={setForm} loading={loading} SubmitForm={VerifyCodeForLogin} form={form} setShow={setShowConfirmCodeByEmailDialog} show={showConfirmCodeByEmailDialog}/>
+ <RecoverPasswordModal status={recoverPasswordStatus} setStatus={setRecoverPasswordStatus} success={success} resendCode={SendCode}  message={message} setMessage={setMessage} setForm={setForm} loading={loading} SubmitForm={recoverPasswordSubmit} form={form} setShow={setShowRecoverPasswordDialog} show={showRecoverPasswordDialog}/>
 
 <div className="login-left-bg flex-1 min-h-[100vh] cursor-pointer" onClick={()=>navigate('/')}></div>
 
 <div className="px-[90px] py-[40px] max-sm:px-[20px] flex max-lg:w-full  justify-center items-center">
  
 <div class="w-[400px]  max-lg:w-full">
-      <h2 className="font-medium text-[22px] mb-2">Login</h2>
+
+      <div className="flex items-center">
+          <h2 className="font-medium text-[22px] mb-2">Login</h2>
+         {user && <span onClick={() => {
+                            navigate('/dashboard')
+                        }} className="inline-flex ml-4 text-center text-white justify-center px-2 bg-honolulu_blue-400 py-1 text-[14px] rounded-full cursor-pointer hover:bg-honolulu_blue-500">
+                          {t('common.login-as',{name:user?.name})}
+          </span>}
+      </div>
+      
       <p className="text-gray-600 mb-4 text-[0.9rem]">{t('common.login-msg')}</p>
-      {!showRecoverPasswordDialog && <Messages  id={'_login_msg'} type={messageType} setMessage={setMessage} message={message}/>}
+      {!showRecoverPasswordDialog && !showConfirmCodeByEmailDialog && <Messages  id={'_login_msg'} type={messageType} setMessage={setMessage} message={message}/>}
       <div class="mb-5">
           <label for="email" class="block mb-2 text-sm font-medium">Email</label>
           <input onChange={(e)=>setForm({...form,email:e.target.value})} type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder=""/>

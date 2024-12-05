@@ -817,6 +817,7 @@ return (
         form={form} 
         r={true} 
         type={'date'}
+        min={new Date().toISOString().split('T')[0]}
         onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-date'])} 
         label={t('form.consultation-date')} 
         onChange={(e) => setForm({...form, consultation_date: e.target.value,scheduled_date:e.target.value,scheduled_weekday:weeks[new Date(e.target.value).getDay()]})} 
@@ -829,6 +830,7 @@ return (
         verified_inputs={verified_inputs} 
         form={form} 
         r={true} 
+        min={new Date().toISOString().split('T')[1].slice(0,5)}
         type={'time'}
         hide={form.type_of_care!="requested" || id}
         onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-hour'])} 
