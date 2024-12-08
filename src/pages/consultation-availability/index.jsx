@@ -335,7 +335,7 @@ function index() {
         <DefaultLayout disableUpdateButton={true} pageContent={!itemToEditLoaded ? {} : {title:t('menu.consultation-availability'),desc:id ? t('common.availability') +" - "+doctorInfo.name :  t('titles.consultation-availability')}}>
                
 
-            <AdditionalMessage  float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
+              <AdditionalMessage  float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
           
 
               <div className={`w-full h-[60vh] ${!itemToEditLoaded ? 'flex':'hidden'} items-center justify-center`}>
@@ -348,8 +348,8 @@ function index() {
 
                <div className={`${!itemToEditLoaded ? 'hidden':''} mb-10`}>
 
-               <div className="flex max-w-[900px] items-start gap-x-7 mt-5">
-                      <div className="">
+               <div className="flex max-lg:flex-col max-w-[900px] items-start gap-x-7 mt-5">
+                      <div className=" max-lg:mb-14">
                         <span className="text-[18px] mb-4 flex font-medium hidden">{t('common.date')}</span>
                         <span className="text-[18px] mb-4 flex font-medium hidden">{t('common.week-view')}</span>
                         
@@ -387,7 +387,6 @@ function index() {
                       <div>
 
                          <div className="flex mb-4">
-
                            <span className="text-[18px]  flex font-medium">{t('common.available-hours')}</span>
 
                            <div className="table" onClick={()=>setTimeout(()=>setSelectUrgentHours(!selectUrgentHours),100)}>
@@ -397,7 +396,6 @@ function index() {
                                 <span class="ms-3 text-sm font-medium text-gray-900">{t('common.set-urgent-hours')}</span>
                             </label>
                            </div>
-
                          </div>
 
 
@@ -423,28 +421,30 @@ function index() {
                                    
                                 </button>
 
-                                    <button onClick={()=>{
+                                <button onClick={()=>{
                                          let date=new Date(selectedDate?.$d).toISOString().split('T')[0]
                                          setSpecificList([...specificList,date])
                                     }} type="button" class={`text-white ${(specificList.includes(new Date(selectedDate?.$d).toISOString().split('T')[0]) || dateView != "calendar" )  ?  'hidden':''} bg-orange-400 underline focus:outline-none font-medium rounded-full text-sm px-5 py-1 text-center inline-flex items-center me-2`}> 
                                     <span className="">{t('common.set-specific-date')}</span>
-                                    </button>
+                                </button>
 
 
-                                    <button onClick={()=>{
+                                <button onClick={()=>{
                                          let date=new Date(selectedDate?.$d).toISOString().split('T')[0]
                                          setSpecificList(specificList.filter(i=>i!=date))
                                     }} type="button" class={`text-white ${(!specificList.includes(new Date(selectedDate?.$d).toISOString().split('T')[0]) || dateView != "calendar")  ?  'hidden':''} bg-honolulu_blue-500 underline focus:outline-none font-medium rounded-full text-sm px-5 py-1 text-center inline-flex items-center me-2`}> 
                                     <span className="">{t('common.set-normal-date')} ({t('common._weeks.'+weeks[new Date(selectedDate?.$d).getDay()].toLowerCase())})</span>
-                                    </button>
+                                </button>
 
 
                                 <button onClick={()=>{
                                    if(dateView=="calendar"){
-                                     let date=new Date(selectedDate?.$d).toISOString().split('T')[0]
-                                     setAvailableSpecific({...availableSpecific,[date]:[]})
-                                     setUrgentAvailableSpecific({...urgentAvailableSpecific,[date]:[]})
-                                     return
+
+                                        let date=new Date(selectedDate?.$d).toISOString().split('T')[0]
+                                        setAvailableSpecific({...availableSpecific,[date]:[]})
+                                        setUrgentAvailableSpecific({...urgentAvailableSpecific,[date]:[]})
+                                        return
+
                                    }
                                    setDays({...days,[selectedWeek]:[]})
                                    setUrgentDays({...urgent_days,[selectedWeek]:[]})
@@ -462,8 +462,6 @@ function index() {
                                  return (
                                     (
                                         <div onClick={()=>{
-
-
                                           if(specificList.includes(date) && dateView=="calendar"){
 
                                             if(selectUrgentHours){

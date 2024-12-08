@@ -82,6 +82,53 @@ iframe{
 
 
 
+/*
+@media print{
+   
+
+  ._print{
+    display: block;
+    opacity: 1 !important;
+  }
+  body {
+      padding: 0px;
+      margin: 0;
+      background: #fff;
+  }
+
+
+  body *{
+      visibility: hidden;
+      padding: 0;
+      border: 0 !important;
+      margin: 0;
+      
+  }
+
+  body ._print{
+      position: unset !important;
+  }
+
+  ._print{
+    visibility: visible;
+    opacity: 1 !important;
+    padding: 0;
+    border:0;
+    margin: 0;
+    border: 0 !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+ 
+  ._print *
+  {
+    visibility: visible;
+  }
+    
+}
+
+*/
 
 @media print {
   *::-webkit-scrollbar {
@@ -92,11 +139,12 @@ iframe{
     display: block;
     opacity: 1 !important;
     width: 100%;
-    min-height: auto;
     background: #fff;
-    z-index: 99; 
+    z-index: 99;
     margin: 0;
     padding: 0;
+    position: relative; /* Adjust as needed */
+    overflow: visible; 
   }
 
   body {
@@ -108,28 +156,24 @@ iframe{
 
   body * {
     visibility: hidden;
-    margin: 0;
-    padding: 0;
   }
 
   ._print, ._print * {
     visibility: visible;
   }
 
-  /* Ensure content flows across pages */
-  ._print {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    page-break-after: auto;
+  .page-break {
+    margin-top: 1rem;
+    display: block;
+    page-break-before: auto;
   }
 
-  /* Avoid clipping of child elements */
-  ._print > * {
-    page-break-inside: avoid;
+}
+@media all {
+  .page-break {
+    display: none;
   }
 }
-
-
 
 
 .css-ncbr6b{

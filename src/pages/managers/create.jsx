@@ -274,7 +274,7 @@ useEffect(()=>{
   
   return (
 
-     <DefaultLayout hide={ShowOnlyInputs} pageContent={{btn:!id ? null : {onClick:()=>{ 
+     <DefaultLayout hide={ShowOnlyInputs} disableUpdateButton={true} pageContent={{btn:!id ? null : {onClick:()=>{ 
          navigate('/add-managers')
      },text:t('menu.add-managers')}}}>
 

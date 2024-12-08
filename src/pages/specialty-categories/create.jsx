@@ -211,7 +211,7 @@ let initial_form={
 
 
   return (
-     <DefaultLayout  pageContent={{btn:!((user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.specialty_categories?.includes('create'))) && id) ? null : {onClick:()=>{
+     <DefaultLayout disableUpdateButton={true}  pageContent={{btn:!((user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.specialty_categories?.includes('create'))) && id) ? null : {onClick:()=>{
       navigate('/add-specialty-category')
     },text:t('menu.specialty-categories')}}}>
          

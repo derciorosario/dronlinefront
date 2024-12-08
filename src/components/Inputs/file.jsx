@@ -25,7 +25,7 @@ function FileInput({_upload,label,res,r}) {
 
  
     useEffect(()=>{
-             res(upload)
+         if(res)    res(upload)
     },[upload])
 
     const [file,setFile]=useState({name:_upload.filename?.replace(data.APP_BASE_URL+"/"+data.SERVER_FILE_STORAGE_PATH+"/",'')})
@@ -108,8 +108,8 @@ function FileInput({_upload,label,res,r}) {
         
         <div className={`flex items-center w-full text-sm h-[40px] text-gray-900 border overflow-hidden border-gray-300 rounded-[0.3rem]   bg-gray-50`}>
              
-             <label className={`h-full relative ${upload.uploading ? 'pointer-events-none':''}  hover:bg-gray-500 cursor-pointer bg-gray-400 text-white inline-flex justify-center items-center px-2`}>
-                 <span className={`${upload.uploading ? 'opacity-0':''}`}>{(file.name || _upload.filename) ? t('common.upload-another-file') : t('common.upload-file')}</span>
+             <label className={`h-full relative ${upload.uploading ? 'pointer-events-none':''} ${!res ? 'hidden':''}  hover:bg-gray-500 cursor-pointer bg-gray-400 text-white inline-flex justify-center items-center px-2`}>
+                 <span className={`${upload.uploading ? 'opacity-0':''} `}>{(file.name || _upload.filename) ? t('common.upload-another-file') : t('common.upload-file')}</span>
                  <input ref={fileInputRef_1} onChange={handleSubmit} type="file" hidden/>
                  {upload.uploading && <div className="flex items-center justify-center absolute w-full top-0 left-0 h-full">{`${upload.progress.toString().split('.')[0]}%`}</div>}
              </label>
@@ -130,7 +130,7 @@ function FileInput({_upload,label,res,r}) {
                           filename:'',
                           progress:0
                         })
-                    }} className="ml-1 hover:*:fill-red-500 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"  fill="#5f6368"><path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/></svg></span>
+                    }} className={`ml-1 hover:*:fill-red-500 cursor-pointer ${!res ? 'hidden':''}`}><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"  fill="#5f6368"><path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/></svg></span>
              </div>}
 
              </div>

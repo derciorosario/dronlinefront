@@ -8,6 +8,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import BasicPagination from '../../components/Pagination/basic';
 import BasicSearch from '../../components/Search/basic';
 import BasicFilter from '../../components/Filters/basic';
+import i18next from 'i18next';
 
 
 
@@ -45,6 +46,7 @@ function App() {
       name:t('common.type'),
       search:'',
       items:[
+        {name:t('common.general'),id:'general'},
         {name:t('common.about-us'),id:'about-us'},
         {name:t('common.our-services'),id:'our-services'},
         {name:t('common.support'),id:'support'},
@@ -128,8 +130,8 @@ function App() {
                           </BaiscTable.Td>
                           <BaiscTable.Td url={`/faq/`+i.id}>{i.id}</BaiscTable.Td>
                           <BaiscTable.Td url={`/faq/`+i.id}>{t('common.'+i.type)}</BaiscTable.Td>
-                          <BaiscTable.Td url={`/faq/`+i.id}>{i.title}</BaiscTable.Td>
-                          <BaiscTable.Td url={`/faq/`+i.id}>{i.content.slice(0,100)}</BaiscTable.Td>
+                          <BaiscTable.Td url={`/faq/`+i.id}>{i[`title_${i18next.language}`]}</BaiscTable.Td>
+                          <BaiscTable.Td url={`/faq/`+i.id}>{i[`content_${i18next.language}`].slice(0,100)}</BaiscTable.Td>
                           <BaiscTable.Td url={`/faq/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                           <BaiscTable.Td url={`/faq/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                      </BaiscTable.Tr>

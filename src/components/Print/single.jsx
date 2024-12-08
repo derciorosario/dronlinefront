@@ -141,11 +141,7 @@ export default function SinglePrint({item,setItem}) {
 
              
                     <div className="w-full py-10">
-
-                            
-                            
                                 {(item?.content || []).map(f=>(
-
                                     <>
                                         <PrintTable header={[t('common.name'),'']} body={f.filter(i=>i.name || i.value).map(i=>(
                                             <PrintTable.Tr>
@@ -155,11 +151,10 @@ export default function SinglePrint({item,setItem}) {
                                         ))}>
                                         </PrintTable>
                                         <span className="flex mb-4"></span>
+                                        <div className="page-break"></div>
                                     </>
 
                                   ))}
-                           
-
                             
 
                     </div>

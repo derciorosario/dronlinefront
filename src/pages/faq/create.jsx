@@ -15,7 +15,6 @@ function CreateFaq({ShowOnlyInputs}) {
   const [valid,setValid]=useState(false)
   const [messageType,setMessageType]=useState('red')
   const data = useData()
-  let from="faqs"
 
   const { id } = useParams()
   const {pathname} = useLocation()
@@ -47,9 +46,11 @@ function CreateFaq({ShowOnlyInputs}) {
 
   let initial_form={
     created_at:'',
-    content:'',
-    type:'',
-    title:''
+    content_en:'',
+    content_pt:'',
+    type:'general',
+    title_pt:'',
+    title_en:''
   }
 
 
@@ -66,8 +67,11 @@ function CreateFaq({ShowOnlyInputs}) {
 
 useEffect(()=>{
   let v=true
-  if(!form.content ||
-     !form.title ||
+  if(
+     !form.content_pt ||
+     !form.title_pt ||
+     !form.content_en ||
+     !form.title_en ||
      !form.type){
       v=false
     }
@@ -188,7 +192,7 @@ return (
 
 <div>   
 
- <DefaultLayout hide={ShowOnlyInputs} pageContent={{btn:!((user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.app_settings?.includes('create'))) && id) ? null : {onClick:(e)=>{
+ <DefaultLayout disableUpdateButton={true} hide={ShowOnlyInputs} pageContent={{btn:!((user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.app_settings?.includes('create'))) && id) ? null : {onClick:(e)=>{
       navigate('/add-faq')
      },text:t('common.add-faq')}}}>
 
@@ -234,24 +238,49 @@ return (
     form={form} 
     r={true} 
     textarea={true}
-    onBlur={() => setVerifiedInputs([...verified_inputs, 'title'])} 
-    label={t('common.title')} 
-    onChange={(e) => setForm({...form, title: e.target.value})} 
+    onBlur={() => setVerifiedInputs([...verified_inputs, 'title_pt'])} 
+    label={t('common.title') +" (pt)"} 
+    onChange={(e) => setForm({...form, title_pt: e.target.value})} 
     field={'title'} 
-    value={form.title}
+    value={form.title_pt}
   />
 
-
-<FormLayout.Input 
+  <FormLayout.Input 
     verified_inputs={verified_inputs} 
     form={form} 
     r={true} 
     textarea={true}
-    onBlur={() => setVerifiedInputs([...verified_inputs, 'content'])} 
-    label={t('common.content')} 
-    onChange={(e) => setForm({...form, content: e.target.value})} 
-    field={'content'} 
-    value={form.content}
+    onBlur={() => setVerifiedInputs([...verified_inputs, 'title_en'])} 
+    label={t('common.title') +" (en)"} 
+    onChange={(e) => setForm({...form, title_en: e.target.value})} 
+    field={'title'} 
+    value={form.title_en}
+  />
+
+
+  <FormLayout.Input 
+    verified_inputs={verified_inputs} 
+    form={form} 
+    r={true} 
+    textarea={true}
+    onBlur={() => setVerifiedInputs([...verified_inputs, 'content_pt'])} 
+    label={t('common.content') + " (pt)"} 
+    onChange={(e) => setForm({...form, content_pt: e.target.value})} 
+    field={'content_pt'} 
+    value={form.content_pt}
+  />
+
+
+  <FormLayout.Input 
+    verified_inputs={verified_inputs} 
+    form={form} 
+    r={true} 
+    textarea={true}
+    onBlur={() => setVerifiedInputs([...verified_inputs, 'content_en'])} 
+    label={t('common.content') + " (en)"} 
+    onChange={(e) => setForm({...form, content_en: e.target.value})} 
+    field={'content_en'} 
+    value={form.content_en}
   />
  
   </FormLayout>

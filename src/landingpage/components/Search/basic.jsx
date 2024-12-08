@@ -21,6 +21,7 @@ export default function BasicSearch({setSearch,setCurrentPage,show,from,total,se
             <input value={search} placeholder={t('common.search-name')} onChange={(e)=>{
                 setCurrentPage(1)
                 setSearch(e.target.value)
+                alert(from)
                 data.handleLoaded('remove',from)
             }} id="default-search" className="block w-full px-4 py-3 _pr-[120px] ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" required />
             <button type="submit" className="text-white hidden absolute end-1  bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">{t('common.search')}</button>

@@ -39,9 +39,11 @@ export default function WorkWithUsForm({}) {
         await data.makeRequest({method:'post',url:`api/doctor-requests`,data:{
          ...form
         }, error: ``},0)
+
        
         setLoading(false)
         setForm(initial_form)
+        handleUploadedFiles({key:'identification_number_filename',filename:''})
         toast.success(t('common.data-sent'))
         data._closeAllPopUps()
         setTimeout(()=>data._showPopUp('doctor_reuqest_sent'),200)
@@ -79,11 +81,11 @@ export default function WorkWithUsForm({}) {
       v=false
     }
     setValid(v)
-
+   console.log({form})
  },[form])
 
  function handleUploadedFiles(upload){
-    setForm({...form,[upload.key]:upload.filename})
+    setForm(prev=>({...prev,[upload.key]:upload.filename}))
   }
 
   function handleUploadeduploaded_files(upload){
@@ -202,7 +204,7 @@ export default function WorkWithUsForm({}) {
                             </div>
                               
                             <span onClick={()=>{
-                                setForm({...form,uploaded_files:form.uploaded_files.filter(f=>f.id!=i.id)})
+                                setTimeout(()=>setForm({...form,uploaded_files:form.uploaded_files.filter(f=>f.id!=i.id)}),100)
                               }} className="ml-2 cursor-pointer hover:opacity-65">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                                 </span>

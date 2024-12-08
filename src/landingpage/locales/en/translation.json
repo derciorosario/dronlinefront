@@ -419,6 +419,7 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+           "info":"Information",
            "consultations":"Consultations",
             "general":"General",
             "not-add-items":"Clear",

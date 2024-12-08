@@ -90,11 +90,13 @@ function Header({openSidebar,setOpenSidebar}) {
              <div className="flex items-center gap-x-3 max-xl:hidden">
                      {menu.map((i,_i)=>(
                           
-                          <div className={`mt-regular ${i.items && i.items?.length==0 ? 'hidden':''} transition-all ease-in delay-100  _menu_item  cursor-pointer h-[60px] items-center relative flex ml-4 border-b-2 border-b-transparent hover:border-b-honolulu_blue-300`}>
-                             <span onClick={()=>{
-                                                navigate(i.path)
-                                                goto()
-                              }} className="text-[14px]  uppercase">{i.name}</span> {i.items && <label>
+                          <div  onClick={()=>{
+                             if(!i.items){
+                              navigate(i.path)
+                              goto()
+                             }
+                          }} className={`mt-regular ${i.items && i.items?.length==0 ? 'hidden':''} transition-all ease-in delay-100  _menu_item  cursor-pointer h-[60px] items-center relative flex ml-4 border-b-2 border-b-transparent hover:border-b-honolulu_blue-300`}>
+                             <span className="text-[14px]  uppercase">{i.name}</span> {i.items && <label>
                                       <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M480-360 280-560h400L480-360Z"/></svg>
                             </label>}
 

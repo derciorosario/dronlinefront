@@ -150,7 +150,7 @@ function index() {
 
       }else if(currentPage=="login-and-password"){
 
-        if(!form.last_password || !form.new_password || !form.confirm_password){
+        if((!form.last_password && !(user?.register_method=="google" && user?.changed_password==false)) || !form.new_password || !form.confirm_password){
             v=false
         }
       }
@@ -222,6 +222,8 @@ async function updateSystemSettings() {
             last_password:form.last_password,
           }, error: ``},0);
 
+
+          setUser({...user,changed_password:true})
           
 
           setLoading(false)

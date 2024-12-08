@@ -32,7 +32,8 @@ export const DataProvider = ({ children }) => {
       reviews:false,
       cancel_appointment:false,
       mobile_menu:false,
-      lang:false
+      lang:false,
+      appointment_messages:false
     }
     let not_closing_popups=[
       'support_messages'

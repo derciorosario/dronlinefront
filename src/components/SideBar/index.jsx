@@ -280,7 +280,7 @@ function SideBar() {
     return (
       <>
       
-      <div className={`${openPopUps.length!=0 || data.paymentInfo?.type_of_care || (data.appointmentcancelationData?.consultation?.id && !data.appointmentcancelationData?.hide) || data.selectedDoctorToSchedule?.id ? 'hidden':'fixed'}  -bottom-2 md:hidden _mobile_menu  left-0 w-full bg-white flex items-center border-t border-t-gray-200 rounded-t-[15px] cursor-pointer shadow-sm`} style={{zIndex:999}}>
+      <div className={`${openPopUps.length!=0 || data.paymentInfo?.type_of_care || (data.appointmentcancelationData?.consultation?.id && !data.appointmentcancelationData?.hide) || data.selectedDoctorToSchedule?.id || data._openPopUps.appointment_messages ? 'hidden':'fixed'}  -bottom-2 md:hidden _mobile_menu  left-0 w-full bg-white flex items-center border-t border-t-gray-200 rounded-t-[15px] cursor-pointer shadow-sm`} style={{zIndex:999}}>
              <div className="w-full px-2 py-4 flex items-center justify-around relative">
 
                 {menuItems.filter(i=>i.showInMobile).map((item, index)=>(

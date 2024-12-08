@@ -61,6 +61,7 @@ export default function Doctors() {
     
     useEffect(()=>{
             data._get(required_data,{doctors:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+            data.handleLoaded('remove','doctors')
     },[pathname,search,currentPage,updateFilters])
 
 
@@ -103,7 +104,7 @@ export default function Doctors() {
            <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>
                 
             <div className="flex-1">
-                 <BasicSearch search={search} total={data._doctors?.total} from={'doctors'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+                <BasicSearch search={search} total={data._doctors?.total} from={'doctors'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
                  
                 {!data._loaded.includes('doctors') && <div className="flex-col flex justify-center items-center h-[200px]">
                         <Loader w={30} h={30}/>

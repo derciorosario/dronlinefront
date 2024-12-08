@@ -73,7 +73,7 @@ function App() {
                        <BaiscTable.Tr>
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.id}</BaiscTable.Td>
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.name}</BaiscTable.Td>
-                         <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.contact_code+" "+i.contact}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.main_contact_code+" "+i.contact}</BaiscTable.Td>
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.email}</BaiscTable.Td>
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.specialty}</BaiscTable.Td>
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.address}</BaiscTable.Td>

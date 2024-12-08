@@ -13,6 +13,7 @@ import Comment from '../../components/modals/comments'
 import Loader from '../../components/Loaders/loader'
 import AppointmentItems from '../../components/Cards/appointmentItems'
 import SearchInput from '../../components/Inputs/search'
+import FileInput from '../../components/Inputs/file'
 
 function AppointmentInvoice({ShowOnlyInputs}) {
 
@@ -32,7 +33,8 @@ function AppointmentInvoice({ShowOnlyInputs}) {
        
 
   let initial_form={
-    created_at:''
+    created_at:'',
+    uploaded_files:[]
   }
 
 
@@ -121,8 +123,52 @@ return (
   topBarContent
 
   bottomContent={(
-    <div></div>
-  )}
+    <div className="mt-5">
+
+    
+      <span className="flex mb-5 items-center hidden">{t('common.documents')}  <label className="text-[0.9rem] ml-2">({t('messages.add-atleast-one-document')})</label> <span className="text-red-500">*</span></span>
+      
+      
+      <div className="flex gap-x-4 flex-wrap gap-y-8 mb-3">
+          {form.id && <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}}  label={t('form.identification-doc')} r={true}/>}
+      </div>
+
+      
+      
+
+
+      <div className="flex gap-x-4 flex-wrap gap-y-4">
+          
+          {form.uploaded_files.map(i=>(
+
+              <div className="flex items-center">
+                
+                <div>
+                <input id={i.id} style={{borderBottom:'0'}} value={i.name} placeholder={t('common.document-name')} onChange={(e)=>{
+                     setForm({...form,uploaded_files:form.uploaded_files.map(f=>{
+                        if(f.id==i.id){
+                          return {...f,name:e.target.value}
+                        }else{
+                          return f
+                        }
+                     })})
+                }}   class={`bg-gray pointer-events-none   text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
+                
+                <FileInput  _upload={{key:i.id,filename:i.filename}}  r={true}/>
+               
+                </div>
+                 
+
+                </div>
+          ))}
+          
+      </div>
+
+
+
+
+    </div>
+)}
   
 
   button={(

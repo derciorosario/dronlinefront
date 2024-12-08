@@ -71,7 +71,7 @@ function Footer({serviceItems}) {
                         <span onClick={()=>{
                           let c=document.getElementById('services');
                           c.scrollIntoView();
-                        }} className="text-white opacity-90  mt-light cursor-pointer hover:opacity-100">{i.name}</span>
+                        }} className="text-white opacity-90  mt-light">{i.name}</span>
                         
                       ))}
                     </div>

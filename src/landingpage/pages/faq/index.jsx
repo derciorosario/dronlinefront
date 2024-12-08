@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import Footer from '../../components/Footer';
 import Loader from '../../components/Loaders/loader';
+import i18next from 'i18next';
 
 function Faq() {
   const data=useHomeData()
@@ -36,11 +37,11 @@ function Faq() {
             <div class="container px-6 py-12 mx-auto">
                 <h1 class="text-2xl font-semibold text-gray-800 lg:text-3xl">{t('common.faq')}</h1>
 
-                <div className="flex items-center mt-4">
+                <div className="flex items-center mt-4 max-md:flex-wrap max-md:gap-y-2">
                     {pages.map((i,_i)=>(
                         <div onClick={()=>{
                             setCurrentPage(i)
-                        }} className={`px-3 p-2 text-white mr-2 cursor-pointer ${currentPage==i ? 'bg-honolulu_blue-300':'bg-gray-300'} hover:bg-honolulu_blue-500 rounded-full`}>
+                        }} className={`px-3 max-md:px-2  max-md:text-[14px] p-2 text-white mr-2 cursor-pointer ${currentPage==i ? 'bg-honolulu_blue-300':'bg-gray-300'} hover:bg-honolulu_blue-500 rounded-full`}>
                                 {i=="support" ? t('common._support') : t('common.'+i)}
                         </div>
                     ))}
@@ -57,9 +58,9 @@ function Faq() {
                             </div>
 
                             <div>
-                                <h1 class="text-xl font-semibold text-gray-700">{i.title}</h1>
+                                <h1 class="text-xl font-semibold text-gray-700">{i[`title_${i18next.language}`]}</h1>
                                 <p class="mt-2 text-sm text-gray-500">
-                                    {i.content}
+                                    {i[`content_${i18next.language}`]}
                                 </p>
                             </div>
                     </div>

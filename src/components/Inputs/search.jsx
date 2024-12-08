@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react'
 
 function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,inputRes,defaultInput}) {
 
-
   let input_id=Math.random().toString().replace('.','')
 
   const [input,setInput]=useState(defaultInput || '')
@@ -15,11 +14,13 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
   
 
   useEffect(()=>{
+
     //setSearched(items.filter(i=>(i.name)?.toLowerCase()?.includes(input.toLowerCase())))
     const filteredItems = items.filter((i) =>
         i.name?.toLowerCase()?.includes(input.toLowerCase())
     );
     setSearched(filteredItems);
+
   },[items,input])
 
   function handleOutsideClick(event){
@@ -28,11 +29,6 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
         setShowOptions(false)
     }
  }
-
- console.log({defaultInput})
-
-
-
 
   // Calculate the items to display on the current page
   const startIndex = (currentPage - 1) * itemsPerPage;

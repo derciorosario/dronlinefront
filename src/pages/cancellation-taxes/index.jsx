@@ -62,7 +62,7 @@ function App() {
                       }
 
 
-                       body={data._cancellation_taxes.map((i,_i)=>(
+                       body={data._cancellation_taxes.filter(i=>i.payment_method!="insurance").map((i,_i)=>(
                         
                               <BaiscTable.Tr>
 

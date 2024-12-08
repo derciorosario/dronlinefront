@@ -24,10 +24,9 @@ function ChatMessages({messages,hide}) {
     {i.filename ? <ChatFileMessage endContent={endContent} comment={i} hide={hide}/> : (
          <>
     {i.is_subject ?  <div className="mb-3">
-
       <div className={`w-full bg-gray-200 flex flex-col rounded-[0.6rem] p-2 mb-2 ${hide ? 'opacity-0':''}`}>
         <span>{t('common.subject')}</span>
-        <p className="text-[14px] text-gray-500">{i.message}</p>
+        <p className="text-[14px] text-gray-500 break-all flex max-w-full">{i.message}</p>
      </div>
      <div className="justify-start items-center inline-flex">
       {!i.not_sent && <h3 className="text-gray-500 text-xs font-normal leading-4 py-1">{i.created_at.split('T')[0]} {i.created_at.split('T')[1].slice(0,5)}</h3>}
@@ -44,7 +43,7 @@ function ChatMessages({messages,hide}) {
     <div className="grid mb-2">
       <h5 className="text-right text-gray-900 text-sm font-semibold leading-snug pb-1">{t('common.you')}</h5>
       <div className="px-3 py-2 bg-honolulu_blue-500 rounded">
-         <h2 className="text-white text-sm font-normal leading-snug">{i.comment || i.message}</h2>
+         <h2 className="text-white text-sm font-normal leading-snug  break-all flex max-w-full">{i.comment || i.message}</h2>
       </div>
       <div className="justify-start items-center inline-flex">
       {!i.not_sent && <h3 className="text-gray-500 text-xs font-normal leading-4 py-1">{i.created_at.split('T')[0]} {i.created_at.split('T')[1].slice(0,5)}</h3>}
@@ -55,8 +54,7 @@ function ChatMessages({messages,hide}) {
       </div>
       </div>
       </div>
-          <div className="border hidden bg-gray-200 rounded-full w-[40px] h-[40px] flex items-center justify-center">{user?.name?.charAt()?.toLocaleUpperCase()}</div>
-    
+          <div className="border hidden bg-gray-200 rounded-full w-[40px] h-[210px] flex items-center justify-center">{user?.name?.charAt()?.toLocaleUpperCase()}</div>
       </div>
        {(i.last_ended!=0 && i.last_ended) && endContent(i)}
       </div> : 
@@ -67,7 +65,7 @@ function ChatMessages({messages,hide}) {
         <h5 className={`${i.highlight ? 'text-honolulu_blue-400':'text-gray-900'} text-sm font-semibold leading-snug pb-1`}>{i.costum_name || i.user?.name}</h5>
         <div className="w-max grid">
           <div className="px-3.5 py-2 bg-gray-100 rounded justify-start  items-center gap-3 inline-flex">
-            <h5 className="text-gray-900 text-sm font-normal leading-snug">{i.comment || i.message}</h5>
+            <h5 className="text-gray-900 text-sm font-normal leading-snug break-all flex max-w-[210px]">{i.comment || i.message}</h5>
           </div>
           <div className="justify-end items-center inline-flex mb-2.5">
             <h6 className="text-gray-500 text-xs font-normal leading-4 py-1">{i.created_at.split('T')[0]} {i.created_at.split('T')[1].slice(0,5)}</h6>
@@ -81,7 +79,6 @@ function ChatMessages({messages,hide}) {
          </>
     )}
 </>
-
 ))}
      </>
   )

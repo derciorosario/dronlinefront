@@ -417,6 +417,7 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "info":"Informação",
         "consultations":"Consultas",
         "general":"Geral",
         "not-add-items":"Limpar",

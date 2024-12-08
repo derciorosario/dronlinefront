@@ -123,20 +123,23 @@ const [showChooseFile,setShowChooseFile]=useState('')
     
   return (
 
-    <div id="authentication-modal" tabindex="-1" aria-hidden="true" class={`bg-[rgba(0,0,0,0.4)] overflow-y-auto overflow-x-hidden ${show ? '' :'translate-y-10 opacity-0 pointer-events-none'} transition-all delay-75 ease-linear flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
+    <div id="authentication-modal" tabindex="-1" aria-hidden="true" class={`bg-[rgba(0,0,0,0.4)] _appointment_messages overflow-y-auto overflow-x-hidden ${show ? '' :'translate-y-10 opacity-0 pointer-events-none'} transition-all delay-75 ease-linear flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
     
     <div class="relative p-4 w-full max-w-md max-h-full">
    
         <div className="w-full border-b px-3 pb-2 flex justify-between items-center bg-white  rounded-t-lg">
              <span>Chat</span>
-             <span  onClick={()=>setShow(false)} className="p-3 cursor-pointer hover:opacity-55"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span>
+             <span  onClick={()=>{
+              setShow(false)
+              data._closeAllPopUps()
+             }} className="p-3 cursor-pointer hover:opacity-55"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span>
              
         </div>
       
         <div id="scroll_comment" class="relative  shadow h-[80vh] bg-white overflow-x-hidden  overflow-y-scroll py-3 px-2">
            
    
-    <div className="w-[400px] relative">
+    <div className="w-[400px] relative max-md:w-full">
 
     <ChatFile res={handleUploadeduploaded_files} show={showChooseFile} setShow={setShowChooseFile}/>
 

@@ -173,16 +173,20 @@ function codeVerificationErrors(e){
   }
 }
 
+
+function LoginOk(response){
+      localStorage.setItem('token',response.token)
+      toast.success(t('messages.successfully-loggedin'))
+      let url=data.getScheduledAppointment() || "/dashboard"
+      window.location.href=url
+}
 async function VerifyCodeForLogin() {
   setMessage('')
   setLoading(true)
 
   try{
       let response=await data.makeRequest({method:'post',url:`api/verify_code_for_login`,data:{...form}, error: ``},0);
-      localStorage.setItem('token',response.token)
-      toast.success(t('messages.successfully-loggedin'))
-      let url=data.getScheduledAppointment() || "/dashboard"
-      window.location.href=url
+      LoginOk(response)
   }catch(e){
       setLoading(false)
       data._scrollToSection('top')
@@ -231,6 +235,11 @@ async function SubmitForm(options){
 
       let response=await data.makeRequest({method:'post',url:`api/login`,data:{...form,email:options?.email || form.email,register_method:options.register_method || 'email'}, error: ``},0);
       console.log(response)
+
+      if(response?.token){
+        LoginOk(response)
+        return
+      }
       setShowConfirmCodeByEmailDialog(true)
       setConfirmCodeByEmailStatus('code_sent')
       setLoading(false)

@@ -160,51 +160,52 @@ function App() {
 
                    <FindSpecialist/>
 
-                   <div className="w-full flex min-h-[400px] mt-[50px] relative mb-[70px] px-10">
+                  <div className="w-full flex min-h-[400px] mt-[50px] relative mb-[70px] px-10 overflow-hidden">
+          
+                        <div className="relative max-lg:absolute  max-lg:h-full left-0 top-0 rounded-[1rem] overflow-hidden">
+                          <div className="bg-[rgba(0,0,0,0.05)]  max-lg:flex z-10 absolute left-0 top-0 w-full h-full"></div>
+                          <img src={ServicesImage} className="h-full   left-0 top-0  object-cover max-lg:blur"/>
+                        </div>
 
-                  <div className="bg-[rgba(255,255,255,0.5)] hidden max-lg:flex z-10 absolute left-0 top-0 w-full h-full"></div>
-
-                  <img src={ServicesImage} className="h-full max-lg:absolute  object-cover max-lg:blur rounded-[1rem]"/>
-
-                  <div className="absolute max-lg:relative z-20 right-0 top-0 min-h-full w-full py-[100px] px-[80px]   max-md:pr-0">
-                            <p className="mb-3 text-[20px] text-white max-w-[300px]">{t('messages.services-sub')}</p>      
-                            <h2 className="mt-bold uppercase text-white mb-10 text-[25px] mb-10">{t('messages.services-title')}</h2>
-
-
-                            <div  className="flex flex-wrap gap-x-2 justify-between w-full">
-                              
-
-                                <div>
-                                    {benefitItems.filter((_,_i)=>_i<=3).map(i=>(
-                                      <div data-aos="fade-left" className="flex items-center mb-3">
-                                          <span className="w-[10px]  h-[10px] bg-white flex mr-3"></span>
-                                          <span className="flex-1 text-white">{i}</span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div>
-                                    {benefitItems.filter((_,_i)=>_i > 3).map(i=>(
-                                      <div data-aos="fade-left" className="flex items-center mb-3">
-                                          <span className="w-[10px] h-[10px] bg-white flex mr-3"></span>
-                                          <span className="flex-1 text-white">{i}</span>
-                                        </div>
-                                    ))}
-                                </div>
+                        <div className="absolute z-20 max-lg:relative right-0 top-0 min-h-full w-full py-[100px] md:px-[80px]   max-md:pr-0">
+                                  <p data-aos="fade-left" className="mb-3 text-[20px] text-white max-w-[300px]">{t('messages.services-sub')}</p>      
+                                  <h2 data-aos="fade-left" className="mt-bold uppercase text-white mb-10 text-[25px] mb-10">{t('messages.services-title')}</h2>
 
 
-                            </div>
+                                  <div  className="flex flex-wrap gap-x-2 justify-between w-full">
+                                    
 
-                                <button data-aos="fade-top" onClick={()=>{
+                                      <div>
+                                          {benefitItems.filter((_,_i)=>_i<=3).map(i=>(
+                                            <div data-aos="fade-left" className="flex items-center mb-3">
+                                                <span className="w-[10px]  h-[10px] bg-white flex mr-3"></span>
+                                                <span className="flex-1 text-white">{i}</span>
+                                              </div>
+                                          ))}
+                                      </div>
 
-                                    navigate('/?contact')
-                                    let c=document.getElementById('contact');
-                                    c.scrollIntoView();
+                                      <div>
+                                          {benefitItems.filter((_,_i)=>_i > 3).map(i=>(
+                                            <div data-aos="fade-left" className="flex items-center mb-3">
+                                                <span className="w-[10px] h-[10px] bg-white flex mr-3"></span>
+                                                <span className="flex-1 text-white">{i}</span>
+                                              </div>
+                                          ))}
+                                      </div>
 
-                                }} className="px-5 py-4 mt-8 whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('common.contact-us')}</button>
-                            
-                           
-                  </div>
+
+                                  </div>
+
+                                      <button data-aos="fade-top" onClick={()=>{
+
+                                          navigate('/?contact')
+                                          let c=document.getElementById('contact');
+                                          c.scrollIntoView();
+
+                                      }} className="px-5 py-4 mt-8 whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('common.contact-us')}</button>
+                                  
+                                
+                        </div>
                   </div>
 
 
@@ -342,15 +343,15 @@ function App() {
                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"  fill="#fff"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>
                    </div>
 
-                  {showFeedback && <div id="feedback"  style={{transform:'rotate(90deg) translateY(-100%)'}} className={`top-[50%] _feedback hover:bg-honolulu_blue-500  items-center px-2 py-2  right-0 text-white flex cursor-pointer ${data.scrollY < 1000 ? 'opacity-0 translate-y-[-300%]':''} ease-in transition-all delay-100 fixed z-50  rounded-[0.3rem]  items-center  bg-honolulu_blue-400  shadow-sm`}>       
+                  {showFeedback && <div id="feedback"  style={{transform:'rotate(90deg) translateY(-100%)'}} className={`top-[50%] _feedback hover:bg-honolulu_blue-500  items-center   right-0 text-white flex cursor-pointer ${data.scrollY < 1000 ? 'opacity-0 translate-y-[-300%]':''} ease-in transition-all delay-100 fixed z-50  rounded-[0.3rem]  items-center  bg-honolulu_blue-400  shadow-sm`}>       
                      
                        <div onClick={()=>{
                             setShowFeedback(false)
-                        }} className="rounded-[0.2rem] p-[1px] bg-[rgba(255,255,255,0.2)]  mr-2">
+                        }} className="rounded-[0.2rem] translate-x-[10px] p-[1px] bg-[rgba(255,255,255,0.2)]  mr-2">
                          <svg className="opacity-65 hover:opacity-100" xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960"  fill="#fff"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                        </div>
 
-                       <span onClick={()=>{
+                       <span className="px-2 py-2" onClick={()=>{
                             data._showPopUp('feedback')
                        }}>Feedback</span>
 

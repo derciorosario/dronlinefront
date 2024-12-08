@@ -8,6 +8,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import BasicPagination from '../../components/Pagination/basic';
 import i18next from 'i18next';
+import BasicFilter from '../../components/Filters/basic';
+import BasicSearch from '../../components/Search/basic';
 
 
 
@@ -27,6 +29,35 @@ function App() {
   const [currentPage,setCurrentPage]=useState(1)
   const [updateFilters,setUpdateFilters]=useState(null)
   const [search,setSearch]=useState('')
+
+ 
+  const [filterOptions,setFilterOptions]=useState([
+
+    {
+      open:false,
+      field:'specialty_categories',
+      name:t('common.specialty'),
+      t_name:'specialists',
+      search:'',
+      items:[],
+      param:'medical_specialty',
+      fetchable:true,
+      selected_ids:[],
+      default_ids:[]
+      
+    },
+    /*{
+      open:false,
+      field:'all_doctors',
+      name:t('common.doctor'),
+      search:'',
+      items:[],
+      param:'user_id',
+      fetchable:true,
+      selected_ids:[],
+      default_ids:[]
+    }*/
+  ])
 
 
   function getIcon(name,active){
@@ -99,7 +130,7 @@ function App() {
 
   useEffect(()=>{ 
     if(!user) return
-    data._get(required_data,{appointments:{name:search,page:currentPage,status:selectedTab}}) 
+    data._get(required_data,{appointments:{name:search,page:currentPage,status:selectedTab,...data.getParamsFromFilters(filterOptions)}}) 
   },[user,pathname,search,currentPage,updateFilters])
 
 
@@ -113,7 +144,7 @@ function App() {
          data.handleLoaded('remove','appointments')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{appointments:{name:search,page:1,status:selectedTab}}) 
+         data._get(required_data,{appointments:{name:search,page:1,status:selectedTab,...data.getParamsFromFilters(filterOptions)}}) 
 
     }
  },[data.updateTable])
@@ -158,9 +189,20 @@ function App() {
                    </div>
                  ))}
              </div>
-             
 
-             <BaiscTable canAdd={user?.role=="patient"} addPath={'/add-appointments'} loaded={data._loaded.includes('appointments') && !loading} header={[
+             <div className="flex">
+
+             <BasicFilter  setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
+               
+
+             <div className="flex-1">
+
+             <BasicSearch total={data._appointments?.total} from={'appointments'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+            
+              <div className="flex w-full relative">
+                <div className="absolute w-full">
+
+               <BaiscTable canAdd={user?.role=="patient"} addPath={'/add-appointments'} loaded={data._loaded.includes('appointments') && !loading} header={[
                         
                          /***<BaiscTable.MainActions options={{
                             deleteFunction:'default',
@@ -254,7 +296,10 @@ function App() {
                       
                     />
               <BasicPagination show={data._loaded.includes('appointments')} from={'appointments'} setCurrentPage={setCurrentPage} total={data._appointments?.appointments?.total}  current={data._appointments?.appointments?.current_page} last={data._appointments?.appointments?.last_page}/>
-    
+              </div>
+              </div>
+            </div>
+            </div>
 
          </DefaultLayout>
   );

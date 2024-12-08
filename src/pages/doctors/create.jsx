@@ -277,7 +277,7 @@ function addPatients({ShowOnlyInputs}) {
 
   return (
 
-     <DefaultLayout hide={ShowOnlyInputs} pageContent={{btn:!((user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor?.includes('create'))) && id) ? null : {onClick:(e)=>{
+     <DefaultLayout hide={ShowOnlyInputs} disableUpdateButton={true} pageContent={{btn:!((user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor?.includes('create'))) && id) ? null : {onClick:(e)=>{
       navigate('/add-doctors')
      },text:t('menu.add-doctors')}}}>
 
