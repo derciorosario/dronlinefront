@@ -79,10 +79,10 @@ function globalOnclick(id){
               <BasicSearch   printAction={()=>{
 
                   let content = [];
-
                   (data._medical_prescriptions?.data || []).forEach(i=>{
+                    content.push([{name:t('form.medication-name'),value:i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name} - ${_medications.filter(f=>f.ITEM==i.name)?.[0]?.active_substance}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')}])
                     i.medical_prescription_items.forEach(f=>{
-                      content.push([{name:t('form.medication-name'),value:f.name},
+                       content.push([
                        {name:t('form.dosage'),value:f.dosage},
                        {name:t('form.prescribed-quantity'),value:f.prescribed_quantity},
                        {name:t('form.treatment-duration'),value:f.treatment_duration},
@@ -127,23 +127,19 @@ function globalOnclick(id){
                                   
                                    </BaiscTable.Td>
                                     <BaiscTable.Td onClick={()=>{
-                                        //setMedicalPrescriptionPrintContent(i)
-                                        //data.setMedicalPrescriptionPrintContent(i)
-
-                     
                                         data.setSinglePrintContent({
                                           patient: itemToShow.appointment.patient,
                                           doctor:itemToShow.appointment.doctor,
                                           title: t('menu.medical-prescription'),
+
                                           content: 
                                              i.medical_prescription_items.map(f=>[
-                                                {name:t('form.medication-name'),value:f.name},
+                                                {name:t('form.medication-name'),value:i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name} - ${_medications.filter(f=>f.ITEM==i.name)?.[0]?.active_substance}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')},
                                                 {name:t('form.dosage'),value:f.dosage},
                                                 {name:t('form.prescribed-quantity'),value:f.prescribed_quantity},
                                                 {name:t('form.treatment-duration'),value:f.treatment_duration},
                                                 {name:t('form.pharmaceutical-form'),value:f.pharmaceutical_form}
                                              ])
-                                          
                                         })
 
                              

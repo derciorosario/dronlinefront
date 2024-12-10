@@ -90,6 +90,8 @@ function addPatients({ShowOnlyInputs}) {
        ((!form.passport_number || !form.passport_number_filename) && form.identification_document=="passport_number") ||
        ((!form.identification_number || !form.identification_number_filename) && form.identification_document=="identification_number") ||
        ((!form.birth_certificate || !form.birth_certificate_filename) && form.identification_document=="birth_certificate") ||
+
+       (form.identification_document=="identification_number" && (!form.date_of_issuance_of_the_identity_card || !form.place_of_issuance_of_the_identity_card)) ||
       
        !form.marital_status ||
        !form.country_of_residence || 
@@ -122,6 +124,7 @@ function addPatients({ShowOnlyInputs}) {
  
  useEffect(()=>{
   if(!user || !id){
+      setForm(initial_form)
       return
   }
 

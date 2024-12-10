@@ -163,11 +163,11 @@ function App() {
                   <div className="w-full flex min-h-[400px] mt-[50px] relative mb-[70px] px-10 overflow-hidden">
           
                         <div className="relative max-lg:absolute  max-lg:h-full left-0 top-0 rounded-[1rem] overflow-hidden">
-                          <div className="bg-[rgba(0,0,0,0.05)]  max-lg:flex z-10 absolute left-0 top-0 w-full h-full"></div>
+                          <div className="bg-[rgba(0,0,0,0.05)]  max-lg:flex absolute left-0 top-0 w-full h-full"></div>
                           <img src={ServicesImage} className="h-full   left-0 top-0  object-cover max-lg:blur"/>
                         </div>
 
-                        <div className="absolute z-20 max-lg:relative right-0 top-0 min-h-full w-full py-[100px] md:px-[80px]   max-md:pr-0">
+                        <div className="absolute max-lg:relative right-0 top-0 min-h-full w-full py-[100px] md:px-[80px]   max-md:pr-0">
                                   <p data-aos="fade-left" className="mb-3 text-[20px] text-white max-w-[300px]">{t('messages.services-sub')}</p>      
                                   <h2 data-aos="fade-left" className="mt-bold uppercase text-white mb-10 text-[25px] mb-10">{t('messages.services-title')}</h2>
 

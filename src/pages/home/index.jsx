@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useAuth } from '../../contexts/AuthContext';
-import DashboardCard from '../../components/Cards/dashboardCard';
 import AdminDashboard from './admin-dashboad';
 import DoctorDashboard from './doctor-dashboard';
 import PatientDashboard from './patient-dashboard';
+import SinglePrint from '../../components/Print/single';
 
 
 
@@ -24,7 +24,11 @@ function App() {
  
   return (
 
-          <DefaultLayout showDates={true}  setStartDate={setStartDate} startDate={startDate} endDate={endDate} setEndDate={setEndDate} pageContent={{title:t('common.welcome'),btn:{onClick:user?.role=="patient" ? (e)=>{
+          <div>
+               <div className=" absolute left-0 top-0">
+                <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
+               </div>
+              <DefaultLayout showDates={true}  setStartDate={setStartDate} startDate={startDate} endDate={endDate} setEndDate={setEndDate} pageContent={{title:t('common.welcome'),btn:{onClick:user?.role=="patient" ? (e)=>{
                 if(!user?.data?.date_of_birth){
                   data._showPopUp('basic_popup','conclude_patient_info')
                 }else{
@@ -40,6 +44,9 @@ function App() {
           </div>
 
          </DefaultLayout>
+          </div>
+
+      
   );
 }
 

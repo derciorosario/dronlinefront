@@ -72,6 +72,12 @@
     "p-3":"É importante destacar que consultas de urgência não são reembolsáveis.",
     "p-4":"Se por algum motivo por sua responsabilidade não conseguir realizar a vídeo consulta sem que tenha manifestado o interesse em cancelar, a Dr. Online não se procederá à devolução do valor pago."
   },
+  "medical-certification-t-1":"Eu, {{doctor_name}}, Médica prestando serviço em Dr. Online, declaro por minha honra que {{patient_name}}, Titular do B. de Identidade n.° {{identification_number}}, passado pelo arquivo de identidade de {{place_of_issuance_of_the_identity_card}}, em {{date_of_issuance_of_the_identity_card}}, foi hoje por mim observado na consulta (ou Serviço) de {{medical_specialty}}, tendo constatado que estará provavelmente impossibilitado de comparecer ao serviço até ao dia {{date_of_leave}}.",
+  "medical-certification-t-2":"A pedido expresso do doente, declaro que ele sofre de {{disease}}.",
+  "medical-certification-t-3":"Reconheço a assinatura supra como sendo de uma entidade autorizada a emitir este atestado.",
+  "medical-certification-t-4":"O Chefe da Secretaria",
+  "medical-certification-t-5":"Este atestado só é válido se a assinatura do Chefe da Secretaria for feita sobre estampilha fiscal de 15,00MT e autenticada com o selo branco em uso na Unidade Sanitária.",
+
   "menu": {
         "home": "Home",
         "more":"Mais",
@@ -88,6 +94,10 @@
         "all-appointments":"Marcações",
         "add-appointments":"Agendar consulta",
         "recent-exams":"Exames recentes",
+        "medical-certificate":"Atestado Médico",
+        "all-medical-certificate": "Todos atestados médicos",
+        "add-medical-certificate": "Adicionar atestado médico",
+        "recent-medical-certificates": "Atestados médicos recentes",
         "recent-medical-prescriptions": "Prescrições médicas recentes",
         "recent-clinical-diary":"Diários clínicos recentes",
         "medical-prescription": "Prescrição Médica",
@@ -177,11 +187,14 @@
         "specialty-categories":"Gerencie categorias de especialidades dos medicos",
         "clinical-diary":"Diário Clínico do paciente",
         "exams":"Exames do paciente",
+        "medical-certificates":"Atestado Médico do paciente",
         "medical-prescriptions":"Prescrição Médica do paciente",
         "payments":"Faça a Gestão de pagamentos das consultas",
         "_payments":"Veja os pagamentos das consultas efetuados"
     },
     "form":{
+        "place_of_issuance_of_the_identity_card":"Local de emissão de bilhete de identidade",
+        "date_of_issuance_of_the_identity_card":"Data de emissao de bilhete de identidade",
         "pt_short_biography":"Bibiográfia resumida (pt)",
         "en_short_biography":"Bibiográfia resumida (en)",
         "pt_long_biography":"Bibiográfia longa (pt)",
@@ -315,7 +328,8 @@
         "new-pending-invoice":"Pagamento pendente por ser avaliado",
         "refund-request":"Pedido de reembolso da consulta",
         "refund-rejected":"Pedido de reembolso rejeitado",
-        "refund-approved":"Pedido de reembolso aprovado"
+        "refund-approved":"Pedido de reembolso aprovado",
+        "consultation-message":"Messagem de consulta"
     },
 
     "notification-messages":{
@@ -417,6 +431,11 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "disease":"Doença",
+        "date_of_leave":"Data de afastamento",
+        "unread-messages":"Mensagens não lidas",
+        "filte":"Filtrar",
+        "you-have-unread-consultation-messages":"{{count}} consultas com mensagens não lidas",
         "info":"Informação",
         "consultations":"Consultas",
         "general":"Geral",
@@ -436,6 +455,7 @@
         "no-clients":"Sem clientes",
         "no-appointments":"Sem marcações",
         "no-exams":"Sem exames",
+        "no-medical-certificates":"Sem atestados médicos",
         "no-prescription":"Sem prescrições medicas",
         "no-clinical-diary":"Sem diário clinico",
         "error-while-printing":"Erro ao Imprimir",
@@ -768,6 +788,8 @@
         "add-form":"Adicionador formulário",
         "update-clinical-diary":"Actualzar Diário Clínico",
         "update-medical-prescription":"Actualzar Prescrição Medica",
+        "add-medical-certificate":"Adicionar atestado médico",
+        "update-medical-certificate":"Actualizar atestado médico",
         "search-patients":"Pesquisar pacientes",
         "patients":"Pacientes",
         "my-patients":"Veja os seus pacientes",

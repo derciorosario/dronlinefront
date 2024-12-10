@@ -164,6 +164,9 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
                 [
                   {name:t('common.single'),value:'single'},
                   {name:t('common.married'),value:'married'},
+                  {name:t('common.widowed'),value:'widowed'},
+                  {name:t('common.divorced'),value:'divorced'},
+                  {name:t('common.other'),value:'other'},
                 ]
                } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'marital_status']) || hideInputs} label={t('form.marital_status')} onChange={(e)=>setForm({...form,marital_status:e.target.value})} field={'marital_status'} value={form.marital_status}/>
               
@@ -431,6 +434,8 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
               <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="identification_number"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'identification_number'])} label={t('form.identification-doc-number')} onChange={(e)=>setForm({...form,identification_number:e.target.value})} field={'order_number'} value={form.identification_number}/>
               <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="birth_certificate"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'birth_certificate'])} label={t('form.birth-certificate')} onChange={(e)=>setForm({...form,birth_certificate:e.target.value})} field={'birth_certificate'} value={form.birth_certificate}/>
               <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="passport_number"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'passport_number'])} label={t('form.passport-number')} onChange={(e)=>setForm({...form,passport_number:e.target.value})} field={'passport_number'} value={form.passport_number}/>
+              <FormLayout.Input r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="identification_number"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'place_of_issuance_of_the_identity_card'])} label={t('form.place_of_issuance_of_the_identity_card')} onChange={(e)=>setForm({...form,place_of_issuance_of_the_identity_card:e.target.value})} field={'place_of_issuance_of_the_identity_card'} value={form.place_of_issuance_of_the_identity_card}/>
+              <FormLayout.Input type={'date'} r={true} hide={hideInputs || (formStep && formStep==2) || form.identification_document!="identification_number"} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'date_of_issuance_of_the_identity_card'])} label={t('form.date_of_issuance_of_the_identity_card')} onChange={(e)=>setForm({...form,date_of_issuance_of_the_identity_card:e.target.value})} field={'date_of_issuance_of_the_identity_card'} value={form.date_of_issuance_of_the_identity_card}/>
              
               
   

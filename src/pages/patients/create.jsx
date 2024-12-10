@@ -90,7 +90,7 @@ function addPatients({ShowOnlyInputs}) {
        ((!form.passport_number || !form.passport_number_filename) && form.identification_document=="passport_number") ||
        ((!form.identification_number || !form.identification_number_filename) && form.identification_document=="identification_number") ||
        ((!form.birth_certificate || !form.birth_certificate_filename) && form.identification_document=="birth_certificate") ||
-    
+       (form.identification_document=="identification_number" && (!form.date_of_issuance_of_the_identity_card || !form.place_of_issuance_of_the_identity_card)) ||
        !form.marital_status ||
        !form.country_of_residence || 
        !form.occupation ||
@@ -109,6 +109,7 @@ function addPatients({ShowOnlyInputs}) {
   
  useEffect(()=>{
   if(!user || !id){
+      setForm(initial_form)
       return
   }
 
@@ -244,7 +245,9 @@ function addPatients({ShowOnlyInputs}) {
 
 
   return (
-     <DefaultLayout hide={ShowOnlyInputs}>
+     <DefaultLayout hide={ShowOnlyInputs} disableUpdateButton={true} pageContent={{btn:!((user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.patient?.includes('create'))) && id) ? null : {onClick:(e)=>{
+      navigate('/add-patient')
+     },text:t('menu.add-patients')}}}>
           
            {message && <div className="px-[20px] mt-9" id="_register_msg">
                <AdditionalMessage  float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>

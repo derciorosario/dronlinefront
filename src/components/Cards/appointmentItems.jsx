@@ -7,11 +7,11 @@ import Exams from '../../pages/exams/index'
 import CreateExams from '../../pages/exams/create'
 import CreateMedicalPrescription from '../../pages/medical-prescription/create'
 import MedicalPrescription from '../../pages/medical-prescription/index'
-
+import MedicalCertificate from '../../pages/medical-certificates/index'
+import CreateMedicalCertificate from '../../pages/medical-certificates/create'
 import { useAuth } from '../../contexts/AuthContext'
 
 function AppointmentItems({show,itemToShow,setItemToShow}) {
-
  const data=useData()
  const {user} = useAuth()
 
@@ -37,17 +37,19 @@ function AppointmentItems({show,itemToShow,setItemToShow}) {
           <div className="w-full  flex items-center">
 
 
-             {((itemToShow?.name=="all-clinical-diary" || itemToShow?.name=="all-exams" || itemToShow?.name=="all-medical-prescription") && (user?.role=="doctor" || (!itemToShow?.appointment?.doctor_id && user?.role=="admin" || user?.role=="manager"))) && <button onClick={()=>{
+             {((itemToShow?.name=="all-clinical-diary" || itemToShow?.name=="all-exams" || itemToShow?.name=="all-medical-prescription" || itemToShow?.name=="all-medical-certificate") && (user?.role=="doctor" || (!itemToShow?.appointment?.doctor_id && user?.role=="admin" || user?.role=="manager"))) && <button onClick={()=>{
                 setItemToShow({
                  ...show,
                  action:'create',
                  appointment:itemToShow?.appointment,
-                 name:itemToShow.name=='all-clinical-diary' ?  'create-clinical-diary' : itemToShow?.name == "all-exams" ? 'create-exams' : 'create-medical-prescription'
+                 name:itemToShow.name=='all-clinical-diary' ?  'create-clinical-diary' : itemToShow?.name == "all-exams" ? 'create-exams' : itemToShow?.name == "all-medical-prescription" ? 'create-medical-prescription' : 'create-medical-certificate'
                 })}} type="button" class="text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-2 text-center inline-flex items-center me-2">
                 <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                 {itemToShow?.name=="all-clinical-diary" && t('menu.add-clinical-diary')}
                 {itemToShow?.name=="all-exams" && t('menu.add-exams')}
                 {itemToShow?.name=="all-medical-prescription" && t('menu.add-medical-prescription')}
+                {itemToShow?.name=="all-medical-certificate" && t('menu.add-medical-certificate')}
+
               </button>}
               
           </div>
@@ -60,14 +62,17 @@ function AppointmentItems({show,itemToShow,setItemToShow}) {
 
           </div>
 
-
             <div>
+              
                 {itemToShow?.name=="all-clinical-diary" && <ClinicalDiary itemToShow={itemToShow} setItemToShow={setItemToShow}  appointment={itemToShow.appointment} hideLayout={true}/>}
                 {itemToShow?.name=="create-clinical-diary" && <CreateClinicalDiary setItemToShow={setItemToShow} itemToShow={itemToShow}  hideLayout={true}/>}
                 {itemToShow?.name=="all-exams" && <Exams itemToShow={itemToShow} setItemToShow={setItemToShow}  appointment={itemToShow.appointment} hideLayout={true}/>}
                 {itemToShow?.name=="create-exams" && <CreateExams setItemToShow={setItemToShow} itemToShow={itemToShow}  hideLayout={true}/>}
                 {itemToShow?.name=="all-medical-prescription" && <MedicalPrescription itemToShow={itemToShow} setItemToShow={setItemToShow}  appointment={itemToShow.appointment} hideLayout={true}/>}
                 {itemToShow?.name=="create-medical-prescription" && <CreateMedicalPrescription setItemToShow={setItemToShow} itemToShow={itemToShow}  hideLayout={true}/>}
+                {itemToShow?.name=="all-medical-certificate" && <MedicalCertificate itemToShow={itemToShow} setItemToShow={setItemToShow}  appointment={itemToShow.appointment} hideLayout={true}/>}
+                {itemToShow?.name=="create-medical-certificate" && <CreateMedicalCertificate setItemToShow={setItemToShow} itemToShow={itemToShow}  hideLayout={true}/>}
+
             </div>
 
 

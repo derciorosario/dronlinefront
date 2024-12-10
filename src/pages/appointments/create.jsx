@@ -13,6 +13,7 @@ import Comment from '../../components/modals/comments'
 import Loader from '../../components/Loaders/loader'
 import AppointmentItems from '../../components/Cards/appointmentItems'
 import SearchInput from '../../components/Inputs/search'
+import SinglePrint from '../../components/Print/single'
 
 function addAppointments({ShowOnlyInputs}) {
   
@@ -36,7 +37,6 @@ function addAppointments({ShowOnlyInputs}) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedDoctor,setSelectedDoctor]=useState({status:'not_selected',hours:[],weekday:null})
           
-
   
   let required_data=['doctors','specialty_categories','dependents']
   useEffect(()=>{   
@@ -84,6 +84,7 @@ function addAppointments({ShowOnlyInputs}) {
     medical_prescriptions:[],
     documents:[],
     comments:[],
+    medical_certificates:[],
     clinical_diaries:[],
     exams:[]
 }
@@ -121,13 +122,47 @@ const [dependents,setDependents]=useState([])
 const [dependensLoaded,setDependesLoaded]=useState([])
 const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':')
 
+
+
+useEffect(() => {
+
+  if(!id) return
+  
+  const interval = setInterval(() => {
+    getAppointmentUnreadMessages()
+  }, 6000);
+
+  return () => clearInterval(interval);
+}, [id]);
+
+
+
+async function getAppointmentUnreadMessages(){
+        (async()=>{
+          try{
+
+            let response=await data.makeRequest({method:'get',url:`api/appointment/${id}/unread-comments`,withToken:true, error: ``},0);
+            setForm(prev=>({...prev,unread_comments_count:response.unread_comments_count}))
+          }catch(e){
+            console.log(e)
+           
+        }
+      })()
+}
+
+
+
+
  useEffect(()=>{
   if(!user || !id){
       return
   }
+
+
   (async()=>{
 
     try{
+
      let response=await data.makeRequest({method:'get',url:`api/appointments/`+id,withToken:true, error: ``},0);
 
      setForm({...form,...response})
@@ -455,7 +490,6 @@ function isUrgentByLimit(hour,date){
 
  },[user])
 
- console.log({form})
 
 
  useEffect(()=>{
@@ -465,9 +499,6 @@ function isUrgentByLimit(hour,date){
   }
 
  },[form.type_of_care])
-
-
-
 
 
  async function handleItems({status,id,payment_confirmed,invoice_id,appointment}){
@@ -517,11 +548,14 @@ function isUrgentByLimit(hour,date){
   }
 }
 
-  const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 return (
 
-<div>   
+<div>  
+   <div className=" absolute left-0 top-0">
+   <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
+   </div>
 
   <AppointmentItems setItemToShow={setItemToShow} show={Boolean(itemToShow)} itemToShow={itemToShow}/> 
   <DefaultLayout   hide={ShowOnlyInputs}   pageContent={{btn:{onClick:user?.role=="patient" && id ? (e)=>{
@@ -567,6 +601,18 @@ return (
               <span className="ml-2">{t('menu.clinical-diary')}</span>
               {(form.clinical_diaries.length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
                  {form.clinical_diaries.length}
+              </div>}
+            </button>
+
+
+            <button onClick={()=>setItemToShow({
+               name:'all-medical-certificate',
+               appointment:form
+            })} type="button" class={`text-gray-600 border focus:ring-4 focus:outline-none font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2`}>         
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#111"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+              <span className="ml-2">{t('menu.medical-certificate')}</span>
+              {(form.medical_certificates.length!=0) && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
+                 {form.medical_certificates.length}
               </div>}
             </button>
 
@@ -634,8 +680,8 @@ return (
                 }} type="button" class={`text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
                   <span className="ml-2">Chat</span>
-                  {(form.comments.length!=0 && id) && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full px-2 flex items-center justify-center">
-                      {form.comments.length}
+                  {(form.unread_comments_count!=0 && id) && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full px-2 flex items-center justify-center">
+                      {form.unread_comments_count}
                   </div>}
                 </button>}
 
@@ -811,49 +857,49 @@ return (
                   onChange={(e) => setForm({...form, medical_specialty: e.target.value})} 
                   field={'medical_specialty'} 
                   value={form.medical_specialty}
-      />
+          />
          
-    <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        r={true} 
-        type={'date'}
-        min={new Date().toISOString().split('T')[0]}
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-date'])} 
-        label={t('form.consultation-date')} 
-        onChange={(e) => setForm({...form, consultation_date: e.target.value,scheduled_date:e.target.value,scheduled_weekday:weeks[new Date(e.target.value).getDay()]})} 
-        field={'consultation_date'} 
-        hide={form.type_of_care!="requested" || id}
-        value={form.consultation_date}
-      />
+          <FormLayout.Input 
+              verified_inputs={verified_inputs} 
+              form={form} 
+              r={true} 
+              type={'date'}
+              min={new Date().toISOString().split('T')[0]}
+              onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-date'])} 
+              label={t('form.consultation-date')} 
+              onChange={(e) => setForm({...form, consultation_date: e.target.value,scheduled_date:e.target.value,scheduled_weekday:weeks[new Date(e.target.value).getDay()]})} 
+              field={'consultation_date'} 
+              hide={form.type_of_care!="requested" || id}
+              value={form.consultation_date}
+            />
 
-      <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        r={true} 
-        min={new Date().toISOString().split('T')[1].slice(0,5)}
-        type={'time'}
-        hide={form.type_of_care!="requested" || id}
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-hour'])} 
-        label={t('form.consultation-hour')} 
-        onChange={(e) => setForm({...form, scheduled_hours: e.target.value})} 
-        field={'consultation_date'} 
-        value={form.scheduled_hours}
-      />
+          <FormLayout.Input 
+            verified_inputs={verified_inputs} 
+            form={form} 
+            r={true} 
+            min={new Date().toISOString().split('T')[1].slice(0,5)}
+            type={'time'}
+            hide={form.type_of_care!="requested" || id}
+            onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation-hour'])} 
+            label={t('form.consultation-hour')} 
+            onChange={(e) => setForm({...form, scheduled_hours: e.target.value})} 
+            field={'consultation_date'} 
+            value={form.scheduled_hours}
+          />
 
 
-    <FormLayout.Input 
-        verified_inputs={verified_inputs} 
-        form={form} 
-        r={true} 
-        textarea={true}
-        hide={user?.role!="patient"}
-        onBlur={() => setVerifiedInputs([...verified_inputs, 'reason-for-consultation'])} 
-        label={t('form.reason-for-consultation')} 
-        onChange={(e) => setForm({...form, reason_for_consultation: e.target.value})} 
-        field={'reason_for_consultation'} 
-        value={form.reason_for_consultation}
-      />
+          <FormLayout.Input 
+              verified_inputs={verified_inputs} 
+              form={form} 
+              r={true} 
+              textarea={true}
+              hide={user?.role!="patient"}
+              onBlur={() => setVerifiedInputs([...verified_inputs, 'reason-for-consultation'])} 
+              label={t('form.reason-for-consultation')} 
+              onChange={(e) => setForm({...form, reason_for_consultation: e.target.value})} 
+              field={'reason_for_consultation'} 
+              value={form.reason_for_consultation}
+            />
 
       <FormLayout.Input 
         verified_inputs={verified_inputs} 

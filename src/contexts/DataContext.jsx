@@ -2,7 +2,7 @@ import { createContext, useContext,useState,useEffect, useRef} from 'react';
 import { useAuth } from './AuthContext';
 import html2pdf from 'html2pdf.js';
 import toast from 'react-hot-toast';
-let env="pro"
+let env="dev"
 import io from 'socket.io-client';
 import { t } from 'i18next';
 const socket = io(env!="dev" ? 'https://dronline-nodeserver.arsbeta-mz.com' : 'http://localhost:3001')
@@ -149,6 +149,7 @@ export const DataProvider = ({ children }) => {
     const [_admin_dashboard,setAdminDashboard]=useState([])
     const [_doctor_dashboard,setDoctorDashboard]=useState([])
     const [_patient_dashboard,setPatientDashboard]=useState([])
+    const [_medical_certificates,setMedicalCertificates]=useState([])
     const [updateTable,setUpdateTable]=useState(null)
     
 
@@ -181,7 +182,8 @@ export const DataProvider = ({ children }) => {
       {name:'upcoming_appointments',update:setUpcomingAppointments,get:_upcoming_appointments},
       {name:'admin_dashboard',update:setAdminDashboard,get:_admin_dashboard},
       {name:'doctor_dashboard',update:setDoctorDashboard,get:_doctor_dashboard},
-      {name:'patient_dashboard',update:setPatientDashboard,get:_patient_dashboard}
+      {name:'patient_dashboard',update:setPatientDashboard,get:_patient_dashboard},
+      {name:'medical_certificates',update:setMedicalCertificates,_get:_medical_certificates}
 
     ]
     
@@ -930,7 +932,8 @@ function isSetAsUrgentHour(hour,AppSettings){
       downloadProgress,
       cancelation_reasons,
       _cancellation_taxes,
-      setGainPerentageForAll
+      setGainPerentageForAll,
+      _medical_certificates
     };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

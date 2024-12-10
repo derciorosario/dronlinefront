@@ -86,6 +86,7 @@ let initial_form={
     
   
   if(!user || !id){
+    setForm(initial_form)
       return
   }
   

@@ -88,9 +88,13 @@
         "all-appointments":"Marcações",
         "add-appointments":"Agendar consulta",
         "recent-exams":"Exames recentes",
-        "recent-medical-prescriptions": "Prescrições médicas recentes",
         "recent-clinical-diary":"Diários clínicos recentes",
         "medical-prescription": "Prescrição Médica",
+        "medical-certificate":"Atestado Médico",
+        "all-medical-certificate": "Todos atestados médicos",
+        "add-medical-certificate": "Adicionar atestado médico",
+        "recent-medical-certificates": "Atestados médicos recentes",
+        "recent-medical-prescriptions": "Prescrições médicas recentes",
         "all-medical-prescription": "Todas prescrições médicas",
         "add-medical-prescription": "Adicionar prescrição médica",
         "clinical-diary":"Diário Clínico",
@@ -154,6 +158,7 @@
         "print":"Imprimir"
     },
     "titles":{
+
         "slide-1-sub-title":"Acesso Instantâneo à Saúde, Onde Quer Que Você Esteja",
         "slide-1-title":"Acesso Instantâneo à Saúde, Onde Quer Que Você Esteja",
         "slide-1-marked-text":"Acesso Instantâneo",
@@ -178,10 +183,15 @@
         "clinical-diary":"Diário Clínico do paciente",
         "exams":"Exames do paciente",
         "medical-prescriptions":"Prescrição Médica do paciente",
+        "medical-certificates":"Atestado Médico do paciente",
         "payments":"Faça a Gestão de pagamentos das consultas",
         "_payments":"Veja os pagamentos das consultas efetuados"
+
+
     },
     "form":{
+        "place_of_issuance_of_the_identity_card":"Local de emissão de bilhete de identidade",
+        "date_of_issuance_of_the_identity_card":"Data de emissao de bilhete de identidade",
         "insurance_company":"Seguradora",
         "insurance_company_name":"Nome da Empresa Seguradora",
         "policy_number":"Número de apolice",
@@ -315,7 +325,8 @@
         "new-pending-invoice":"Pagamento pendente por ser avaliado",
         "refund-request":"Pedido de reembolso da consulta",
         "refund-rejected":"Pedido de reembolso rejeitado",
-        "refund-approved":"Pedido de reembolso aprovado"
+        "refund-approved":"Pedido de reembolso aprovado",
+        "consultation-message":"Messagem de consulta"
     },
 
     "notification-messages":{
@@ -332,7 +343,6 @@
     },
 
     "messages":{
-
         "password-recovered":"Sua senha foi actualizada com sucesso. A nova senha foi envida para seu email",
         "recover-password-msg":"Informe seu email para receber uma nova senha caso esteja registrado.",
         "unable-to-load-consultation-items":"Não foi possivel carregar todos os recursos necessários para a consulta",
@@ -415,6 +425,13 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "disease":"Doença",
+        "date_of_leave":"Data de afastamento",
+        "unread-messages":"Mensagens não lidas",
+        "filter":"Filtrar",
+        "you-have-unread-consultation-messages":"{{count}} consulta(s) com mensagens não lidas",
+        "widowed":"Viúvo(a)",
+        "divorced":"Divorciado(a)",
         "consultations":"Consultas",
         "general":"Geral",
         "login-msg":"Por favor, insira suas credenciais para acessar sua conta.",
@@ -428,6 +445,7 @@
         "no-appointments":"Sem marcações",
         "no-exams":"Sem exames",
         "no-prescription":"Sem prescrições medicas",
+        "no-medical-certificates":"Sem atestados médicos",
         "no-clinical-diary":"Sem diário clinico",
         "error-while-printing":"Erro ao Imprimir",
         "set-as-approved":"Redefinir aprovado",
@@ -758,6 +776,8 @@
         "add-form":"Adicionador formulário",
         "update-clinical-diary":"Actualzar Diário Clínico",
         "update-medical-prescription":"Actualzar Prescrição Medica",
+        "add-medical-certificate":"Adicionar atestado médico",
+        "update-medical-certificate":"Actualizar atestado médico",
         "search-patients":"Pesquisar pacientes",
         "patients":"Pacientes",
         "my-patients":"Veja os seus pacientes",

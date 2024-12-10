@@ -307,7 +307,7 @@ const [form,setForm]=useState(initial_form)
 
 
             <FormCard  hide={itemToShow.action!="update" || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
-                {name:t('form.consultation-id'),value:form.id},
+                {name:'ID',value:form.id},
                 {name:t('form.clinical-information'),value:form.clinical_information},
                 {name:t('form.requested-exams'),value:form.requested_exams},
                 {name:t('form.results-report'),value:form.results_report},

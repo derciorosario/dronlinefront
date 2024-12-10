@@ -206,20 +206,23 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
   }
 
 
+
   function setPatientId(id){
     setForm({...form,patient_id:id})
   }
 
-
-  console.log({form})
+  //console.log({form})
 
   const [chosenPatient,setChosenPatient]=useState({})
 
   const [cannotEdit,setCannotEdit]=useState(false)
 
+
   useEffect(()=>{
       setCannotEdit(((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"))
   })
+
+
   
   return (
      <DefaultLayout hide={ShowOnlyInputs || hideLayout}>

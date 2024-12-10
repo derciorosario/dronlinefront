@@ -79,14 +79,14 @@ function getTitle(type){
 
 function getMessageContent(i){
   //upcoming-consultation
-  let link=(i.type=="upcoming-consultation" || i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request")  ?  '/appointment/'+i.data.details?.id :  (i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected") ? '/payment-management/'+i.data.details?.id : ''
+  let link=(i.type=="upcoming-consultation"  || i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="consultation-message")  ?  '/appointment/'+i.data.details?.id :  (i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected") ? '/payment-management/'+i.data.details?.id : ''
   
   return (
     <>
       <div class="ms-3 text-sm font-normal">
       <div class="text-sm font-semibold text-gray-900">{getTitle(i.type)}</div>
       <div class="text-sm font-normal">
-        {t('notification-messages.'+i.type)}
+        {i.type=="consultation-message" ? `${t('common.message')}: ${i.data.message}` : t('notification-messages.'+i.type)}
         {(i.type=="upcoming-consultation") && <span>{i.data.details?.scheduled_date} {i.data.details?.scheduled_hours}</span>}
         {(i.type=="consultation-status" || i.type=="invoice-status") && <span className={`font-medium ${i.data?.status=="rejected" || i.data?.status=="canceled" ? 'text-red-500':i.data?.status=="completed" || i.data?.status=="done"  ? "text-green-500" : i.data?.status =="pending" ? "text-orange-400":"text-honolulu_blue-400"} `}> {t('common.'+i.data?.status)}</span>}
         {i.type=="new-mpesa-payment"  &&  <span> #{i.data.details?.patient_id}</span>}
@@ -94,7 +94,7 @@ function getMessageContent(i){
         {(i.type=="invoice-status" || i.type=="new-pending-invoice" || i.type=="refund-request") && <p>{t('common.reference')}:   #{i.data.details?.ref_id}</p>}
       </div> 
 
-      {(i.type=="upcoming-consultation" || i.type=="consultation-status" || i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected") && <div className="flex items-center flex-wrap">
+      {(i.type=="upcoming-consultation" || i.type=="consultation-status" || i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected" || i.type=="consultation-message") && <div className="flex items-center flex-wrap">
            <div className="w-full">
               <button onClick={()=>{
                     navigate(link)

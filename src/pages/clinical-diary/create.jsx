@@ -308,7 +308,7 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
               {name: t('form.physical-exam'), value: form.physical_exam},
               {name: t('form.complementary-exams'), value: form.complementary_exams},
               {name: t('form.diagnoses'), value: form.diagnoses},
-              {name: t('form.therapeutic-plan'), value: form.therapeutic_plan},
+             // {name: t('form.therapeutic-plan'), value: form.therapeutic_plan},
               {name: t('form.prescribed-medications'), value: form.prescribed_medications},
               {name: t('form.therapeutic-recommendations'), value: form.therapeutic_recommendations},
               {name: t('form.other-instructions'), value: form.other_instructions},
@@ -416,7 +416,7 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
               value={form.diagnoses} 
             />
 
-            <FormLayout.Input 
+           {/*** <FormLayout.Input 
               verified_inputs={verified_inputs} 
               form={form} 
               textarea={true}
@@ -425,7 +425,7 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
               onChange={(e) => setForm({...form, therapeutic_plan: e.target.value})} 
               field={'therapeutic_plan'}  
               value={form.therapeutic_plan} 
-            />
+            /> */}
 
             <FormLayout.Input 
               verified_inputs={verified_inputs} 

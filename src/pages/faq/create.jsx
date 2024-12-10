@@ -83,6 +83,7 @@ useEffect(()=>{
 
  useEffect(()=>{
   if(!user || !id){
+      setForm(initial_form)
       return
   }
   (async()=>{

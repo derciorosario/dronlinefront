@@ -61,6 +61,24 @@ const [showChooseFile,setShowChooseFile]=useState('')
     add_comment(filename,comment)
  }
 
+ function getComments(prev,r){
+
+  const messagesMap = new Map();
+  r.comments.forEach(msg => {
+      messagesMap.set(msg.generated_id, msg);
+  });
+  
+  (prev.some(i=>i.not_sent) ? prev : []).forEach(msg => {
+      if (!messagesMap.has(msg.generated_id)) {
+          messagesMap.set(msg.generated_id, msg);
+      }
+  });
+
+return Array.from(messagesMap.values())
+.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+}
+
 
 
  async function update_comments(){
@@ -69,11 +87,16 @@ const [showChooseFile,setShowChooseFile]=useState('')
 
         try{
             let r=await data.makeRequest({method:'get',url:`api/appointments/${form.id}/comments`,withToken:true, error: ``},0);
-            let sent_ids=r.map(i=>i.generated_id)
-            setForm(prev=>({
-                ...prev,
-                comments:[...prev.comments.filter(i=>i.not_sent && sent_ids.includes(i.generated_id)),...r].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-            }))
+           
+
+              setForm(prev=>({
+                  ...prev,
+                  comments:getComments(prev.comments,r)
+              }))
+
+
+
+
         }catch(e){
              console.log(e)
          }
@@ -105,10 +128,6 @@ const [showChooseFile,setShowChooseFile]=useState('')
                         ...c
                      }, error: ``},0);
 
-                     setForm(prev=>({
-                        ...prev,
-                        comments:[...prev.comments.filter(i=>i.generated_id!=c.generated_id),{...c,not_sent:false}].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-                     }))
                 })
 
             }catch(e){
@@ -118,6 +137,33 @@ const [showChooseFile,setShowChooseFile]=useState('')
         })()
 
  },[comments])
+
+
+
+ useEffect(()=>{
+
+  if(!show) return
+
+  let last_message=comments.filter(i=>!i.not_sent)[comments.filter(i=>!i.not_sent).length - 1]
+
+  if(last_message){
+
+    (async()=>{
+      try{
+
+         let r=await data.makeRequest({method:'post',url:`api/appointments/${form.id}/mark-comments-as-read`,withToken:true,data:{
+          commentId: last_message.id
+         }, error: ``},0);
+
+       
+      }catch(e){
+           console.log(e)
+      }
+    })()
+      
+  }
+
+ },[comments,show])
 
 
     

@@ -30,7 +30,8 @@ function App() {
   const [updateFilters,setUpdateFilters]=useState(null)
   const [search,setSearch]=useState('')
 
- 
+  const [showWithMessages,setShowWithMessages]=useState(false);
+
   const [filterOptions,setFilterOptions]=useState([
 
     {
@@ -131,6 +132,7 @@ function App() {
   useEffect(()=>{ 
     if(!user) return
     data._get(required_data,{appointments:{name:search,page:currentPage,status:selectedTab,...data.getParamsFromFilters(filterOptions)}}) 
+    setShowWithMessages(false)
   },[user,pathname,search,currentPage,updateFilters])
 
 
@@ -144,6 +146,7 @@ function App() {
          data.handleLoaded('remove','appointments')
          setCurrentPage(1)
          setLoading(false)
+         setShowWithMessages(false)
          data._get(required_data,{appointments:{name:search,page:1,status:selectedTab,...data.getParamsFromFilters(filterOptions)}}) 
 
     }
@@ -160,13 +163,25 @@ function App() {
 
 
 
-
+ 
 
        
   return (
    
          <DefaultLayout
-            pageContent={{page:'appointments',title:t('common.appointments'),desc:t('titles.appointments'),btn:{onClick:user?.role=="patient" ? (e)=>{
+            pageContent={{leftContent:(
+                  <div className={`flex flex-col mr-5 ${!data._appointments.appointments_with_unread_comments || !data._loaded.includes('appointments') || loading ? 'hidden':''}`}>
+                      <span className="text-[13px] w-[200px]">{t('common.you-have-unread-consultation-messages',{count:data._appointments.appointments_with_unread_comments})}</span>
+                      <div className="table" onClick={()=>{}}>
+                        <div  class="inline-flex items-center cursor-pointer" onClick={()=>{
+                           setShowWithMessages(!showWithMessages)
+                        }}>
+                                <input type="checkbox" value="" checked={showWithMessages}/>
+                                <span class="ml-1 text-sm font-medium">{t('common.filter')}</span>
+                        </div>
+                      </div>
+                 </div>
+            ),page:'appointments',title:t('common.appointments'),desc:t('titles.appointments'),btn:{onClick:user?.role=="patient" ? (e)=>{
             if(!user?.data?.date_of_birth){
               data._showPopUp('basic_popup','conclude_patient_info')
             }else{
@@ -215,6 +230,7 @@ function App() {
                           t('form.consultation-hour'),
                           t('form.medical-specialty'),
                           t('form.type-of-care'),
+                          t('common.unread-messages'),
                           t('form.consultation-method'),
                           t('form.payment-confirmed'),
                           t('common.doctor'),
@@ -231,7 +247,7 @@ function App() {
 
 
 
-                       body={(data._appointments?.appointments?.data || []).map(i=>{
+                       body={(data._appointments?.appointments?.data || []).filter(i=>i.unread_comments_count || !showWithMessages).map(i=>{
                             
                             return i
                             
@@ -257,6 +273,11 @@ function App() {
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.scheduled_hours}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[i18next.language+"_name"]}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{t('common.types_of_care.'+i.type_of_care)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/appointment/`+i.id}>
+                                    <div className={`ml-2 ${i.unread_comments_count!=0 ? 'bg-honolulu_blue-400' : 'bg-gray-300'}  text-white rounded-full px-1 flex items-center justify-center`}>
+                                      <span>{i.unread_comments_count}</span>
+                                    </div>
+                                </BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{'Plataforma Zoom'}</BaiscTable.Td>
                                
                                 <BaiscTable.Td url={`/appointment/`+i.id}>
@@ -266,6 +287,7 @@ function App() {
                                 </BaiscTable.Td>
 
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
+                               
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.reason_for_consultation?.length > 40 ? i.reason_for_consultation?.slice(0,40)+"..." : i.reason_for_consultation}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.additional_observations?.length > 40 ? i.additional_observations?.slice(0,40)+"..." : i.additional_observations}</BaiscTable.Td>
                                

@@ -6,6 +6,7 @@ import { useAuth } from '../../../contexts/AuthContext'
 import DashboardSkeleton from '../../../components/Skeleton/dashboad'
 import BaiscTable from '../../../components/Tables/basic'
 import _medications from '../../../assets/medications.json'
+import SinglePrint from '../../../components/Print/single'
 
 export default function PatientDashboard({startDate,endDate,setStartDate,setEndDate}) {
 
@@ -82,6 +83,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
   return (
     <div className="w-full">
 
+
            {!data._loaded.includes('patient_dashboard') && <DashboardSkeleton/>}
 
            {data._loaded.includes('patient_dashboard') && <div>
@@ -137,6 +139,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                        t('form.consultation-hour'),
                                        t('form.medical-specialty'),
                                        t('form.type-of-care'),
+                                       t('common.unread-messages'),
                                        t('form.consultation-method'),
                                        t('form.payment-confirmed'),
                                        t('common.doctor'),
@@ -162,6 +165,11 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{i.scheduled_hours}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[i18next.language+"_name"]}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{t('common.types_of_care.'+i.type_of_care)}</BaiscTable.Td>
+                                          <BaiscTable.Td url={`/appointment/`+i.id}>
+                                              <div className={`ml-2 ${i.unread_comments_count!=0 ? 'bg-honolulu_blue-400' : 'bg-gray-300'}  text-white rounded-full px-1 flex items-center justify-center`}>
+                                                <span>{i.unread_comments_count}</span>
+                                              </div>
+                                          </BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{'Plataforma Zoom'}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>
                                             <button type="button" class={`text-white cursor-default ml-4 ${i.payment_confirmed ? "bg-honolulu_blue-500": "bg-gray-400"}  focus:outline-none  font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center`}>
@@ -298,7 +306,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                           title: t('menu.medical-prescription'),
                                           content: 
                                              i.medical_prescription_items.map(f=>[
-                                                {name:t('form.medication-name'),value:f.name},
+                                                {name:t('form.medication-name'),value:i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name} - ${_medications.filter(f=>f.ITEM==i.name)?.[0]?.active_substance}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')},
                                                 {name:t('form.dosage'),value:f.dosage},
                                                 {name:t('form.prescribed-quantity'),value:f.prescribed_quantity},
                                                 {name:t('form.treatment-duration'),value:f.treatment_duration},
@@ -316,6 +324,74 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                              
                                </BaiscTable.Tr>
                            ))}
+   
+                         
+                 />
+               </div>
+
+
+
+
+
+
+
+
+               <div className="w-full">
+
+                <div className="w-full mt-8">
+                    <span className="font-medium">{t('menu.recent-medical-certificates')}</span>
+                    <span className="text-gray-500 ml-2">({(data._patient_dashboard?.recentItems?.medicalCertificates || []).length})</span>
+                </div>
+
+                
+                <BaiscTable  canAdd={false} hide={(data._patient_dashboard?.recentItems?.medicalCertificates || []).length==0} loaded={data._loaded.includes('patient_dashboard')} header={[
+                            '.',
+                            'ID',
+                             t('form.medication-names'),
+                           ]
+                         }
+
+                           body={(data._patient_dashboard?.recentItems?.medicalCertificates || []).map((i,_i)=>(
+                        
+                            <BaiscTable.Tr >
+                              <BaiscTable.Td>
+                                <BaiscTable.Actions options={{
+                                     deleteFunction:'default',
+                                     deleteUrl:'api/delete/medical-certificates',
+                                     id:i.id}
+                                }/>
+                             
+                              </BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>{
+
+            
+                                  data.setSinglePrintContent({
+                                    patient: i.appointment.patient,
+                                    doctor:i.appointment.doctor,
+                                    appointment:i.appointment,
+                                    title: t('menu.medical-certificate'),
+                                    from:'medical-certificates',
+                                    content: [
+                                       [
+                                        {...i,disease:i.disease,date_of_leave:i.date_of_leave,medical_specialty:data._specialty_categories.filter(f=>f.id==i.appointment.medical_specialty)[0]?.[`${i18next.language}_name`]},
+                                      ]
+                                    ]
+
+                                  })
+
+                               }}>
+
+                               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
+                             
+                              </BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.disease}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.date_of_leave}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.details}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data._specialty_categories.filter(f=>f.id==i.appointment.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
+                          </BaiscTable.Tr>
+                      ))}
+
    
                          
                  />

@@ -588,7 +588,7 @@ useEffect(()=>{
                       {users.length==0 && <p className="text-[14px] text-gray-600">{t('common.waiting-for-messages')}...</p>}
                </div>}
 
-               {(messages.length==0 && (user?.role=="doctor" || user?.role=="patient"))  && <div className={`flex items-center h-full  justify-center`}>
+               {(messages.length==0 && !loading && (user?.role=="doctor" || user?.role=="patient"))  && <div className={`flex items-center h-full  justify-center`}>
                        <span className="text-[14px] text-gray-400">{t('common.send-a-message-to-get-support')}</span>
                </div>}
 

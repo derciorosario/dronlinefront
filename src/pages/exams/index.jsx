@@ -7,6 +7,7 @@ import BaiscTable from '../../components/Tables/basic';
 import { useAuth } from '../../contexts/AuthContext';
 import BasicSearch from '../../components/Search/basic';
 import BasicPagination from '../../components/Pagination/basic';
+import SinglePrint from '../../components/Print/single';
 
 
 
@@ -62,7 +63,10 @@ function globalOnclick(id){
 }
  
   return (
-   
+
+       <>
+        
+     
         <DefaultLayout hide={hideLayout} pageContent={{title:t('menu.exams'),desc:t('titles.exams')}}>   
             
         <div className="flex">
@@ -85,7 +89,7 @@ function globalOnclick(id){
                   })
               })
 
-           }} hideFilters={true} total={data._clinical_diary?.total} from={'exams'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+           }} hideFilters={true} total={data._exams?.total} from={'exams'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
             <div className="flex w-full relative">
 
@@ -151,7 +155,7 @@ function globalOnclick(id){
                       
               />
 
-             <BasicPagination show={data._loaded.includes('clinical_diary')} from={'clinical_diary'} setCurrentPage={setCurrentPage} total={data._clinical_diary?.total}  current={data._clinical_diary?.current_page} last={data._clinical_diary?.last_page}/>
+             <BasicPagination show={data._loaded.includes('exams')} from={'exams'} setCurrentPage={setCurrentPage} total={data._exams?.total}  current={data._exams?.current_page} last={data._exams?.last_page}/>
           
 
             </div>
@@ -162,7 +166,8 @@ function globalOnclick(id){
            </div>
         </div>
        </DefaultLayout>
-
+       </>
+   
   );
 }
 

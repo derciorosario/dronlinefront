@@ -32,7 +32,7 @@ export default function BasicFilter({dateFilters,setDateFilter,filterOptions,set
 
   return (
     <>
-    <div className={`max-md:${data.showFilters ? 'fixed':'hidden'} max-md:overflow-scroll max-md:mb-32 z-50 right-0 top-1 max-md:h-[100vh]  max-md:w-full`}>
+    <div className={`max-md:${data.showFilters ? 'fixed':'hidden'} max-md:overflow-scroll max-md:mb-32 max-md:z-50 right-0 top-1 max-md:h-[100vh]  max-md:w-full`}>
     <div  style={data.isMobile ? {width:'100%'} : {width:data.showFilters ? '190px':'0'}} className={`min-h-[400px] bg-white   max-md:h-full relative h-auto  ${show ? 'opacity-0 pointer-events-none':'ease-in delay-75 transition-all'} overflow-x-hidden  mr-2`}>
          
          <div className="rounded-[2rem] pb-5 md:w-[170px] w-full  absolute left-0 top-0">

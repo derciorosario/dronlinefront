@@ -81,6 +81,8 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
        !form.date_of_birth  ||
        !form.relationship ||
        !form.identification_document ||
+
+       (form.identification_document=="identification_number" && (!form.date_of_issuance_of_the_identity_card || !form.place_of_issuance_of_the_identity_card)) ||
        
        ((!form.passport_number || !form.passport_number_filename) && form.identification_document=="passport_number") ||
        ((!form.identification_number || !form.identification_number_filename) && form.identification_document=="identification_number") ||
@@ -100,6 +102,7 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
   
  useEffect(()=>{
   if(!user || !id || hideLayout){
+      if(!id) setForm(initial_form)
       return
   }
 
