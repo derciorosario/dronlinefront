@@ -9,8 +9,7 @@ import i18next from 'i18next';
 const HomeDataContext = createContext();
 
 export const HomeDataProvider = ({ children }) => {
-
-
+  
     const [isLoading, setIsLoading] = useState(true);
     const [dialogs,setDialogs]=useState({})
 

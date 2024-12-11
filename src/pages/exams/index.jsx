@@ -97,7 +97,7 @@ function globalOnclick(id){
 
             <BaiscTable canAdd={false} loaded={data._loaded.includes('exams')} header={[
                        
-                       <BaiscTable.MainActions options={{
+                       <BaiscTable.MainActions hide={user?.role=="patient"} options={{
                           deleteFunction:'default',
                           deleteUrl:'api/delete/exams'}
                          } items={data._exams?.data || []}/>,
@@ -115,7 +115,7 @@ function globalOnclick(id){
                         
                               <BaiscTable.Tr >
                                 <BaiscTable.Td>
-                                  <BaiscTable.Actions options={{
+                                  <BaiscTable.Actions hide={user?.role=="patient"} options={{
                                        deleteFunction:'default',
                                        deleteUrl:'api/delete/exams',
                                        id:i.id}

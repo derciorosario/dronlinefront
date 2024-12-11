@@ -553,7 +553,7 @@ const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturd
 return (
 
 <div>  
-   <div className=" absolute left-0 top-0">
+   <div className=" absolute left-0 top-0 w-full">
    <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
    </div>
 

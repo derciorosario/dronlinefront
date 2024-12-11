@@ -258,7 +258,7 @@ export default function SinglePrint({item,setItem}) {
              
                     
 
-                    <div style={{width:'100%'}} className={`flex-1 ${item?.from=="medical-certificates" ? 'hidden':''}  flex flex-col justify-end w-full`}>
+               <div style={{width:'100%'}} className={`flex-1 ${item?.from=="medical-certificates" ? 'hidden':''}  flex flex-col justify-end w-full`}>
                       <div className="mt-10 flex justify-between">
                           <span className="font-medium">{new Date().toISOString().split('T')[0]}</span>
   

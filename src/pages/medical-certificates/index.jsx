@@ -81,9 +81,9 @@ function globalOnclick(id){
 
             <div className="absolute w-full">
 
-            <BaiscTable canAdd={false} loaded={data._loaded.includes('medical_certificates')} header={[
+            <BaiscTable  canAdd={false} loaded={data._loaded.includes('medical_certificates')} header={[
                        
-                       <BaiscTable.MainActions options={{
+                       <BaiscTable.MainActions hide={user?.role=="patient"} options={{
                           deleteFunction:'default',
                           deleteUrl:'api/delete/medical-certificates'}
                          } items={data._medical_certificates?.data || []}/>,
@@ -101,7 +101,7 @@ function globalOnclick(id){
                         
                               <BaiscTable.Tr >
                                 <BaiscTable.Td>
-                                  <BaiscTable.Actions options={{
+                                  <BaiscTable.Actions hide={user?.role=="patient"} options={{
                                        deleteFunction:'default',
                                        deleteUrl:'api/delete/medical-certificates',
                                        id:i.id}

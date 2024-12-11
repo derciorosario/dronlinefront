@@ -258,7 +258,7 @@ export default function SinglePrint({item,setItem}) {
              
                     
 
-                <div className={`flex-1 ${item?.from=="medical-certificates" ? 'hidden':'flex'} flex-col justify-end`}>
+               <div style={{width:'100%'}} className={`flex-1 ${item?.from=="medical-certificates" ? 'hidden':''}  flex flex-col justify-end w-full`}>
                       <div className="mt-10 flex justify-between">
                           <span className="font-medium">{new Date().toISOString().split('T')[0]}</span>
   
@@ -266,16 +266,19 @@ export default function SinglePrint({item,setItem}) {
                             <div className="flex">
                                 <span className="min-w-[100px] flex border-black border-b border-dashed  items-center" >{item?.doctor?.name || t('common.dronline-team')}</span>
                             </div>
-                            {item?.doctor && <img width={100} className="h-auto" src={doctorSignature}/>}
+                           
+                            <div className="mt-2 flex justify-between">
+                                {item?.doctor && <img width={100} className="h-auto mr-2" src={doctorSignature}/>}
+                                {item?.doctor && <img width={100}  className="h-auto" src={doctorStamp}/>}
+                               
+                            </div>
+                            
                           </div>
                          
                     </div>
+                    
+                    <span className="flex w-full justify-center my-5">Dr Online</span>
 
-                      <span className="flex w-full justify-center my-5">Dr Online</span>
-
-                      <div className="mt-2 flex justify-between">
-                          {item?.doctor && <img width={100}  className="h-auto" src={doctorStamp}/>}
-                      </div>
                  </div>
 
 

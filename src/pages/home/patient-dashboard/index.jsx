@@ -345,23 +345,18 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
 
                 
                 <BaiscTable  canAdd={false} hide={(data._patient_dashboard?.recentItems?.medicalCertificates || []).length==0} loaded={data._loaded.includes('patient_dashboard')} header={[
-                            '.',
                             'ID',
-                             t('form.medication-names'),
+                            t('common.disease'),
+                            t('common.date_of_leave'),
+                            t('common.details'),
+                            t('form.medical-specialty')
                            ]
                          }
 
                            body={(data._patient_dashboard?.recentItems?.medicalCertificates || []).map((i,_i)=>(
                         
                             <BaiscTable.Tr >
-                              <BaiscTable.Td>
-                                <BaiscTable.Actions options={{
-                                     deleteFunction:'default',
-                                     deleteUrl:'api/delete/medical-certificates',
-                                     id:i.id}
-                                }/>
                              
-                              </BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>{
 
             

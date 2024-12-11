@@ -71,6 +71,11 @@
     "t-10": "Contacts",
     "p-10": "For questions or additional information, contact us at info@dronline.co.mz during office hours, Monday to Friday, from 8 am to 4 pm."
 },
+"medical-certification-t-1": "I, {{doctor_name}}, a doctor providing service at Dr. Online, declare under my honor that {{patient_name}}, holder of Identity Card No. {{identification_number}}, issued by the identity archive of {{place_of_issuance_of_the_identity_card}}, on {{date_of_issuance_of_the_identity_card}}, was observed by me today in the consultation (or Service) of {{medical_specialty}}, having determined that they will likely be unable to attend work until {{date_of_leave}}.",
+  "medical-certification-t-2": "At the express request of the patient, I declare that they suffer from {{disease}}.",
+  "medical-certification-t-3": "I recognize the above signature as belonging to an entity authorized to issue this certificate.",
+  "medical-certification-t-4": "The Secretary Chief",
+  "medical-certification-t-5": "This certificate is only valid if the signature of the Secretary Chief is made over a fiscal stamp of 15.00MT and authenticated with the embossed seal in use at the Health Unit.",
     "menu": {
         "home": "Home",
         "more":"More",

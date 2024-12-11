@@ -103,7 +103,7 @@ function globalOnclick(id){
    
                <div className="absolute w-full">
                <BaiscTable canAdd={false} loaded={data._loaded.includes('medical_prescriptions')} header={[
-                            <BaiscTable.MainActions options={{
+                            <BaiscTable.MainActions hide={user?.role=="patient"} options={{
                              deleteFunction:'default',
                              deleteUrl:'api/delete/medical-prescriptions'}
                             } items={data._exams?.data || []}/>,
@@ -119,7 +119,7 @@ function globalOnclick(id){
                            
                                  <BaiscTable.Tr >
                                    <BaiscTable.Td>
-                                     <BaiscTable.Actions options={{
+                                     <BaiscTable.Actions hide={user?.role=="patient"} options={{
                                           deleteFunction:'default',
                                           deleteUrl:'api/delete/medical-prescriptions',
                                           id:i.id}

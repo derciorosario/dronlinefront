@@ -25,7 +25,7 @@ function App() {
   return (
 
           <div>
-               <div className=" absolute left-0 top-0">
+               <div className=" absolute left-0 top-0 w-full">
                 <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
                </div>
               <DefaultLayout showDates={true}  setStartDate={setStartDate} startDate={startDate} endDate={endDate} setEndDate={setEndDate} pageContent={{title:t('common.welcome'),btn:{onClick:user?.role=="patient" ? (e)=>{

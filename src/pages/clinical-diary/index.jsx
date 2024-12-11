@@ -108,7 +108,7 @@ function globalOnclick(id){
 
             <div className="absolute w-full">
             <BaiscTable canAdd={false} loaded={data._loaded.includes('clinical_diary')} header={[
-                         <BaiscTable.MainActions options={{
+                         <BaiscTable.MainActions hide={user?.role=="patient"} options={{
                           deleteFunction:'default',
                           deleteUrl:'api/delete/clinical-diary'}
                          } items={data._clinical_diary?.data || []}/>,
@@ -136,7 +136,7 @@ function globalOnclick(id){
                         
                               <BaiscTable.Tr >
                                 <BaiscTable.Td>
-                                  <BaiscTable.Actions options={{
+                                  <BaiscTable.Actions hide={user?.role=="patient"} options={{
                                        deleteFunction:'default',
                                        deleteUrl:'api/delete/clinical-diary',
                                        id:i.id}

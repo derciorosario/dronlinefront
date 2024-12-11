@@ -72,6 +72,12 @@
     "p-3":"É importante destacar que consultas de urgência não são reembolsáveis.",
     "p-4":"Se por algum motivo por sua responsabilidade não conseguir realizar a vídeo consulta sem que tenha manifestado o interesse em cancelar, a Dr. Online não se procederá à devolução do valor pago."
   },
+  "medical-certification-t-1":"Eu, {{doctor_name}}, Médica prestando serviço em Dr. Online, declaro por minha honra que {{patient_name}}, Titular do B. de Identidade n.° {{identification_number}}, passado pelo arquivo de identidade de {{place_of_issuance_of_the_identity_card}}, em {{date_of_issuance_of_the_identity_card}}, foi hoje por mim observado na consulta (ou Serviço) de {{medical_specialty}}, tendo constatado que estará provavelmente impossibilitado de comparecer ao serviço até ao dia {{date_of_leave}}.",
+  "medical-certification-t-2":"A pedido expresso do doente, declaro que ele sofre de {{disease}}.",
+  "medical-certification-t-3":"Reconheço a assinatura supra como sendo de uma entidade autorizada a emitir este atestado.",
+  "medical-certification-t-4":"O Chefe da Secretaria",
+  "medical-certification-t-5":"Este atestado só é válido se a assinatura do Chefe da Secretaria for feita sobre estampilha fiscal de 15,00MT e autenticada com o selo branco em uso na Unidade Sanitária.",
+
   "menu": {
         "home": "Home",
         "more":"Mais",

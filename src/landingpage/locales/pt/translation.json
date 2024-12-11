@@ -431,6 +431,7 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "filter":"Filtrar",
         "disease":"Doença",
         "date_of_leave":"Data de afastamento",
         "unread-messages":"Mensagens não lidas",

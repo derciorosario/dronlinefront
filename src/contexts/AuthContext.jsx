@@ -24,10 +24,10 @@ export const AuthProvider = ({ children }) => {
   const [pathname,setPathName]=useState(null)
   const [recoveringPassword,setRecoveringPassword]=useState(false)
   
-  let env="dev"
+  let env="pro"
   const APP_BASE_URL = env =="pro" ? "https://dronline-server.arsbeta-mz.com": 'http://127.0.0.1:8000'
   const SERVER_FILE_STORAGE_PATH=`storage/uploads`
-  const APP_FRONDEND=env == "dev" ? "http://localhost:5173" : "https://dronline-one.netlify.app" 
+  const APP_FRONDEND=env == "dev" ? "http://localhost:5173" : "https://dronline-landingpage.netlify.app" 
      
   const login = (userData, authToken) => {
     setUser(userData);
