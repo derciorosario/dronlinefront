@@ -189,29 +189,18 @@ return Array.from(messagesMap.values())
 
     <ChatFile res={handleUploadeduploaded_files} show={showChooseFile} setShow={setShowChooseFile}/>
 
-     <ChatMessages hide={showChooseFile} messages={comments.map(i=>({...i,costum_name:i.user?.role!="doctor" && user?.role=="patient" ? t('common.dronline-team')  : i.user.name}))}/>
+    <ChatMessages hide={showChooseFile} messages={comments.map(i=>({...i,costum_name:i.user?.role!="doctor" && user?.role=="patient" ? t('common.dronline-team')  : i.user.name}))}/>
 
 
-
-
-
-{/***File - It is hidden*/}
-
-
-
-
-
-
+   {/***File - It is hidden*/}
 
 
     </div>
                
     </div>
 
-    
 
-
-    <div className={`w-full bg-white overflow-hidden rounded-b-lg ${user?.role=="admin" ? '_hidden':''}`}>
+    <div className={`w-full   ${(user?.role=="admin" || user?.role=="manager") && form.doctor_id ? 'hidden':''} bg-white overflow-hidden rounded-b-lg `}>
 
 
     <div className="w-full pl-3 pr-1 py-1  bg-white border border-gray-200 items-center gap-2 inline-flex justify-between">
@@ -242,15 +231,14 @@ return Array.from(messagesMap.values())
                              </g>
              </svg>
             </div>}
-
-
+           
             <div className="flex items-center gap-2">
            
             <button onClick={()=>{
               if(commentText && !comments.some(i=>i.not_sent))  add_comment()
             }} className={`items-center  ${showChooseFile || comments.some(i=>i.not_sent) ? ' opacity-0 pointer-events-none w-0':'transition-all ease-in'}   overflow-hidden  flex px-3 py-2 ${commentText && !comments.some(i=>i.not_sent) ? 'bg-honolulu_blue-500':'bg-gray-400'} rounded-full shadow `}>
                 
-                <h3 className={`text-white text-xs font-semibold leading-4 px-2`}>{t('common.send')}</h3>
+                <h3 className={`text-white  text-xs font-semibold leading-4 px-2`}>{t('common.send')}</h3>
             </button>
             </div>
     </div>

@@ -318,6 +318,7 @@
         "virtual-consultation": "Virtual Consultation"
     },
 
+    
     "notification-titles":{
         "consultation": "Consultation",
         "upcoming-consultation": "Upcoming Consultation",
@@ -330,7 +331,8 @@
         "refund-request": "Consultation Refund Request",
         "refund-rejected": "Refund Request Rejected",
         "refund-approved": "Refund Request Approved",
-        "consultation-message":"Consultation message"
+        "consultation-message":"Consultation message",
+        "medical-certificate-status":"Medical certificate Status Update"
     },
 
     "notification-messages":{
@@ -343,7 +345,8 @@
         "new-consultation-request": "A new consultation is awaiting approval",
         "refund-request": "A cancellation and refund request has been made",
         "refund-rejected": "Your refund request has been declined",
-        "refund-approved": "Your refund request has been approved"
+        "refund-approved": "Your refund request has been approved",
+        "medical-certificate-status":"Status:"
     },
 
     "messages":{
@@ -432,6 +435,10 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+            "medical-prescription": "Medical prescription",
+            "exam":"Exam",
+            "clinical-diary": "Clinical diary",
+           "medical-certificates": "Medical Certificates",
            "disease":"Disease",
            "date_of_leave":"Date of leave",
            "unread-messages":"Unread messages",

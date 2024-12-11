@@ -84,7 +84,8 @@ const default_selected_permissions= {
   feedback:[],
   support:[],
   app_settings:[],
-  stats:[]
+  stats:[],
+  medical_certificates:[]
  }
 
 const [selectedPermissions,setSelectedPermissions]=useState(default_selected_permissions)
@@ -111,6 +112,10 @@ const [permissions,setPermissions]=useState([
   {
     "resource":"payment_management",
     "actions":['read','approve','reject']
+  },
+  {
+    "resource":"medical_certificates",
+    "actions":['read','update','approve','reject']
   },
   {
     "resource":"doctor_availability",

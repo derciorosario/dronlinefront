@@ -42,6 +42,8 @@ import CancellationTaxes from './pages/cancellation-taxes/index.jsx'
 import CreateCancellationTaxes from './pages/cancellation-taxes/create.jsx'
 import AppSettings from './pages/app-settings/create.jsx'
 
+import MedicalCertificates from './pages/medical-certificates/index.jsx'
+import CreateMedicalCertificates from './pages/medical-certificates/create.jsx'
 
 import LandingPageHome from './landingpage/pages/home/index.jsx'
 import Privacy from './landingpage/pages/privacy-policy';
@@ -131,6 +133,9 @@ function App() {
          <Route path="/medical-prescription/:id" element={<CreateMedicalPrescription/>} />
          <Route path="/add-medical-prescription" element={<CreateMedicalPrescription/>} />
 
+         <Route path="/medical-certificate/:id" element={<CreateMedicalCertificates/>} />
+         <Route path="/medical-certificates" element={<MedicalCertificates/>} />
+
          <Route path="/exams/:id" element={<CreateExams/>} />
          <Route path="/add-exams" element={<CreateExams/>} />
 
@@ -138,6 +143,8 @@ function App() {
 
          <Route path="/consultation-availability"  element={<ConsultationAvailability/>} />
          <Route path="/consultation-availability/:id"  element={<ConsultationAvailability/>} />
+
+         
 
          <Route path="/scheduler"  element={<Scheduler/>} />
 

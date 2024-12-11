@@ -24,17 +24,20 @@ export default function SinglePrint({item,setItem}) {
         
           if(!localStorage.getItem('print_single'))  {
 
-
           data.setIsLoading(true)
-
              
-          preloadImages([
+          let imagestoLoad=[
             item.doctor?.signature_filename,
             item.doctor?.stamp_filename,
             JSON.parse(user?.app_settings?.[0]?.value).stamp_filename
-          ].filter(i=>i))
+          ]
 
+         
+          if(item?.from=="medical-certificates"){
+             imagestoLoad.push(item?.i?.status_changer?.signature_filename)
+          }
 
+          preloadImages(imagestoLoad.filter(i=>i))
 
           }
 
@@ -127,7 +130,7 @@ export default function SinglePrint({item,setItem}) {
    
     return (
       
-      <div className={`w-full flex flex-col overflow-y-auto h-[100vh] ${!item ? '':'_print'} pointer-events-none opacity-0  fixed left-0 top-0 bg-white z-50 px-10`}>
+      <div className={`w-full  flex flex-col overflow-y-auto h-[100vh] ${!item ? '':'_print'} pointer-events-none opacity-0  fixed left-0 top-0 bg-white z-50 px-10`}>
                  
                  {(user?.app_settings?.[0]?.value && item?.from!="medical-certificates") && <div className="top-2 left-2">
                       <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>
@@ -148,13 +151,13 @@ export default function SinglePrint({item,setItem}) {
                                   <span>Patient name:</span>
                             </div>
           
-                            <div  className="flex-1 border-b border-b-black flex items-end mx-4">
+                            <div  className="flex-1 border-b border-b-gray-600 flex items-end mx-4">
                                   <span className="font-medium">{item?.patient?.name}</span>
                             </div>
           
                             <div className="flex items-end ml-5 w-[170px]">
                                 <span>Pro. No:</span>
-                                <span className="flex border-b border-black ml-4 min-w-[200px]">{item?.patient?.id}</span>
+                                <span className="flex border-b border-b-gray-600 ml-4 min-w-[200px]">{item?.patient?.id}</span>
                             </div>
                         </div>
 
@@ -167,13 +170,13 @@ export default function SinglePrint({item,setItem}) {
                                   <span>Address:</span>
                             </div>
           
-                            <div  className="flex-1 border-b border-b-black flex items-end mx-4">
+                            <div  className="flex-1 border-b border-b-gray-600 flex items-end mx-4">
                                   <span className="font-medium">{item?.patient?.address}</span>
                             </div>
           
                             <div className="flex items-end ml-5 w-[170px]">
                                 <span>Tel:</span>
-                                <span className="flex border-b border-black ml-4 min-w-[200px]">{item?.patient?.main_contact}</span>
+                                <span className="flex border-b border-b-gray-600 ml-4 min-w-[200px]">{item?.patient?.main_contact}</span>
                             </div>
 
                           </div>
@@ -212,6 +215,9 @@ export default function SinglePrint({item,setItem}) {
                                         </div>
                                         <div className="flex justify-center mt-2">
                                               {item?.doctor && <img width={100} className="h-auto ml-2" src={doctorSignature}/>}
+                                              {(user?.app_settings?.[0]?.value && !item?.doctor) && <div className="top-2 left-2">
+                                                      <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>
+                                              </div>}
                                         </div>
 
                                         <div className="border-t border-t-gray-400 w-full mt-10">
@@ -219,11 +225,9 @@ export default function SinglePrint({item,setItem}) {
                                           <p className="leading-relaxed mt-3 flex justify-center" style={{lineHeight:2}}>{t('medical-certification-t-4',variables)}</p>
                                         </div>
 
-                                        <div className="flex justify-center">
-                                            {(user?.app_settings?.[0]?.value && item?.from=="medical-certificates") && <div className="top-2 left-2">
-                                                  <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>
-                                            </div>}
-                                        </div>
+                                        {item?.i?.status_changer?.signature_filename && <div className="flex justify-center">
+                                             <img width={100}  className="h-auto" src={item?.i?.status_changer?.signature_filename}/>
+                                        </div>}
 
                                         <div className="border-t border-t-gray-400 w-full mt-10">
                                           <p className="leading-relaxed" style={{lineHeight:2}}>{t('medical-certification-t-5',variables)}</p>
@@ -260,7 +264,7 @@ export default function SinglePrint({item,setItem}) {
 
                <div style={{width:'100%'}} className={`flex-1 ${item?.from=="medical-certificates" ? 'hidden':''}  flex flex-col justify-end w-full`}>
                       <div className="mt-10 flex justify-between">
-                          <span className="font-medium">{new Date().toISOString().split('T')[0]}</span>
+                          <span>{t('common.date')}: <label className="font-medium">{new Date().toISOString().split('T')[0]}</label></span>
   
                           <div>
                             <div className="flex">

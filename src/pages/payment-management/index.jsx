@@ -128,6 +128,7 @@ function App() {
    
   <DefaultLayout
     pageContent={{page:'appointment_invoices',title:t('common.payments'),desc:user?.role=="patient" ? t('titles._payments') : t('titles.payments')}}>
+    
       <div className={`flex items-center mb-4 gap-2 ${!data._loaded.includes('appointment_invoices') ? 'hidden':''}`}>
           {['pending','approved','rejected'].map((i,_i)=>(
             <div onClick={()=>{

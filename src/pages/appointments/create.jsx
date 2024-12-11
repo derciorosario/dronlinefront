@@ -531,7 +531,7 @@ function isUrgentByLimit(hour,date){
    toast.remove()
    toast.success(t('messages.updated-successfully'))
    data.setUpdateTable(Math.random())
-   
+   setLoading(false)
 
   }catch(e){
 
@@ -672,7 +672,7 @@ return (
               <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>                 
             </div>}
 
-            {(form.status!="pending" && form.status!="canceled" && id) && <div className={`flex _feedback items-center gap-x-2  ${(user?.role=="admin" || user?.role=="manager") && form.doctor_id ? 'hidden':''}  ${!id || !itemToEditLoaded ? 'hidden':''}`}>  
+            {(form.status!="pending" && form.status!="canceled" && id) && <div className={`flex _feedback items-center gap-x-2    ${!id || !itemToEditLoaded ? 'hidden':''}`}>  
                 
                 {form.status!="completed" && <button onClick={()=>{
                   setShowComment(true)

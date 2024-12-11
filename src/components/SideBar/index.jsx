@@ -19,6 +19,7 @@ import AppSettingsIcon from '../../assets/images/menu-icons/app-settings.svg'
 import StatsIcon from '../../assets/images/menu-icons/stats.svg'
 import SpecialtyCategoriesIcon from '../../assets/images/menu-icons/specialty-categories.svg'
 import MoreIcon from '../../assets/images/menu-icons/more.svg'
+import MedicalCerificateIcon from '../../assets/images/menu-icons/medical-certificate.svg'
 
 import { t } from 'i18next';
 import { useAuth } from '../../contexts/AuthContext';
@@ -87,6 +88,8 @@ function SideBar() {
      ],access:['admin','patient'],manager_access:{name:'payment_management',per:['read','reject','approve']},showInMobile:true},
     
 
+     {name:t('common.medical-certificates'),path:'/medical-certificates',paths:['/medical-certificates','medical-certificate/:id'], field:'medical-certificate',icon:'medical_certificate',access:['admin','manager','patient','doctor'],manager_access:{name:'medical_certificates',per:['read','reject','approve']}},
+
      {name:'Feedback',path:'/app-feedback',field:'app-feedback',icon:'feedback',sub_menus:[
         {name:t('menu.app-feedback'),path:'/app-feedback',paths:['app-feedback'],manager_access:{name:'feedback',per:['read']}},
         {name:t('menu.appointment-feedback'),path:'/appointment-feedback',paths:['appointment-feedback'],manager_access:{name:'feedback',per:['read']}},
@@ -124,6 +127,7 @@ function SideBar() {
       app_settings:AppSettingsIcon,
       feedback:FeedbackIcon,
       logs:StatsIcon,
+      medical_certificate:MedicalCerificateIcon,
       specialty_categories:SpecialtyCategoriesIcon,
       more:MoreIcon
 

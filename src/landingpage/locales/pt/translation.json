@@ -329,7 +329,8 @@
         "refund-request":"Pedido de reembolso da consulta",
         "refund-rejected":"Pedido de reembolso rejeitado",
         "refund-approved":"Pedido de reembolso aprovado",
-        "consultation-message":"Messagem de consulta"
+        "consultation-message":"Messagem de consulta",
+        "medical-certificate-status":"Actualização do estado do atestado médico"
     },
 
     "notification-messages":{
@@ -342,7 +343,8 @@
        "new-consultation-request":"Nova consulta espera por aprovação",
        "refund-request":"Foi efetuado um pedido cancelamento  e reembolso",
        "refund-rejected":"Seu pedido de reembolso foi recusado",
-       "refund-approved":"Seu pedido de reembolso foi aprovado"
+       "refund-approved":"Seu pedido de reembolso foi aprovado",
+       "medical-certificate-status":"Estado:"
     },
 
     "messages":{
@@ -356,9 +358,9 @@
         "services-title":"Explore Nossos Serviços",
         "services-sub":"Tudo o Que Oferecemos para Seu Conforto e Saúde",
         "about-us":"Oferecemos uma plataforma completa de serviços médicos online, garantindo que você tenha acesso rápido e eficiente a especialistas de diversas áreas da saúde. Através de consultas virtuais seguras e práticas, você pode receber atendimento de qualidade, sem a necessidade de deslocamentos ou longas esperas, diretamente no conforto da sua casa.",
-        "urgent-consultation-limit-with-hours-and-minutes":"As consultas agendadas {{hours}} hora(s) e {{minutes}} minuto(s) antes do horário da conulta são consideradas como urgentes",
-        "urgent-consultation-limit-with-hours":"As consultas agendadas {{hours}} hora(s) antes do horário da conulta são consideradas como urgentes",
-        "urgent-consultation-limit-with-minutes":"As consultas agendadas {{minutes}} minuto(s) antes do horário da conulta são consideradas como urgentes",
+        "urgent-consultation-limit-with-hours-and-minutes":"As consultas agendadas {{hours}} hora(s) e {{minutes}} minuto(s) antes do horário da consulta são consideradas como urgentes",
+        "urgent-consultation-limit-with-hours":"As consultas agendadas {{hours}} hora(s) antes do horário da consulta são consideradas como urgentes",
+        "urgent-consultation-limit-with-minutes":"As consultas agendadas {{minutes}} minuto(s) antes do horário da consulta são consideradas como urgentes",
         "wait-for-refund":"Consulta foi cancelada. O pedido de reembolso do valor da consulta será processado e poderá ser notificado",
         "get-refund":"Obter o seu valor de volta, o pagamento será processado pela nossa equipa",
         "choose-aother-appointment":"Cancele e crie uma nova. O valor da consulta cancelada será usanda na nova consulta",
@@ -431,6 +433,10 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "medical-prescription": "Prescrição Médica",
+        "exam":"Exame",
+        "clinical-diary":"Diário Clínico",
+        "medical-certificates": "Atestados médicos",
         "filter":"Filtrar",
         "disease":"Doença",
         "date_of_leave":"Data de afastamento",

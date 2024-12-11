@@ -7,13 +7,14 @@ import DashboardSkeleton from '../../../components/Skeleton/dashboad'
 import BaiscTable from '../../../components/Tables/basic'
 import _medications from '../../../assets/medications.json'
 import SinglePrint from '../../../components/Print/single'
+import { useNavigate } from 'react-router-dom'
 
 export default function PatientDashboard({startDate,endDate,setStartDate,setEndDate}) {
 
     const data=useData()
     const {user,APP_FRONDEND,serverTime} = useAuth()
     const [hideAmounts,setHideAmounts]=useState(Boolean(localStorage.getItem('hide_dashboard_amounts')))
-    
+    const navigate = useNavigate()
 
     function getIcon(name,active){
         return (
@@ -34,13 +35,12 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
         )
       }
 
-      function globalOnclick(id){
-        setItemToShow({
-          ...itemToShow,
-          action:'update',
-          name:'create-clinical-diary',
-          update_id:id
-         })
+      function globalOnclick(id,path){
+
+        if(path){
+          navigate(path)
+        }
+       
       }
     
     
@@ -345,6 +345,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
 
                 
                 <BaiscTable  canAdd={false} hide={(data._patient_dashboard?.recentItems?.medicalCertificates || []).length==0} loaded={data._loaded.includes('patient_dashboard')} header={[
+                            '.',
                             'ID',
                             t('common.disease'),
                             t('common.date_of_leave'),
@@ -359,11 +360,15 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                              
                               <BaiscTable.Td onClick={()=>{
 
+                                 
+                                 if(i.status!="approved") return
+
             
                                   data.setSinglePrintContent({
                                     patient: i.appointment.patient,
                                     doctor:i.appointment.doctor,
                                     appointment:i.appointment,
+                                    i,
                                     title: t('menu.medical-certificate'),
                                     from:'medical-certificates',
                                     content: [
@@ -376,14 +381,14 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
 
                                }}>
 
-                               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
-                             
+                               {i.status=="approved" && <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
+                             }
                               </BaiscTable.Td>
-                              <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
-                              <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.disease}</BaiscTable.Td>
-                              <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.date_of_leave}</BaiscTable.Td>
-                              <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.details}</BaiscTable.Td>
-                              <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data._specialty_categories.filter(f=>f.id==i.appointment.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.id}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.disease}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.date_of_leave}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.details}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{data._specialty_categories.filter(f=>f.id==i.appointment.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
                           </BaiscTable.Tr>
                       ))}
 
