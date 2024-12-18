@@ -114,10 +114,10 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
          toast.error(t('common.item-not-found'))
          navigate('/appointments')
       }else  if(e.message=='Failed to fetch'){
-        
+         navigate('/appointments')
       }else{
-        toast.error(t('common.unexpected-error'))
-        navigate('/appointments')  
+         toast.error(t('common.unexpected-error'))
+         navigate('/appointments')  
       }
 
      

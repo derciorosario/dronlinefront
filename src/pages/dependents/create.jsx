@@ -123,9 +123,10 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
     }catch(e){
       if(e.message==404){
          toast.error(t('common.item-not-found'))
-         //navigate('/dependents')
+         navigate('/dependents')
       }else  if(e.message=='Failed to fetch'){
-         
+        navigate('/dependents')
+        toast.error(t('common.check-network'))
       }else{
         toast.error(t('common.unexpected-error'))
         navigate('/dependents')  
@@ -157,16 +158,20 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
 
     }else{
 
-      if(form.has_chronic_diseases==null || form.has_surgery_or_relevant_procedures==null || form.has_drug_allergies==null ||form. has_continuous_use_of_medications==null){
+      /*if(form.has_chronic_diseases==null || form.has_surgery_or_relevant_procedures==null || form.has_drug_allergies==null ||form. has_continuous_use_of_medications==null){
         setMessage(t('common.fill-all-required-fills'))
         setMessageType('red')
         setLoading(false)
         return
-      }
+      }*/
 
      
       let response=await data.makeRequest({method:'post',url:`api/patients/${user.data?.id}/dependents`,withToken:true,data:{
-        ...form,uploaded_files:form.uploaded_files.filter(i=>i.filename)
+        ...form,uploaded_files:form.uploaded_files.filter(i=>i.filename),
+        has_chronic_diseases:form.has_chronic_diseases==null ? false : form.has_chronic_diseases,
+        has_surgery_or_relevant_procedures: form.has_surgery_or_relevant_procedures==null ? false : form.has_surgery_or_relevant_procedures,
+        has_drug_allergies:form.has_drug_allergies==null ? false : form.has_drug_allergies,
+        has_continuous_use_of_medications: form.has_continuous_use_of_medications==null ? false : form.has_continuous_use_of_medications
       }, error: ``},0)
 
       if(hideLayout){
@@ -301,7 +306,7 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
 
 
   return (
-     <DefaultLayout hide={ShowOnlyInputs || hideLayout} pageContent={{btn:user?.role=="patient" && id ? { onClick:(e)=>{
+     <DefaultLayout disableUpdateButton={true} hide={ShowOnlyInputs || hideLayout} pageContent={{btn:user?.role=="patient" && id ? { onClick:(e)=>{
                  
       navigate('/add-dependent')
 

@@ -339,7 +339,7 @@ function App() {
 
                    <div onClick={()=>{
                     data._scrollToSection('top')
-                   }} className={`w-[60px] cursor-pointer h-[60px] ${data.scrollY < 100 ? 'opacity-0 scale-50':''} ease-in transition-all delay-100 fixed z-50 right-4 bottom-4 rounded-[0.3rem] flex items-center justify-center bg-honolulu_blue-400  shadow-sm`}>
+                   }} className={`w-[60px] h-[60px] max-md:h-[45px] max-md:w-[45px] cursor-pointer  ${data.scrollY < 100 ? 'opacity-0 scale-50':''} ease-in transition-all delay-100 fixed z-50 right-4 bottom-4 rounded-[0.3rem] flex items-center justify-center bg-honolulu_blue-400  shadow-sm`}>
                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"  fill="#fff"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>
                    </div>
 

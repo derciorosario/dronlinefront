@@ -24,9 +24,9 @@ function AdditionalMessage({type,setMessage,message,float,id,btnSee,btnClose,tit
 
   
   return (
-  <div style={{zIndex:'99999'}} id={id} className={`${float ? 'fixed':''}  right-10 max-w-[400px] bottom-0 ${!message ? 'translate-y-[100%] opacity-0 pointer-events-none':''}   w-full [&>_div]:w-full  transition-all ease-in duration-150`}>
+  <div style={{zIndex:'99999'}} id={id} className={`${float ? 'fixed':''} sm:right-10 sm:max-w-[400px] w-full bottom-0 ${!message ? 'translate-y-[100%] opacity-0 pointer-events-none':''}   w-full [&>_div]:w-full  transition-all ease-in duration-150`}>
    
-  <div className={`absolute h-[5px] overflow-hidden translate-x-[-50%] left-[50%]  top-[0.1rem]  rounded-[0.3rem]`} style={{width:'98%'}}>
+  <div className={`absolute h-[5px] overflow-hidden max-sm:w-full sm:translate-x-[-50%] sm:left-[50%]  top-[0.1rem]  rounded-[0.3rem]`} style={{width:'98%'}}>
  
     <div className={`absolute h-full top-0 left-0 `} style={{background:type || '#111',width:100 - per+'%'}}></div>
     <div className={`h-full w-full`}  style={{background:type || '#111',opacity:'0.4'}}></div>
@@ -43,7 +43,7 @@ function AdditionalMessage({type,setMessage,message,float,id,btnSee,btnClose,tit
     <h3 class="text-lg font-medium   mb-2">{title}</h3>
   </div>
   <div class="mt-2 mb-4 text-sm hidden">
-  {message}
+  {message} 
   </div>
   <div class="flex">
    {btnSee &&  <button onClick={btnSee?.onClick} type="button" class="text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-xs px-3 py-1.5 me-2 text-center inline-flex items-center">

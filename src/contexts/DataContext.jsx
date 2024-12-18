@@ -5,16 +5,15 @@ import toast from 'react-hot-toast';
 let env="pro"
 import io from 'socket.io-client';
 import { t } from 'i18next';
-const socket = io(env!="dev" ? 'https://dronline-nodeserver.arsbeta-mz.com' : 'http://localhost:3001')
+const socket_server=env!="dev" ? 'https://dronline-nodeserver.arsbeta-mz.com' : 'http://localhost:3001'
+const socket = io(socket_server)
 let log_id=Math.random().toString()
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-   
     const [dialogs,setDialogs]=useState({
       
     })
-    
     const [isDeleting,setIsDeleting]=useState(false)
 
     let initial_popups={
@@ -110,7 +109,7 @@ export const DataProvider = ({ children }) => {
         return res
     }
    
-    const {makeRequest,APP_BASE_URL,SERVER_FILE_STORAGE_PATH,isLoading,setIsLoading,user,serverTime,setServerTime} = useAuth()
+    const {makeRequest,APP_BASE_URL,SERVER_FILE_STORAGE_PATH,isLoading,setIsLoading,user,serverTime,setServerTime,APP_FRONDEND} = useAuth()
 
     const [auth,setAuth]=useState({
       email:'',
@@ -215,8 +214,6 @@ export const DataProvider = ({ children }) => {
         return string.replace(/[^0-9]/g, '')
      }
 
-  
-
 
     async function _get(from,params){
       let items=typeof from == "string" ? [from] : from
@@ -273,40 +270,47 @@ export const DataProvider = ({ children }) => {
       return () => clearInterval(intervalId);
 
     }, [updatingServerInfo]);
-
-
    
 
     useEffect(()=>{
 
       socket.on('info',({time})=>{
-
         if(localStorage.getItem('changing_doctor_calendar')){
           return
         }
-
          setServerTime(time)
          timeRef.current=new Date(`${time.date}T${time.hour}:00`)
          setUpdatingServerInfo(Math.random())
       })
-      
+        
       socket.emit('info')
-
       socket.on('disconnect', (data) => {
-       
         setOnline(false)
       });
 
       socket.on('connect', (data) => {
         setOnline(true)
+        if(user)  socket.emit('add-connected-user',{user})
       });
 
     },[])
 
-   
+    useEffect(()=>{
+        if(!user) return
+        socket.emit('add-connected-user',{user})
+    },[user])
+
+     function handleZoomMeetings(action,sessionName){
+           if(action=="start"){
+              socket.emit('start-zoom-meeting',{sessionName})
+           }else if(action=="remove"){
+              socket.emit('remove-zoom-meeting',{sessionName})
+           }else if(action=="check"){
+              socket.emit('check-zoom-meeting',{sessionName})
+           } 
+    }
    
     useEffect(() => {
-
 
       //if(!user || user?.role=="admin" || user?.role=="patient" || user?.role=="doctor") return
       if(!user || user?.role=="admin") return
@@ -334,7 +338,10 @@ export const DataProvider = ({ children }) => {
       scheduled_date:'',
       scheduled_type_of_care:'',
       canceled_appointment_id:'',
-      type_of_care:''
+      type_of_care:'',
+      add_info:'',
+      adding_appointment:'',
+      add_from_doctor_request_id:''
     }
     
     const [_filters, setFilters] = useState(initial_filters);
@@ -816,7 +823,8 @@ function isSetAsUrgentHour(hour,AppSettings){
 
 
   function hasConsultationTimePassed(i) {
-      const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':')
+      
+    const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':')
       if(serverTime){
         const currentTime = new Date(`${serverTime.date}T${formatTime(serverTime.hour)}:00`);
         const consultationTime = new Date(`${i.scheduled_date}T${formatTime(i.scheduled_hours)}:00`);
@@ -824,17 +832,27 @@ function isSetAsUrgentHour(hour,AppSettings){
           return true
         }
       } 
-  }
+    }
 
     const [unreadSupportMessages,setUnreadSupportMessages]=useState(0)
-
-    
     const [isMobile,setIsMobile]=useState(window.innerWidth <= 768)
+    const [waitingParticipantInfo,setWaitingParticipantInfo]=useState(null)
+    const [viewedMeetingNots,setViewedMeetingNots]=useState(localStorage.getItem('viewedAppointments') ? JSON.parse(localStorage.getItem('viewedAppointments')) : [])
+    const [lastJoinMeetingID,setLastJoinMeetingID]=useState(null)
 
-  
-   
+
 
     const value = {
+      lastJoinMeetingID,
+      setLastJoinMeetingID,
+      viewedMeetingNots,
+      setViewedMeetingNots,
+      waitingParticipantInfo,
+      setWaitingParticipantInfo,
+      socket,
+      APP_FRONDEND,
+      socket_server,
+      handleZoomMeetings,
       isMobile,setIsMobile,
       hasConsultationTimePassed,
       getDoctorAmountEarned,

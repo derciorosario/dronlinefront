@@ -11,12 +11,10 @@ const data=useData()
 function endContent(i){
    return (
     <div className="flex items-center justify-center">
-       <span className={`${i.last_ended_status=="done" ? 'bg-green-500' : 'bg-red-500'} text-[14px] my-5 text-white rounded-full px-2 py-1`}>{t('common.support-'+i.last_ended_status)}</span>
+       <span className={`${i?.last_ended_status=="done" || !i?.last_ended_status ? 'bg-green-500' : 'bg-red-500'} text-[14px] my-5 text-white rounded-full px-2 py-1`}>{t('common.support-'+(i?.last_ended_status || 'done'))}</span>
     </div>
    )
  }
-
-
    
 const checkFileType = (filename) => {
     const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
@@ -31,7 +29,7 @@ const checkFileType = (filename) => {
   return (
 
      <div>
-      <div class={`flex ${comment.user_id == user?.id ? 'justify-end':' justify-start'} mb-6 gap-2.5 ${hide ? 'hidden':''}`}>
+      <div class={`flex ${comment.user_id == user?.id ? 'justify-end':' justify-start'} mb-14 gap-2.5 ${hide ? 'hidden':''}`}>
    {comment.user_id != user?.id && <div className="border bg-gray-200 rounded-full w-[40px] h-[40px] flex items-center justify-center">{comment.user?.name?.charAt()?.toUpperCase()}</div>}
    <div class="flex flex-col gap-1">
       <div class="flex items-center space-x-2 rtl:space-x-reverse">
@@ -72,7 +70,7 @@ const checkFileType = (filename) => {
    
 </div>
  
-{(comment.last_ended!=0 && comment.last_ended) && endContent()}
+{(comment.last_ended!=0 && comment.last_ended) && endContent(comment)}
 
      </div>
 

@@ -37,11 +37,6 @@ const ProtectedRoute = ({ children, redirectTo = '/', path }) => {
   if (loading) {
       return <Outlet/>;
   }else if(!user && !loading){
-
-      if(location.pathname=="/"){
-         // return <LandingPageHome/>
-      }
-
       return <Navigate to={'/login'} replace />
   }else if(user.role=="client"){
       toast.remove()
@@ -49,11 +44,6 @@ const ProtectedRoute = ({ children, redirectTo = '/', path }) => {
       return <Navigate to={'/login'} replace />
   }else{
 
-    /*if(page_restriction[user.role].includes(location.pathname.split('T').join(''))){
-           toast.remove()
-           toast.error('Página restrita')
-           return <Navigate to={'/'} replace />
-     }*/
      return isAuthenticated ? children : <Navigate to={redirectTo} replace />;
 
   }

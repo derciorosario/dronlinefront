@@ -73,7 +73,7 @@ function globalOnclick(id){
 
            <div className="flex-1">
           
-           <BasicSearch printAction={()=>{
+           <BasicSearch loaded={data._loaded.includes('exams')} search={search} printAction={()=>{
 
               data.setSinglePrintContent({
                   patient: itemToShow.appointment.patient,

@@ -137,7 +137,7 @@ function ChatFile({show,setShow,_upload,res}) {
         </div>}
 
 
-        {upload.filename && <span className="flex justify-center">{file.name}</span>}
+         {upload.filename && <span className="flex justify-center">{t('common.file-uploaded')}</span>}
     
            {!upload.uploading  && 
         <div class="grid gap-1">
@@ -174,7 +174,8 @@ function ChatFile({show,setShow,_upload,res}) {
 
           <input value={fileTitle} onChange={(e)=>{
             setFileTitle(e.target.value)
-          }} placeholder={t('common.title-optional')} className={` p-2.5 outline-none flex-1`}/>
+          }} placeholder={t('common.title-optional')} className={` p-2.5 outline-none flex-1 w-[60%]`}/>
+          
           <div onClick={()=>{
             res({...upload,comment:fileTitle})
             close()

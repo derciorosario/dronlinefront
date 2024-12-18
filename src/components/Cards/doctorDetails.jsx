@@ -22,7 +22,6 @@ function Item({i,active,selected}){
  }
 
 
-
  return (
     
  <div  class="w-full bg-white border border-gray-200 rounded-lg shadow ">

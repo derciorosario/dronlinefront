@@ -56,7 +56,8 @@ function FileInput({_upload,label,res,r}) {
           setUpload(prev=>({...prev,progress:percentComplete}))
         }
       };
-    
+  
+
       xhr.open('POST', data.APP_BASE_URL + '/api/upload', true);
       xhr.setRequestHeader('Accept', 'application/json');
     

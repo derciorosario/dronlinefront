@@ -36,7 +36,6 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
     const [selectedTab2,setSelectedTab2]=useState('scheduled_for_today')
 
 
-    console.log({bbbbbbbbbb:data._loaded})
    
     let required_data=['doctor_dashboard','specialty_categories']
 
@@ -180,9 +179,7 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
                                           )
                                    })}
 
-                                  {upcomingAppointments.length==0 && <span className="mr-[30px] ml-4 text-gray-400">({t('common.no-appointments')})</span>}
-                       
-                        </div>
+                           </div>
 
                         <BaiscTable canAdd={false} hide={upcomingAppointments.length==0}   loaded={data._loaded.includes('doctor_dashboard')} header={[
                                        t('form.consultation-id'),

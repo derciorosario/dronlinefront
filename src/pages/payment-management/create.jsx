@@ -87,7 +87,8 @@ function AppointmentInvoice({ShowOnlyInputs}) {
          toast.error(t('common.item-not-found'))
          navigate('/payment-management')
       }else  if(e.message=='Failed to fetch'){
-        
+         navigate('/payment-management')
+         toast.error(t('common.check-network'))
       }else{
         toast.error(t('common.unexpected-error'))
         navigate('/payment-management')  

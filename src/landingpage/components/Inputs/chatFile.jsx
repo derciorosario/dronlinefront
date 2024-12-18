@@ -121,7 +121,6 @@ function ChatFile({show,setShow,_upload,res}) {
         
         <div class="w-full py-9 bg-gray-50  shadow-lg  rounded-2xl border border-gray-300 border-dashed">
         
-        
         <div class="grid gap-3 relative">
 
 
@@ -134,10 +133,9 @@ function ChatFile({show,setShow,_upload,res}) {
         </div>}
 
 
-        {upload.filename && <span className="flex justify-center">{file.name}</span>}
-    
+        {upload.filename && <span className="flex justify-center">{t('common.file-uploaded')}</span>}
            {!upload.uploading  && 
-        <div class="grid gap-1">
+           <div class="grid gap-1">
             <h4 class={`text-center hidden text-gray-900 text-sm font-medium leading-snug`}>{t('common.drag-file')}</h4>
             <span class={`text-center hidden  text-gray-400 text-xs font-light leading-4`}>{t('common.or')}</span>
             <div class="flex items-center justify-center">
@@ -147,7 +145,6 @@ function ChatFile({show,setShow,_upload,res}) {
               </label>
             </div>
           </div>
-                
           }
 
 
@@ -167,18 +164,19 @@ function ChatFile({show,setShow,_upload,res}) {
         
         </div>
                     
-        {upload.filename &&  <div className={`bg-gray absolute px-1 overflow-hidden flex items-center left-[50%] bottom-[-20px] border-gray-300 bg-white  border text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500  w-[80%] translate-x-[-50%]`}>
-
-          <input value={fileTitle} onChange={(e)=>{
-            setFileTitle(e.target.value)
-          }} placeholder={t('common.title-optional')} className={` p-2.5 outline-none flex-1`}/>
-          <div onClick={()=>{
-            res({...upload,comment:fileTitle})
-            close()
-          }} class="flex  h-9 px-5  flex-col bg-green-500 rounded-full shadow text-white text-xs font-semibold leading-4 items-center  cursor-pointer justify-center focus:outline-none">{t('common.send')}</div>
-             
+         {upload.filename &&  <div className={`bg-gray absolute px-1 overflow-hidden flex items-center left-[50%] bottom-[-20px] border-gray-300 bg-white  border text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500  w-[80%] translate-x-[-50%]`}>
         
-        </div>}
+                  <input value={fileTitle} onChange={(e)=>{
+                    setFileTitle(e.target.value)
+                  }} placeholder={t('common.title-optional')} className={` p-2.5 outline-none flex-1 w-[60%]`}/>
+                  
+                  <div onClick={()=>{
+                    res({...upload,comment:fileTitle})
+                    close()
+                  }} class="flex  h-9 px-5  flex-col bg-green-500 rounded-full shadow text-white text-xs font-semibold leading-4 items-center  cursor-pointer justify-center focus:outline-none">{t('common.send')}</div>
+                     
+                
+          </div>}
             
         </div> 
 

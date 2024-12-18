@@ -180,7 +180,8 @@ useEffect(()=>{
          toast.error(t('common.item-not-found'))
          navigate('/managers')
       }else  if(e.message=='Failed to fetch'){
-        
+        navigate('/managers')
+        toast.error(t('common.check-network'))
       }else{
         toast.error(t('common.unexpected-error'))
         navigate('/managers')  
@@ -263,9 +264,9 @@ useEffect(()=>{
       }else if(e.message==500){
         setMessage(t('common.unexpected-error'))
       }else  if(e.message=='Failed to fetch'){
-          setMessage(t('common.check-network'))
+        setMessage(t('common.check-network'))
       }else{
-          setMessage(t('common.unexpected-error'))
+        setMessage(t('common.unexpected-error'))
       }
 
       setLoading(false)

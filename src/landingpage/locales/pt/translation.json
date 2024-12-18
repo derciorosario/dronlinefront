@@ -330,7 +330,9 @@
         "refund-rejected":"Pedido de reembolso rejeitado",
         "refund-approved":"Pedido de reembolso aprovado",
         "consultation-message":"Messagem de consulta",
-        "medical-certificate-status":"Actualização do estado do atestado médico"
+        "medical-certificate-status":"Actualização do estado do atestado médico",
+        "support-message":"Mensagem de suporte",
+        "new-medical-certificate":"Novo atestado médico"
     },
 
     "notification-messages":{
@@ -344,7 +346,8 @@
        "refund-request":"Foi efetuado um pedido cancelamento  e reembolso",
        "refund-rejected":"Seu pedido de reembolso foi recusado",
        "refund-approved":"Seu pedido de reembolso foi aprovado",
-       "medical-certificate-status":"Estado:"
+       "medical-certificate-status":"Estado:",
+       "support-message":"Mensagem:"
     },
 
     "messages":{
@@ -365,7 +368,7 @@
         "get-refund":"Obter o seu valor de volta, o pagamento será processado pela nossa equipa",
         "choose-aother-appointment":"Cancele e crie uma nova. O valor da consulta cancelada será usanda na nova consulta",
         "appointment-no-longer-available":"A hora e data selecionada para a consulta não está mais disponível",
-        "you-have-saved-appointment":"Você tem um rascunho guardado da sua consulta. Deseja ter minar o preenchimento?",
+        "you-have-saved-appointment":"Você tem um rascunho guardado da sua consulta. Deseja terminar o preenchimento?",
         "login-to-proceed-with-consultation":"Seu agendamento foi salvo, mas antes de proceder com o envio, precisa registar ou fazer o login na plataforma. ",
         "contact-us-if-delay":"Caso não tenha resposta nos próximos 5 minutos, aconselhamos que ligue de imediato para o contacto +258 856462304.",
         "password-mismatch":"As senhas inseridas devem ser iguais",
@@ -433,6 +436,26 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "edit-to-add":"Editar para cadastro",
+        "approved-by":"Aprovado por",
+        "print-anyway":"Imprimir mesmo assim",
+        "printing-images-missing":"Algumas imagens não foram carregas",
+        "cannot-edit-information":"Não pode editar informação",
+        "file-uploaded":"Arquivo carregado",
+        "widowed":"Viúvo(a)",
+        "divorced":"Divorciado(a)",
+        "upcoming-appointments":"Consultas futuras",
+        "data-sent":"Dados enviados com sucesso",
+        "patient-joined-meeting":"Paciente acedeu a consulta",
+        "doctor-joined-meeting":"Médico acedeu a consulta",
+        "patient-waiting":"Paciente está a espera na consulta",
+        "doctor-waiting":"Médico está a espera para consulta",
+        "to_start":"Iniciar",
+        "waiting-for-doctor":"A espera do médico",
+        "virtual-appointment":"Consulta virtual",
+        "home":"Página inicial",
+        "available-24":"Atendimento 24 horas",
+        "update-manager":"Actualizar gestor",
         "medical-prescription": "Prescrição Médica",
         "exam":"Exame",
         "clinical-diary":"Diário Clínico",
@@ -835,6 +858,7 @@
         "choose-file":"Escolher arquivo",
         "understood":"Entendi",
         "add-info":"Adicione Informação",
+        "to-add-info":"Adicionar Informação",
         "view-profile":"Aceder ao perfil",
         "cancel":"Cancelar",
         "results":"Resultado(s)",

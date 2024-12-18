@@ -71,6 +71,7 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
                   </div>
               </div> }        
         </div>
+
         <div id="dropdown" class="z-10  absolute left-0 top-[100%] bg-white divide-y divide-gray-100 rounded-lg shadow w-full">
             {showOptions && <ul class="py-2 max-h-[200px] overflow-y-auto text-sm text-gray-700" aria-labelledby="dropdown-button">
              
@@ -90,8 +91,10 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
                             setSelectedId(i.id)
                             res(i.id)
                             setInput('')
-                            inputRes('')
                             setShowOptions(false)
+                            inputRes('')
+                           
+
                         }} type="button" class="inline-flex w-full text-[13px] truncate px-4 py-2 hover:bg-gray-100">{i.name}</button>
                     </li>
                 ))}

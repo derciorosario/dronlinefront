@@ -97,7 +97,8 @@ let initial_form={}
          toast.error(t('common.item-not-found'))
          navigate('/cancellation-taxes')
       }else  if(e.message=='Failed to fetch'){
-        
+        navigate('/cancellation-taxes') 
+        toast.error(t('common.check-network'))
       }else{
         toast.error(t('common.unexpected-error'))
         navigate('/cancellation-taxes')  

@@ -55,21 +55,18 @@ import AppointmentCancelationTerms from './landingpage/pages/appointment-cancela
 
 function App() {
 
-// const {pathname} = useLocation()
+  //const {pathname} = useLocation()
 
   return (
+
     <Router>
-
       <Routes>
-
-
          <Route path="/terms" element={ <Terms/>} />
          <Route path="/faq" element={ <LandingPageFaq/>} />
          <Route path="/privacy" element={ <Privacy/>} />
          <Route path="/how-to-cancel-my-consultation" element={<HowToCancelConsultation/>}/>
          <Route path="/doctors-list" element={<DoctorList/>}/>
          <Route path="/dashboard" element={<ProtectedRoute redirectTo="/login"><Home/></ProtectedRoute>}/>
-
          <Route path="/appointment-cancelation-terms" element={ <AppointmentCancelationTerms/>} />
       
          <Route path="/register"  element={<Register/>} />
@@ -150,10 +147,7 @@ function App() {
 
          <Route path="/logs"  element={<Logs/>} />
          <Route path="/user-activities"  element={<UserActivities/>} />
-         <Route path="/meeting/zoom"  element={<ZoomMeeting/>} />
-
-         
-
+         <Route path="/meeting/zoom/appointment/:id"  element={<ProtectedRoute redirectTo="/login"><ZoomMeeting/></ProtectedRoute>} />
          <Route path="*" element={<NotFound />} />
 
       </Routes>

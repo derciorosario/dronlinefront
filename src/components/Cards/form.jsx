@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 function FormCard({items,hide,printMode}) {
   const navigate=useNavigate()
   return (
-    <div  className={`w-full  flex mt-5 flex-wrap gap-y-10 px-5 py-5 bg-gray-50 rounded-[0.3rem] ${hide ? 'hidden':''}`}>
+    <div  className={`w-full flex mt-5 flex-wrap gap-y-10 px-5 py-5 max-md:px-2 bg-gray-50 rounded-[0.3rem] ${hide ? 'hidden':''}`}>
                {items.filter(i=>!i.hide).map((i,_i)=>(
                    <div class={`w-[33%] px-3 max-sm:w-full  ${printMode ? 'mb-2':'mb-5 max-md:w-[48%]'}`}>
                     <div>

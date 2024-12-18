@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import {  useLocation, useNavigate } from 'react-router-dom';
 import DashboardIcon from '../../assets/images/menu-icons/dashboard.svg'
 import PatientIcon from '../../assets/images/menu-icons/patient.svg'
 import LogoIcon from '../../assets/images/dark-logo-1.png'
@@ -25,7 +25,7 @@ import { t } from 'i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { useData } from '../../contexts/DataContext';
 
-function SideBar() {
+function SideBar({hideSidebar}) {
 
     const {pathname}=useLocation()
     const navigate = useNavigate()
@@ -279,12 +279,10 @@ function SideBar() {
        setOpenPopUps(_open)
     },[data._openPopUps])
 
-
-  
     return (
       <>
       
-      <div className={`${openPopUps.length!=0 || data.paymentInfo?.type_of_care || (data.appointmentcancelationData?.consultation?.id && !data.appointmentcancelationData?.hide) || data.selectedDoctorToSchedule?.id || data._openPopUps.appointment_messages ? 'hidden':'fixed'}  -bottom-2 md:hidden _mobile_menu  left-0 w-full bg-white flex items-center border-t border-t-gray-200 rounded-t-[15px] cursor-pointer shadow-sm`} style={{zIndex:999}}>
+      <div className={`${openPopUps.length!=0 || data.paymentInfo?.type_of_care || (data.appointmentcancelationData?.consultation?.id && !data.appointmentcancelationData?.hide) || data.selectedDoctorToSchedule?.id || data._openPopUps.appointment_messages || data._openPopUps.add_dependent  || data._openPopUps.notifications || data._openPopUps.feedback ? 'hidden':'fixed'}  -bottom-2 md:hidden _mobile_menu  left-0 w-full bg-white flex items-center border-t border-t-gray-200 rounded-t-[15px] cursor-pointer shadow-sm`} style={{zIndex:999}}>
              <div className="w-full px-2 py-4 flex items-center justify-around relative">
 
                 {menuItems.filter(i=>i.showInMobile).map((item, index)=>(
@@ -331,7 +329,7 @@ function SideBar() {
              </div>
       </div>
 
-      <div className={`min-w-[230px]  md:max-w-[240px] max-md:${openMobileMenu ? 'w-full':'hidden'} max-md:flex flex-col bg-white h-[100vh] max-md:fixed max-md:z-50  left-0 top-0`}>
+      <div className={`min-w-[230px] ${hideSidebar ? 'hidden':''}  md:max-w-[240px] max-md:${openMobileMenu ? 'w-full':'hidden'} max-md:flex flex-col bg-white h-[100vh] max-md:fixed max-md:z-50  left-0 top-0`}>
 
       <div className="flex justify-center max-md:justify-around py-[20px] mb-6 cursor-pointer items-center">
           <h1 className="text-[25px] font-medium" onClick={()=>navigate('/')}>

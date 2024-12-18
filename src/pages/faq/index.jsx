@@ -99,7 +99,7 @@ function App() {
          <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
           
          <div className="flex-1">
-             <BasicSearch hideSearch={true} total={data._faqs?.total} from={'faqs'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+             <BasicSearch hideSearch={true} loaded={data._loaded.includes('faqs') && !loading} search={search} total={data._faqs?.total} from={'faqs'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
              <div className="flex w-full relative">
                 <div className="absolute w-full">

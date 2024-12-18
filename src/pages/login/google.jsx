@@ -29,7 +29,7 @@ function GoogleSignIn({signUpWithGoogle,setMessage,isSignup,setLoading}) {
                     name:'dercio',
                     email:'ded@sad.com'
                 })
-            }} className="w-full  login-container">
+            }} className="w-full max-lg:hidden  login-container">
                
                 <button type="button" class="border focus:ring-4 w-full  focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-2.5 text-center inline-flex justify-center items-center">
                         <img src={GoogleIcon} width={"20"}/>
@@ -39,7 +39,7 @@ function GoogleSignIn({signUpWithGoogle,setMessage,isSignup,setLoading}) {
             </div>
 
 
-            <div style={{left: position.x, top: position.y,transform: 'translate(-50%, -50%)',opacity:'0.01'}} className="absolute left-0 top-0  h-full">
+            <div style={{left: position.x, top: position.y,transform: 'translate(-50%, -50%)',opacity:'0.01'}} className="absolute left-0 top-0  h-full max-lg:hidden">
 
                     <GoogleLogin
                             onSuccess={credentialResponse => {
@@ -52,6 +52,20 @@ function GoogleSignIn({signUpWithGoogle,setMessage,isSignup,setLoading}) {
                 />
 
             </div>
+
+
+            <div className="flex  w-full lg:hidden">
+                <GoogleLogin
+                                onSuccess={credentialResponse => {
+                                    const decoded = jwtDecode(credentialResponse.credential);
+                                    signUpWithGoogle(decoded)
+                                }}
+                                onError={() => {
+                                    setMessage(t('common.check-network'))
+                                }}
+                />
+            </div>
+
         </label>
   )
 }

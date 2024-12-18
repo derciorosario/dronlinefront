@@ -61,9 +61,9 @@ function App() {
           if(e.message==500){
             toast.error(t('common.unexpected-error'))
           }else  if(e.message=='Failed to fetch'){
-              toast.error(t('common.check-network'))
+            toast.error(t('common.check-network'))
           }else{
-              toast.error(t('common.unexpected-error'))
+            toast.error(t('common.unexpected-error'))
           }
 
        }
@@ -130,12 +130,12 @@ function App() {
    
   <DefaultLayout
     pageContent={{page:'appointment_invoices',title:t('common.refunds')}}>
-      <div className={`flex items-center mb-4 gap-2 ${!data._loaded.includes('appointment_invoices') ? 'hidden':''}`}>
+      <div className={`flex items-center mb-4 w-full flex-wrap md:gap-2 ${!data._loaded.includes('appointment_invoices') ? 'hidden':''}`}>
         {['pending','approved','rejected'].map((i,_i)=>(
             <div onClick={()=>{
               setSelectedTab(i)
               data.setUpdateTable(Math.random())
-            }} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+            }} className={`flex max-md:min-w-[130px] mb-1 transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
               <span>{getIcon(i,selectedTab==i)}</span>
               <span>{t('common.'+i)}</span>
               {data._appointment_invoices?.status_counts?.[i] && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
@@ -151,7 +151,7 @@ function App() {
          <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
           
          <div className="flex-1">
-             <BasicSearch hideSearch={true} total={data._appointment_invoices?.data?.total} from={'appointment_invoices'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+             <BasicSearch hideSearch={true} search={search} total={data._appointment_invoices?.data?.total} from={'appointment_invoices'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
              <div className="flex w-full relative">
                 <div className="absolute w-full">

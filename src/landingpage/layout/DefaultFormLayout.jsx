@@ -15,7 +15,7 @@ return (
              {topBarContent}
         </div>}
         
-        <form class="px-3 flex flex-wrap gap-x-4">
+        <form class="px-3 flex flex-wrap gap-x-4 max-md:px-1">
              {childrenWithProps}
         </form>
 
@@ -36,7 +36,7 @@ return (
        
         let _id=Math.random()
 
-        return (   
+    return (   
             <div style={style ? {...style} : {}} className={`mt-7 ${textarea ? 'w-full':'w-[300px]'} ${hide || hideInputs ? 'hidden':''}`}>
                     <label for={_id} class="block mb-2 text-sm  text-gray-900">{label} {r && <span className="text-red-500">*</span>}</label>
                    

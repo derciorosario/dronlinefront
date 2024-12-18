@@ -134,7 +134,8 @@ function addPatients({ShowOnlyInputs}) {
          toast.error(t('common.item-not-found'))
          navigate('/patients')
       }else  if(e.message=='Failed to fetch'){
-        
+        toast.error(t('common.check-network')) 
+        navigate('/patients')
       }else{
         toast.error(t('common.unexpected-error'))
         navigate('/patients')  
@@ -168,12 +169,12 @@ function addPatients({ShowOnlyInputs}) {
 
     }else{
 
-      if(form.has_chronic_diseases==null || form.has_surgery_or_relevant_procedures==null || form.has_drug_allergies==null || form.has_continuous_use_of_medications==null){
+     /* if(form.has_chronic_diseases==null || form.has_surgery_or_relevant_procedures==null || form.has_drug_allergies==null || form.has_continuous_use_of_medications==null){
         setMessage(t('common.fill-all-required-fills'))
         setMessageType('red')
         setLoading(false)
         return
-      }
+      }*/
 
       if(!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))){
         setMessage(t('common.invalid-email'))
@@ -183,7 +184,11 @@ function addPatients({ShowOnlyInputs}) {
       }
    
       let response=await data.makeRequest({method:'post',url:`api/register-patient`,withToken:true,data:{
-        ...form,uploaded_files:form.uploaded_files.filter(i=>i.filename)
+        ...form,uploaded_files:form.uploaded_files.filter(i=>i.filename),
+        has_chronic_diseases:form.has_chronic_diseases==null ? false : form.has_chronic_diseases,
+        has_surgery_or_relevant_procedures: form.has_surgery_or_relevant_procedures==null ? false : form.has_surgery_or_relevant_procedures,
+        has_drug_allergies:form.has_drug_allergies==null ? false : form.has_drug_allergies,
+        has_continuous_use_of_medications: form.has_continuous_use_of_medications==null ? false : form.has_continuous_use_of_medications
       }, error: ``},0)
 
       setForm({...initial_form,keep_message:true})

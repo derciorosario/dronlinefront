@@ -10,6 +10,7 @@ import BasicPagination from '../../components/Pagination/basic';
 import i18next from 'i18next';
 import BasicFilter from '../../components/Filters/basic';
 import BasicSearch from '../../components/Search/basic';
+import SelectedFilters from '../../components/Filters/selected-filters';
 
 
 
@@ -170,17 +171,19 @@ function App() {
    
          <DefaultLayout
             pageContent={{leftContent:(
-                  <div className={`flex flex-col mr-5 ${!data._appointments.appointments_with_unread_comments || !data._loaded.includes('appointments') || loading ? 'hidden':''}`}>
-                      <span className="text-[13px] w-[200px]">{t('common.you-have-unread-consultation-messages',{count:data._appointments.appointments_with_unread_comments})}</span>
-                      <div className="table" onClick={()=>{}}>
+
+                   <div className={`flex  md:flex-col  mr-5 ${!data._appointments.appointments_with_unread_comments || !data._loaded.includes('appointments') || loading ? 'hidden':''}`}>
+                      <span className="text-[13px] md:w-[200px] w-full">{t('common.you-have-unread-consultation-messages',{count:data._appointments.appointments_with_unread_comments})}</span>
+                      <div className="table max-md:ml-2" onClick={()=>{}}>
                         <div  class="inline-flex items-center cursor-pointer" onClick={()=>{
                            setShowWithMessages(!showWithMessages)
                         }}>
-                                <input type="checkbox" value="" checked={showWithMessages}/>
-                                <span class="ml-1 text-sm font-medium">{t('common.filter')}</span>
+                         <input type="checkbox" value="" checked={showWithMessages}/>
+                         <span class="ml-1 text-sm font-medium">{t('common.filter')}</span>
                         </div>
                       </div>
-                 </div>
+                  </div>
+
             ),page:'appointments',title:t('common.appointments'),desc:t('titles.appointments'),btn:{onClick:user?.role=="patient" ? (e)=>{
             if(!user?.data?.date_of_birth){
               data._showPopUp('basic_popup','conclude_patient_info')
@@ -194,7 +197,7 @@ function App() {
                    <div onClick={()=>{
                       data.setUpdateTable(Math.random())
                       setSelectedTab(i)
-                   }} className={`flex max-md:min-w-[130px] transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+                   }} className={`flex   border-gray-300 ml-1 max-md:min-w-[150px] transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
                      <span className="">{getIcon(i,selectedTab==i)}</span>
                      <span className="max-md:text-[15px]">{t('common.'+i)}</span>
                      {data._appointments?.status_counts?.[i] && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
@@ -206,16 +209,13 @@ function App() {
              </div>
 
              <div className="flex">
-
-             <BasicFilter  setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
-               
-
+             <BasicFilter  setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>      
              <div className="flex-1">
-
-             <BasicSearch total={data._appointments?.total} from={'appointments'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
-            
-              <div className="flex w-full relative">
-                <div className="absolute w-full">
+             <BasicSearch  hideSearch={true} loaded={data._loaded.includes('appointments') && !loading} search={search} total={data._appointments?.appointments?.total} from={'appointments'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+             <SelectedFilters setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
+           
+             <div className="flex w-full relative">
+             <div className="absolute w-full">
 
                <BaiscTable canAdd={user?.role=="patient"} addPath={'/add-appointments'} loaded={data._loaded.includes('appointments') && !loading} header={[
                         
@@ -231,7 +231,7 @@ function App() {
                           t('form.medical-specialty'),
                           t('form.type-of-care'),
                           t('common.unread-messages'),
-                          t('form.consultation-method'),
+                         // t('form.consultation-method'),
                           t('form.payment-confirmed'),
                           t('common.doctor'),
                           t('form.reason-for-consultation'),
@@ -278,7 +278,7 @@ function App() {
                                       <span>{i.unread_comments_count}</span>
                                     </div>
                                 </BaiscTable.Td>
-                                <BaiscTable.Td url={`/appointment/`+i.id}>{'Plataforma Zoom'}</BaiscTable.Td>
+                               {/** <BaiscTable.Td url={`/appointment/`+i.id}>{'Plataforma Zoom'}</BaiscTable.Td> */}
                                
                                 <BaiscTable.Td url={`/appointment/`+i.id}>
                                   <button type="button" class={`text-white cursor-default ml-4 ${i.payment_confirmed ? "bg-honolulu_blue-500": "bg-gray-400"}  focus:outline-none  font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center`}>
@@ -293,20 +293,30 @@ function App() {
                                
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                                <BaiscTable.Td hide={selectedTab!="approved"}>
+                               
+                               {/** <BaiscTable.Td hide={selectedTab!="approved"}>
                                     {i.zoom_link && <div className="cursor-pointer hover:opacity-80" onClick={()=>{
                                          window.open(i.zoom_meeting.meeting_data[`${user?.role=="patient" ? 'join':'start'}_url`], '_blank')
                                     }}>               
                                          <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
                                     </div>}
+                                </BaiscTable.Td> */}
+
+                                <BaiscTable.Td hide={selectedTab!="approved"}>
+                                   <div onClick={()=>{
+                                         window.open(`${data.APP_FRONDEND}/meeting/zoom/appointment/`+i.id, '_blank')
+                                    }}>
+                                     <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
+                                   </div>
                                 </BaiscTable.Td>
+
                                
                                 <BaiscTable.Td hide={selectedTab!="canceled"} url={`/appointment/`+i.id}>{i.cancelation_reason ? (t('common.'+i.cancelation_reason)?.length > 40 ? t('common.'+i.cancelation_reason).slice(0,40)+"..." : t('common.'+i.cancelation_reason)):''}</BaiscTable.Td>
                                 <BaiscTable.AdvancedActions  id={i.id} items={[
                                     //{hide:0==0 || i.payment_confirmed==true || !(user?.role=="admin" || user?.role=="patient" || (user?.role=="manager" && user?.data?.permissions?.appointments?.includes('cancel'))),name:t('common.approve-payment'),onClick:()=>{handleItems({payment_confirmed:true,id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M440-200h80v-40h40q17 0 28.5-11.5T600-280v-120q0-17-11.5-28.5T560-440H440v-40h160v-80h-80v-40h-80v40h-40q-17 0-28.5 11.5T360-520v120q0 17 11.5 28.5T400-360h120v40H360v80h80v40ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-560v-160H240v640h480v-480H520ZM240-800v160-160 640-640Z"/></svg>)},
                                     {hide:user?.role!="doctor" || i.status!="completed",name:t('common.set-as-approved'),onClick:()=>{handleItems({status:'approved',id:i.id})},icon:(<svg  xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M438-226 296-368l58-58 84 84 168-168 58 58-226 226ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>)},
                                     {hide:data.hasConsultationTimePassed(i) || (i.status=="completed" && (user?.role!="admin" && user?.role!="manager")) || i.status=="canceled" || !(user?.role=="admin" || user?.role=="patient" || (user?.role=="manager" && user?.data?.permissions?.appointments?.includes('cancel')) || (i.status=="completed" && user?.role=="doctor")),name:t('common.cancel'),onClick:()=>{handleItems({status:'canceled',id:i.id,appointment:i})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m388-212-56-56 92-92-92-92 56-56 92 92 92-92 56 56-92 92 92 92-56 56-92-92-92 92ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>)},
-                                    {hide:i.status=="completed" || !i.payment_confirmed || user?.role!="doctor",name:t('common.complete'),onClick:()=>{handleItems({status:'completed',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
+                                    {hide:i.status=="completed" || i.status=="canceled" || !i.payment_confirmed || (user?.role!="doctor" && i.doctor_id) || ((user?.role!="manager" && user?.role!="admin") && !i.doctor_id),name:t('common.complete'),onClick:()=>{handleItems({status:'completed',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
                                    
                                 ]}/>
 

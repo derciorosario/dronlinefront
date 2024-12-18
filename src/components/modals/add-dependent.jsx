@@ -20,7 +20,7 @@ function AddDependentPopUp({ show }) {
         </div>
 
         <div className="justify-between mb-4 mt-5">
-             <AddDependents hideLayout={true}/>
+             <AddDependents loadingWithPopUp={true} hideLayout={true}/>
         </div>
       </div>
     </div>

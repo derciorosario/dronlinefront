@@ -48,10 +48,10 @@ function Feedback({setShowFeedback}) {
   return (
     <div className={`w-full flex pb-[100px] px-3 items-end justify-center ${!data._openPopUps.feedback ? 'opacity-0 pointer-events-none translate-y-[100px]':''} fixed left-0 top-0 h-[100vh] bg-[rgba(0,0,0,0.3)] z-50 transition ease-in delay-100`}>
     
-          <div className="w-[600px] bg-white p-4 rounded-[0.3rem] _feedback">
+          <div className="max-w-[600px] bg-white p-4 rounded-[0.3rem] _feedback">
 
            <div class="flex justify-between mb-6">
-                <h2 class="text-[20px] flex-1 mr-3 lg:text-2xl font-bold text-gray-900">{t('common.share-your-option')}</h2>
+                <h2 class="text-[20px] max-sm:text-[17px] flex-1 mr-3 lg:text-2xl font-bold text-gray-900">{t('common.share-your-option')}</h2>
                 <div onClick={()=>data._closeAllPopUps()} className="bg-honolulu_blue-400 cursor-pointer hover:opacity-90 w-[40px] h-[40px] right-3 top-3 z-30 rounded-full flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
             </div>
@@ -80,7 +80,7 @@ function Feedback({setShowFeedback}) {
                          if(!rateSelected)  setChosenIndex(null)
 
                         }} 
-                 className="flex items-center gap-x-2">
+                 className="flex items-center gap-x-2 flex-wrap">
 
                 {[1,2,3,4,5].map((_,_i)=>(
 
@@ -92,8 +92,8 @@ function Feedback({setShowFeedback}) {
                           setRateSelected(true)
                         }}
                         className="cursor-pointer">
-                       {(chosenIndex!=null && chosenIndex >= _i) ? <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill={`${rateSelected ? 'rgb(12,124,171)':'#5f6368'}`}><path d="m233-120 65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z"/></svg>
-                        : <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/></svg>
+                       {(chosenIndex!=null && chosenIndex >= _i) ? <svg className="h-[24px] max-sm:h-[19px]" xmlns="http://www.w3.org/2000/svg"  viewBox="0 -960 960 960" fill={`${rateSelected ? 'rgb(12,124,171)':'#5f6368'}`}><path d="m233-120 65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z"/></svg>
+                        : <svg className="h-[24px] max-sm:h-[19px]" xmlns="http://www.w3.org/2000/svg"  viewBox="0 -960 960 960"  fill="#5f6368"><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/></svg>
                        }       
                     </span>
 

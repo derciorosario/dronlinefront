@@ -66,7 +66,7 @@ function App() {
           
            <div className="flex-1">
           
-           <BasicSearch hideFilters={true} total={data._managers?.total} from={'managers'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+           <BasicSearch loaded={data._loaded.includes('managers')} hideFilters={true} search={search} total={data._managers?.total} from={'managers'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
            <div className="flex w-full relative">
 

@@ -315,7 +315,7 @@ useEffect(()=>{
             <div className="flex">
                 <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>
                 <div className="flex-1">
-                  <BasicSearch total={data._doctors?.total} from={'doctors'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+                  <BasicSearch loaded={data._loaded.includes('doctors')} total={data._doctors?.total} search={search} from={'doctors'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
                   <div className={`flex flex-wrap gap-2 ease-in transition ${!data._loaded.includes('doctors') ? 'hidden':''}`}>
                         {data._doctors?.data?.map(i=>(
                           <DoctorCard item={i}/>

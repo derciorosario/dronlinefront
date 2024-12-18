@@ -68,16 +68,13 @@ function globalOnclick(id){
   return (
    
         <>
+
          <MedicalPrescriptionPrint item={medicalPrescriptionPrintContent} setItem={setMedicalPrescriptionPrintContent}/>
          <DefaultLayout hide={hideLayout} pageContent={{title:t('menu.medical-prescription'),desc:t('titles.medical-prescriptions')}}>
-           
             
            <div className="flex">
-   
               <div className="flex-1">
-             
-              <BasicSearch   printAction={()=>{
-
+              <BasicSearch  loaded={data._loaded.includes('medical_prescriptions')} search={search}  printAction={()=>{
                   let content = [];
                   (data._medical_prescriptions?.data || []).forEach(i=>{
                     content.push([{name:t('form.medication-name'),value:i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name} - ${_medications.filter(f=>f.ITEM==i.name)?.[0]?.active_substance}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')}])
@@ -89,7 +86,6 @@ function globalOnclick(id){
                        {name:t('form.pharmaceutical-form'),value:f.pharmaceutical_form}])
                    })
                   })
-                 
                   data.setSinglePrintContent({
                       patient: itemToShow.appointment.patient,
                       doctor:itemToShow.appointment.doctor,

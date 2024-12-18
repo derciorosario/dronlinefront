@@ -14,7 +14,6 @@ const AuthContext = createContext();
  */
 
 export const AuthProvider = ({ children }) => {
-
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
@@ -28,15 +27,13 @@ export const AuthProvider = ({ children }) => {
   const APP_BASE_URL = env =="pro" ? "https://dronline-server.arsbeta-mz.com": 'http://127.0.0.1:8000'
   const SERVER_FILE_STORAGE_PATH=`storage/uploads`
   const APP_FRONDEND=env == "dev" ? "http://localhost:5173" : "https://dronline-landingpage.netlify.app" 
-     
+    
   const login = (userData, authToken) => {
     setUser(userData);
     setToken(authToken);
-   
   };
 
-
-    async function logoutFromServer(){
+  async function logoutFromServer(){
          try{
            await makeRequest({method:'post',url:'api/logout',withToken:true, error: ``},0);
          }catch(e){
@@ -51,7 +48,6 @@ export const AuthProvider = ({ children }) => {
     const logout =  async() => {
 
       if(recoveringPassword) return
-
      
       if(!window.location.href.includes('/login')) {
           setIsLoading(true)
@@ -59,19 +55,20 @@ export const AuthProvider = ({ children }) => {
 
 
      if(localStorage.getItem('token')){
+      
       if(!await logoutFromServer()){
         toast.error(t('common.check-network'))
         setIsLoading(false)
         return
       }
+
      }
-     
 
-     
-
+     console.log('2:'+localStorage.getItem('token'))
     
-    localStorage.removeItem('token');
-    
+     if(window.location.href.includes('/login')) {
+        localStorage.removeItem('token')
+     }
 
 
     if(!window.location.href.includes('/login') && pathname!="/" && pathname && !window.location.href.includes('/register')) {
@@ -114,9 +111,7 @@ export const AuthProvider = ({ children }) => {
           setLoading(false)
           localStorage.removeItem('token')
           logout()
-        } finally {
-         // setLoading(false);
-        }
+        } 
       };
 
 
@@ -128,14 +123,11 @@ export const AuthProvider = ({ children }) => {
       }
 
        if(!token){
-          logout()
+          //logout('ignore_token')
           setLoading(false)
        }
 
      }, [isAuthenticated, user, token]);
-
-
-
 
 
      function encodeFormData(data) {

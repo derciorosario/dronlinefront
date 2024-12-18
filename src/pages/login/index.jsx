@@ -12,6 +12,7 @@ import DefaultLayout from '../../layout/DefaultLayout';
 import { useAuth } from '../../contexts/AuthContext';
 import RecoverPasswordModal from '../../components/modals/recover-password';
 import ConfirmUserByEmailCode from '../../components/modals/confirm-by-email-code';
+import i18n from '../../i18n';
 
 axios.defaults.withCredentials = true;
 
@@ -33,6 +34,14 @@ function Login() {
   const data = useData()
   const {user,check_user,setRecoveringPassword} = useAuth()
 
+
+
+  const [lang,setLang]=useState(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'pt')
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setLang(lng)
+    localStorage.setItem('lang',lng)
+  };
   useEffect(()=>{
    if(new URLSearchParams(window.location.search).get('recover-password')){
      setShowRecoverPasswordDialog(true)
@@ -312,17 +321,38 @@ async function SubmitForm(options){
 <DefaultLayout hideAll={true} hide={true} removeMargin={true} hideSupportBadges={true}>
 
 <div className="flex">
+
+<div onClick={()=>navigate('/')} className="bg-honolulu_blue-500  hover:bg-honolulu_blue-600 absolute left-2 top-2 z-20 px-2 py-2 rounded max-md:py-1 cursor-pointer flex items-center">          
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+                        <span className="text-white">{t('common.home')}</span>
+</div>
+
+
+
+<div className="flex ml-3  absolute right-2 top-2  mr-4 items-center  cursor-pointer" style={{zIndex:9}}>
+
+                    <select onChange={(e)=>{
+                         changeLanguage(e.target.value)
+                    }} value={lang} className="mr-2 bg-transparent border-0 outline-none">
+                          <option value={'pt'} disabled={lang=="pt"}>PT</option>
+                          <option value={'en'} disabled={lang=="en"}>EN</option>
+                    </select>
+</div>
+
+
+ 
  <ConfirmUserByEmailCode status={confirmCodeByEmailStatus} setStatus={setConfirmCodeByEmailStatus} success={success} resendCode={SendCode}  message={message} setMessage={setMessage} setForm={setForm} loading={loading} SubmitForm={VerifyCodeForLogin} form={form} setShow={setShowConfirmCodeByEmailDialog} show={showConfirmCodeByEmailDialog}/>
  <RecoverPasswordModal status={recoverPasswordStatus} setStatus={setRecoverPasswordStatus} success={success} resendCode={SendCode}  message={message} setMessage={setMessage} setForm={setForm} loading={loading} SubmitForm={recoverPasswordSubmit} form={form} setShow={setShowRecoverPasswordDialog} show={showRecoverPasswordDialog}/>
 
-<div className="login-left-bg flex-1 min-h-[100vh] cursor-pointer" onClick={()=>navigate('/')}></div>
+<div className="login-left-bg flex-1 min-h-[100vh]"></div>
 
 <div className="px-[90px] py-[40px] max-sm:px-[20px] flex max-lg:w-full  justify-center items-center">
  
-<div class="w-[400px]  max-lg:w-full">
-
+<div class="w-[400px] max-md:pt-5  max-lg:w-full">
       <div className="flex items-center">
-          <h2 className="font-medium text-[22px] mb-2">Login</h2>
+          <h2 className="font-medium text-[22px] mb-2">Login | <span onClick={()=>{
+             navigate('/register')
+          }} className="text-[20px] text-honolulu_blue-400 underline cursor-pointer"> {t('common.register')}</span></h2>
          {user && <span onClick={() => {
                             navigate('/dashboard')
                         }} className="inline-flex ml-4 text-center text-white justify-center px-2 bg-honolulu_blue-400 py-1 text-[14px] rounded-full cursor-pointer hover:bg-honolulu_blue-500">

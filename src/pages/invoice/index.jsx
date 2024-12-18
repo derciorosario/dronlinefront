@@ -115,7 +115,7 @@ if(loading){
            </div>
 
             
-            <div className={`min-h-[100vh]  py-32 pb-10 px-5 w-full ${message || status==500 ? 'hidden':''} bg-[#D9D9D9]`}>
+            <div className={`min-h-[100vh]  py-20 max-md:py-10 pb-10 px-5 w-full ${message || status==500 ? 'hidden':''} bg-[#D9D9D9]`}>
                  <div className="max-w-[700px] px-3 pb-3 mx-auto flex items-center justify-between">
                      <h2 className="text-[27px]">{t('common.invoice')}</h2>
                      <button onClick={()=>{
@@ -124,13 +124,13 @@ if(loading){
                         
                      }} className=" bg-white rounded-[0.3rem] px-2 mt-6 py-1 cursor-pointer text-gray-600 shadow hover:underline mb-3">{t('common.download')}</button>
                     </div>
-                 <div id="_invoice" className={`bg-white max-w-[700px] min-h-[90vh] p-10 mx-auto ${pathname.includes('/invoice/') ? '_print print-table':''}`}>
+                 <div id="_invoice" className={`bg-white max-w-[700px] min-h-[90vh] p-10 max-md:p-5 mx-auto ${pathname.includes('/invoice/') ? '_print print-table':''}`}>
                          <span className={`flex mb-2 justify-end text-[14px] ${invoice?.status=="pending" ? 'text-orange-400':invoice?.status=="approved" ? ' text-green-500':' text-red-500'}`}>{t('common.'+invoice?.status)}</span>
                
                         <div className="flex justify-between mb-10">
-                               <img className="w-[160px] h-[60px]" src={Logo}/>
+                               <img className="md:w-[130px]  w-[100px]" src={Logo}/>
                                <span className="text-[26px] font-bold hidden">Dr. Online</span>
-                               <span className="text-[23px]">{t('common.invoice')}</span>
+                               <span className="text-[23px] max-md:text-[19px]">{t('common.invoice')}</span>
                         </div>
 
                         <div className="sm:flex justify-between">
@@ -155,7 +155,7 @@ if(loading){
    
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500  table-fixed">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 lg:table-fixed">
         <thead class="text-xs text-white uppercase bg-honolulu_blue-500">
             <tr>
                 <th scope="col" class="px-6 py-3">
@@ -221,7 +221,7 @@ if(loading){
                            {/***8<QRCodeGenerator link={`${data.server_url}/api/v1/invoice/`+invoice_number} /> */}
                         </div>
 
-                        <div className="flex justify-center mt-40"><span className="mr-3">{t('invoice.generated-in')}:</span><label>{serverTime?.date} {serverTime.hour} </label></div>
+                        <div className="flex justify-center mt-40"><span className="mr-3">{t('invoice.generated-in')}:</span><label>{serverTime?.date} {serverTime?.hour} </label></div>
                  </div>
            </div>
    </DefaultLayout>

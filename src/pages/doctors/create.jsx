@@ -6,7 +6,7 @@ import { t } from 'i18next'
 import FileInput from '../../components/Inputs/file'
 import PatientForm from '../../components/Patient/form'
 import { useData } from '../../contexts/DataContext'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import AdditionalMessage from '../messages/additional'
 import { useAuth } from '../../contexts/AuthContext'
 import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
@@ -21,8 +21,8 @@ function addPatients({ShowOnlyInputs}) {
   const [valid,setValid]=useState(false)
   const [messageType,setMessageType]=useState('red')
   const data = useData()
+  const [searchParams, setSearchParams] = useSearchParams();
     
-
   const { id } = useParams()
   const {pathname} = useLocation()
   const navigate = useNavigate()
@@ -30,10 +30,9 @@ function addPatients({ShowOnlyInputs}) {
   const [loading,setLoading]=useState(false);
   const [itemToEditLoaded,setItemToEditLoaded]=useState(false)
   const [MessageBtnSee,setMessageBtnSee]=useState(null)
+  const [doctorRequestToBeLoaded,setDoctorRequestToBeLoaded]=useState(false)
 
   const {user} = useAuth()
-
-  
 
   let initial_form={
 
@@ -144,12 +143,12 @@ function addPatients({ShowOnlyInputs}) {
 
       console.log({e})
 
-
       if(e.message==404){
          toast.error(t('common.item-not-found'))
          navigate('/doctors')
       }else  if(e.message=='Failed to fetch'){
-        
+         toast.error(t('common.check-network'))
+         navigate('/doctors')
       }else{
         toast.error(t('common.unexpected-error'))
         navigate('/doctors')  
@@ -162,12 +161,54 @@ function addPatients({ShowOnlyInputs}) {
 
 
 
+useEffect(()=>{
+
+
+  let res=data._sendFilter(searchParams)
+
+
+
+  if(!res.add_from_doctor_request_id){
+      return
+  }
+
+  
+  (async()=>{
+    try{
+
+      let response=await data.makeRequest({method:'get',url:`api/doctor-requests/`+res.add_from_doctor_request_id,withToken:true, error: ``},0);
+      setForm({...form,...response,main_contact:response.contact,residential_address:response.address,identification_document:'identification_number'})
+      console.log({response})
+      setDoctorRequestToBeLoaded(true)
+
+    }catch(e){
+
+      console.log({e})
+
+      if(e.message==404){
+         toast.error(t('common.item-not-found'))
+      }else  if(e.message=='Failed to fetch'){
+         toast.error(t('common.check-network')) 
+      }else{
+        toast.error(t('common.unexpected-error'))
+      }
+
+      setDoctorRequestToBeLoaded(true)
+  }
+})()
+
+},[user,pathname])
+
+
+
+
+
+
+
 
   async function SubmitForm(){
 
-
     setLoading(true)
-
     
     if(form.uploaded_files.some(i=>i.filename && !i.name)){
       setMessage(t('common.add-document-name'))
@@ -273,9 +314,6 @@ function addPatients({ShowOnlyInputs}) {
   }
 
 
-  console.log({form})
-
-
 
 
   return (
@@ -286,11 +324,11 @@ function addPatients({ShowOnlyInputs}) {
 
             <AdditionalMessage btnSee={MessageBtnSee} float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
           
-            {!itemToEditLoaded && id && <div className="mt-10">
+            {(!itemToEditLoaded && id || (!id && new URLSearchParams(window.location.search).get('add_from_doctor_request_id') && !doctorRequestToBeLoaded)) && <div className="mt-10">
               <DefaultFormSkeleton/>
             </div>}
 
-           <FormLayout hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={id ? t('common.update-doctor') : t('common.add-doctor')} verified_inputs={verified_inputs} form={form}
+           <FormLayout hide={!itemToEditLoaded && id || (!id && new URLSearchParams(window.location.search).get('add_from_doctor_request_id') && !doctorRequestToBeLoaded)} hideTitle={ShowOnlyInputs} title={id ? t('common.update-doctor') : t('common.add-doctor')} verified_inputs={verified_inputs} form={form}
            
             bottomContent={(
                 <div className="mt-5">

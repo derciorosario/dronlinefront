@@ -65,10 +65,10 @@ export default function CancelAppointmentModel({}) {
 
     
     if(invoice && data._loaded.includes('cancellation_taxes')){
-       let price=parseFloat(invoice.amount)
+       let price=parseFloat(invoice?.amount || 0)
        let consultation_price=price
    
-       let payment_method=data._cancellation_taxes.filter(i=>i.payment_method==invoice.payment_method)[0]
+       let payment_method=data._cancellation_taxes.filter(i=>i.payment_method==invoice?.payment_method)[0]
 
        let taxes=0
 
@@ -103,15 +103,14 @@ export default function CancelAppointmentModel({}) {
 
  
 
-  async function createRefund(reason){
-
+  async function createRefund(){
     data.setIsLoading(true)
     toast.remove()
      
      try{
-
           await data.makeRequest({method:'post',url:`api/refunds/create`,withToken:true,data:{
             appointment_id:data.appointmentcancelationData.consultation.id,
+            doctor_id:data.appointmentcancelationData.consultation.doctor_id,
             amount:getAmount().price,
             taxes:getAmount().taxes,
             price:getAmount().consultation_price,
@@ -214,7 +213,7 @@ export default function CancelAppointmentModel({}) {
                     {data.cancelation_reasons.map((i,_i)=>(
                         <li onClick={()=>setSelectedReason(i)} class="w-full border-b border-gray-200 rounded-t-lg">
                             <div class="flex items-center ps-3">
-                                <input id={`list-radio-license-${_i}`} type="radio" value="" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2"/>
+                                <input id={`list-radio-license-${_i}`} type="radio" value="" name="list-radio" class="w-4 h-4 text-honolulu_blue-400 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2"/>
                                 <label for={`list-radio-license-${_i}`} class="w-full py-3 ms-2 text-sm font-medium text-gray-900">{t('common.'+i)} </label>
                             </div>
                        </li>
@@ -287,15 +286,18 @@ export default function CancelAppointmentModel({}) {
        <div className="p-4 md:p-5">
           {(selectReason && itemsLoaded)  && <button onClick={()=>{
                createRefund()
-          }} class={`text-white mt-3 mb-6 inline-flex w-full justify-center ${(selectReason && invoice) ? 'bg-blue-700 hover:bg-blue-800':'bg-gray-400 pointer-events-none'} focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center`}>
+          }} class={`text-white mt-3 mb-6 inline-flex w-full justify-center ${(selectReason && invoice) ? 'bg-honolulu_blue-400 hover:bg-honolulu_blue-400':'bg-gray-400 pointer-events-none'} focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center`}>
                     {t('common.cancel-consultation')}
         </button>}
        </div>
 
   
 
-      {(!itemsLoaded && selectReason) && <div className="h-[200px] flex items-center justify-center">
-          <div><Loader/></div>
+      {(!itemsLoaded && selectReason) && <div className="h-[200px] flex flex-col items-center justify-center">
+         
+            <div className="mb-2">{t('common.loading')}</div>
+            <Loader/>
+
        </div>}
 
 

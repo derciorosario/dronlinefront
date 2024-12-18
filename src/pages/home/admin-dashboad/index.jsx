@@ -178,9 +178,9 @@ export default function AdminDashboard({startDate,endDate,setStartDate,setEndDat
                             <span className="text-gray-500 ml-2">({(data._admin_dashboard?.recentInvoices || []).length})</span>
                         </div>
 
-                        <div className="flex items-center mb-4 gap-2 mt-5">
+                        <div className="flex items-center mb-4 w-full flex-wrap md:gap-2 mt-5">
                                 {['payment','refund'].map((i,_i)=>(
-                                    <div onClick={()=>setSelectedTab1(i)} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab1==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+                                    <div onClick={()=>setSelectedTab1(i)} className={`flex max-md:min-w-[130px] mb-1 transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab1==i ? 'bg-honolulu_blue-500 text-white':''}`}>
                                         <span>{getIcon(i,selectedTab1==i)}</span>
                                         <span>{t('common.'+i+'s')}</span>
                                         {(data._admin_dashboard?.recentInvoices || []).filter(f=>f.type==i).length!=0 && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
@@ -220,7 +220,6 @@ export default function AdminDashboard({startDate,endDate,setStartDate,setEndDat
                                             <BaiscTable.Td url={`/payment-management/`+i.id}>{i.payment_method=="mpesa" ? 'M-pesa' : t('common.bank-transfer')}</BaiscTable.Td>
                                             <BaiscTable.Td url={`/payment-management/`+i.id}>{i.patient?.name}</BaiscTable.Td>
                                             <BaiscTable.Td url={`/payment-management/`+i.id}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
-                                            <BaiscTable.Td url={`/payment-management/`+i.id}>{i.policy_number || '-'}</BaiscTable.Td>
                                             <BaiscTable.Td>
                                                         <span onClick={()=>{
                                                             window.open(APP_FRONDEND+"/invoice/"+i.ref_id, '_blank')
@@ -246,9 +245,9 @@ export default function AdminDashboard({startDate,endDate,setStartDate,setEndDat
                             <span className="text-gray-500 ml-2">({topClients.length})</span>
                         </div>
 
-                        <div className="flex items-center mb-4 gap-2 mt-5">
+                        <div className="flex items-center mb-4 w-full flex-wrap md:gap-2 mt-5">
                                 {['patient','doctor'].map((i,_i)=>(
-                                    <div onClick={()=>setSelectedTab2(i)} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab2==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+                                    <div onClick={()=>setSelectedTab2(i)} className={`flex max-md:min-w-[130px] mb-1 transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab2==i ? 'bg-honolulu_blue-500 text-white':''}`}>
                                         <span>{getIcon(i,selectedTab2==i)}</span>
                                         <span>{t('common.'+i+'s')}</span>
                                         {topClients.filter(f=>f.role==i).length!=0 && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">

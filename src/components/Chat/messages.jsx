@@ -11,7 +11,7 @@ function ChatMessages({messages,hide}) {
   function endContent(i){
     return (
      <div className="flex items-center justify-center">
-        <span className={`${i.last_ended_status=="done" ? 'bg-green-500' : 'bg-red-500'} text-[14px] my-5 text-white rounded-full px-2 py-1`}>{t('common.support-'+i.last_ended_status)}</span>
+        <span className={`${i?.last_ended_status=="done" ||  !i?.last_ended_status ? 'bg-green-500' : 'bg-red-500'} text-[14px] my-5 text-white rounded-full px-2 py-1`}>{t('common.support-'+(i?.last_ended_status || 'done'))}</span>
      </div>
     )
   }

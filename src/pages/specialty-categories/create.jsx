@@ -107,13 +107,12 @@ let initial_form={
     }catch(e){
       console.log(e)
 
-      return
-
       if(e.message==404){
          toast.error(t('common.item-not-found'))
          navigate('/specialty-categories')
       }else  if(e.message=='Failed to fetch'){
-        
+        navigate('/specialty-categories')
+        toast.error(t('common.check-network'))
       }else{
         toast.error(t('common.unexpected-error'))
         navigate('/appointments')  

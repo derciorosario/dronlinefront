@@ -6,9 +6,8 @@ import ConfirmDialog from '../modals/confirm'
 import { useData } from '../../contexts/DataContext'
 import { useNavigate } from 'react-router-dom'
 import i18n from '../../i18n'
-import LogoIcon from '../../assets/images/dark-logo-1-short.png'
 
-function Header({pageContent}) {
+function Header({pageContent,headerLeftContent}) {
 
   const {user,logout} = useAuth()
   const data=useData()
@@ -96,9 +95,16 @@ function Header({pageContent}) {
          <div className="flex items-center justify-between h-[70px]  px-[10px] bg-white rounded-bl-[0.3rem]">
                
                <div className="flex md:justify-end flex-1">
-                   <h2 className="text-[25px] cursor-pointer font-medium md:hidden mr-10" onClick={()=>navigate('/')}>
+                   {/***<h2 className="text-[25px] cursor-pointer font-medium md:hidden mr-10" onClick={()=>navigate('/')}>
                       <img src={LogoIcon} width={50} className="flex-shrink-0"/>
-                   </h2>
+                   </h2> */}
+
+                   {headerLeftContent}
+
+                   <div onClick={()=>navigate('/')} className="bg-slate-300 px-2 py-2 rounded md:hidden cursor-pointer">          
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+                   </div>
+
                    {pageContent?.loading==true && <Loader/>}
                    
 
@@ -116,18 +122,16 @@ function Header({pageContent}) {
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960"  fill="#5f6368"><path d="m480-80-10-120h-10q-142 0-241-99t-99-241q0-142 99-241t241-99q71 0 132.5 26.5t108 73q46.5 46.5 73 108T800-540q0 75-24.5 144t-67 128q-42.5 59-101 107T480-80Zm80-146q71-60 115.5-140.5T720-540q0-109-75.5-184.5T460-800q-109 0-184.5 75.5T200-540q0 109 75.5 184.5T460-280h100v54Zm-101-95q17 0 29-12t12-29q0-17-12-29t-29-12q-17 0-29 12t-12 29q0 17 12 29t29 12Zm-29-127h60q0-30 6-42t38-44q18-18 30-39t12-45q0-51-34.5-76.5T460-720q-44 0-74 24.5T344-636l56 22q5-17 19-33.5t41-16.5q27 0 40.5 15t13.5 33q0 17-10 30.5T480-558q-35 30-42.5 47.5T430-448Zm30-65Z"/></svg>
                 <span className="max-md:hidden">{(user?.role=="admin" || user?.role=="manager") ? t('common._support') : t('common.support')}</span>
                 
-                {supportMsgCount!=0 && <span className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">{supportMsgCount}</span>}
+                {supportMsgCount!=0 && <span className="md:ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">{supportMsgCount}</span>}
               
               </button>}
 
 
                   <div onClick={()=>{
-                    
                      data._showPopUp('header_user_dropdown')
-                      
-                  }} className="ml-7 _header_user_dropdown relative bg-gray-100 rounded-[0.3rem] py-1 px-2.5 cursor-pointer flex justify-center items-center">
+                  }} className="sm:ml-7 _header_user_dropdown relative bg-gray-100 rounded-[0.3rem] py-1 px-2.5 cursor-pointer flex justify-center items-center">
                     
-                    {!data._openPopUps.header_user_dropdown && <div className="absolute bottom-0 right-1 translate-y-[0.7rem]">
+                    {!data._openPopUps.header_user_dropdown && <div className="absolute bottom-0 right-1 translate-y-[0.7rem] z-10">
                           <span className="bg-honolulu_blue-500 px-1 py-[0.05rem] text-white rounded-[0.3rem] text-[0.7rem]">{t('common.'+user?.role)}</span>
                     </div>}
 

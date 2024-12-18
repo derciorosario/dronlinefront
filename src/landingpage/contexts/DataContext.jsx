@@ -83,7 +83,6 @@ export const HomeDataProvider = ({ children }) => {
     
         let d=JSON.parse(JSON.stringify(array))
 
-    
         let res=[]
         d.forEach((t,_)=>{
           if(search_from_object(t)) {

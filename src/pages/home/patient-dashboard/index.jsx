@@ -111,15 +111,15 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                  <div className="w-full">
 
                         <div className="w-full mt-8">
-                            <span className="font-medium">{t('common.appointments')}</span>
+                            <span className="font-medium">{t('common.upcoming-appointments')}</span>
                             <span className="text-gray-500 ml-2">({upcomingAppointments.length})</span>
                         </div>
 
-                        <div className="flex items-center mb-4 gap-2 mt-5">
+                        <div className="flex items-center mb-4 w-full flex-wrap md:gap-2 mt-5">
                                   {['scheduled_for_today','all'].map((i,_i)=>{
                                           let total=i=="all" ? upcomingAppointments.length : upcomingAppointments.filter(f=>f.scheduled_date==serverTime.date).length
                                           return (
-                                            <div onClick={()=>setSelectedTab2(i)} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab2==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+                                            <div onClick={()=>setSelectedTab2(i)} className={`flex max-md:min-w-[130px] transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab2==i ? 'bg-honolulu_blue-500 text-white':''}`}>
                                                 <span>{t('dashboard.'+i)}</span>
                                                 {total!=0 && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
                                                     <span>{total}</span>
@@ -128,7 +128,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                           )
                                    })}
 
-                                  {upcomingAppointments.length==0 && <span className="mr-[30px] ml-4 text-gray-400">({t('common.no-appointments')})</span>}
+                                  {/***{upcomingAppointments.length==0 && <span className="mr-[30px] ml-4 text-gray-400 max-sm:text-[13px]">({t('common.no-appointments')})</span>} */}
                         </div>
 
                         <BaiscTable canAdd={false} hide={upcomingAppointments.length==0}   loaded={data._loaded.includes('patient_dashboard')} header={[
@@ -140,7 +140,6 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                        t('form.medical-specialty'),
                                        t('form.type-of-care'),
                                        t('common.unread-messages'),
-                                       t('form.consultation-method'),
                                        t('form.payment-confirmed'),
                                        t('common.doctor'),
                                        t('form.reason-for-consultation'),
@@ -170,7 +169,6 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                                 <span>{i.unread_comments_count}</span>
                                               </div>
                                           </BaiscTable.Td>
-                                          <BaiscTable.Td url={`/appointment/`+i.id}>{'Plataforma Zoom'}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>
                                             <button type="button" class={`text-white cursor-default ml-4 ${i.payment_confirmed ? "bg-honolulu_blue-500": "bg-gray-400"}  focus:outline-none  font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center`}>
                                               {i.payment_confirmed ? t('common.yes') : t('common.no')}
@@ -181,12 +179,14 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{i.additional_observations?.length > 40 ? i.additional_observations?.slice(0,40)+"..." : i.additional_observations}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                                          <BaiscTable.Td>
-                                            {i.zoom_link && <div className="cursor-pointer hover:opacity-80" onClick={()=>{
-                                                window.open(i.zoom_meeting.meeting_data[`${user?.role=="patient" ? 'join':'start'}_url`], '_blank')
-                                            }}>               
-                                                <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
-                                            </div>}
+
+                                           <BaiscTable.Td >
+                                                                            {i.status=="approved" &&  <div onClick={()=>{
+                                                                                   window.open(`${data.APP_FRONDEND}/meeting/zoom/appointment/`+i.id, '_blank')
+                                                                                   
+                                                                              }}>
+                                                                               <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
+                                                                             </div>}
                                           </BaiscTable.Td>
 
                                         </BaiscTable.Tr>
@@ -350,7 +350,9 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                             t('common.disease'),
                             t('common.date_of_leave'),
                             t('common.details'),
-                            t('form.medical-specialty')
+                            t('form.medical-specialty'),
+                            t('common.patient'),
+                            t('common.doctor')
                            ]
                          }
 
@@ -389,6 +391,8 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.date_of_leave}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.details}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{data._specialty_categories.filter(f=>f.id==i.appointment.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.patient?.name}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
                           </BaiscTable.Tr>
                       ))}
 

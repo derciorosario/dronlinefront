@@ -7,6 +7,7 @@ import BaiscTable from '../../components/Tables/basic';
 import { useAuth } from '../../contexts/AuthContext';
 import BasicFilter from '../../components/Filters/basic';
 import BasicSearch from '../../components/Search/basic';
+import SelectedFilters from '../../components/Filters/selected-filters';
 
 
 
@@ -90,8 +91,9 @@ function App() {
 
                 <div className="flex-1">
 
-                   <BasicSearch total={data._patients?.total} from={'patients'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
-                   
+                   <BasicSearch loaded={data._loaded.includes('patients')} search={search} total={data._patients?.total} from={'patients'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+                   <SelectedFilters setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
+                              
                    <div className="flex w-full relative">
                         
                         <div className="absolute w-full">

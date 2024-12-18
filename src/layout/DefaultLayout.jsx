@@ -24,10 +24,10 @@ import Reviews from '../components/PopUp/reviews.jsx'
 import CancelAppointmentModel from '../components/modals/cancel-appointments.jsx'
 import DownloadProgress from '../components/Loaders/download-progress.jsx'
 import SupportBadge from '../components/Badges/support-badge.jsx'
-import WorkWithUsForm from '../../../landingpage/src/components/Form/work-with-us.jsx'
 import ChangePasswordModal from '../components/modals/change-password.jsx'
+import UserWaitingInTheRoom from '../components/modals/user-waiting-in-meeting-room.jsx'
 
-function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate,hideSupportBadges,startDate,endDate,setStartDate,setEndDate}) {
+function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate,hideSupportBadges,startDate,endDate,setStartDate,setEndDate,hideSidebar,headerLeftContent}) {
     
 
   const data=useData()
@@ -38,15 +38,25 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
   useEffect(()=>{
     setPathName(pathname)
   },[pathname])
-
   const [showDateFilters,setShowDateFilters]=useState(false)
+
+
+  useEffect(()=>{
+
+    if(data._openPopUps.basic_popup=="printing-images-missing"){
+      data.setUpdateTable(Math.random())
+    } 
+
+    data._closeAllPopUps()
+
+  },[pathname])
+
 
   return ( 
 
-    <div id={'top'} className={`flex ${!hide ? 'bg-[#F9F9F9]':''} w-full`}>
-
+    <div id={'top'} className={`flex ${!hide ? 'bg-[#F9F9F9]':''} w-full  `}>
                
-      
+               <UserWaitingInTheRoom/>
                <ChangePasswordModal/>
                <Reviews show={data._openPopUps.reviews}/>
                <Feedback show={data._openPopUps.feedback}/>
@@ -56,35 +66,38 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
                <PaymentProcess info={data.paymentInfo}/>
                <SelectDoctorAvailability  item={data.selectedDoctorToSchedule}/>
                <CancelAppointmentModel show={data._openPopUps.cancel_appointment}/>
-
                <DownloadProgress progress={data.downloadProgress}/>
-              
                <Delete show={data._openPopUps.delete}/>
-
-               
-
                <DoctorList show={data._openPopUps.doctor_list}/>
-
                <AddDependentPopUp show={data._openPopUps.add_dependent}/>
+               <BasicPopUp preventClosing={data._openPopUps.basic_popup=="conclude_patient_info" || data._openPopUps.basic_popup=="printing-images-missing"}
                
-               <BasicPopUp show={data._openPopUps.basic_popup && !(user?.role=="patient" && data._openPopUps.basic_popup=="login-to-proceed-with-consultation")} title={data._openPopUps.basic_popup=="password-recovered" ? t('messages.password-recovered') :
-                
+               show={data._openPopUps.basic_popup && !(user?.role=="patient" && data._openPopUps.basic_popup=="login-to-proceed-with-consultation")} title={data._openPopUps.basic_popup=="printing-images-missing" ? t('common.error-while-printing')  : data._openPopUps.basic_popup=="password-recovered" ? t('messages.password-recovered') :
                 data._openPopUps.basic_popup=="define-same-gain-perentage-for-all" ? t('common.sure-to-continue') :  data._openPopUps.basic_popup=="consultation-is-already-canceled" ? t('messages.consultation-is-already-canceled') : data._openPopUps.basic_popup=="unable-to-load-consultation-items" ? t('messages.unable-to-load-consultation-items') :  data._openPopUps.basic_popup=="wait-for-refund" ?  t('messages.wait-for-refund'): data._openPopUps.basic_popup=="appointment-no-longer-available" ? t('messages.appointment-no-longer-available') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('common.draft-saved') : data._openPopUps.basic_popup=="conclude_patient_info" ?
                
                 t('common.add-info'): data._openPopUps.basic_popup=="contact-us-if-delay" ? t('common.info') : t('common.info')}
 
-                btnConfirm={{text:data._openPopUps.basic_popup=="password-recovered" ? t('common.understood') : data._openPopUps.basic_popup=="define-same-gain-perentage-for-all" ? t('common.cancel') : data._openPopUps.basic_popup=="unable-to-load-consultation-items" ? t('common.cancel') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('common.ignore') : data._openPopUps.basic_popup=="conclude_patient_info" ? t('common.do-it-later')  : t('common.understood'),onClick:()=>{
+                btnConfirm={{text:data._openPopUps.basic_popup=="printing-images-missing" ? t('common.print-anyway') : data._openPopUps.basic_popup=="password-recovered" ? t('common.understood') : data._openPopUps.basic_popup=="define-same-gain-perentage-for-all" ? t('common.cancel') : data._openPopUps.basic_popup=="unable-to-load-consultation-items" ? t('common.cancel') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('common.use-saved-draft') : data._openPopUps.basic_popup=="conclude_patient_info" ? t('common.to-add-info')  : t('common.understood'),onClick:()=>{
                   
                   if(data._openPopUps.basic_popup=="password-recovered"){
                     data.setIsLoading(true)
                     let url=data.getScheduledAppointment() || "/dashboard"
                     window.location.href=url
                     return
+                  }else if(data._openPopUps.basic_popup=="conclude_patient_info"){
+                    navigate('/profile?add_info=true&adding_appointment=true')
                   }
-                  
                   data._closeAllPopUps()
+
                   if(data._openPopUps.basic_popup=="you-have-saved-appointment"){
+                    data.setIsLoading(true)
+                    window.location.href=`add-appointments`+localStorage.getItem('saved_appointment_url')
                     localStorage.removeItem('saved_appointment_url')
+                  }
+
+                  if(data._openPopUps.basic_popup=="printing-images-missing"){
+                      window.print()
+                      data.setUpdateTable(Math.random())
                   }
                 }}}
                 
@@ -96,22 +109,20 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
 
                     window.location.reload()
 
-                  }}:data._openPopUps.basic_popup=="you-have-saved-appointment" ?  {text:t('common.use-saved-draft'),onClick:()=>{
+                  }}:data._openPopUps.basic_popup=="you-have-saved-appointment" ?  {text:t('common.ignore'),onClick:()=>{
                     data._closeAllPopUps()
-                    data.setIsLoading(true)
-                    window.location.href=`add-appointments`+localStorage.getItem('saved_appointment_url')
                     localStorage.removeItem('saved_appointment_url')
-                 }} : data._openPopUps.basic_popup=="conclude_patient_info" ? {text:t('common.view-profile'),onClick:()=>{
-                   navigate('/profile')
-                   data._closeAllPopUps()
+                 }} : data._openPopUps.basic_popup=="printing-images-missing" ? {text: t('common.cancel'),onClick:()=>{
+                    data._closeAllPopUps()
+                    data.setUpdateTable(Math.random())
                  }}: {}}
                 
               message={
-                data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('messages.you-have-saved-appointment') : data._openPopUps.basic_popup=="conclude_patient_info" ?
+                 data._openPopUps.basic_popup=="printing-images-missing" ? t('common.printing-images-missing') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('messages.you-have-saved-appointment') : data._openPopUps.basic_popup=="conclude_patient_info" ?
                  t('messages.conclude_patient_info'): data._openPopUps.basic_popup=="contact-us-if-delay" ? t('messages.contact-us-if-delay') : data._openPopUps.basic_popup=="login-to-proceed-with-consultation" ? t('messages.login-to-proceed-with-consultation')  : ''} />
 
               {!hide && <div className="h-full">
-                <SideBar/>
+                <SideBar hideSidebar={hideSidebar}/>
               </div>}
 
 
@@ -119,8 +130,8 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
 
                  {(!hideSupportBadges &&  ((user?.role=="manager" && user?.data?.permissions?.support?.includes('read')) || user?.role=="admin")) && <SupportBadge/>}
                  
-                 {user?.role=="patient" && !user?.data?.date_of_birth && !hideAll && <TopAlert/>}
-                 {!hide && <Header pageContent={pageContent}/>}
+                 {user?.role=="patient" && !user?.data?.gender && !hideAll && <TopAlert/>}
+                 {!hide && <Header headerLeftContent={headerLeftContent} pageContent={pageContent}/>}
 
                  <div className={`${!removeMargin ? 'mx-[20px] ':''} relative mb-24`}>
                     {(pageContent) && <div className="py-[20px] md:flex">
@@ -145,32 +156,30 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
                               <p className="text-gray-600">{pageContent.desc}</p>
                           )}
                       </div>
-
-
-                     
-
                      
                       {!disableUpdateButton && <div className="flex-1 flex justify-end items-end">
                         {showDates && <div className="flex items-end">
 
-                          {showDateFilters && <div className="flex items-center flex-1 md:justify-end mr-3">
+                          {showDateFilters && <div className="flex items-center max-sm:flex-wrap flex-1 md:justify-end mr-3">
 
                             <div className="items-center mr-1">
-                              <h6 className="text-[0.8rem] font-medium text-gray-900 mr-2">
+                              <h6 className="text-[0.8rem]  flex min-w-[80px]  font-medium text-gray-900 mr-2">
                                   {t('common.start')}
                               </h6>
-                              <input onChange={(e)=>setStartDate(e.target.value)} value={startDate} type="date" className="w-full py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+                              <input onChange={(e)=>setStartDate(e.target.value)} value={startDate} type="date" className="w-full min-w-[80px] py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
                             </div>
 
                             <div className="items-center">
-                              <h6 className="text-[0.8rem] font-medium text-gray-900 mr-2">
+                              <h6 className="text-[0.8rem] flex min-w-[80px] font-medium text-gray-900 mr-2">
                                   {t('common.end')}
                               </h6>
-                              <input onChange={(e)=>setEndDate(e.target.value)} value={endDate} type="date" className="block w-full py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+                              <input onChange={(e)=>setEndDate(e.target.value)} value={endDate} type="date" className="block w-full min-w-[80px] py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
                             </div>
                           </div>}
 
                          
+
+                           <div className="mr-3">
 
                            <button onClick={()=>{
                               setShowDateFilters(!showDateFilters)
@@ -179,7 +188,7 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
                                   setEndDate('')
                               }
 
-                           }} type="button" className="text-white w-full mr-3 bg-honolulu_blue-500 font-medium rounded-full text-sm px-3 py-1.5 flex items-center  focus:outline-none">
+                           }} type="button" className="text-white w-full justify-center bg-honolulu_blue-500 font-medium rounded-full text-sm px-3 py-1.5 flex items-center  focus:outline-none">
                             {showDateFilters && <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff">
                               <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                             </svg>}
@@ -187,6 +196,9 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
                             
                             <span className="ml-1 max-md:hidden">{t('common.filters')}</span>
                            </button>
+
+
+                           </div>
 
                           </div>}
 
@@ -198,7 +210,7 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
 
                                           if(refreshOnUpdate){
                                              setIsLoading(true)
-                                             window.locationPaymentProcessload()
+                                             window.location.reload()
                                           }else{
                                             data.setUpdateTable(Math.random())
                                           }

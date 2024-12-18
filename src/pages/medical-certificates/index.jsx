@@ -117,9 +117,9 @@ async function handleItems({status,id}){
      if(e.message==500){
        toast.error(t('common.unexpected-error'))
      }else  if(e.message=='Failed to fetch'){
-         toast.error(t('common.check-network'))
+      toast.error(t('common.check-network'))
      }else{
-         toast.error(t('common.unexpected-error'))
+      toast.error(t('common.unexpected-error'))
      }
 
   }
@@ -144,12 +144,12 @@ useEffect(()=>{
      
         <DefaultLayout hide={hideLayout} pageContent={{title:t('common.medical-certificates'),desc:itemToShow ? t('titles.medical-certificates') : null}}>   
        
-        <div className={`items-center flex mb-4 gap-2 ${!data._loaded.includes('medical_certificates') ? 'hidden':''}`}>
+        <div className={`flex items-center mb-4 w-full flex-wrap md:gap-2 ${!data._loaded.includes('medical_certificates') ? 'hidden':''}`}>
           {['pending','approved','rejected'].map((i,_i)=>(
             <div onClick={()=>{
               data.setUpdateTable(Math.random())
               setSelectedTab(i)
-            }} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+            }} className={`flex max-md:min-w-[130px] mb-1 transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
               <span className="max-md:hidden">{getIcon(i,selectedTab==i)}</span>
               <span>{t('common.'+i)}</span>
 
@@ -167,7 +167,7 @@ useEffect(()=>{
 
            <div className="flex-1">
           
-           <BasicSearch  hideFilters={true} total={data._medical_certificates?.certificates?.total} from={'medical_certificates'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+           <BasicSearch hideSearch={true} loaded={data._loaded.includes('medical_certificates')}  hideFilters={true} search={search} total={data._medical_certificates?.certificates?.total} from={'medical_certificates'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
             <div className="flex w-full relative">
 
@@ -184,7 +184,10 @@ useEffect(()=>{
                           t('common.disease'),
                           t('common.date_of_leave'),
                           t('common.details'),
-                          t('form.medical-specialty')
+                          t('form.medical-specialty'),
+                          t('common.patient'),
+                          t('common.doctor'),
+                          selectedTab=="approved" ? t('common.approved-by') : null
                         ]
                       }
 
@@ -228,6 +231,9 @@ useEffect(()=>{
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.date_of_leave}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.details}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data._specialty_categories.filter(z=>z.id==i.appointment.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.patient?.name}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
+                                <BaiscTable.Td hide={selectedTab!="approved"} onClick={()=>globalOnclick(i.id)}>{i.status_changer?.role=="admin" ? t('common.dronline-team') : (i.status_changer?.name || '-')}</BaiscTable.Td>
                                 <BaiscTable.AdvancedActions id={i.id} items={[
                                     {hide:i.status=="approved" || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.medical_certificates?.includes('approve')) ),name:t('common.approve'),onClick:()=>{handleItems({status:'approved',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
                                     {hide:i.status=="rejected" || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.medical_certificates?.includes('reject')) ),name:t('common.reject'),onClick:()=>{handleItems({status:'rejected',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>)}

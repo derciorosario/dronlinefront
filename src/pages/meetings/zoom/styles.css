@@ -1,0 +1,30 @@
+#zoom-root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+  
+  main {
+    width: 70%;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .mdc-snackbar.mat-mdc-snack-bar-container,
+  .mdc-snackbar_surface.mat-mdc-snackbar-surface
+  {
+    display: none !important;
+  }
+  
+
+
+@media (max-width:768px){
+  #zoom-root {
+    max-width: 1280px;
+    padding: 0;
+ }
+  main {
+    width: 100%;
+  }
+}

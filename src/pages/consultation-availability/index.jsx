@@ -370,11 +370,11 @@ function index() {
                         </div>}
                          
 
-                        {dateView=="week" && <div className="flex flex-wrap gap-2 mt-3 w-[300px]">
+                        {dateView=="week" && <div className="flex flex-wrap gap-2 mt-3 w-[300px] max-sm:w-full">
                             {weeks.map((i,_i)=>(
                                <div onClick={()=>setSelelectedWeek(i)} className={`border overflow-hidden relative cursor-pointer hover:border-honolulu_blue-400 ${i==selectedWeek ? 'bg-honolulu_blue-400 text-white':''} rounded-[0.3rem] text-center px-2 py-4 w-[48%]`}>
 
-                                 <span>{t('common._weeks.'+i.toLowerCase())}</span>
+                                 <span className=" max-sm:text-[14px]">{t('common._weeks.'+i.toLowerCase())}</span>
                                  {(days[i].length!=0 || urgent_days[i].length!=0) && <div className="w-full absolute bottom-0 left-0 h-[2px] bg-honolulu_blue-300"></div>}
 
                                </div>
@@ -386,14 +386,14 @@ function index() {
 
                       <div>
 
-                         <div className="flex mb-4">
+                         <div className="flex mb-4 w-full">
                            <span className="text-[18px]  flex font-medium">{t('common.available-hours')}</span>
 
-                           <div className="table" onClick={()=>setTimeout(()=>setSelectUrgentHours(!selectUrgentHours),100)}>
-                            <label  class="inline-flex items-center cursor-pointer ml-10">
+                           <div className="table flex-shrink-0 flex-1" onClick={()=>setTimeout(()=>setSelectUrgentHours(!selectUrgentHours),100)}>
+                            <label  class="inline-flex flex-1 items-center cursor-pointer ml-10 flex-wrap">
                                 <input type="checkbox" value="" class="sr-only peer" checked={Boolean(selectUrgentHours)}/>
-                                <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-orange-200 peer-checked:bg-orange-400  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all "></div>
-                                <span class="ms-3 text-sm font-medium text-gray-900">{t('common.set-urgent-hours')}</span>
+                                <div class="relative mr-2 w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-orange-200 peer-checked:bg-orange-400  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all "></div>
+                                <span class="text-sm max-sm:text-[12px] font-medium text-gray-900">{t('common.set-urgent-hours')}</span>
                             </label>
                            </div>
                          </div>

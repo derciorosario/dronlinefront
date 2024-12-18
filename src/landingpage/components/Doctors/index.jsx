@@ -9,6 +9,7 @@ import BasicPagination from '../Pagination/basic'
 import Loader from '../Loaders/loader'
 import BasicFilter from '../../../components/Filters/basic'
 import BasicSearch from '../../../components/Search/basic'
+import SelectedFilters from '../../../components/Filters/selected-filters'
 
 export default function Doctors() {
     const data=useHomeData()
@@ -17,6 +18,7 @@ export default function Doctors() {
         data._scrollToSection('top')
     },[])
     
+    const [canFetch,setCanFetch]=useState(false)
 
     let required_data=['doctors']
     const {pathname} = useLocation()
@@ -60,6 +62,13 @@ export default function Doctors() {
     
     
     useEffect(()=>{
+
+
+        
+            if(!canFetch) return
+
+            
+
             data._get(required_data,{doctors:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
             data.handleLoaded('remove','doctors')
     },[pathname,search,currentPage,updateFilters])
@@ -75,6 +84,9 @@ export default function Doctors() {
         setSearch('id::'+doctor)
       }
 
+      setCanFetch(true)
+      setUpdateFilters(Math.random())
+
       if(new URLSearchParams(window.location.search).get('medical_specialty')){
         data.setShowFilters(true)
       }
@@ -84,7 +96,6 @@ export default function Doctors() {
     
   
   useEffect(()=>{
-  
     data.handleLoaded('remove','doctors')
   
   },[updateFilters])
@@ -102,10 +113,11 @@ export default function Doctors() {
 
            <div className="flex px-[50px] max-lg:px-[20px]">
            <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>
-                
+         
             <div className="flex-1">
-                <BasicSearch search={search} total={data._doctors?.total} from={'doctors'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
-                 
+                <BasicSearch loaded={data._loaded.includes('doctors')} search={search} total={data._doctors?.total} from={'doctors'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+                <SelectedFilters setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
+                
                 {!data._loaded.includes('doctors') && <div className="flex-col flex justify-center items-center h-[200px]">
                         <Loader w={30} h={30}/>
                         <span className="mt-2">{t('common.loading')}...</span>

@@ -129,12 +129,12 @@ function App() {
   <DefaultLayout
     pageContent={{page:'appointment_invoices',title:t('common.payments'),desc:user?.role=="patient" ? t('titles._payments') : t('titles.payments')}}>
     
-      <div className={`flex items-center mb-4 gap-2 ${!data._loaded.includes('appointment_invoices') ? 'hidden':''}`}>
+      <div className={`flex items-center mb-4 w-full flex-wrap md:gap-2 ${!data._loaded.includes('appointment_invoices') ? 'hidden':''}`}>
           {['pending','approved','rejected'].map((i,_i)=>(
             <div onClick={()=>{
               data.setUpdateTable(Math.random())
               setSelectedTab(i)
-            }} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+            }} className={`flex max-md:min-w-[130px] mb-1 transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
               <span className="max-md:hidden">{getIcon(i,selectedTab==i)}</span>
               <span>{t('common.'+i)}</span>
 
@@ -152,7 +152,7 @@ function App() {
          <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
           
          <div className="flex-1">
-             <BasicSearch hideSearch={true} total={data._appointment_invoices?.invoices?.total} from={'appointment_invoices'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+             <BasicSearch hideSearch={true}  loaded={data._loaded.includes('appointment_invoices') && !loading} search={search} total={data._appointment_invoices?.invoices?.total} from={'appointment_invoices'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
             
              <div className="flex w-full relative">
                 <div className="absolute w-full">
@@ -166,8 +166,8 @@ function App() {
                    t('common.patient'),
                    t('common.doctor'),
                    t('form.consultation-id'),
-                   t('form.insurance_company_name'),
-                   t('form.policy_number'),
+                  // t('form.insurance_company_name'),
+                  // t('form.policy_number'),
                    t('common.invoice'),
                    t('common.created_at'),
                    t('common.last-update'),
@@ -192,8 +192,8 @@ function App() {
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.patient?.name}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.appointment?.id}</BaiscTable.Td>
-                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.insurance_company || '-'}</BaiscTable.Td>
-                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.policy_number || '-'}</BaiscTable.Td>
+                         {/**<BaiscTable.Td url={`/payment-management/`+i.id}>{i.insurance_company || '-'}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.policy_number || '-'}</BaiscTable.Td> */}
                          <BaiscTable.Td>
                                     <span onClick={()=>{
                                         window.open(APP_FRONDEND+"/invoice/"+i.ref_id, '_blank')

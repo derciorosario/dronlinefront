@@ -9,6 +9,7 @@ import BasicFilter from '../../components/Filters/basic';
 import BasicSearch from '../../components/Search/basic';
 import BasicPagination from '../../components/Pagination/basic';
 import i18next from 'i18next';
+import SelectedFilters from '../../components/Filters/selected-filters';
 
 
 
@@ -147,7 +148,7 @@ function getDoctorAmountEarned(i){
            <div className="flex-1">
           
            <BasicSearch total={data._doctors?.total} from={'doctors'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
-            
+           <SelectedFilters setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>                 
            <div className="flex w-full relative">
 
             <div className="absolute w-full">

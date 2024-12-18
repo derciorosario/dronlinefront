@@ -74,38 +74,56 @@ export default function Notifications({show}) {
 
 
 function getTitle(type){
+
+    if(type=="participant-is-waiting"){
+      return user?.role=="doctor" ? t('common.patient-joined-meeting') : t('common.doctor-joined-meeting') 
+    }
     return t('notification-titles.'+type)
+
 }
 
 function getMessageContent(i){
-  //upcoming-consultation
-  let link=(i.type=="upcoming-consultation"  || i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="consultation-message")  ?  '/appointment/'+i.data.details?.id :  (i.type=="medical-certificate-status") ? '/medical-certificate/'+i.data.details?.id :  (i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected") ? '/payment-management/'+i.data.details?.id : ''
   
+  //upcoming-consultation
+
+  let link=(i.type=="new-medical-certificate") ? '/medical-certificate/'+i.data.details?.id : (i.type=="participant-is-waiting") ? `/meeting/zoom/appointment/`+i.data.details?.id  : (i.type=="upcoming-consultation"  || i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="consultation-message")  ?  '/appointment/'+i.data.details?.id :  (i.type=="medical-certificate-status") ? '/medical-certificate/'+i.data.details?.id :  (i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected") ? '/payment-management/'+i.data.details?.id : ''
+  let btnLinkText=(i.type=="participant-is-waiting") ?  t('common.to_start') : t('common.see')
+
   return (
     <>
       <div class="ms-3 text-sm font-normal">
       <div class="text-sm font-semibold text-gray-900">{getTitle(i.type)}</div>
       <div class="text-sm font-normal">
-        {i.type=="consultation-message" ? `${t('common.message')}: ${i.data.message}` : t('notification-messages.'+i.type)}
+        {(i.type=="participant-is-waiting" || i.type=="new-medical-certificate") ? '': i.type=="consultation-message" || i.type=="support-message" ? `${t('common.message')}: ${i.data.message}` : t('notification-messages.'+i.type)}
         {(i.type=="upcoming-consultation") && <span>{i.data.details?.scheduled_date} {i.data.details?.scheduled_hours}</span>}
         {(i.type=="consultation-status" || i.type=="invoice-status" || i.type=="medical-certificate-status") && <span className={`font-medium ${i.data?.status=="rejected" || i.data?.status=="canceled" ? 'text-red-500':i.data?.status=="completed" || i.data?.status=="done"  ? "text-green-500" : i.data?.status =="pending" ? "text-orange-400":"text-honolulu_blue-400"} `}> {t('common.'+i.data?.status)}</span>}
         {i.type=="new-mpesa-payment"  &&  <span> #{i.data.details?.patient_id}</span>}
-        {(i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request") && <p>{t('common.consultation-timetable')}:   {i.data.details?.scheduled_date} {i.data.details?.scheduled_hours}</p>}
+        {(i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="participant-is-waiting") && <p>{t('common.consultation-timetable')}:   {i.data.details?.scheduled_date} {i.data.details?.scheduled_hours}</p>}
         {(i.type=="invoice-status" || i.type=="new-pending-invoice" || i.type=="refund-request") && <p>{t('common.reference')}:   #{i.data.details?.ref_id}</p>}
       </div> 
 
-      {(i.type=="upcoming-consultation" || i.type=="consultation-status" || i.type=="medical-certificate-status" || i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected" || i.type=="consultation-message") && <div className="flex items-center flex-wrap">
+      {(i.type=="participant-is-waiting" || i.type=="upcoming-consultation" || i.type=="consultation-status" || i.type=="medical-certificate-status" || i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected" || i.type=="consultation-message" || i.type=="support-message" || i.type=="new-medical-certificate") && <div className="flex items-center flex-wrap">
            <div className="w-full">
               <button onClick={()=>{
+
+                    if(i.type=="support-message"){
+                      data._closeAllPopUps()
+                      data._showPopUp('support_messages')
+                      return
+                    }
                     navigate(link)
                     setTimeout(()=>{
                         data._closeAllPopUps()
                     },100)
               }} type="button" class="text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-full mb-2 mt-1 text-sm px-3 py-1 text-center inline-flex items-center me-2">
-                                            <div>{t('common.see')}</div>
+                                            <div>{btnLinkText}</div>
                 </button>
           </div>
       </div>}
+
+
+
+
       
       <span class="text-xs font-medium text-blue-600">{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</span>   
       </div>

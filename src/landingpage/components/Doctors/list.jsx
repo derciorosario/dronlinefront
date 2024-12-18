@@ -41,12 +41,13 @@ function DoctorList({max,items,animate}) {
     
             
            {items.filter((i,_i)=>_i <= max || !max).map(item=>(
+            
              <div className="flex w-[46%] max-md:w-full gap-2 flex-col max-lg:w-full">
     
               <div>
      
               <div className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden">
-                  <img  src={item.profile_picture_filename} className="h-[300px] w-full object-cover"/> 
+                  <img  src={item.profile_picture_filename} className="h-[300px] w-full object-cover object-top"/> 
               </div>
      
 

@@ -79,6 +79,13 @@ function App() {
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.address}</BaiscTable.Td>
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.additional_info}</BaiscTable.Td>
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
+                         <BaiscTable.AdvancedActions id={i.id} items={[
+                              {name:t('common.edit-to-add'),onClick:()=>{
+                                data._closeAllPopUps()
+                                  window.open('/add-doctors?add_from_doctor_request_id='+i.id,'_blank')
+                              }},
+                              
+                          ]}/>
                        </BaiscTable.Tr>
                  ))}
              />

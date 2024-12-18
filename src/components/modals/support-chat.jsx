@@ -26,7 +26,6 @@ function SupportChat({show}) {
  const [search,setSearch]=useState('')
  const [selectedSubjectId,setSelectedSubjectId]=useState(null)
 
-
  moment.locale(i18next.language)
 
  useEffect(() => {
@@ -162,7 +161,9 @@ useEffect(()=>{
     }
     update_messages((user?.role=="admin" || user?.role=="manager") ? selectedUser.current : null,seeHistory)
     get_users()
+
 },[show,selectedUser.current])
+
 
 
  useEffect(()=>{
@@ -298,11 +299,11 @@ useEffect(()=>{
     }
 
     return (
-    <div id="authentication-modal" tabindex="-1" aria-hidden="true" class={`bg-[rgba(0,0,0,0.4)] max-md:bg-white overflow-y-auto _support_messages overflow-x-hidden ${show ? '' :'translate-y-10 opacity-0 pointer-events-none'} transition-all delay-75 ease-linear flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
+    <div id="authentication-modal" tabindex="-1" aria-hidden="true" class={`bg-[rgba(0,0,0,0.4)] max-md:bg-white overflow-y-auto _support_messages overflow-x-hidden  ${show ? '' :'translate-y-10 opacity-0 pointer-events-none'} transition-all delay-75 ease-linear flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
     
-    <div class={`relative max-md:w-full  ${(user?.role=="admin" || user?.role=="manager") ? 'w-[95%]':'w-[600px]'}`}>
+    <div class={`relative max-md:w-full max-md:h-full  ${(user?.role=="admin" || user?.role=="manager") ? 'w-[95%]':'w-[600px]'} max-md:translate-y-2`}>
 
-        <div className="w-full border-b px-3 pb-2 flex justify-between items-center bg-white  rounded-t-lg">
+        <div className="w-full border-b px-3 pb-2 flex justify-between items-center bg-white rounded-t-lg">
              <span>{t('common._support')}</span>
              <span  onClick={()=>{
                   data._closeAllPopUps()
@@ -334,7 +335,7 @@ useEffect(()=>{
 
          }
 
-         <div className={`w-full h-[80vh] max-md:h-[85vh]  bg-white  left-0 top-0 flex`}>
+         <div className={`w-full h-[80vh] max-md:h-auto flex-1  bg-white  left-0 top-0 flex`}>
          
             <div className={`w-[300px]  max-lg:hidden  ${(user?.role=="admin" || user?.role=="manager") ? '':' hidden'}`}>
                    
@@ -346,7 +347,7 @@ useEffect(()=>{
                    </div>
             </div>
 
-            <div id="scroll_comment" class="relative flex-1 shadow h-[80vh] bg-white rounded-b-[0.4rem] overflow-x-hidden  overflow-y-scroll py-3 px-2">
+            <div id="scroll_comment" class="relative flex-1 shadow h-[80vh] max-md:h-[80vh] bg-white rounded-b-[0.4rem] overflow-x-hidden  overflow-y-scroll py-3 px-2">
             <div className={`w-full absolute bg-white  h-full z-40 top-0 left-0 ${seeHistory && !selectedSubjectId && !loading && !deleting && (user?.role=="admin" || user?.role=="manager") ? '':'hidden'}`}>
                    
                    <div className="mt-2 px-2 font-medium">{t('common.history')} - <span>{users.filter(i=>i.id==selectedUser.current)[0]?.name}</span></div>
@@ -400,11 +401,7 @@ useEffect(()=>{
 
                     </div>
 
-
-                   
-
                 </div> 
-
                   <div className="overflow-x-auto relative w-full">
                   <table class={`w-full text-sm text-left rtl:text-right px-1`}>
                    <thead class="text-xs text-gray-700 bg-gray-50">
@@ -423,7 +420,7 @@ useEffect(()=>{
                                     <span className="ml-2 py-2 flex">{i?.message}</span>
                                  </td>
                                  <td class="px-6 py-3">
-                                 <span className={`px-2  ${i.last_ended_status=="done"   ? 'bg-green-500': i.last_ended_status=="canceled" ? 'bg-red-500':'bg-honolulu_blue-500'} py-1 rounded-sm text-white`}>{i.last_ended_status==null ? t('common.open') : t('common.'+i.last_ended_status)}</span>
+                                 <span className={`px-2  ${i?.last_ended_status=="done" || !i?.last_ended_status  ? 'bg-green-500': i?.last_ended_status=="canceled" ? 'bg-red-500':'bg-honolulu_blue-500'} py-1 rounded-sm text-white`}>{i?.last_ended_status==null ? t('common.open') : t('common.'+(i.last_ended_status || 'done'))}</span>
                                  </td>
                                  
                                  <td class="px-6 py-3">
@@ -604,9 +601,9 @@ useEffect(()=>{
        
 
 
-<div className={`w-full ${(seeHistory || ((user?.role=="admin" || user?.role=="manager") && messages.length==0 && !seeHistory) ) ? 'opacity-0 pointer-events-none':''} ${((user?.role=="admin" || user?.role=="manager") && !selectedUser.current) || (loading || deleting) ? ' opacity-0 pointer-events-none':''} bg-white  rounded-b-lg ${user?.role=="admin" ? '_hidden':''}`}>
+<div className={`w-full bg-white max-md:absolute bottom-0 ${(seeHistory || ((user?.role=="admin" || user?.role=="manager") && messages.length==0 && !seeHistory) ) ? 'opacity-0 pointer-events-none':''} ${((user?.role=="admin" || user?.role=="manager") && !selectedUser.current) || (loading || deleting) ? ' opacity-0 pointer-events-none':''} bg-white  rounded-b-lg ${user?.role=="admin" ? '_hidden':''}`}>
 
-    <div className="w-full pl-3 pr-1 py-1 relative  bg-white border border-gray-200 items-center gap-2 inline-flex justify-between">
+    <div className="w-full  max-md:-translate-y-3 pl-3 pr-1 py-1 relative  bg-white border border-gray-200 items-center gap-2 inline-flex justify-between">
     
              <div className={`absolute ${(messages.length==0 && (user?.role=="doctor" || user?.role=="patient")) ? '':'hidden'} bg-gray-200 bottom-[100%]  rounded-t-[0.3rem] left-0 w-full`}>
                 <span className="flex  px-2 py-1 text-[15px]">{t('common.subject')}</span>

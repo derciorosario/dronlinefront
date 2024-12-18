@@ -10,6 +10,7 @@ import VerifyRegisterEmail from '../../components/modals/verify-register-email';
 import ButtonLoader from '../../components/Loaders/button';
 import toast from 'react-hot-toast';
 import _var from '../../assets/vaiables.json'
+import i18n from '../../i18n';
 
 
 axios.defaults.withCredentials = true;
@@ -24,6 +25,14 @@ function Login() {
   const [showConfirmDialog,setShowConfirmDialog]=useState(false)
   const [formUpdater,setFormUpdater]=useState(false)
   const [success,setSuccess] = useState(false)
+
+
+  const [lang,setLang]=useState(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'pt')
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setLang(lng)
+    localStorage.setItem('lang',lng)
+  };
   
 
   const [form,setForm]=useState({
@@ -236,20 +245,32 @@ async function VerifyCode(){
 
 
 
-
-
   return (
     <div className="flex" id="top">
 
             <VerifyRegisterEmail success={success} resendCode={resendCode} message={message} setMessage={setMessage} setForm={setForm} loading={loading} SubmitForm={VerifyCode} form={form} setShow={setShowConfirmDialog} show={showConfirmDialog}/>
 
-            <div className="login-left-bg flex-1 min-h-[100vh] max-lg:hidden cursor-pointer" onClick={()=>navigate('/')}>
+            <div onClick={()=>navigate('/')} className="bg-honolulu_blue-500 hover:bg-honolulu_blue-600 absolute left-2 top-2 z-20 px-2 py-2 rounded max-md:py-1 cursor-pointer flex items-center">          
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+                        <span className="text-white">{t('common.home')}</span>
+            </div>
+            <div className="flex ml-3  absolute right-2 top-2  mr-4 items-center  cursor-pointer" style={{zIndex:9}}>
+
+                    <select onChange={(e)=>{
+                         changeLanguage(e.target.value)
+                    }} value={lang} className="mr-2 bg-transparent border-0 outline-none">
+                          <option value={'pt'} disabled={lang=="pt"}>PT</option>
+                          <option value={'en'} disabled={lang=="en"}>EN</option>
+                    </select>
+             </div>
+
+            <div className="login-left-bg flex-1 min-h-[100vh] max-lg:hidden">
 
             </div>
 
             <div className="px-[90px] py-[40px] max-sm:px-[20px] flex max-lg:w-full  justify-center items-center">
              
-              <div class="w-[450px]  max-lg:w-full">
+              <div class="w-[450px] max-md:pt-5  max-lg:w-full">
 
                  <div className="flex items-center justify-between mb-10">
 
@@ -325,7 +346,7 @@ async function VerifyCode(){
                     <div class="mb-3">
                         <label for="contact" class="block mb-2 text-sm font-medium">{t('form.contact')}</label>
                         <div className="flex items-center">
-                              <select  onChange={(e)=>setForm({...form,main_contact_code:e.target.value})} value={form.main_contact_code} class={`bg-gray w-[90px] mr-1 border border-gray-300  text-gray-900 text-sm rounded-[0.4rem] focus:ring-blue-500 focus:border-blue-500 block p-2.5`}>
+                              <select  onChange={(e)=>setForm({...form,main_contact_code:e.target.value})} value={form.main_contact_code} class={`bg-gray w-[90px] mr-1 border border-gray-300  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5`}>
                                   {_var.contry_codes.map(i=>(
                                     <option selected={form.main_contact_code==i.code ? true : false}  value={i.code}>+{i.code}</option>
                                   ))}

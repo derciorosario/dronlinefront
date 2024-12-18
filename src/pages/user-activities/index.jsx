@@ -205,7 +205,7 @@ return (
 <BasicFilter end={endDate} start={startDate} setEnd={setEndDate} setStart={setStartDate} setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
  
 <div className="flex-1">
-    <BasicSearch  hideSearch={true} total={data._user_activities?.activities?.total} from={'user_activities'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+    <BasicSearch loaded={data._loaded.includes('user_activities')}  hideSearch={true} search={search} total={data._user_activities?.activities?.total} from={'user_activities'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
    
      
      {data._loaded.includes('user_activities') && <FormCard hide={!selectedManager}  items={[

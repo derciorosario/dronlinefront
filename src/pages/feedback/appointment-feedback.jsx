@@ -105,12 +105,12 @@ useEffect(()=>{
   <DefaultLayout
 
     pageContent={{page:'appointment_feedbacks',title:t('menu.appointment-feedback'),desc:''}}>
-      <div className={`flex items-center mb-4 gap-2 ${!data._loaded.includes('appointment_feedback') ? 'hidden':''}`}>
+      <div className={`flex items-center mb-4 w-full flex-wrap md:gap-2 ${!data._loaded.includes('appointment_feedback') ? 'hidden':''}`}>
           {['pending','approved','rejected'].map((i,_i)=>(
             <div onClick={()=>{
               setSelectedTab(i)
               data.setUpdateTable(Math.random())
-            }} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
+            }} className={`flex max-md:min-w-[130px] mb-1 transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab==i ? 'bg-honolulu_blue-500 text-white':''}`}>
               <span>{getIcon(i,selectedTab==i)}</span>
               <span>{t('common.'+i)}</span>
                      {data._appointment_feedback?.status_counts?.[i] && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
@@ -125,7 +125,7 @@ useEffect(()=>{
       <div className="flex">
         
          <div className="flex-1">
-             <BasicSearch hideFilters={true}  total={data._appointment_feedback?.reviews?.total} from={'appointment_feedback'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
+             <BasicSearch hideFilters={true} loaded={data._loaded.includes('appointment_feedback') && !loading} search={search}  total={data._appointment_feedback?.reviews?.total} from={'appointment_feedback'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
              <div className="flex w-full relative">
                 <div className="absolute w-full">
                 <BaiscTable canAdd={false}  loaded={data._loaded.includes('appointment_feedback') && !loading} header={[

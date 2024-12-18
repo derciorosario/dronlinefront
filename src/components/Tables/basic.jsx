@@ -8,7 +8,7 @@ function BaiscTable({header,body,loaded,addPath,canAdd,notClickable,hide}) {
   const navigate=useNavigate()
 
   return (
-    <div className={`${notClickable ? '_not_clickable_table':''} ${hide ? 'hidden':''}`}>
+    <div className={`${notClickable ? '_not_clickable_table':''} ${hide ? 'hidden':''} max-h-[1300px] overflow-y-auto`}>
      <div class="relative overflow-x-auto shadow-sm sm:rounded-lg">
       <table class={`w-full ${!loaded ? 'hidden':''} text-sm text-left rtl:text-right`}>
           <thead class="text-xs text-gray-700 bg-gray-50">

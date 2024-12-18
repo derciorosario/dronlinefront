@@ -11,6 +11,7 @@ export default function SinglePrint({item,setItem}) {
 
     const [doctorSignature,setDoctorSignature]=useState(null)
     const [doctorStamp,setDoctorStamp]=useState(null)
+    const [secretaryChiefSignature,setSecretaryChiefSignature]=useState(null)
     const [imagesLoaded, setImagesLoaded] = useState(false);
 
 
@@ -20,6 +21,7 @@ export default function SinglePrint({item,setItem}) {
 
           setDoctorSignature(item.doctor?.signature_filename)
           setDoctorStamp(item.doctor?.stamp_filename)
+          setSecretaryChiefSignature(item?.i?.status_changer?.signature_filename)
 
         
           if(!localStorage.getItem('print_single'))  {
@@ -66,7 +68,7 @@ export default function SinglePrint({item,setItem}) {
           );
 
           const images = await Promise.all(promises);
-          console.log({images})
+
           setTimeout(()=>{
             window.print()
               setTimeout(()=>{
@@ -76,16 +78,22 @@ export default function SinglePrint({item,setItem}) {
             data.setIsLoading(false)
           },1000)
 
-          
-
       } catch (error) {
-          window.print()
+
+          data._showPopUp('basic_popup','printing-images-missing')
           console.error(error);
-          setItem(null)
-          toast.error(t('common.error-while-printing'))
+          //setItem(null)
+          //toast.error(t('common.error-while-printing'))
+          //window.print()
           data.setIsLoading(false)
       }
   };
+
+   useEffect(()=>{
+    setItem(null)
+   },[data.updateTable])
+
+
 
 
     const {user}=useAuth()
@@ -206,7 +214,7 @@ export default function SinglePrint({item,setItem}) {
                                  return (
                                   <>
                                       <div>
-                                        <div>
+                                        <div className="text-justify">
                                         
                                         <p className="leading-relaxed" style={{lineHeight:2}}>{t('medical-certification-t-1',variables)}</p>
                                         <p className="leading-relaxed" style={{lineHeight:2}}>{t('medical-certification-t-2',variables)}</p>
@@ -222,12 +230,20 @@ export default function SinglePrint({item,setItem}) {
 
                                         <div className="border-t border-t-gray-400 w-full mt-10">
                                           <p className="leading-relaxed" style={{lineHeight:2}}>{t('medical-certification-t-3',variables)}</p>
+
+                                          <p className="mt-5 text-[18px] mb-2 flex justify-center">{formatDate(f.created_at.split('T')[0],i18next.language)}</p>
                                           <p className="leading-relaxed mt-3 flex justify-center" style={{lineHeight:2}}>{t('medical-certification-t-4',variables)}</p>
                                         </div>
 
-                                        {item?.i?.status_changer?.signature_filename && <div className="flex justify-center">
-                                             <img width={100}  className="h-auto" src={item?.i?.status_changer?.signature_filename}/>
-                                        </div>}
+                                      
+                                         <div className="flex justify-center">
+                                             <img width={100}  className="h-auto" src={secretaryChiefSignature}/>
+                                             {(user?.app_settings?.[0]?.value && item?.i?.status_changer?.role=="admin")  && (
+                                              <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>
+                                             )}
+                                        </div>
+
+                                        
 
                                         <div className="border-t border-t-gray-400 w-full mt-10">
                                           <p className="leading-relaxed" style={{lineHeight:2}}>{t('medical-certification-t-5',variables)}</p>

@@ -191,7 +191,8 @@ function SelectDoctorAvailability({ item }) {
     "january", "february", "march", "april", "may", "june",
     "july", "august", "september", "october", "november", "december"
   ];
-   
+
+ 
   useEffect(()=>{
 
     
@@ -274,8 +275,8 @@ function SelectDoctorAvailability({ item }) {
   },[item])
 
   return (
-    <div className={`w-full h-[100vh] bg-[rgba(0,0,0,0.2)] ease-in  overflow-y-auto _doctor_list ${!item?.id ? 'opacity-0 pointer-events-none translate-y-[100px]' : 'z-[60]'} ease-in transition-all delay-75 fixed flex items-center justify-center`}>
-      <div className="w-full  p-4 relative bg-white  max-h-[90vh] max-md:max-h-[100vh] border overflow-y-auto border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">
+    <div className={`w-full h-[100vh] bg-[rgba(0,0,0,0.4)] ease-in pb-5  overflow-y-auto _doctor_list ${!item?.id ? 'opacity-0 pointer-events-none translate-y-[100px]' : 'z-[60]'} ease-in transition-all delay-75 fixed flex items-center justify-center`}>
+      <div className="w-full  p-4 relative bg-white  max-h-[90vh] translate-y-3 max-md:max-h-[100vh] border overflow-y-auto border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px] max-md:max-w-[95%]">
         <div className="flex absolute mb-3 top-1 left-2">
           <span onClick={() => {
 
@@ -394,15 +395,18 @@ function SelectDoctorAvailability({ item }) {
        
                <a href="#" onClick={()=>{
 
-                   if(pathname.includes('/doctors-list') || pathname=="/"){
+                   if((pathname.includes('/doctors-list') || pathname=="/") && user?.role!="patient"){
                       
                       homeData.setIsLoading(true)
                       window.location.href=(`/login?nextpage=add-appointments&scheduled_doctor=${item.id}&type_of_care=${typeOfCare}&scheduled_hours=${selectedDoctors[item.id]}&scheduled_date=${selectedDates[item.id] || new Date().toISOString().split('T')[0]}&scheduled_weekday=${weeks[new Date(selectedDates[item.id] || new Date().toISOString().split('T')).getDay()]}`)
+                      return
                     }
 
                     data._closeAllPopUps()
+                    homeData._closeAllPopUps()
                     data.setPaymentInfo({doctor:item})
                     data.setSelectedDoctorToSchedule({});
+                    homeData.setSelectedDoctorToSchedule({})
                     navigate(`/add-appointments?scheduled_doctor=${item.id}&type_of_care=${typeOfCare}&scheduled_hours=${selectedDoctors[item.id]}&scheduled_date=${selectedDates[item.id] || new Date().toISOString().split('T')[0]}&scheduled_weekday=${weeks[new Date(selectedDates[item.id] || new Date().toISOString().split('T')).getDay()]}&canceled_appointment_id=${data.appointmentcancelationData?.consultation?.id || ''}`)
                     data.setAppointmentcancelationData({})
                 }} class={`inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white ${selectedDoctors[item.id]?.length ? 'bg-honolulu_blue-400':'bg-gray-500 pointer-events-none'} rounded-lg  focus:ring-4 focus:outline-none focus:ring-blue-300`}>

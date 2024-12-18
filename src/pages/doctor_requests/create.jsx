@@ -70,7 +70,8 @@ function AppointmentInvoice({ShowOnlyInputs}) {
          toast.error(t('common.item-not-found'))
          navigate('/membership-requests')
       }else  if(e.message=='Failed to fetch'){
-        
+        navigate('/membership-requests')
+        toast.error(t('common.check-network'))
       }else{
         toast.error(t('common.unexpected-error'))
         navigate('/membership-requests')  
@@ -119,6 +120,17 @@ return (
   <div>
 
   <FormLayout  hide={!itemToEditLoaded && id} hideTitle={ShowOnlyInputs} title={t('menu.membership-requests')} verified_inputs={verified_inputs} form={form}
+
+  advancedActions={{hide:!id,id:form.id, 
+    
+    items:[
+      {name:t('common.edit-to-add'),onClick:()=>{
+          data._closeAllPopUps()
+          window.open('/add-doctors?add_from_doctor_request_id='+form.id,'_blank')
+      }},
+    ]
+
+}}
 
   topBarContent
 

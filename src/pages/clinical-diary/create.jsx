@@ -118,7 +118,8 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
           toast.error(t('common.item-not-found'))
           navigate('/appointments')
       }else  if(e.message=='Failed to fetch'){
-        
+         navigate('/appointments')
+         toast.error(t('common.check-network'))
       }else{
         toast.error(t('common.unexpected-error'))
         navigate('/appointments')  

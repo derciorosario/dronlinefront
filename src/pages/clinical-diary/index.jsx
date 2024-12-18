@@ -77,7 +77,7 @@ function globalOnclick(id){
 
            <div className="flex-1">
           
-           <BasicSearch hideFilters={true}   printAction={()=>{
+           <BasicSearch loaded={data._loaded.includes('clinical_diary')} hideFilters={true} search={search}   printAction={()=>{
 
                 data.setSinglePrintContent({
                     patient: itemToShow.appointment.patient,

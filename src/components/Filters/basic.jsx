@@ -35,7 +35,7 @@ export default function BasicFilter({dateFilters,setDateFilter,filterOptions,set
     <div className={`max-md:${data.showFilters ? 'fixed':'hidden'} max-md:overflow-scroll max-md:mb-32 max-md:z-50 right-0 top-1 max-md:h-[100vh]  max-md:w-full`}>
     <div  style={data.isMobile ? {width:'100%'} : {width:data.showFilters ? '190px':'0'}} className={`min-h-[400px] bg-white   max-md:h-full relative h-auto  ${show ? 'opacity-0 pointer-events-none':'ease-in delay-75 transition-all'} overflow-x-hidden  mr-2`}>
          
-         <div className="rounded-[2rem] pb-5 md:w-[170px] w-full  absolute left-0 top-0">
+         <div className="rounded-[2rem] pb-5 md:w-[170px] w-full  absolute left-0 top-0 max-md:px-3">
 
            <button onClick={()=>data.setShowFilters(false)} type="button" className="text-white flex  max-md:mt-2 justify-center items-center mb-1 w-full bg-honolulu_blue-500 font-medium rounded-full text-sm px-5 py-2.5  focus:outline-none">       
                <svg className="mr-1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"  fill="#fff"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
