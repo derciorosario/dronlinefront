@@ -166,7 +166,7 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
       }*/
 
      
-      let response=await data.makeRequest({method:'post',url:`api/patients/${user.data?.id}/dependents`,withToken:true,data:{
+      let response=await data.makeRequest({method:'post',url:`api/patients/${user?.data?.id}/dependents`,withToken:true,data:{
         ...form,uploaded_files:form.uploaded_files.filter(i=>i.filename),
         has_chronic_diseases:form.has_chronic_diseases==null ? false : form.has_chronic_diseases,
         has_surgery_or_relevant_procedures: form.has_surgery_or_relevant_procedures==null ? false : form.has_surgery_or_relevant_procedures,

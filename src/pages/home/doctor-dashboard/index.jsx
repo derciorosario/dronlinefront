@@ -59,8 +59,8 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
      const [upcomingAppointments,setUpcomingAppointments]=useState([])
 
      useEffect(()=>{ 
-             setUpcomingAppointments((data._doctor_dashboard.upcomingAppointments || []).map(i=>({
-              ...i,type:i.scheduled_date==serverTime.date ? 'scheduled_for_today' : 'all'
+             setUpcomingAppointments((data._doctor_dashboard?.upcomingAppointments || []).map(i=>({
+              ...i,type:i.scheduled_date==serverTime?.date ? 'scheduled_for_today' : 'all'
             })))
      },[data._doctor_dashboard])
 
@@ -168,7 +168,7 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
 
                         <div className="flex items-center mb-4 gap-2 mt-5">
                                   {['scheduled_for_today','all'].map((i,_i)=>{
-                                          let total=i=="all" ? upcomingAppointments.length : upcomingAppointments.filter(f=>f.scheduled_date==serverTime.date).length
+                                          let total=i=="all" ? upcomingAppointments.length : upcomingAppointments.filter(f=>f.scheduled_date==serverTime?.date).length
                                           return (
                                             <div onClick={()=>setSelectedTab2(i)} className={`flex transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab2==i ? 'bg-honolulu_blue-500 text-white':''}`}>
                                                 <span>{t('dashboard.'+i)}</span>
@@ -182,6 +182,7 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
                            </div>
 
                         <BaiscTable canAdd={false} hide={upcomingAppointments.length==0}   loaded={data._loaded.includes('doctor_dashboard')} header={[
+                                    
                                        t('form.consultation-id'),
                                        t('common.this-is-for'),
                                        t('form.consultation-status'),

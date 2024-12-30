@@ -40,9 +40,9 @@ function DoctorList({max,items,animate}) {
     <div className="flex  mx-auto gap-y-20 gap-x-16 flex-wrap">
     
             
-           {items.filter((i,_i)=>_i <= max || !max).map(item=>(
+           {items.filter((i,_i)=>_i <= max || !max).map((item,_item)=>(
             
-             <div className="flex w-[46%] max-md:w-full gap-2 flex-col max-lg:w-full">
+             <div className={`flex w-[46%] max-md:w-full gap-2 flex-col max-lg:w-full`} data-aos="fade-up" data-aos-delay={`${(_item+1) * 200}`}>
     
               <div>
      

@@ -30,6 +30,12 @@ export default function WorkWithUsForm({}) {
     setLoading(true)
     try{
 
+      if(form.uploaded_files.some(i=>i.filename && !i.name)){
+        toast.error(t('common.add-document-name'))
+        setLoading(false)
+        return
+      }
+
         if(!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))){
             toast.error(t('common.invalid-email'))
             setLoading(false)
@@ -37,7 +43,8 @@ export default function WorkWithUsForm({}) {
         }
 
         await data.makeRequest({method:'post',url:`api/doctor-requests`,data:{
-         ...form
+         ...form,
+         uploaded_files:form.uploaded_files.filter(i=>i.filename)
         }, error: ``},0)
 
        
@@ -91,6 +98,7 @@ export default function WorkWithUsForm({}) {
   function handleUploadeduploaded_files(upload){
 
     setForm({...form,uploaded_files:form.uploaded_files.map(i=>{
+        console.log({upload})
         if(i.id==upload.key){
           return {...i,filename:upload.filename}
         }else{
@@ -100,6 +108,9 @@ export default function WorkWithUsForm({}) {
 
   }
 
+  function getID() {
+      return 
+  }
 
   return (
             
@@ -111,7 +122,6 @@ export default function WorkWithUsForm({}) {
                         <h3 class="text-lg font-semibold text-gray-900">
                           {t('common.insert-medical-and-personal-info')}
                         </h3>
-
                         
                     </div>
                   
@@ -189,7 +199,7 @@ export default function WorkWithUsForm({}) {
                   <div className="flex gap-x-4 flex-wrap gap-y-4 w-[300px]">
 
                       {form.uploaded_files.map(i=>(
-                            <div className="flex items-center w-full">
+                            <div key={i.id} className="flex items-center w-full">
                             <div>
                             <input id={i.id} style={{borderBottom:'0'}} value={i.name} placeholder={t('common.document-name')} onChange={(e)=>{
                                  setForm({...form,uploaded_files:form.uploaded_files.map(f=>{

@@ -17,8 +17,8 @@ import Comment from '../../components/modals/comments'
 import SearchInput from '../../components/Inputs/search'
 import _medication_names from '../../assets/medication-names.json'
 import _medications from '../../assets/medications.json'
-function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
 
+function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
   const [message,setMessage]=useState('')
   const [verified_inputs,setVerifiedInputs]=useState([])
   const [valid,setValid]=useState(false)
@@ -36,7 +36,6 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
   const [showComment,setShowComment]=useState(false)
   const [itemToEditLoaded,setItemToEditLoaded]=useState(false)
   const [MessageBtnSee,setMessageBtnSee]=useState(null)
-
   let required_data=['doctors','patients']
 
   useEffect(()=>{
@@ -46,7 +45,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
       data._get(required_data) 
     ),500)
 
-},[user,pathname])
+  },[user,pathname])
 
 
   let initial_form={
@@ -55,7 +54,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
     ],
     uploaded_files:[],
     comments:[]
-   }
+  }
 
 
 
@@ -108,17 +107,21 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
 
       console.log(e)
 
-      return
 
       if(e.message==404){
          toast.error(t('common.item-not-found'))
-         navigate('/appointments')
       }else  if(e.message=='Failed to fetch'){
-         navigate('/appointments')
+         toast.error(t('common.check-network'))
       }else{
          toast.error(t('common.unexpected-error'))
-         navigate('/appointments')  
+        
       }
+      
+      setItemToShow({
+        ...itemToShow,
+        name:itemToShow.name.replace('create','all')
+      }) 
+      
 
      
   }
@@ -150,7 +153,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
 
       }else{
 
-        let response=await data.makeRequest({method:'post',url:`api/medical-prescriptions`,withToken:true,data:{
+        await data.makeRequest({method:'post',url:`api/medical-prescriptions`,withToken:true,data:{
           ...form,
           patient_id:itemToShow.appointment.patient_id,
           doctor_id:itemToShow.appointment.doctor_id,
@@ -159,8 +162,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
         }, error: ``},0);
   
         setForm({...initial_form})
-        setMessageType('green')
-        setMessage(t('messages.added-successfully'))
+        toast.success(t('messages.added-successfully'))
         setLoading(false)
         setVerifiedInputs([])
         data._scrollToSection('center-content')
@@ -170,24 +172,19 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow}) {
      
 
     }catch(e){
-      setMessageType('red')
-      data._scrollToSection('_register_msg')
-      if(e.message==401){
-        setMessage(t('common.email-exists'))
-      }else if(e.message==400){
-        setMessage(t('common.invalid-data'))
+      
+      if(e.message==404){
+        toast.error(t('common.item-not-found'))
       }else if(e.message==500){
-        setMessage(t('common.unexpected-error'))
+        toast.error(t('common.unexpected-error'))
       }else  if(e.message=='Failed to fetch'){
-          setMessage(t('common.check-network'))
+        toast.error(t('common.check-network'))
       }else{
-          setMessage(t('common.unexpected-error'))
+        toast.error(t('common.unexpected-error'))
       }
 
       setLoading(false)
-      
     }
-
     data.setUpdateTable(Math.random())
 
   }

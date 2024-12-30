@@ -19,13 +19,15 @@ function PaymentProcess({ info }) {
                
         <div className={`flex absolute mb-3 top-1 ${info?.loading ? 'opacity-0 pointer-events-none':''} left-2`}>
           <span onClick={() => {
+
                if(info?.step==3){
                   data.setPaymentInfo({done:true,is_proof:true})
                }else if(info?.step==2){
-                  data.setPaymentInfo({...info,step:1})
+                  data.setPaymentInfo({...info,step:1,payment_method:null})
                }else{
                   data.setPaymentInfo({})
                }
+               
           }} className="table px-2 bg-gray-200 py-1 text-[14px] rounded-full cursor-pointer hover:bg-gray-300">
             {info?.step==3 ? t('common.close') : t('common.go-back')}
           </span>

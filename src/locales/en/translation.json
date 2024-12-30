@@ -462,7 +462,7 @@
             "login-msg":"Please enter your credentials to access your account.",
             "dronline-short-desc": "Dr.Online, Lda. provides telemedicine services aimed at facilitating access to medical care through digital technologies.",
             "updating-company-profile": "Updating profile",
-            "only-files-less-than": "Only files up to 2MB",
+            "only-files-less-than": "Only files up to 10MB",
             "file-not-permited": "File not allowed",
             "review": "Consultation feedback",
             "no-recent-payments": "No recent payments",

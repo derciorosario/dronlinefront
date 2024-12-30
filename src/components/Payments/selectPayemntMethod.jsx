@@ -209,6 +209,7 @@ function SelectPayemntMethod({info}) {
     <div class={`mt-6 w-full ${!info?.payment_method ? 'hidden':''}`}> 
         <div class="flow-root">
           <div class="-my-3 divide-y divide-gray-200">
+
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('common.consult')}</dt>
               <dd class="text-base font-medium text-gray-900 text-right">{data._specialty_categories.filter(i=>i.id==info?.medical_specialty)[0]?.[i18next.language+"_name"]}</dd>
@@ -217,23 +218,17 @@ function SelectPayemntMethod({info}) {
               <dt class="text-base font-normal text-gray-500">{t('form.type-of-care')}</dt>
               <dd class="text-base font-medium text-gray-900 text-right">{t('form.'+info?.type_of_care+"-c")} {info?.type_of_care=="scheduled"  ? `(Normal)` :''}</dd>
             </dl>
+
             {info?.type_of_care!="requested" && <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('common.doctor')}</dt>
               <dd class="text-base font-medium text-gray-900 text-right">{(data._doctors?.data || []).filter(i=>i.id==info?.doctor_id)[0]?.name}</dd>
             </dl>}
 
-
-
-            
-
-
             {getAmount().refund!=0 && <>
-
               <dl class="flex items-center justify-between gap-4 py-3">
                 <dt class="text-base font-normal text-gray-500">{t('common.paid-before')}</dt>
                 <dd class="text-base font-medium text-gray-900 text-right">{data.formatNumber(data._cn_op(invoice?.price))} MT</dd>
               </dl>
-
 
              {invoice?.amount!=getAmount().consultation_price && <>
                 <dl class="flex items-center justify-between gap-4 py-3 hidden">
@@ -246,14 +241,11 @@ function SelectPayemntMethod({info}) {
                 <dd class="text-base font-medium text-gray-900 text-right">{data.formatNumber(data._cn_op(getAmount().refund))} MT</dd>
                 </dl>
               </>}
-
               
               <dl class="flex items-center justify-between gap-4 py-3">
                 <dt class="text-base font-normal text-gray-500">{t('common.consultation-price')}</dt>
                 <dd class="text-base font-medium text-gray-900 line-through text-right">{data.formatNumber(data._cn_op(getAmount().consultation_price))} MT</dd>
               </dl>
-
-
             </>}
 
 
@@ -268,9 +260,6 @@ function SelectPayemntMethod({info}) {
                 <dt class="text-base font-normal text-gray-500">{t('common.consultation-price')}</dt>
                 <dd class="text-base font-medium text-gray-900 line-through text-right">{data.formatNumber(data._cn_op(getAmount().consultation_price))} MT</dd>
               </dl>
-
-           
-
             </>}
 
 
@@ -289,24 +278,20 @@ function SelectPayemntMethod({info}) {
         </div>
 
         <div class="space-y-3 mt-2">
+
           <button onClick={()=>{
-
-
              let form_data=({...info,step:2,amount:getAmount().price,taxes:getAmount().taxes,price:getAmount().consultation_price})
-           
-
              if(getAmount().price==0){
                   createNoAmountPayment(form_data)
                   return
              }
              data.setPaymentInfo(form_data)
-
              document.querySelector('#payment_popup').scrollTo(0,0)
           }} type="submit" class={`flex w-full items-center justify-center rounded-lg ${(info?.payment_method && data._loaded.includes('cancellation_taxes')) ? 'bg-honolulu_blue-500':'bg-gray-400 pointer-events-none opacity-90'} px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4  focus:ring-primary-300`}>
              {t('common.proceed-with-payment')}
           </button>
           <p class=" hidden text-sm font-normal text-gray-500">One or more items in your cart require an account. <a href="#" title="" class="font-medium text-primary-700 underline hover:no-underline">Sign in or create an account now.</a>.</p>
-        </div>
+       </div>
       </div>
 
         </div>

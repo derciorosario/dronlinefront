@@ -55,7 +55,7 @@ function SendProof({info}) {
     formData.append('file', f);
     let fileName = uuidv4();
     formData.append('filename', fileName);
-    formData.append('formdata',JSON.stringify({...info,patient_id:user.data?.id}))
+    formData.append('formdata',JSON.stringify({...info,patient_id:user?.data?.id}))
   
     setFile(f);
 

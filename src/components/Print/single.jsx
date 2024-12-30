@@ -13,11 +13,35 @@ export default function SinglePrint({item,setItem}) {
     const [doctorStamp,setDoctorStamp]=useState(null)
     const [secretaryChiefSignature,setSecretaryChiefSignature]=useState(null)
     const [imagesLoaded, setImagesLoaded] = useState(false);
+    const [appSettings,setAppSettings]=useState(null)
+
+
+
+     useEffect(()=>{
+
+       (async()=>{
+          setAppSettings(null)
+          if(!item) return
+
+          try{
+              data.setIsLoading(true)
+              let r=await data.makeRequest({method:'get',url:`api/userdata/`,withToken:true, error: ``},0);
+              setAppSettings({...JSON.parse(r.app_settings[0].value)})
+          }catch(e){
+              toast.error(t('common.error-while-printing'))
+              data.setIsLoading(false)
+              console.log({e})
+              setItem(null)
+          }
+       })()
+
+
+     },[item])
 
 
       useEffect(()=>{
 
-         if(item){
+         if(item && appSettings){
 
           setDoctorSignature(item.doctor?.signature_filename)
           setDoctorStamp(item.doctor?.stamp_filename)
@@ -26,7 +50,7 @@ export default function SinglePrint({item,setItem}) {
         
           if(!localStorage.getItem('print_single'))  {
 
-          data.setIsLoading(true)
+           data.setIsLoading(true)
              
           let imagestoLoad=[
             item.doctor?.signature_filename,
@@ -51,7 +75,7 @@ export default function SinglePrint({item,setItem}) {
           
         }
          
-    },[item])
+    },[item,appSettings])
 
 
     const preloadImages = async (links) => {
@@ -94,6 +118,7 @@ export default function SinglePrint({item,setItem}) {
    },[data.updateTable])
 
 
+  
 
 
     const {user}=useAuth()
@@ -296,10 +321,17 @@ export default function SinglePrint({item,setItem}) {
                           </div>
                          
                     </div>
-                    
-                    <span className="flex w-full justify-center my-5">Dr Online</span>
+               </div>
 
-                 </div>
+               <div className="w-full text-[0.8rem] text-gray-500 flex justify-between mt-10 border-t border-t-gray-200 pt-3">
+                    <span>{appSettings?.address}</span>
+                    <span>{appSettings?.name}</span>
+                    <div className="flex">
+                      <span>{appSettings?.email}</span>
+                      <label className="mx-2">|</label>
+                      <span>{appSettings?.main_contact}</span>
+                    </div>
+               </div>
 
 
       </div>

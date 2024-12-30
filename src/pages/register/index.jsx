@@ -148,8 +148,16 @@ function Login() {
  }
 
 
+ console.log(data.auth.type)
+
+
 
  async function SendCode(){
+
+  if(data.auth.type){
+    VerifyCode()
+    return
+  }
 
   setMessage('')
 
@@ -213,6 +221,8 @@ async function resendCode(){
 
 
 async function VerifyCode(){
+
+
 
     setMessage('')
     setLoading(true)
@@ -296,8 +306,8 @@ async function VerifyCode(){
                   {data.auth.type!="google"  && <GoogleSignIn setLoading={setLoading}  isSignup={true} setMessage={setMessage} signUpWithGoogle={signUpWithGoogle}/>}
 
                    {(data.auth.type=="google" && !showConfirmDialog) &&  <button  onClick={()=>{
-                    data.setAuth({...data.auth,type:null})
-                    setFormUpdater(Math.random())
+                        data.setAuth({...data.auth,type:null})
+                        setFormUpdater(Math.random())
                     }}   type="button" class="border  bg-red-100 w-full mb-[30px]  border-red-600 cursor-pointer hover:opacity-65 text-red-500  mt-10  focus:outline-none font-medium rounded-[0.3rem] text-sm px-5 py-2.5 text-center inline-flex justify-center items-center">
                         <span> {t('common.cancel-google-signup')}</span>
                    </button>}

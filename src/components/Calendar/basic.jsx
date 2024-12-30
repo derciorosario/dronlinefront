@@ -149,7 +149,7 @@ const Calendar = ({items}) => {
   
     (async()=>{
       try{
-       let response=await data.makeRequest({method:'get',url:`api/doctor/`+user.data.id,withToken:true, error: ``},100);
+       let response=await data.makeRequest({method:'get',url:`api/doctor/`+user?.data.id,withToken:true, error: ``},100);
        setDoctorData(response)
       }catch(e){
         console.log({e})

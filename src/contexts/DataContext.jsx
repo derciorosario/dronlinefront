@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 let env="pro"
 import io from 'socket.io-client';
 import { t } from 'i18next';
-const socket_server=env!="dev" ? 'https://dronline-nodeserver.arsbeta-mz.com' : 'http://localhost:3001'
+const socket_server=env!="dev" ? 'https://socket.dronlinemz.com/' : 'http://localhost:3001'
 const socket = io(socket_server)
 let log_id=Math.random().toString()
 const DataContext = createContext();
@@ -254,16 +254,20 @@ export const DataProvider = ({ children }) => {
           return
         }
         
-        timeRef.current = new Date(timeRef.current.getTime() + 3000);
+        try{
+          timeRef.current = new Date(timeRef.current.getTime() + 3000);
 
-        setServerTime({
-          week_day: timeRef.current.getDay(),
-          month: timeRef.current.getMonth() + 1,
-          date: timeRef.current.toISOString().split('T')[0],
-          hour: timeRef.current.toTimeString().slice(0, 5),
-          day: timeRef.current.getDate().toString().padStart(2, '0'),
-        });
-
+          setServerTime({
+            week_day: timeRef.current.getDay(),
+            month: timeRef.current.getMonth() + 1,
+            date: timeRef.current.toISOString().split('T')[0],
+            hour: timeRef.current.toTimeString().slice(0, 5),
+            day: timeRef.current.getDate().toString().padStart(2, '0'),
+          });
+  
+        }catch(e){
+           console.log({e})
+        }
 
       }, 3000);
   
@@ -317,10 +321,10 @@ export const DataProvider = ({ children }) => {
 
       const interval = setInterval(() => {
           socket.emit('log-user',{
-            id:user.id,
-            email:user.email,
+            id:user?.id,
+            email:user?.email,
             log_id,
-            role:user.role
+            role:user?.role
           })
       }, 5000)
 
@@ -341,7 +345,8 @@ export const DataProvider = ({ children }) => {
       type_of_care:'',
       add_info:'',
       adding_appointment:'',
-      add_from_doctor_request_id:''
+      add_from_doctor_request_id:'',
+      reason_for_consultation:''
     }
     
     const [_filters, setFilters] = useState(initial_filters);
@@ -826,7 +831,7 @@ function isSetAsUrgentHour(hour,AppSettings){
       
     const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':')
       if(serverTime){
-        const currentTime = new Date(`${serverTime.date}T${formatTime(serverTime.hour)}:00`);
+        const currentTime = new Date(`${serverTime?.date}T${formatTime(serverTime?.hour)}:00`);
         const consultationTime = new Date(`${i.scheduled_date}T${formatTime(i.scheduled_hours)}:00`);
         if(currentTime > consultationTime){
           return true
@@ -841,6 +846,10 @@ function isSetAsUrgentHour(hour,AppSettings){
     const [lastJoinMeetingID,setLastJoinMeetingID]=useState(null)
 
 
+
+    useEffect(()=>{
+      setSelectedTableItems([])
+    },[updateTable])
 
     const value = {
       lastJoinMeetingID,

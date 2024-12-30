@@ -16,7 +16,7 @@ import FormCard from '../../components/Cards/form'
 import Comment from '../../components/modals/comments'
 import SearchInput from '../../components/Inputs/search'
 
-function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
+function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow,setItemToShow}) {
 
   const [message,setMessage]=useState('')
   const [verified_inputs,setVerifiedInputs]=useState([])
@@ -115,15 +115,19 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
     }catch(e){
 
       if(e.message==404){
-          toast.error(t('common.item-not-found'))
-          navigate('/appointments')
+        toast.error(t('common.item-not-found'))
+      }else if(e.message==500){
+        toast.error(t('common.unexpected-error'))
       }else  if(e.message=='Failed to fetch'){
-         navigate('/appointments')
-         toast.error(t('common.check-network'))
+        toast.error(t('common.check-network'))
       }else{
         toast.error(t('common.unexpected-error'))
-        navigate('/appointments')  
       }
+
+      setItemToShow({
+        ...itemToShow,
+        name:itemToShow.name.replace('create','all')
+      }) 
      
   }
   
@@ -154,18 +158,17 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
 
       }else{
 
-        let response=await data.makeRequest({method:'post',url:`api/clinical-diary`,withToken:true,data:{
+        await data.makeRequest({method:'post',url:`api/clinical-diary`,withToken:true,data:{
           ...form,
           patient_id:itemToShow.appointment.patient_id,
           doctor_id:itemToShow.appointment.doctor_id,
           appointment_id:itemToShow.appointment.id,
-          user_id:user.id
+          user_id:user?.id
         }, error: ``},0);
   
         setForm({...initial_form})
 
-        setMessageType('green')
-        setMessage(t('messages.added-successfully'))
+        toast.success(t('messages.added-successfully'))
         setLoading(false)
         setVerifiedInputs([])
         data.handleLoaded('remove','clinical_diary')
@@ -173,19 +176,18 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow}) {
      
 
     }catch(e){
-      setMessageType('red')
+     
 
       console.log({e})
-      if(e.message==401){
-        setMessage(t('common.email-exists'))
-      }else if(e.message==400){
-        setMessage(t('common.invalid-data'))
+
+      if(e.message==404){
+          toast.error(t('common.item-not-found'))
       }else if(e.message==500){
-        setMessage(t('common.unexpected-error'))
+        toast.error(t('common.unexpected-error'))
       }else  if(e.message=='Failed to fetch'){
-          setMessage(t('common.check-network'))
+        toast.error(t('common.check-network'))
       }else{
-          setMessage(t('common.unexpected-error'))
+        toast.error(t('common.unexpected-error'))
       }
 
       setLoading(false)

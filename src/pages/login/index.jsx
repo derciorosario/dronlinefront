@@ -350,7 +350,7 @@ async function SubmitForm(options){
  
 <div class="w-[400px] max-md:pt-5  max-lg:w-full">
       <div className="flex items-center">
-          <h2 className="font-medium text-[22px] mb-2">Login | <span onClick={()=>{
+          <h2 className="font-medium text-[22px] mb-2">Login <label className="mx-2 font-normal text-gray-400"> | </label> <span onClick={()=>{
              navigate('/register')
           }} className="text-[20px] text-honolulu_blue-400 underline cursor-pointer"> {t('common.register')}</span></h2>
          {user && <span onClick={() => {

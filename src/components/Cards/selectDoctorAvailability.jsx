@@ -27,9 +27,9 @@ function SelectDoctorAvailability({ item }) {
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
     let date=new Date(newDate.$d).toISOString().split('T')[0]
-    setSelectedDates({...selectedDates,[item.id]:date})
-    setSelectedWeekDays({...selectedWeekDays,[item.id]:weeks[new Date(date).getDay()]})
-    setSelectedDoctors({...selectedDoctors,[item.id]:[]})
+    setSelectedDates({...selectedDates,[item?.id]:date})
+    setSelectedWeekDays({...selectedWeekDays,[item?.id]:weeks[new Date(date).getDay()]})
+    setSelectedDoctors({...selectedDoctors,[item?.id]:[]})
   };
 
   const [selectedWeekDays,setSelectedWeekDays] = useState({})
@@ -50,11 +50,11 @@ function SelectDoctorAvailability({ item }) {
           return []
       }
       
-      let date=selectedDates[item.id] || new Date().toISOString().split('T')[0]
+      let date=selectedDates[item?.id] || new Date().toISOString().split('T')[0]
       if(type=="normal"){
-          return (item.availability.unavailable_specific_date[date] ? [] : item.availability.specific_date[date] ? item.availability.specific_date[date] : item.urgent_availability.specific_date[date] ? [] : !selectedWeekDays[item.id] ? (item.availability.weekday[weeks[new Date().getDay()]] || []) : (item.availability.weekday[selectedWeekDays[item.id]] || [])).filter(i=>(date > data.serverTime.date) ||  formatTime(i) > formatTime(data.serverTime.hour)).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!afterAppointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=data.appointmentcancelationData?.consultation?.id))
+          return (item?.availability?.unavailable_specific_date?.[date] ? [] : item?.availability?.specific_date?.[date] ? item?.availability.specific_date?.[date] : item?.urgent_availability?.specific_date?.[date] ? [] : !selectedWeekDays?.[item?.id] ? (item?.availability?.weekday?.[weeks?.[new Date().getDay()]] || []) : (item?.availability?.weekday?.[selectedWeekDays?.[item?.id]] || []))?.filter(i=>(date > data.serverTime?.date) ||  formatTime(i) > formatTime(data.serverTime?.hour)).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!afterAppointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=data.appointmentcancelationData?.consultation?.id))
       }else{
-          return (item.urgent_availability.unavailable_specific_date[date] ? [] : item.urgent_availability.specific_date[date] ? item.urgent_availability.specific_date[date] : item.availability.specific_date[date] ? [] : !selectedWeekDays[item.id] ? (item.urgent_availability.weekday[weeks[new Date().getDay()]] || []) : (item.urgent_availability.weekday[selectedWeekDays[item.id]] || [])).filter(i=>(date > data.serverTime.date) ||  formatTime(i) > formatTime(data.serverTime.hour)).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!afterAppointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=data.appointmentcancelationData?.consultation?.id))
+          return (item?.urgent_availability?.unavailable_specific_date?.[date] ? [] : item?.urgent_availability?.specific_date?.[date] ? item?.urgent_availability.specific_date?.[date] : item?.availability.specific_date[date] ? [] : !selectedWeekDays[item?.id] ? (item?.urgent_availability?.weekday?.[weeks?.[new Date().getDay()]] || []) : (item?.urgent_availability?.weekday?.[selectedWeekDays?.[item?.id]] || []))?.filter(i=>(date > data.serverTime?.date) ||  formatTime(i) > formatTime(data.serverTime?.hour)).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!afterAppointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=data.appointmentcancelationData?.consultation?.id))
       }
 
   }
@@ -108,11 +108,11 @@ function SelectDoctorAvailability({ item }) {
         if(!settings) return
         let {urgent_consultation_limit_duration_hours,urgent_consultation_limit_duration_minutes} = settings
         let selected_hour=hour
-        let selected_date=selectedDates[item.id] || data.serverTime?.date
+        let selected_date=selectedDates?.[item?.id] || data.serverTime?.date
 
         if(selected_date && selected_hour && data.serverTime?.date){
 
-          const currentTime = new Date(`${data.serverTime.date}T${formatTime(data.serverTime.hour)}:00`);
+          const currentTime = new Date(`${data.serverTime?.date}T${formatTime(data.serverTime?.hour)}:00`);
           const consultationTime = new Date(`${selected_date}T${formatTime(selected_hour)}:00`);
           let {minutes} = data.getTimeDifference(currentTime,consultationTime)
           let minutes_limit=(parseInt(urgent_consultation_limit_duration_hours) * 60) + parseInt(urgent_consultation_limit_duration_minutes);
@@ -147,7 +147,7 @@ function SelectDoctorAvailability({ item }) {
     
     try{
       let r=await data.makeRequest({method:'post',url:`api/after-date-appointments`,withToken:true,data:{
-       doctor_id:item.id
+       doctor_id:item?.id
       }, error: ``},0);
 
       if(localStorage.getItem('changing_doctor_calendar')){
@@ -195,8 +195,6 @@ function SelectDoctorAvailability({ item }) {
  
   useEffect(()=>{
 
-    
-
     if(!item?.id) return
 
     const interval = setInterval(() => {
@@ -212,11 +210,11 @@ function SelectDoctorAvailability({ item }) {
             let current_month=new Date().getMonth()
             
             let d=data.getDatesForMonthWithBuffer(_month + 1, _year)
-            let weekdaysAvailability=[item.availability.weekday,item.urgent_availability.weekday]
+            let weekdaysAvailability=[item?.availability.weekday,item?.urgent_availability.weekday]
 
             let unavailable_dates=[]
-            if(!Array.isArray(item.availability.unavailable_specific_date)){
-                unavailable_dates=Object.keys(item.availability.unavailable_specific_date)
+            if(!Array.isArray(item?.availability.unavailable_specific_date)){
+                unavailable_dates=Object.keys(item?.availability.unavailable_specific_date)
             }
 
 
@@ -284,9 +282,7 @@ function SelectDoctorAvailability({ item }) {
             homeData.setSelectedDoctorToSchedule({});
 
           }} className="table px-2 bg-gray-200 py-1 text-[14px] rounded-full cursor-pointer hover:bg-gray-300">
-             
              {t('common.go-back')}
-
           </span>
         </div>
 
@@ -336,7 +332,7 @@ function SelectDoctorAvailability({ item }) {
                                         <select  onChange={(e)=>{
                                             handleSelectDoctorAvailability(item,e.target.value)
                                             setTypeOfCare('normal')
-                                        }} value={getAvailableHours(item,'normal').includes(selectedDoctors[item.id]?.[0]) && typeOfCare=="normal" ? selectedDoctors[item.id]?.[0] : ''}  class={`bg-gray text-[14px] w-[155px] border ${getAvailableHours(item,'normal').includes(selectedDoctors[item.id]?.[0]) && typeOfCare=="normal" ? 'border-honolulu_blue-400':'border-gray-300'}  text-gray-900 text-sm rounded-full outline-none text-center  block  p-2`}>
+                                        }} value={getAvailableHours(item,'normal').includes(selectedDoctors[item?.id]?.[0]) && typeOfCare=="normal" ? selectedDoctors[item?.id]?.[0] : ''}  class={`bg-gray text-[14px] w-[155px] border ${getAvailableHours(item,'normal').includes(selectedDoctors[item?.id]?.[0]) && typeOfCare=="normal" ? 'border-honolulu_blue-400':'border-gray-300'}  text-gray-900 text-sm rounded-full outline-none text-center  block  p-2`}>
                                             <option selected disabled value={""}>{t('common.set-timetable')}</option>
                                             {getAvailableHours(item,'normal').map((i,_i)=>(
                                                 <option value={i}>{i} - {data.timeAfter30Minutes(i)} {(isUrgentByLimit(i) || data.isSetAsUrgentHour(i,settings || false)) ? `(${t('common.urgent').toLowerCase()})`:''}</option>
@@ -352,7 +348,7 @@ function SelectDoctorAvailability({ item }) {
                                         <select  onChange={(e)=>{
                                             handleSelectDoctorAvailability(item,e.target.value,'urgent')
                                             setTypeOfCare('urgent')
-                                        }} value={getAvailableHours(item,'urgent').includes(selectedDoctors[item.id]?.[0]) && typeOfCare=="urgent" ? selectedDoctors[item.id]?.[0] : ''}  class={`bg-gray border  ${getAvailableHours(item,'urgent').includes(selectedDoctors[item.id]?.[0])  && typeOfCare=="urgent" ? 'border-honolulu_blue-400':'border-gray-300'}  text-gray-900 text-sm rounded-full text-center outline-none  block text-[14px] w-[155px] p-2`}>
+                                        }} value={getAvailableHours(item,'urgent').includes(selectedDoctors[item?.id]?.[0]) && typeOfCare=="urgent" ? selectedDoctors[item?.id]?.[0] : ''}  class={`bg-gray border  ${getAvailableHours(item,'urgent').includes(selectedDoctors[item?.id]?.[0])  && typeOfCare=="urgent" ? 'border-honolulu_blue-400':'border-gray-300'}  text-gray-900 text-sm rounded-full text-center outline-none  block text-[14px] w-[155px] p-2`}>
                                             <option selected disabled value={""}>{t('common.set-timetable')}</option>
                                             {getAvailableHours(item,'urgent').map((i,_i)=>(
                                                 <option value={i}>{i} - {data.timeAfter30Minutes(i)}</option>
@@ -398,7 +394,7 @@ function SelectDoctorAvailability({ item }) {
                    if((pathname.includes('/doctors-list') || pathname=="/") && user?.role!="patient"){
                       
                       homeData.setIsLoading(true)
-                      window.location.href=(`/login?nextpage=add-appointments&scheduled_doctor=${item.id}&type_of_care=${typeOfCare}&scheduled_hours=${selectedDoctors[item.id]}&scheduled_date=${selectedDates[item.id] || new Date().toISOString().split('T')[0]}&scheduled_weekday=${weeks[new Date(selectedDates[item.id] || new Date().toISOString().split('T')).getDay()]}`)
+                      window.location.href=(`/login?nextpage=add-appointments&scheduled_doctor=${item?.id}&type_of_care=${typeOfCare}&scheduled_hours=${selectedDoctors[item?.id]}&scheduled_date=${selectedDates[item?.id] || new Date().toISOString().split('T')[0]}&scheduled_weekday=${weeks[new Date(selectedDates[item?.id] || new Date().toISOString().split('T')).getDay()]}`)
                       return
                     }
 
@@ -407,9 +403,9 @@ function SelectDoctorAvailability({ item }) {
                     data.setPaymentInfo({doctor:item})
                     data.setSelectedDoctorToSchedule({});
                     homeData.setSelectedDoctorToSchedule({})
-                    navigate(`/add-appointments?scheduled_doctor=${item.id}&type_of_care=${typeOfCare}&scheduled_hours=${selectedDoctors[item.id]}&scheduled_date=${selectedDates[item.id] || new Date().toISOString().split('T')[0]}&scheduled_weekday=${weeks[new Date(selectedDates[item.id] || new Date().toISOString().split('T')).getDay()]}&canceled_appointment_id=${data.appointmentcancelationData?.consultation?.id || ''}`)
+                    navigate(`/add-appointments?scheduled_doctor=${item?.id}&type_of_care=${typeOfCare}&scheduled_hours=${selectedDoctors[item?.id]}&scheduled_date=${selectedDates[item?.id] || new Date().toISOString().split('T')[0]}&scheduled_weekday=${weeks[new Date(selectedDates[item?.id] || new Date().toISOString().split('T')).getDay()]}&canceled_appointment_id=${data.appointmentcancelationData?.consultation?.id || ''}`)
                     data.setAppointmentcancelationData({})
-                }} class={`inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white ${selectedDoctors[item.id]?.length ? 'bg-honolulu_blue-400':'bg-gray-500 pointer-events-none'} rounded-lg  focus:ring-4 focus:outline-none focus:ring-blue-300`}>
+                }} class={`inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white ${selectedDoctors[item?.id]?.length ? 'bg-honolulu_blue-400':'bg-gray-500 pointer-events-none'} rounded-lg  focus:ring-4 focus:outline-none focus:ring-blue-300`}>
                     {t('common.book')}
                     <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>

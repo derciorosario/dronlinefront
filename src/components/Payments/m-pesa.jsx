@@ -21,7 +21,7 @@ function Mpesa({info}) {
                 phone:info?.mpesa_number,
               ...info,
                 doctor:null,
-                patient_id:user.data?.id
+                patient_id:user?.data?.id
               }, error: ``},0);
 
              data.setPaymentInfo({...info,doctor:null,done:true,appointment:response.appointment,loading:false})
@@ -65,7 +65,7 @@ function Mpesa({info}) {
                         }} type="submit" class={`flex relative mt-4 w-full items-center justify-center ${loading ? 'pointer-events-none':''} rounded-lg ${info?.mpesa_number?.length==9 ? 'bg-honolulu_blue-500':'bg-gray-400 pointer-events-none opacity-90'} px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4  focus:ring-primary-300`}>
                             <span className={`${loading ? 'opacity-0':''}`}> {t('common.proceed-with-payment')}</span>
                             <div className={`${!loading ? ' opacity-0':''} opacity-1 h-full  absolute left-0 top-0 w-full flex items-center justify-center`}>
-                                <Loader/> <span>{t('common.loading')}</span>
+                                <Loader/> <span>{t('common.verify-phone')}</span>
                             </div>
                         </button>
             </div>

@@ -27,16 +27,21 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
   
  
   useEffect(()=>{
-    res(upload)
+       res(upload)
   },[upload])
 
   
   const [file,setFile]=useState({})
    
   const handleSubmit = async (event) => {
-
    
     let f = event.target.files[0];
+
+    if((f.size/1024/1024) > 10){
+      toast.error(t('common.only-files-less-than'))
+      return
+    }
+
     const formData = new FormData();
     formData.append('file', f);
     let fileName = uuidv4();

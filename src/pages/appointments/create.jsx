@@ -234,12 +234,13 @@ useEffect(()=>{
           let is_urgent=res.type_of_care=="urgent"
 
           let new_form={...form,
+            reason_for_consultation:res.reason_for_consultation || '',
             name:response.name,
             is_urgent,
             medical_specialty:response.medical_specialty,
             consultation_date:res.scheduled_date,
             doctor_id:response.id,
-            patient_id:user.data?.id || null,
+            patient_id:user?.data?.id || null,
             scheduled_date:res.scheduled_date,
             scheduled_doctor:res.scheduled_doctor,
             scheduled_hours:res.scheduled_hours,
@@ -291,18 +292,19 @@ useEffect(()=>{
 
 function getAvailableHours(item,type,date,selectedWeekDays,canceled_appointment_id=null){
   const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+  
   if(data.serverTime){
-     if(new Date(data.serverTime?.date) > new Date(date)){
+     if(new Date(data?.serverTime?.date) > new Date(date)){
       return []
      }
   }
 
   if(type=="scheduled"){
-      return (item.availability?.unavailable_specific_date?.[date] ? [] : item.availability?.specific_date?.[date] ? item.availability?.specific_date?.[date] : item.urgent_availability?.specific_date?.[date] ? [] : !selectedWeekDays[item.id] ? (item.availability.weekday[weeks[new Date().getDay()]] || []) : (item.availability.weekday[selectedWeekDays[item.id]] || [])).filter(i=>(date > data.serverTime?.date) ||  formatTime(i) > formatTime(data.serverTime?.hour)).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!item.on_appointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=canceled_appointment_id))
+      return (item?.availability?.unavailable_specific_date?.[date] ? [] : item?.availability?.specific_date?.[date] ? item?.availability?.specific_date?.[date] : item?.urgent_availability?.specific_date?.[date] ? [] : !selectedWeekDays?.[item?.id] ? (item?.availability?.weekday?.[weeks?.[new Date().getDay()]] || []) : (item?.availability.weekday[selectedWeekDays?.[item?.id]] || [])).filter(i=>(date > data?.serverTime?.date) ||  formatTime(i) > formatTime(data.serverTime?.hour)).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!item?.on_appointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=canceled_appointment_id))
   }else{
-    
-      return (item.urgent_availability?.unavailable_specific_date?.[date] ? [] : item.urgent_availability?.specific_date?.[date] ? item.urgent_availability?.specific_date?.[date] : item.availability?.specific_date?.[date] ? [] : !selectedWeekDays[item.id] ? (item.urgent_availability.weekday[weeks[new Date().getDay()]] || []) : (item.urgent_availability.weekday[selectedWeekDays[item.id]] || [])).filter(i=>(date > data.serverTime?.date) ||  formatTime(i) > formatTime(data.serverTime?.hour)).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!item.on_appointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=canceled_appointment_id))
+      return (item?.urgent_availability?.unavailable_specific_date?.[date] ? [] : item?.urgent_availability?.specific_date?.[date] ? item?.urgent_availability?.specific_date?.[date] : item?.availability?.specific_date?.[date] ? [] : !selectedWeekDays?.[item?.id] ? (item?.urgent_availability?.weekday?.[weeks?.[new Date().getDay()]] || []) : (item?.urgent_availability.weekday?.[selectedWeekDays?.[item?.id]] || [])).filter(i=>(date > data?.serverTime?.date) ||  formatTime(i) > formatTime(data.serverTime?.hour)).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!item?.on_appointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=canceled_appointment_id))
   }
+
 }
 
 
@@ -347,7 +349,7 @@ function isUrgentByLimit(hour,date){
           ...form,
           scheduled_date:form.type_of_care=="requested" ? form.consultation_date : form.scheduled_date,
           dependent_id:form.is_for_dependent ? form.dependent_id : null,
-          patient_id:user.data?.id
+          patient_id:user?.data?.id
 
         }, error: ``},0);
 
@@ -404,7 +406,7 @@ function isUrgentByLimit(hour,date){
 
 
   useEffect(()=>{
-             if(data.paymentInfo.done){
+             if(data.paymentInfo?.done){
                   setForm({...initial_form})
                   setMessageType('green')
                   setMessage(t('messages.added-successfully'))
@@ -412,7 +414,7 @@ function isUrgentByLimit(hour,date){
                   data._scrollToSection('center-content')
                   setVerifiedInputs([])
 
-                  if(!data.paymentInfo.is_proof){
+                  if(!data.paymentInfo?.is_proof){
                     
                     setMessageBtnSee({onClick:()=>{
                       navigate('/appointment/'+data.paymentInfo.appointment.id)
@@ -434,7 +436,7 @@ function isUrgentByLimit(hour,date){
                   data._updateFilters(new_params,setSearchParams)
                   data.setPaymentInfo({...data.paymentInfo,done:false,type_of_care:null})
              }
- },[data.paymentInfo])
+ },[data?.paymentInfo])
 
  const [itemToShow,setItemToShow]=useState(null)
 
@@ -481,7 +483,7 @@ function isUrgentByLimit(hour,date){
     if(!user?.data?.gender){
        data._showPopUp('basic_popup','conclude_patient_info')
        if(window.location.search?.includes('scheduled_doctor') && window.location.search?.includes('scheduled_date')){
-        localStorage.setItem('saved_appointment_url',window.location.search)
+        localStorage.setItem('saved_appointment_url',window.location.search+"&reason_for_consultation="+form.reason_for_consultation)
        }
     }else if(localStorage.getItem('saved_appointment_url') && !id){
        data._showPopUp('basic_popup','you-have-saved-appointment')
@@ -666,7 +668,7 @@ return (
     <div className="mt-4 items-center flex">
 
              {!id && <span onClick={() => {
-                localStorage.setItem('saved_appointment_url',window.location.search)
+                localStorage.setItem('saved_appointment_url',window.location.search+"&reason_for_consultation="+form.reason_for_consultation)
                 toast.success(t('messages.successfully-saved'))
             }} className={`table px-2 ${valid ? 'bg-honolulu_blue-500':' bg-gray-300 pointer-events-none'} text-white  right-1 top-1 py-1 text-[14px] rounded-full cursor-pointer hover:bg-honolulu_blue-500`}>
                  {t('common.close-and-save')}

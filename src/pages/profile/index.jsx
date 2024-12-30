@@ -31,13 +31,13 @@ function index() {
     const [formStep,setFormStep]=useState(1)
     const [loading,setLoading]=useState(false)
 
-
     useEffect(()=>{
+
         if(!user){
             return
         }
-        (async()=>{
 
+        (async()=>{
           try{
            let response=await data.makeRequest({method:'get',url:`api/userdata/`,withToken:true, error: ``},0);
            setForm({...form,...user,...response.data,app_settings:{...response.app_settings[0],value:JSON.parse(response.app_settings[0].value)}})
@@ -48,7 +48,6 @@ function index() {
               toast.error(t('common.unexpected-error'))
               navigate('/')  
           }
-
       })()
       
     },[user])
@@ -71,9 +70,8 @@ function index() {
  
     let pages=[
         {t_label:'personal-info',name:'personal-info'},
-        //{t_label:'dependents',name:'dependents'},
         {t_label:'login-and-password',name:'login-and-password'},
-        {t_label:'system-info',name:'system-info'},
+       // {t_label:'system-info',name:'system-info'},
         {t_label:'logout',name:'logout'},
     ]
 
@@ -164,11 +162,10 @@ function index() {
            ((!form.identification_number || !form.identification_number_filename) && form.identification_document=="identification_number") ||
            ((!form.birth_certificate || !form.birth_certificate_filename) && form.identification_document=="birth_certificate") ||
         
-           !form.marital_status ||
+         
            !form.country_of_residence || 
            !form.occupation ||
            !form.nationality ||
-           !form.marital_status ||
            !form.country_of_residence 
 
         ){

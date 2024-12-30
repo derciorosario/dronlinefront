@@ -17,10 +17,12 @@ function Invoice({}) {
   const [sub,setSub]=useState(0)
   const { id } = useParams()
   const {user,serverTime}=useAuth()
-
-
+  const [appSettings,setAppSettings]=useState(null)
 
   let required_data=['specialty_categories']
+
+
+
 
 
   async function get_invoice(){
@@ -60,6 +62,22 @@ function Invoice({}) {
 },[pathname])
 
 
+useEffect(()=>{
+
+    (async()=>{
+       setAppSettings(null)
+       try{
+           let r=await data.makeRequest({method:'get',url:`api/userdata/`,withToken:true, error: ``},1000);
+           setAppSettings({...JSON.parse(r.app_settings[0].value)})
+       }catch(e){
+           console.log({e})
+       }
+    })()
+
+
+  },[])
+
+
 
 useEffect(()=>{
 
@@ -79,7 +97,7 @@ useEffect(()=>{
 },[status])
 
 
-if(loading){
+if(loading || !appSettings){
      return (
         <DefaultLayout hide={user?.id ? false : true}>
          <div className="flex justify-center flex-col h-[80vh]">
@@ -221,7 +239,19 @@ if(loading){
                            {/***8<QRCodeGenerator link={`${data.server_url}/api/v1/invoice/`+invoice_number} /> */}
                         </div>
 
+                       
+
+
                         <div className="flex justify-center mt-40"><span className="mr-3">{t('invoice.generated-in')}:</span><label>{serverTime?.date} {serverTime?.hour} </label></div>
+                        <div className="w-full text-[0.8rem] flex-wrap max-md:text-[0.7rem] flex justify-between mt-10 border-t border-t-gray-200 py-3">
+                                <span>{appSettings?.address}</span>
+                                <span>{appSettings?.name}</span>
+                                <div className="flex max-sm:flex-col">
+                                    <span>{appSettings?.email}</span>
+                                    <label className="mx-2 max-sm:hidden">|</label>
+                                    <span>{appSettings?.main_contact}</span>
+                                </div>
+                        </div>
                  </div>
            </div>
    </DefaultLayout>

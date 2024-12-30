@@ -133,7 +133,7 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
                  {user?.role=="patient" && !user?.data?.gender && !hideAll && <TopAlert/>}
                  {!hide && <Header headerLeftContent={headerLeftContent} pageContent={pageContent}/>}
 
-                 <div className={`${!removeMargin ? 'mx-[20px] ':''} relative mb-24`}>
+                 <div className={`${!removeMargin ? 'mx-[20px] mb-24':''} relative `}>
                     {(pageContent) && <div className="py-[20px] md:flex">
                          <div>
                                   <div className="flex items-center max-md:mb-5">

@@ -20,7 +20,6 @@ function SupportChat({show}) {
  const selectedUser=useRef(null)
  const [deleting,setDeleting]=useState(false)
  const [seeHistory,setSeeHostory]=useState(false)
- const [startAnewChat,setStartAnewChat]=useState(true)
  const [startDate,setStartDate]=useState('')
  const [endDate,setEndDate]=useState('')
  const [search,setSearch]=useState('')
@@ -55,7 +54,7 @@ function SupportChat({show}) {
          created_at:new Date().toISOString(),
          is_subject:messages.length==0 && (user?.role=="doctor" || user?.role=="patient"),
          generated_id:Math.random().toString(),
-         user_id:user.id
+         user_id:user?.id
      }
 
     if(filename) {
@@ -88,7 +87,7 @@ function SupportChat({show}) {
     try{
      
         await data.makeRequest({method:'post',url:`api/delete-user-messages`,withToken:true,data:{
-         id:user.id,
+         id:user?.id,
          status,
        }, error: ``},0);
        
@@ -570,7 +569,7 @@ useEffect(()=>{
                     </button>}
 
                    <ChatFile res={handleUploadeduploaded_files} show={showChooseFile} setShow={setShowChooseFile}/>
-                   <ChatMessages hide={showChooseFile} messages={selectedSubjectId ? getMessagesBetweenSubjects() : messages.map(i=>({...i,costum_name:(user?.role=="doctor" || user?.role=="patient") && i.user_id!=user?.id ? t('common.dronline-support') : selectedUser.current==i.user_id ? `${t('common.'+i.user.role)} - `+i.user.name : null, highlight:selectedUser.current==i.user_id}))}/>
+                   <ChatMessages hide={showChooseFile} messages={selectedSubjectId ? getMessagesBetweenSubjects() : messages.map(i=>({...i,costum_name:(user?.role=="doctor" || user?.role=="patient") && i.user_id!=user?.id ? t('common.dronline-support') : selectedUser.current==i.user_id ? `${t('common.'+i.user?.role)} - `+i.user?.name : null, highlight:selectedUser.current==i.user_id}))}/>
                
                </div>}
 

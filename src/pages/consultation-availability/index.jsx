@@ -165,7 +165,7 @@ function index() {
         (async()=>{
           try{
 
-            let response=await data.makeRequest({method:'get',url:`api/doctor/`+(id || user.data.id),withToken:true, error: ``},100);
+            let response=await data.makeRequest({method:'get',url:`api/doctor/`+(id || user?.data.id),withToken:true, error: ``},100);
             let app_settings_response=await data.makeRequest({method:'get',url:`api/userdata/`,withToken:true, error: ``},0);
             setAppSettings(JSON.parse(app_settings_response.app_settings[0].value))
             
@@ -244,7 +244,7 @@ function index() {
                 }
             })
 
-            let r=await data.makeRequest({method:'post',url:`api/doctor-schedule/${id || user.data.id}/set`,withToken:true,data:{
+            let r=await data.makeRequest({method:'post',url:`api/doctor-schedule/${id || user?.data.id}/set`,withToken:true,data:{
               
                 days:{
                     "weekday":days,

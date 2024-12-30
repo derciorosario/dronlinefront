@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import Loader from '../Loaders/loader'
 import ConfirmDialog from '../modals/confirm'
 import { useData } from '../../contexts/DataContext'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import i18n from '../../i18n'
 
 function Header({pageContent,headerLeftContent}) {
@@ -14,6 +14,7 @@ function Header({pageContent,headerLeftContent}) {
   const navigate=useNavigate()
   const [unreadNotifications,setUnreadNotifications]=useState(0)
   const [lang,setLang]=useState(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'pt')
+  const {pathname} = useLocation()
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -37,21 +38,12 @@ function Header({pageContent,headerLeftContent}) {
     }
   }
 
-
   useEffect(() => {
-
-    
-    
     const interval = setInterval(() => {
         getUnreadNotificationMessages()
     }, 10000)
     return () => clearInterval(interval);
-
   }, []);
-
-
-
-
 
   const [unreadSupportMessages,setUnreadSupportMessages]=useState(0)
   async function getUnreadSupportMessages(){
@@ -65,12 +57,8 @@ function Header({pageContent,headerLeftContent}) {
           console.log(e)
       }
   }
-
   
   useEffect(() => {
-
-   
-
       if(user?.role=="manager" || user?.role=="admin" || !user){
         return
       }
@@ -87,6 +75,7 @@ function Header({pageContent,headerLeftContent}) {
     setSupportMsgCount((user?.role=="patient" || user?.role=="doctor") ? unreadSupportMessages : data.unreadSupportMessages)
   },[data.unreadSupportMessages,unreadSupportMessages])
 
+
   return (
     <div className="w-full">
       
@@ -95,15 +84,16 @@ function Header({pageContent,headerLeftContent}) {
          <div className="flex items-center justify-between h-[70px]  px-[10px] bg-white rounded-bl-[0.3rem]">
                
                <div className="flex md:justify-end flex-1">
+                  
                    {/***<h2 className="text-[25px] cursor-pointer font-medium md:hidden mr-10" onClick={()=>navigate('/')}>
                       <img src={LogoIcon} width={50} className="flex-shrink-0"/>
                    </h2> */}
 
                    {headerLeftContent}
-
-                   <div onClick={()=>navigate('/')} className="bg-slate-300 px-2 py-2 rounded md:hidden cursor-pointer">          
+                   
+                   {!pathname.includes('/meeting/zoom/appointment') && <div onClick={()=>navigate('/')} className="bg-slate-300 px-2 py-2 rounded md:hidden cursor-pointer">          
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
-                   </div>
+                   </div>}
 
                    {pageContent?.loading==true && <Loader/>}
                    
@@ -116,7 +106,7 @@ function Header({pageContent,headerLeftContent}) {
                
                <div className="flex items-center justify-end">
 
-               {(user?.role!="manager" ||  user?.data?.permissions?.support?.includes('read')) && <button onClick={()=>{
+               {((user?.role!="manager" ||  user?.data?.permissions?.support?.includes('read')) && !pathname.includes('/meeting/zoom/appointment')) && <button onClick={()=>{
                   data._showPopUp('support_messages')
                }} type="button" class="text-gray-600 _support_messages focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm md:px-5 py-1 text-center inline-flex items-center me-2">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960"  fill="#5f6368"><path d="m480-80-10-120h-10q-142 0-241-99t-99-241q0-142 99-241t241-99q71 0 132.5 26.5t108 73q46.5 46.5 73 108T800-540q0 75-24.5 144t-67 128q-42.5 59-101 107T480-80Zm80-146q71-60 115.5-140.5T720-540q0-109-75.5-184.5T460-800q-109 0-184.5 75.5T200-540q0 109 75.5 184.5T460-280h100v54Zm-101-95q17 0 29-12t12-29q0-17-12-29t-29-12q-17 0-29 12t-12 29q0 17 12 29t29 12Zm-29-127h60q0-30 6-42t38-44q18-18 30-39t12-45q0-51-34.5-76.5T460-720q-44 0-74 24.5T344-636l56 22q5-17 19-33.5t41-16.5q27 0 40.5 15t13.5 33q0 17-10 30.5T480-558q-35 30-42.5 47.5T430-448Zm30-65Z"/></svg>

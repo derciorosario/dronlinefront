@@ -172,7 +172,7 @@ function ManagersList(){
               body={(data._users_activity_info).map((i,_i)=>(
                       <BaiscTable.Tr>
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.userId}</BaiscTable.Td>
-                        <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.user.name}</BaiscTable.Td>
+                        <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.user?.name}</BaiscTable.Td>
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{t('common.'+i.role)}</BaiscTable.Td>
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{convertSeconds(i.totalDuration)}</BaiscTable.Td>
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.lastLoginTime?.split('T')?.[0]}</BaiscTable.Td>
@@ -230,7 +230,7 @@ return (
        body={(data._user_activities?.activities?.data || []).map((i,_i)=>(
               <BaiscTable.Tr>
                  <BaiscTable.Td >{i.id}</BaiscTable.Td>
-                 <BaiscTable.Td >{i.user.name}</BaiscTable.Td>
+                 <BaiscTable.Td >{i.user?.name}</BaiscTable.Td>
                  <BaiscTable.Td >{t('common.'+i.role)}</BaiscTable.Td>
                  <BaiscTable.Td >{convertSeconds(i.duration)}</BaiscTable.Td>
                  <BaiscTable.Td >{i.duration ? (i.duration / 60 ).toFixed(2) : 0} min</BaiscTable.Td>

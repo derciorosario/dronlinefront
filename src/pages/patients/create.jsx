@@ -91,11 +91,9 @@ function addPatients({ShowOnlyInputs}) {
        ((!form.identification_number || !form.identification_number_filename) && form.identification_document=="identification_number") ||
        ((!form.birth_certificate || !form.birth_certificate_filename) && form.identification_document=="birth_certificate") ||
        (form.identification_document=="identification_number" && (!form.date_of_issuance_of_the_identity_card || !form.place_of_issuance_of_the_identity_card)) ||
-       !form.marital_status ||
        !form.country_of_residence || 
        !form.occupation ||
        !form.nationality ||
-       !form.marital_status ||
        !form.country_of_residence 
     ){
       v=false

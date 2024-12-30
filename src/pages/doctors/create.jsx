@@ -92,11 +92,9 @@ function addPatients({ShowOnlyInputs}) {
 
        (form.identification_document=="identification_number" && (!form.date_of_issuance_of_the_identity_card || !form.place_of_issuance_of_the_identity_card)) ||
       
-       !form.marital_status ||
        !form.country_of_residence || 
        !form.occupation ||
        !form.nationality ||
-       !form.marital_status ||
        !form.country_of_residence ||
        !form.years_of_experience
     
@@ -202,10 +200,6 @@ useEffect(()=>{
 
 
 
-
-
-
-
   async function SubmitForm(){
 
     setLoading(true)
@@ -215,13 +209,14 @@ useEffect(()=>{
       setMessageType('red')
       setLoading(false)
       return
-   }
+    }
 
     try{
       if(id){
         
         let r=await data.makeRequest({method:'post',url:`api/doctor/`+id,withToken:true,data:{
-          ...form
+          ...form,
+          uploaded_files:form.uploaded_files.filter(i=>i.filename)
         }, error: ``},0);
         setForm({...form,r})
         setMessage(t('messages.updated-successfully'))
@@ -388,7 +383,7 @@ useEffect(()=>{
                       
                       {form.uploaded_files.map(i=>(
 
-                          <div className="flex items-center">
+                          <div key={i.id} className="flex items-center">
                             
                             <div>
                             <input id={i.id} style={{borderBottom:'0'}} value={i.name} placeholder={t('common.document-name')} onChange={(e)=>{

@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 export default function PatientDashboard({startDate,endDate,setStartDate,setEndDate}) {
 
     const data=useData()
-    const {user,APP_FRONDEND,serverTime} = useAuth()
+    const {user,serverTime} = useAuth()
     const [hideAmounts,setHideAmounts]=useState(Boolean(localStorage.getItem('hide_dashboard_amounts')))
     const navigate = useNavigate()
 
@@ -72,8 +72,8 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
 
      useEffect(()=>{
 
-            setUpcomingAppointments((data._patient_dashboard.upcomingAppointments || []).map(i=>({
-              ...i,type:i.scheduled_date==serverTime.date ? 'scheduled_for_today' : 'all'
+            setUpcomingAppointments((data._patient_dashboard?.upcomingAppointments || []).map(i=>({
+              ...i,type:i.scheduled_date==serverTime?.date ? 'scheduled_for_today' : 'all'
             })))
             
      },[data._patient_dashboard])
@@ -82,7 +82,6 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
  
   return (
     <div className="w-full">
-
 
            {!data._loaded.includes('patient_dashboard') && <DashboardSkeleton/>}
 
@@ -117,7 +116,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
 
                         <div className="flex items-center mb-4 w-full flex-wrap md:gap-2 mt-5">
                                   {['scheduled_for_today','all'].map((i,_i)=>{
-                                          let total=i=="all" ? upcomingAppointments.length : upcomingAppointments.filter(f=>f.scheduled_date==serverTime.date).length
+                                          let total=i=="all" ? upcomingAppointments.length : upcomingAppointments.filter(f=>f.scheduled_date==serverTime?.date).length
                                           return (
                                             <div onClick={()=>setSelectedTab2(i)} className={`flex max-md:min-w-[130px] transition-all ease-in duration-75 items-center cursor-pointer  rounded-[0.3rem] px-2 py-1 ${selectedTab2==i ? 'bg-honolulu_blue-500 text-white':''}`}>
                                                 <span>{t('dashboard.'+i)}</span>
@@ -375,7 +374,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                     from:'medical-certificates',
                                     content: [
                                        [
-                                        {...i,disease:i.disease,date_of_leave:i.date_of_leave,medical_specialty:data._specialty_categories.filter(f=>f.id==i.appointment.medical_specialty)[0]?.[`${i18next.language}_name`]},
+                                        {...i,disease:i.disease,date_of_leave:i.date_of_leave,medical_specialty:data._specialty_categories.filter(f=>f.id==i.appointment?.medical_specialty)[0]?.[`${i18next.language}_name`]},
                                       ]
                                     ]
 
@@ -390,7 +389,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.disease}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.date_of_leave}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.details}</BaiscTable.Td>
-                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{data._specialty_categories.filter(f=>f.id==i.appointment.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
+                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{data._specialty_categories.filter(f=>f.id==i.appointment?.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.patient?.name}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
                           </BaiscTable.Tr>

@@ -37,7 +37,7 @@ const [showChooseFile,setShowChooseFile]=useState('')
          generated_id:Math.random().toString(),
          not_sent:true,
          user,
-         user_id:user.id
+         user_id:user?.id
      }
 
     if(filename) {
@@ -189,7 +189,7 @@ return Array.from(messagesMap.values())
 
     <ChatFile res={handleUploadeduploaded_files} show={showChooseFile} setShow={setShowChooseFile}/>
 
-    <ChatMessages hide={showChooseFile} messages={comments.map(i=>({...i,costum_name:i.user?.role!="doctor" && user?.role=="patient" ? t('common.dronline-team')  : i.user.name}))}/>
+    <ChatMessages hide={showChooseFile} messages={comments.map(i=>({...i,costum_name:i.user?.role!="doctor" && user?.role=="patient" ? t('common.dronline-team')  : i.user?.name}))}/>
 
 
    {/***File - It is hidden*/}

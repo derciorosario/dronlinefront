@@ -41,8 +41,8 @@ function getAdvancedActions(items=[],id=null,w=undefined){
 
 return (
     <div className={`bg-white w-full md:m-3 py-3 rounded-[0.3rem] min-h-[60vh] pb-[30px] ${hide ? 'hidden':''}`}>
-        {!hideTitle && <div className="w-full border-b px-3 pb-2 flex justify-between items-center">
-             <span className="mr-3">{title}</span>
+        {!hideTitle && <div className="w-full max-md:flex-col border-b px-3 pb-2 flex justify-between items-center">
+             <span className="mr-3 max-md:mb-5">{title}</span>
             
              <div className="relative flex items-center">
                {topBarContent}

@@ -166,7 +166,7 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
                   {name:t('common.divorced'),value:'divorced'},
                   //{name:t('common.other'),value:'other'},
                 ]
-               } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'marital_status']) || hideInputs} label={t('form.marital_status')} onChange={(e)=>setForm({...form,marital_status:e.target.value})} field={'marital_status'} value={form.marital_status}/>
+               }  onBlur={()=>setVerifiedInputs([...verified_inputs,'marital_status']) || hideInputs} label={t('form.marital_status')} onChange={(e)=>setForm({...form,marital_status:e.target.value})} field={'marital_status'} value={form.marital_status}/>
               
               <FormLayout.Input  hide={(formStep && formStep==2) ||  form_name=="dependent" || hideInputs} verified_inputs={verified_inputs} form={form} selectOptions={
 

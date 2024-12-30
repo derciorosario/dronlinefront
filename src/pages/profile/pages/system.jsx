@@ -13,7 +13,7 @@ function SystemPage({form,setForm}) {
     return (
         
        <div>
-          <div className="flex gap-x-4 flex-wrap mt-4">
+            <div className="flex gap-x-4 flex-wrap mt-4">
                               <FileInput _upload={{key:'stamp_filename',filename:form?.app_settings?.value?.stamp_filename}} res={({filename})=>{
                                    setForm({...form,app_settings:{...form.app_settings,value:{...form.app_settings.value,stamp_filename:filename}}})
                               }} label={t('common.stamp')} r={true}/>

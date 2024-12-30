@@ -207,16 +207,18 @@ function SideBar({hideSidebar}) {
                 })
               }
 
-              return show || user.data.permissions[item.manager_access?.name]?.some(i=>item.manager_access?.per?.includes(i)) || item.manager_access==true
+              return show || user?.data.permissions[item.manager_access?.name]?.some(i=>item.manager_access?.per?.includes(i)) || item.manager_access==true
          }
+
+
        
          return item.access.includes(user?.role) || item.access.includes('all')
 
-
+         
       }else{
 
          if(user?.role=="manager" && user){
-           return user.data.permissions[item.manager_access?.name]?.some(i=>item.manager_access?.per?.includes(i)) || item.manager_access==true
+           return user?.data.permissions[item.manager_access?.name]?.some(i=>item.manager_access?.per?.includes(i)) || item.manager_access==true
          }
 
         return  item.access?.includes(user?.role) || !item.access || item.access?.includes('all')

@@ -9,11 +9,19 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "iOS >= 5",
+    "not op_mini all"
+  ],
   "dependencies": {
     "@aldabil/react-scheduler": "^2.9.5",
     "@date-io/date-fns": "^3.0.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@formatjs/intl": "^3.0.4",
+    "@formatjs/intl-pluralrules": "^5.4.1",
     "@material-ui/pickers": "^3.3.11",
     "@material-ui/styles": "^4.11.5",
     "@mui/icons-material": "^6.1.5",
@@ -27,6 +35,7 @@
     "@zoomus/websdk": "^2.18.3",
     "aos": "^2.3.4",
     "axios": "^1.7.7",
+    "core-js": "^3.39.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.3.2",
@@ -54,14 +63,18 @@
     "react-slick": "^0.30.2",
     "react-to-print": "^3.0.2",
     "react-typewriter-effect": "^1.1.0",
+    "regenerator-runtime": "^0.14.1",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.8.1",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+    "@babel/preset-env": "^7.26.0",
+    "@rollup/plugin-babel": "^6.0.4",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.2",

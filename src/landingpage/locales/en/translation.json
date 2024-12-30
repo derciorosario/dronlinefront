@@ -332,9 +332,10 @@
         "refund-rejected": "Refund Request Rejected",
         "refund-approved": "Refund Request Approved",
         "consultation-message":"Consultation message",
-        "medical-certificate-status":"Medical certificate Status Update"
+        "medical-certificate-status":"Medical certificate Status Update",
+        "support-message":"Support message",
+        "new-medical-certificate":"New medical certificate"
     },
-
     "notification-messages":{
         "upcoming-consultation": "You have an upcoming consultation scheduled. Consultation time:",
         "consultation-status": "Status:",
@@ -346,7 +347,8 @@
         "refund-request": "A cancellation and refund request has been made",
         "refund-rejected": "Your refund request has been declined",
         "refund-approved": "Your refund request has been approved",
-        "medical-certificate-status":"Status:"
+        "medical-certificate-status":"Status:",
+        "support-message":"Mensagem:"
     },
 
     "messages":{
@@ -435,6 +437,9 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+           "address":"Address",
+           "restart-meeting":"Restart meeting",
+           "leave":"Sair",
            "edit-to-add":"Edit for registration",
            "approved-by":"Approved by",
            "print-anyway":"Print anyway",
@@ -477,7 +482,7 @@
             "login-msg":"Please enter your credentials to access your account.",
             "dronline-short-desc": "Dr.Online, Lda. provides telemedicine services aimed at facilitating access to medical care through digital technologies.",
             "updating-company-profile": "Updating profile",
-            "only-files-less-than": "Only files up to 2MB",
+            "only-files-less-than": "Only files up to 10MB",
             "file-not-permited": "File not allowed",
             "review": "Consultation feedback",
             "no-recent-payments": "No recent payments",

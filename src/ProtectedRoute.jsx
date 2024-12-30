@@ -38,7 +38,7 @@ const ProtectedRoute = ({ children, redirectTo = '/', path }) => {
       return <Outlet/>;
   }else if(!user && !loading){
       return <Navigate to={'/login'} replace />
-  }else if(user.role=="client"){
+  }else if(user?.role=="client"){
       toast.remove()
       toast.error('Página restrita para clientes')
       return <Navigate to={'/login'} replace />

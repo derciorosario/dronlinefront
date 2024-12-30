@@ -107,7 +107,7 @@ export default function Doctors() {
            <div className="mt-[40px]">
 
            <div className="mx-[50px] max-lg:mx-[20px]" id="our-specialists">
-                       <h2 className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>          
+                       <h2 data-aos="fade-up" className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>          
            </div>
 
 

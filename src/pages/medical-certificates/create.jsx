@@ -101,19 +101,47 @@ const [form,setForm]=useState(initial_form)
 
     }catch(e){
 
-      console.log(e)
 
-      return
+      toast.remove()
 
-      if(e.message==404){
-         toast.error(t('common.item-not-found'))
-         navigate('/appointment')
-      }else  if(e.message=='Failed to fetch'){
+
+      if(itemToShow){
+        if(e.message==404){
+          toast.error(t('common.item-not-found'))
+        }else if(e.message==500){
+          toast.error(t('common.unexpected-error'))
+        }else  if(e.message=='Failed to fetch'){
+          toast.error(t('common.check-network'))
+        }else{
+          toast.error(t('common.unexpected-error'))
+        }
+  
+        setItemToShow({
+          ...itemToShow,
+          name:itemToShow.name.replace('create','all')
+        }) 
         
       }else{
-        toast.error(t('common.unexpected-error'))
-        navigate('/appointments')  
+        
+        if(e.message==404){
+          toast.error(t('common.item-not-found'))
+          navigate('/medical-certificates')
+        }else if(e.message==500){
+          toast.error(t('common.unexpected-error'))
+          navigate('/medical-certificates')
+        }else  if(e.message=='Failed to fetch'){
+          toast.error(t('common.check-network'))
+          navigate('/medical-certificates')
+        }else{
+          toast.error(t('common.unexpected-error'))
+          navigate('/medical-certificates')
+        }
+
       }
+
+      console.log(e)
+
+      
 
      
   }
@@ -162,7 +190,7 @@ const [form,setForm]=useState(initial_form)
   
         setForm({...initial_form})
         setMessageType('green')
-        setMessage(t('messages.added-successfully'))
+        toast.success(t('messages.added-successfully'))
         setLoading(false)
        
         setVerifiedInputs([])
@@ -175,19 +203,12 @@ const [form,setForm]=useState(initial_form)
 
     }catch(e){
 
-      setMessageType('red')
-
-      data._scrollToSection('_register_msg')
-      if(e.message==401){
-        setMessage(t('common.email-exists'))
-      }else if(e.message==400){
-        setMessage(t('common.invalid-data'))
-      }else if(e.message==500){
-        setMessage(t('common.unexpected-error'))
+      if(e.message==500){
+        toast.error(t('common.unexpected-error'))
       }else  if(e.message=='Failed to fetch'){
-          setMessage(t('common.check-network'))
+        toast.error(t('common.check-network'))
       }else{
-          setMessage(t('common.unexpected-error'))
+        toast.error(t('common.unexpected-error'))
       }
 
       setLoading(false)
