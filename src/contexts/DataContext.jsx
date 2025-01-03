@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 let env="pro"
 import io from 'socket.io-client';
 import { t } from 'i18next';
-const socket_server=env!="dev" ? 'https://socket.dronlinemz.com/' : 'http://localhost:3001'
+const socket_server=env!="dev" ? 'https://socket.dronlinemz.com' : 'http://localhost:3001'
 const socket = io(socket_server)
 let log_id=Math.random().toString()
 const DataContext = createContext();
@@ -188,7 +188,6 @@ export const DataProvider = ({ children }) => {
     
 
     function handleLoaded(action,item){
-
       if(Array.isArray(item) && action=="remove"){
         setLoaded((prev)=>prev.filter(i=>!item.includes(i)))
         return
@@ -237,12 +236,9 @@ export const DataProvider = ({ children }) => {
     }
 
     const [online,setOnline]=useState(false)
-
     const [updatingServerInfo,setUpdatingServerInfo] = useState(null);
 
     const timeRef = useRef(null)
-
-  
 
     useEffect(() => {
 
@@ -852,6 +848,7 @@ function isSetAsUrgentHour(hour,AppSettings){
     },[updateTable])
 
     const value = {
+      env,
       lastJoinMeetingID,
       setLastJoinMeetingID,
       viewedMeetingNots,

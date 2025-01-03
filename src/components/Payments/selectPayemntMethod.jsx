@@ -144,10 +144,9 @@ function SelectPayemntMethod({info}) {
   return (
     <div>
 
-    <h3 className="mt-7 font-medium text-[20px]">{t('common.select-payment-method')}</h3>
+    <h3 className="mt-7 font-medium text-[20px] mb-3">{t('common.select-payment-method')}</h3>
 
     <div class="space-y-4">
-          <h3 class="text-xl font-semibold text-gray-900"></h3>
 
           <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4 cursor-pointer" onClick={()=>{
@@ -156,12 +155,29 @@ function SelectPayemntMethod({info}) {
                   }}>
               <div class="flex items-start">
                 <div class="flex h-5 items-center">
-                  <input checked={info?.payment_method=="mpesa"} id="dhl" aria-describedby="dhl-text" type="radio" name="delivery-method" value="" class="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600" />
+                  <input checked={info?.payment_method=="mpesa"} id="mpesa" aria-describedby="mpesa-text" type="radio" name="delivery-method" value="" class="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600" />
                 </div>
 
                 <div class="ms-4 text-sm">
-                  <label for="dhl" class="font-medium leading-none text-gray-900 cursor-pointer"> M-pesa </label>
-                  <p id="dhl-text" class="mt-1 text-xs font-normal text-gray-500"></p>
+                  <label for="mpesa" class="font-medium leading-none text-gray-900 cursor-pointer"> M-pesa </label>
+                  <p id="mpesa-text" class="mt-1 text-xs font-normal text-gray-500"></p>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4 cursor-pointer" onClick={()=>{
+                     data.setPaymentInfo(({...info,payment_method:'paypal'}))
+                     document.querySelector('#payment_popup').scrollTop=document.querySelector('#payment_popup')?.clientHeight || 0
+                  }}>
+              <div class="flex items-start">
+                <div class="flex h-5 items-center">
+                  <input checked={info?.payment_method=="paypal"} id="paypal" aria-describedby="paypal-text" type="radio" name="delivery-method" value="" class="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600" />
+                </div>
+
+                <div class="ms-4 text-sm">
+                  <label for="paypal" class="font-medium leading-none text-gray-900 cursor-pointer"> Paypal </label>
+                  <p id="paypal-text" class="mt-1 text-xs font-normal text-gray-500"></p>
                 </div>
               </div>
             </div>

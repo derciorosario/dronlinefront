@@ -278,7 +278,7 @@ function App() {
                                        }} className="px-5 max-lg:mb-4 max-lg:w-full py-4 whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('common.contact-us')}</button>
                                        <div className="flex flex-col ml-3">
                                           <p  className="text-[13px] uppercase text-honolulu_blue-400 mt-bold">{t('common.central-info')}</p>
-                                          <span className="text-[25px] font-medium text-honolulu_blue-500">+258 856462304</span>
+                                          <span className="text-[25px] font-medium text-honolulu_blue-500">+258 861024024</span>
                                        </div>
                                     </div>
                                 </div>

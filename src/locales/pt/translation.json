@@ -196,6 +196,7 @@
 
     },
     "form":{
+        "medication":"Médicamento",
         "place_of_issuance_of_the_identity_card":"Local de emissão de bilhete de identidade",
         "date_of_issuance_of_the_identity_card":"Data de emissao de bilhete de identidade",
         "insurance_company":"Seguradora",
@@ -326,6 +327,7 @@
         "consultation-status":"Actualização do estado da Consulta",
         "invoice-status":"Actualização do estado do pagamento",
         "new-mpesa-payment":"Novo pagamento via M-pesa",
+        "new-paypal-payment": "Novo pagamento via Paypal",
         "new-consultation-added":"Nova consulta marcada",
         "new-consultation-request":"Nova consula pendente",
         "new-pending-invoice":"Pagamento pendente por ser avaliado",
@@ -341,6 +343,7 @@
        "consultation-status":"Estado:",
        "invoice-status":"Estado:",
        "new-mpesa-payment":"ID do paciente",
+       "new-paypal-payment": "ID do paciente",
        "new-consultation-added":"Voçe tem uma nova consulta",
        "new-pending-invoice":"Novo comprovativo de pagamento de consulta foi adicionado",
        "new-consultation-request":"Nova consulta espera por aprovação",
@@ -367,7 +370,7 @@
         "appointment-no-longer-available":"A hora e data selecionada para a consulta não está mais disponível",
         "you-have-saved-appointment":"Você tem um rascunho guardado da sua consulta. Deseja terminar o preenchimento?",
         "login-to-proceed-with-consultation":"Seu agendamento foi salvo, mas antes de proceder com o envio, precisa registar ou fazer o login na plataforma. ",
-        "contact-us-if-delay":"Caso não tenha resposta nos próximos 5 minutos, aconselhamos que ligue de imediato para o contacto +258 856462304.",
+        "contact-us-if-delay":"Caso não tenha resposta nos próximos 5 minutos, aconselhamos que ligue de imediato para o contacto +258 861024024.",
         "password-mismatch":"As senhas inseridas devem ser iguais",
         "conclude_patient_info":" Precisamos de mais algumas informações suas para que possa iniciar as consultas.",
         "successfully-registered":"Registrado com sucesso",
@@ -433,6 +436,8 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "assign-my-signature":"Assignar minha assinatura",
+        "assign-app-signature":"Assignar assinatura da plataforma",
         "edit-to-add":"Editar para cadastro",
         "approved-by":"Aprovado por",
         "print-anyway":"Imprimir mesmo assim",
@@ -837,6 +842,7 @@
         "send-message":"Enviar messagem",
         "doctor":"Médico",
         "mpesa":"M-pesa",
+        "paypal":"Paypal",
         "select-doctor":"Selecionar especialista",
         "drag-file":"Arraste",
         "choose-file":"Escolher arquivo",

@@ -6,6 +6,7 @@ import FormCard from '../Cards/form'
 import PrintTable from '../Tables/print'
 import { useAuth } from '../../contexts/AuthContext'
 import toast from 'react-hot-toast'
+import BaiscTable from '../Tables/basic'
 export default function SinglePrint({item,setItem}) {
     const data=useData()
 
@@ -14,8 +15,6 @@ export default function SinglePrint({item,setItem}) {
     const [secretaryChiefSignature,setSecretaryChiefSignature]=useState(null)
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const [appSettings,setAppSettings]=useState(null)
-
-
 
      useEffect(()=>{
 
@@ -58,7 +57,6 @@ export default function SinglePrint({item,setItem}) {
             JSON.parse(user?.app_settings?.[0]?.value).stamp_filename
           ]
 
-         
           if(item?.from=="medical-certificates"){
              imagestoLoad.push(item?.i?.status_changer?.signature_filename)
           }
@@ -91,16 +89,18 @@ export default function SinglePrint({item,setItem}) {
                   })
           );
 
-          const images = await Promise.all(promises);
+          await Promise.all(promises);
 
           setTimeout(()=>{
-            window.print()
-              setTimeout(()=>{
-                setItem(null)
-              },2000)
-            setImagesLoaded(true);
-            data.setIsLoading(false)
+                window.print()
+                setTimeout(()=>{
+                  setItem(null)
+                  data.setUpdateTable(Math.random())
+                },300)
+              setImagesLoaded(true);
+              data.setIsLoading(false)
           },1000)
+
 
       } catch (error) {
 
@@ -157,22 +157,23 @@ export default function SinglePrint({item,setItem}) {
       
       return "Unsupported language";
     }
+
+
     
-    
+    console.log({item})
   
    
     return (
       
       <div className={`w-full  flex flex-col overflow-y-auto h-[100vh] ${!item ? '':'_print'} pointer-events-none opacity-0  fixed left-0 top-0 bg-white z-50 px-10`}>
                  
-                 {(user?.app_settings?.[0]?.value && item?.from!="medical-certificates") && <div className="top-2 left-2">
-                      <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>
-                 </div>}
+                
                  <div className="justify-around flex w-full">
+                      <img className="w-[160px] h-[60px]" src={Logo}/>
                       <h2 className="text-[26px] font-medium flex flex-col items-center">
                        <span>{item?.title}</span>
                       </h2>
-                     <img className="w-[160px] h-[60px]" src={Logo}/>
+                    
                  </div>
 
                  <div className={`${item?.from=="medical-certificates" ? 'hidden':''}`}>
@@ -221,10 +222,9 @@ export default function SinglePrint({item,setItem}) {
                       <div className="w-full py-10 px-5">
 
                              {(item?.content || []).map(f=>{
-
                                  f=f[0]
-
                                  let variables={
+
                                   date_of_leave:f.date_of_leave,
                                   medical_specialty:f.medical_specialty,
                                   patient_name:item?.patient?.name,
@@ -248,9 +248,7 @@ export default function SinglePrint({item,setItem}) {
                                         </div>
                                         <div className="flex justify-center mt-2">
                                               {item?.doctor && <img width={100} className="h-auto ml-2" src={doctorSignature}/>}
-                                              {(user?.app_settings?.[0]?.value && !item?.doctor) && <div className="top-2 left-2">
-                                                      <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>
-                                              </div>}
+                                              {(user?.app_settings?.[0]?.value && !item?.doctor) && <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>}
                                         </div>
 
                                         <div className="border-t border-t-gray-400 w-full mt-10">
@@ -261,10 +259,11 @@ export default function SinglePrint({item,setItem}) {
                                         </div>
 
                                       
-                                         <div className="flex justify-center">
-                                             <img width={100}  className="h-auto" src={secretaryChiefSignature}/>
-                                             {(user?.app_settings?.[0]?.value && item?.i?.status_changer?.role=="admin")  && (
-                                              <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>
+                                         <div className="flex justify-center w-full">
+                                             {(user?.app_settings?.[0]?.value && item?.i?.status_changer?.role=="admin") ? (
+                                                <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>
+                                             ) : (
+                                                <img width={100}  className="h-auto" src={secretaryChiefSignature}/>
                                              )}
                                         </div>
 
@@ -280,12 +279,11 @@ export default function SinglePrint({item,setItem}) {
                              })}
                             
                       </div>
-
-
-
                   ) : (
+
                     <div className="w-full py-10">
-                                {(item?.content || []).map(f=>(
+
+                                {item?.type!="table" && (item?.content || []).map(f=>(
                                     <>
                                         <PrintTable header={[t('common.name'),'']} body={f.filter(i=>i.name || i.value).map(i=>(
                                             <PrintTable.Tr>
@@ -297,7 +295,25 @@ export default function SinglePrint({item,setItem}) {
                                         <div className="mb-6"></div>
                                     </>
                                 ))}
+
+
+
+                                {item?.type=="table" && <div>
+
+                                                  <BaiscTable loaded={true} header={item.table_header} body={(item?.table_items || []).map(i=>(
+                                                          <BaiscTable.Tr>
+                                                              <BaiscTable.Td>{i.name}</BaiscTable.Td>
+                                                              <BaiscTable.Td>{i.dosage}</BaiscTable.Td>
+                                                              <BaiscTable.Td>{i.dosing_instructions}</BaiscTable.Td>
+                                                              <BaiscTable.Td>{i.prescribed_quantity}</BaiscTable.Td>
+                                                              <BaiscTable.Td>{i.treatment_duration}</BaiscTable.Td>
+                                                              <BaiscTable.Td>{i.pharmaceutical_form}</BaiscTable.Td>
+                                                         </BaiscTable.Tr>
+                                                   ))}/>
+                                  
+                                </div>}
                     </div>
+
                   )}
 
              
@@ -315,7 +331,7 @@ export default function SinglePrint({item,setItem}) {
                             <div className="mt-2 flex justify-between">
                                 {item?.doctor && <img width={100} className="h-auto mr-2" src={doctorSignature}/>}
                                 {item?.doctor && <img width={100}  className="h-auto" src={doctorStamp}/>}
-                               
+                                {(user?.app_settings?.[0]?.value && item?.from!="medical-certificates") &&  <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>}
                             </div>
                             
                           </div>

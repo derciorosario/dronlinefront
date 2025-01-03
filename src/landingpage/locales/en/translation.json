@@ -192,6 +192,7 @@
         "_payments": "View completed consultation payments"
     },
     "form":{
+        "medication":"Medication",
         "place_of_issuance_of_the_identity_card":"Place of issuance of the identity card",
         "date_of_issuance_of_the_identity_card":"Date of issuance of the identity card",
         "pt_short_biography": "Short Biography (pt)",
@@ -325,6 +326,7 @@
         "consultation-status": "Consultation Status Update",
         "invoice-status": "Payment Status Update",
         "new-mpesa-payment": "New Payment via M-Pesa",
+        "new-paypal-payment": "New Payment via Paypal",
         "new-consultation-added": "New Consultation Scheduled",
         "new-consultation-request": "New Pending Consultation Request",
         "new-pending-invoice": "Pending Payment to be Reviewed",
@@ -341,6 +343,7 @@
         "consultation-status": "Status:",
         "invoice-status": "Status:",
         "new-mpesa-payment": "Patient ID",
+        "new-paypal-payment": "Patient ID",
         "new-consultation-added": "You have a new consultation",
         "new-pending-invoice": "A new consultation payment receipt has been added",
         "new-consultation-request": "A new consultation is awaiting approval",
@@ -370,7 +373,7 @@
         "appointment-no-longer-available": "The selected time and date for the consultation are no longer available.",
         "you-have-saved-appointment": "You have a saved draft of your consultation. Do you want to complete it?",
         "login-to-proceed-with-consultation": "Your booking has been saved, but you need to register or log in to the platform before proceeding.",
-        "contact-us-if-delay": "If you do not receive a response within the next 5 minutes, we advise you to call immediately at +258 856462304.",
+        "contact-us-if-delay": "If you do not receive a response within the next 5 minutes, we advise you to call immediately at +258 861024024.",
         "password-mismatch": "The passwords entered must match.",
         "conclude_patient_info": "We need a few more details from you to start the consultations.",
         "successfully-registered": "Successfully registered",
@@ -437,6 +440,8 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+          "assign-my-signature":"Assign my signature",
+          "assign-app-signature":"Assign app signature",
            "address":"Address",
            "restart-meeting":"Restart meeting",
            "leave":"Sair",
@@ -862,6 +867,7 @@
             "send-message": "Send message",
             "doctor": "Doctor",
             "mpesa": "M-pesa",
+            "paypal":"Paypal",
             "select-doctor": "Select doctor",
             "drag-file": "Drag file",
             "choose-file": "Choose file",

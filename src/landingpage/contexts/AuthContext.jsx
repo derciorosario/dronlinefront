@@ -9,11 +9,11 @@ export const HomeAuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
   const [auth, setAuth] = useState(false);
-  
+
   let env="pro"
   const APP_BASE_URL  = env =="pro" ? "https://api.dronlinemz.com": 'http://127.0.0.1:8000'
   const SERVER_FILE_STORAGE_PATH=`storage/uploads`
-  const APP_FRONDEND=env == "dev" ? "http://localhost:5173" : "https://dronline-landingpage.netlify.app" 
+  const APP_FRONDEND=env == "dev" ? "http://localhost:5173" : "https://dronlinemz.com" 
  
   const login = (userData, authToken) => {
     setUser(userData);
@@ -24,7 +24,6 @@ export const HomeAuthProvider = ({ children }) => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('token');
-
     if(!window.location.href.includes('/login')) {
        window.location.href="/login"
     }
@@ -35,13 +34,8 @@ export const HomeAuthProvider = ({ children }) => {
   };
 
 
-
-
-
-
-     function encodeFormData(data) {
+  function encodeFormData(data) {
       const formData = new URLSearchParams();
-      
       function buildFormData(formData, data, parentKey) {
         if (Array.isArray(data)) {
           data.forEach((value, index) => {
@@ -55,10 +49,10 @@ export const HomeAuthProvider = ({ children }) => {
           formData.append(parentKey, data);
         }
       }
-    
       buildFormData(formData, data);
       return formData.toString();
-    }
+
+  }
 
 
 

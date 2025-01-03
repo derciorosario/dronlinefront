@@ -268,12 +268,12 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                             
                             {(_i != form.medical_prescription_items.length - 1 || form.medical_prescription_items.length >= 2) && <div className="w-full pt-3 flex items-center">
                                <span className="mr-4 flex items-center justify-center w-[30px] h-[30px] bg-gray-200 text-[0.9rem] rounded-full">{_i + 1}</span>
-                               <span onClick={()=>{
+                               {!cannotEdit && <span onClick={()=>{
                                  setForm({...form,medical_prescription_items:form.medical_prescription_items.filter((_,_f)=>_f!=_i)})
                                }} className="text-[0.9rem] flex items-center cursor-pointer hover:underline">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"></path></svg>
                                 {t('common.delete')}
-                                </span>
+                                </span>}
                             </div>}
 
                            <div className="w-full">

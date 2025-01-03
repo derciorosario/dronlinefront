@@ -84,7 +84,6 @@ function MedicalPrescriptionPrint({item,setItem}) {
                             <PrintTable.Td>{i.prescribed_quantity}</PrintTable.Td>
                             <PrintTable.Td>{i.treatment_duration}</PrintTable.Td>
                             <PrintTable.Td>{i.pharmaceutical_form}</PrintTable.Td>
-                           
                     </PrintTable.Tr>
                 ))}>
                     

@@ -190,7 +190,7 @@ Header.BottomBar=()=>{
                     
                    <div className="flex flex-col">
                       <p  className="text-[13px] max-md:text-[10px] uppercase text-honolulu_blue-400 mt-bold">{t('common.central-info')}</p>
-                      <span className="text-[25px] max-md:text-[13px] font-medium text-honolulu_blue-500">+258 856462304</span>
+                      <span className="text-[25px] max-md:text-[13px] font-medium text-honolulu_blue-500">+258 861024024</span>
                    </div>
                   
                </div>

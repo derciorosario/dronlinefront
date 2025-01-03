@@ -77,14 +77,12 @@ function globalOnclick(id){
               <BasicSearch  loaded={data._loaded.includes('medical_prescriptions')} search={search}  printAction={()=>{
                   let content = [];
                   (data._medical_prescriptions?.data || []).forEach(i=>{
-                    content.push([{name:t('form.medication-name'),value:i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name} - ${_medications.filter(f=>f.ITEM==i.name)?.[0]?.active_substance}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')}])
                     i.medical_prescription_items.forEach(f=>{
-                       content.push([
-                       {name:t('form.dosage'),value:f.dosage},
-                       {name:t('form.prescribed-quantity'),value:f.prescribed_quantity},
+                      content.push([
+                       {name:t('form.medication'),value:`${t('form.medication-name')}:${f.name ? `${_medications.filter(g=>g.ITEM==f.name)?.[0]?.name} - ${_medications.filter(g=>g.ITEM==f.name)?.[0]?.active_substance}` : f.custom_name}(${f.prescribed_quantity});   ${t('form.dosage')}:${f.dosage};  ${t('form.prescribed-quantity')}:${f.prescribed_quantity}`},
                        {name:t('form.treatment-duration'),value:f.treatment_duration},
                        {name:t('form.pharmaceutical-form'),value:f.pharmaceutical_form}])
-                   })
+                      })
                   })
                   data.setSinglePrintContent({
                       patient: itemToShow.appointment.patient,
@@ -102,8 +100,7 @@ function globalOnclick(id){
                             <BaiscTable.MainActions hide={user?.role=="patient"} options={{
                              deleteFunction:'default',
                              deleteUrl:'api/delete/medical-prescriptions'}
-                            } items={data._exams?.data || []}/>,
-                            
+                            } items={data._medical_prescriptions?.data || []}/>,
                             '.',
                             'ID',
                              t('form.medication-names'),
@@ -127,12 +124,9 @@ function globalOnclick(id){
                                           patient: itemToShow.appointment.patient,
                                           doctor:itemToShow.appointment.doctor,
                                           title: t('menu.medical-prescription'),
-
                                           content: 
                                              i.medical_prescription_items.map(f=>[
-                                                {name:t('form.medication-name'),value:i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name} - ${_medications.filter(f=>f.ITEM==i.name)?.[0]?.active_substance}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')},
-                                                {name:t('form.dosage'),value:f.dosage},
-                                                {name:t('form.prescribed-quantity'),value:f.prescribed_quantity},
+                                                {name:t('form.medication'),value:`${t('form.medication-name')}:${f.name ? `${_medications.filter(g=>g.ITEM==f.name)?.[0]?.name} - ${_medications.filter(g=>g.ITEM==f.name)?.[0]?.active_substance}` : f.custom_name}(${f.prescribed_quantity});   ${t('form.dosage')}:${f.dosage};  ${t('form.prescribed-quantity')}:${f.prescribed_quantity}`},
                                                 {name:t('form.treatment-duration'),value:f.treatment_duration},
                                                 {name:t('form.pharmaceutical-form'),value:f.pharmaceutical_form}
                                              ])
@@ -150,9 +144,8 @@ function globalOnclick(id){
                          
                  />
    
-   <BasicPagination show={data._loaded.includes('medical_prescriptions')} from={'medical_prescriptions'} setCurrentPage={setCurrentPage} total={data._medical_prescriptions?.total}  current={data._medical_prescriptions?.current_page} last={data._medical_prescriptions?.last_page}/>
+               <BasicPagination show={data._loaded.includes('medical_prescriptions')} from={'medical_prescriptions'} setCurrentPage={setCurrentPage} total={data._medical_prescriptions?.total}  current={data._medical_prescriptions?.current_page} last={data._medical_prescriptions?.last_page}/>
              
-   
                </div>
    
                

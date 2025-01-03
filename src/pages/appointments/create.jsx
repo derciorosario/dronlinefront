@@ -369,11 +369,9 @@ function isUrgentByLimit(hour,date){
                   document.querySelector('#center-content').scrollTop=0
                 }
         }})
-        
         if(form.type_of_care=="urgent"){
           data._showPopUp('basic_popup','contact-us-if-delay')
         }
-
         setSelectedDoctor({...selectedDoctor,status:'not_selected'})
         data.handleLoaded('remove','appointments')
         let new_params={scheduled_date:'',scheduled_doctor:'',scheduled_hours:'',scheduled_weekday:''}
@@ -414,7 +412,7 @@ function isUrgentByLimit(hour,date){
                   data._scrollToSection('center-content')
                   setVerifiedInputs([])
 
-                  if(!data.paymentInfo?.is_proof){
+                  if(!data.paymentInfo?.is_proof && data.paymentInfo?.appointment?.id){
                     
                     setMessageBtnSee({onClick:()=>{
                       navigate('/appointment/'+data.paymentInfo.appointment.id)

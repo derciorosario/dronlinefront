@@ -166,7 +166,7 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
                             <span className="text-gray-500 ml-2">({upcomingAppointments.length})</span>
                         </div>
 
-                        <div className="flex items-center mb-4 gap-2 mt-5">
+                        {upcomingAppointments.length!=0 && <div className="flex items-center mb-4 gap-2 mt-5">
                                   {['scheduled_for_today','all'].map((i,_i)=>{
                                           let total=i=="all" ? upcomingAppointments.length : upcomingAppointments.filter(f=>f.scheduled_date==serverTime?.date).length
                                           return (
@@ -179,7 +179,7 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
                                           )
                                    })}
 
-                           </div>
+                           </div>}
 
                         <BaiscTable canAdd={false} hide={upcomingAppointments.length==0}   loaded={data._loaded.includes('doctor_dashboard')} header={[
                                     

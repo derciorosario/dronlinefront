@@ -114,7 +114,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                             <span className="text-gray-500 ml-2">({upcomingAppointments.length})</span>
                         </div>
 
-                        <div className="flex items-center mb-4 w-full flex-wrap md:gap-2 mt-5">
+                       {upcomingAppointments.length!=0 && <div className="flex items-center mb-4 w-full flex-wrap md:gap-2 mt-5">
                                   {['scheduled_for_today','all'].map((i,_i)=>{
                                           let total=i=="all" ? upcomingAppointments.length : upcomingAppointments.filter(f=>f.scheduled_date==serverTime?.date).length
                                           return (
@@ -126,9 +126,8 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                             </div>
                                           )
                                    })}
-
                                   {/***{upcomingAppointments.length==0 && <span className="mr-[30px] ml-4 text-gray-400 max-sm:text-[13px]">({t('common.no-appointments')})</span>} */}
-                        </div>
+                        </div>}
 
                         <BaiscTable canAdd={false} hide={upcomingAppointments.length==0}   loaded={data._loaded.includes('patient_dashboard')} header={[
                                        t('form.consultation-id'),
@@ -178,7 +177,6 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{i.additional_observations?.length > 40 ? i.additional_observations?.slice(0,40)+"..." : i.additional_observations}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                           <BaiscTable.Td url={`/appointment/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-
                                            <BaiscTable.Td >
                                                                             {i.status=="approved" &&  <div onClick={()=>{
                                                                                    window.open(`${data.APP_FRONDEND}/meeting/zoom/appointment/`+i.id, '_blank')
@@ -187,7 +185,6 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                                                                <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
                                                                              </div>}
                                           </BaiscTable.Td>
-
                                         </BaiscTable.Tr>
                                     ))}
                         />
@@ -305,11 +302,9 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                           title: t('menu.medical-prescription'),
                                           content: 
                                              i.medical_prescription_items.map(f=>[
-                                                {name:t('form.medication-name'),value:i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name} - ${_medications.filter(f=>f.ITEM==i.name)?.[0]?.active_substance}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')},
-                                                {name:t('form.dosage'),value:f.dosage},
-                                                {name:t('form.prescribed-quantity'),value:f.prescribed_quantity},
-                                                {name:t('form.treatment-duration'),value:f.treatment_duration},
-                                                {name:t('form.pharmaceutical-form'),value:f.pharmaceutical_form}
+                                              {name:t('form.medication'),value:`${t('form.medication-name')}:${f.name ? `${_medications.filter(g=>g.ITEM==f.name)?.[0]?.name} - ${_medications.filter(g=>g.ITEM==f.name)?.[0]?.active_substance}` : f.custom_name}(${f.prescribed_quantity});   ${t('form.dosage')}:${f.dosage};  ${t('form.prescribed-quantity')}:${f.prescribed_quantity}`},
+                                              {name:t('form.treatment-duration'),value:f.treatment_duration},
+                                              {name:t('form.pharmaceutical-form'),value:f.pharmaceutical_form}
                                              ])
                                           
                                         })
@@ -360,11 +355,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                             <BaiscTable.Tr >
                              
                               <BaiscTable.Td onClick={()=>{
-
-                                 
                                  if(i.status!="approved") return
-
-            
                                   data.setSinglePrintContent({
                                     patient: i.appointment.patient,
                                     doctor:i.appointment.doctor,

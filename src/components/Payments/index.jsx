@@ -7,10 +7,13 @@ import SendProof from './proof';
 import Mpesa from './m-pesa';
 import toast from 'react-hot-toast';
 import InsurancePayment from './insurance';
+import PayPal from './paypal';
 
 function PaymentProcess({ info }) {
 
   const data=useData();
+
+  console.log({info})
   
  
   return (
@@ -92,6 +95,7 @@ function PaymentProcess({ info }) {
                 {(info?.step==2 && info?.payment_method=='bank_transfer') && <SendProof info={info}/>}
                 {(info?.step==2 && info?.payment_method=='mpesa') && <Mpesa info={info}/>}
                 {(info?.step==2 && info?.payment_method=="insurance") && <InsurancePayment info={info}/>}
+                {(info?.step==2 && info?.payment_method=="paypal") && <PayPal info={info}/>}
 
                 {(info?.step==3 && info?.payment_method=='bank_transfer') && <div>
                      <h3 className="mt-3 font-medium text-[20px] mb-2">{t('common.proof-sent')}</h3>
