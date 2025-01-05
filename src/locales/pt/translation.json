@@ -436,6 +436,8 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "developed-by":"Desenvolvido por",
+        "in-partnership-with":"em parceria com",
         "assign-my-signature":"Assignar minha assinatura",
         "assign-app-signature":"Assignar assinatura da plataforma",
         "edit-to-add":"Editar para cadastro",

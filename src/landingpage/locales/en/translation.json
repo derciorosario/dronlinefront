@@ -440,8 +440,10 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
-          "assign-my-signature":"Assign my signature",
-          "assign-app-signature":"Assign app signature",
+           "developed-by":"Developed by",
+           "in-partnership-with":"in partnership with",
+           "assign-my-signature":"Assign my signature",
+           "assign-app-signature":"Assign app signature",
            "address":"Address",
            "restart-meeting":"Restart meeting",
            "leave":"Sair",

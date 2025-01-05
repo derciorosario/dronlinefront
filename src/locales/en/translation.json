@@ -437,6 +437,8 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+            "developed-by":"Developed by",
+            "in-partnership-with":"in partnership with",
             "edit-to-add":"Edit for registration",
             "approved-by":"Approved by",
             "print-anyway":"Print anyway",

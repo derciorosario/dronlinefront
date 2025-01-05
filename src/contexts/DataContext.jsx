@@ -11,9 +11,11 @@ let log_id=Math.random().toString()
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
+  
     const [dialogs,setDialogs]=useState({
       
     })
+
     const [isDeleting,setIsDeleting]=useState(false)
 
     let initial_popups={
@@ -614,6 +616,7 @@ export const DataProvider = ({ children }) => {
 
    
    let cancelation_reasons = [
+
     "reason-personal-change",
     "reason-health-issues",
     "reason-emergency",
@@ -624,6 +627,7 @@ export const DataProvider = ({ children }) => {
     "reason-preference",
     "reason-dissatisfaction",
     "other"
+
 ];
 
 
@@ -784,13 +788,9 @@ async function setGainPerentageForAll(){
 
 function isSetAsUrgentHour(hour,AppSettings){
 
-  console.log({AppSettings})
-
   if(!hour) {
     return 0
   }
-
-
   let isUrgent
 
   if(AppSettings?.do_not_define_urgent_hours || AppSettings==null) return

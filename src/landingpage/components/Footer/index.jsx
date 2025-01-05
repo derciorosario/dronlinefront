@@ -138,7 +138,7 @@ function Footer({serviceItems}) {
 
     <div className="" id="newsletter">
 
-<div className="w-full py-[40px] px-[100px] max-md:px-[20px] bg-honolulu_blue-600 flex justify-between items-center">
+<div className="w-full py-[20px] px-[100px] max-md:px-[20px] bg-honolulu_blue-600 flex justify-between items-center">
 
      <div className="flex w-[320px] hidden max-md:w-full  items-center bg-white rounded-[0.3rem] p-2 relative">
           <input onFocus={()=>data._showPopUp('show_doctors_list')}  placeholder={t('common.insert-email-to-subscribe')} className="w-full _show_doctors_list px-2 outline-none"/>                           
@@ -146,12 +146,18 @@ function Footer({serviceItems}) {
      </div>
 
      <div className="flex items-center gap-x-1 text-white">
-        &copy; {serverTime?.date?.split('-')?.[0]} <span className="hidden">{t('common.all-right-reserved')}</span>
+        <div className="flex items-center mr-3">
+          &copy; {serverTime?.date?.split('-')?.[0]} <span className="hidden">{t('common.all-right-reserved')}</span>
+        </div>
+        <div className="flex flex-col text-gray-300 text-[0.9rem]">
+          <span>{t('common.developed-by')} <a href="https://alinvest-group.com" target="_blank" className="text-white">ALINVEST</a></span>
+          <span className="text-[0.8rem]">{t('common.in-partnership-with')} <a target="_blank" href="https://derflash.com" className="text-white">DERFLASH</a></span>  
+        </div>
      </div>
 
      <span onClick={()=>{
          window.location.href="https://wa.me/258861024024"
-     }} className="ml-[20px] cursor-pointer hover:opacity-65">
+     }} style={{zIndex:49}} className="ml-[20px] max-md:translate-x-2 bg-honolulu_blue-600 w-[60px] h-[50px] flex items-center justify-center cursor-pointer">
 
            <svg className="fill-honolulu_blue-400"  height="30px"  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                viewBox="0 0 308 308" xml:space="preserve">

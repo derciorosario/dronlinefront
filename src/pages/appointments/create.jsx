@@ -38,9 +38,8 @@ function addAppointments({ShowOnlyInputs}) {
   let required_data=['doctors','specialty_categories','dependents']
   useEffect(()=>{   
         if(!user) return
-        setTimeout(()=>(
-          data._get(required_data) 
-        ),500)
+        data.handleLoaded('remove',required_data)
+        data._get(required_data) 
   },[user,pathname])
 
 
@@ -103,7 +102,6 @@ function addAppointments({ShowOnlyInputs}) {
       v=false
     }
     setValid(v)
-    console.log({form})
 
  },[form])
 
@@ -830,7 +828,7 @@ return (
 
             {selectedDoctor.status=="selected" && <>
               <div className="">
-                <span>{form.name} <label className="text-[13px] text-gray-500">({data._specialty_categories.filter(f=>f.id==form.medical_specialty)[0]?.[i18next.language+"_name"]})</label></span>
+                <span>{form.name} <label className={`${!data._loaded.includes('specialty_categories') ? 'hidden': ''} text-[13px] text-gray-500`}>({data._specialty_categories.filter(f=>f.id==form.medical_specialty)[0]?.[i18next.language+"_name"]})</label></span>
                 <div className="flex items-center max-md:flex-col max-md:items-start">
                     <span className="text-[13px]">{form.consultation_date} ({t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})</span>
                     <span className="mx-2 max-md:hidden">-</span>

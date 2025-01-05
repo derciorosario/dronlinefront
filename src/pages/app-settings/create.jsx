@@ -39,9 +39,8 @@ function index({ShowOnlyInputs}) {
   useEffect(()=>{
         
     if(!user) return
-    setTimeout(()=>(
-      data._get(required_data) 
-    ),500)
+    data._get(required_data) 
+    
 
 },[user,pathname])
 

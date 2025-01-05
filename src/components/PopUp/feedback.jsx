@@ -77,7 +77,7 @@ function Feedback() {
   }
 
   return (
-    <div className={`w-full flex pb-[100px] px-3 items-end justify-center ${!data._openPopUps.feedback ? 'opacity-0 pointer-events-none translate-y-[100px]':''} fixed left-0 top-0 h-[100vh] bg-[rgba(0,0,0,0.3)] z-50 transition ease-in delay-100`}>
+    <div className={`w-full flex pb-[100px] px-3 items-end justify-center ${!data._openPopUps?.feedback ? 'opacity-0 pointer-events-none translate-y-[100px]':''} fixed left-0 top-0 h-[100vh] bg-[rgba(0,0,0,0.3)] z-50 transition ease-in delay-100`}>
     
           <div className="max-w-[600px] bg-white p-4 rounded-[0.3rem] _feedback">
 
