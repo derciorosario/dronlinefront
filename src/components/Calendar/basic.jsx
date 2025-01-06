@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import { useEffect } from "react";
 import { t } from 'i18next'
 import Loader from "../Loaders/loader";
+import toast from "react-hot-toast";
 
 
 const Calendar = ({items}) => {
@@ -15,6 +16,7 @@ const Calendar = ({items}) => {
   const {pathname} = useParams()
   const [doctorData,setDoctorData]=useState(null)
   const [events,setEvents]=useState([])
+  const { id } = useParams()
 
   const customTranslations = {
     noData: "Nenhum dado a exibir",
@@ -138,20 +140,24 @@ const Calendar = ({items}) => {
 
   
   useEffect(()=>{
-
+    
     if(!user){
         return
     }
 
-    if(user?.role!="doctor"){
+    if(user?.role=="patient"){
        return
     }
   
     (async()=>{
       try{
-       let response=await data.makeRequest({method:'get',url:`api/doctor/`+user?.data.id,withToken:true, error: ``},100);
+       let response=await data.makeRequest({method:'get',url:`api/doctor/`+( ((user?.role=="admin" || user?.role=="manager") && id) ? id : user?.data.id),withToken:true, error: ``},100);
        setDoctorData(response)
       }catch(e){
+        if(e.message==404){
+          toast.error(t('common.item-not-found'))
+          navigate('/')
+       }
         console.log({e})
       }
   })()

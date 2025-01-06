@@ -153,11 +153,12 @@ function SelectPayemntMethod({info}) {
                      data.setPaymentInfo(({...info,payment_method:'mpesa'}))
                      document.querySelector('#payment_popup').scrollTop=document.querySelector('#payment_popup')?.clientHeight || 0
                   }}>
+
               <div class="flex items-start">
                 <div class="flex h-5 items-center">
                   <input checked={info?.payment_method=="mpesa"} id="mpesa" aria-describedby="mpesa-text" type="radio" name="delivery-method" value="" class="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600" />
                 </div>
-
+                
                 <div class="ms-4 text-sm">
                   <label for="mpesa" class="font-medium leading-none text-gray-900 cursor-pointer"> M-pesa </label>
                   <p id="mpesa-text" class="mt-1 text-xs font-normal text-gray-500"></p>
@@ -177,7 +178,7 @@ function SelectPayemntMethod({info}) {
 
                 <div class="ms-4 text-sm">
                   <label for="paypal" class="font-medium leading-none text-gray-900 cursor-pointer"> Paypal </label>
-                  <p id="paypal-text" class="mt-1 text-xs font-normal text-gray-500"></p>
+                  <p id="paypal-text" class="mt-1 text-xs font-normal text-gray-500">{t('common.taxes-may-apply')}</p>
                 </div>
               </div>
             </div>

@@ -222,12 +222,11 @@ useEffect(()=>{
                 }
                
               }
-            }catch(e){
+            }catch(e){ 
               data._showPopUp('basic_popup','unable-to-load-consultation-items')
               setSelectedDoctor({status:'not_selected'})
               return
             }
-
 
           let is_urgent=res.type_of_care=="urgent"
 
@@ -251,20 +250,21 @@ useEffect(()=>{
           }
 
           let available_hours=getAvailableHours(response,new_form.type_of_care,res.scheduled_date,{[response.id]:res.scheduled_weekday},res.canceled_appointment_id)
+
+        
           if(isUrgentByLimit(res.scheduled_hours,res.scheduled_date) || data.isSetAsUrgentHour(res.scheduled_hours,JSON.parse(user?.app_settings?.[0]?.value))){
             new_form.type_of_care='urgent'
           }
 
           if(!available_hours.includes(res.scheduled_hours)){
-
-            if(!user?.data?.gender && user){
+            if(user){
               data._showPopUp('basic_popup','appointment-no-longer-available')
               setSelectedDoctor({status:'not_selected'})
               return
             }
-           
           }else{
             setSelectedDoctor({status:'selected'})
+            console.log('3')
             setForm({...new_form,is_for_dependent:form.is_for_dependent,dependent_id:form.dependent_id})
           }
     }
@@ -381,7 +381,6 @@ function isUrgentByLimit(hour,date){
     }catch(e){
 
       setMessageType('red')
-
       data._scrollToSection('_register_msg')
       if(e.message==401){
         setMessage(t('common.email-exists'))
@@ -394,8 +393,8 @@ function isUrgentByLimit(hour,date){
       }else{
           setMessage(t('common.unexpected-error'))
       }
-
       setLoading(false)
+
     }
 
   }

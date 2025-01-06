@@ -13,8 +13,7 @@ function PaymentProcess({ info }) {
 
   const data=useData();
 
-  console.log({info})
-  
+ 
  
   return (
     <div className={`w-full px-4 h-[100vh] bg-[rgba(0,0,0,0.2)]  ease-in _doctor_list ${(!info?.type_of_care || info?.done) ? 'opacity-0 pointer-events-none translate-y-[100px]' : ''} ease-in transition-all delay-75 fixed flex items-center justify-center z-50`}>

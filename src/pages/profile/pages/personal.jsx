@@ -6,9 +6,7 @@ import PatientForm from '../../../components/Patient/form'
 import FileInput from '../../../components/Inputs/file'
 
 function PersonalPage({verified_inputs,form,setVerifiedInputs,setForm,formStep,handleUploadedFiles}) {
-
     const {user} = useAuth()
-
     return (
         
        <div className="flex flex-wrap gap-x-2 w-full">
@@ -24,8 +22,6 @@ function PersonalPage({verified_inputs,form,setVerifiedInputs,setForm,formStep,h
               {form.identification_document=="birth_certificate" &&  <FileInput _upload={{key:'birth_certificate_filename',filename:form.birth_certificate_filename}} res={handleUploadedFiles} label={t('form.birth-certificate')} r={true}/>}
               {form.identification_document=="passport_number" &&  <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport-number')} r={true}/>}
              </div>}
-
-        
             
        </div>
     )

@@ -50,10 +50,7 @@ function App() {
 
   useEffect(()=>{
 
-    console.log({ssssss:data._settings})
-
    
-  
     data._get(required_data) 
  
 
@@ -330,9 +327,9 @@ function App() {
                   </div>
 
 
-                  <div className="my-[100px]">
+                {/**  <div className="my-[100px]">
                      <div class="elfsight-app-ccccb092-5472-4e1f-b77b-cec83c1b39db" data-elfsight-app-lazy></div>
-                  </div>
+                  </div> */}
 
 
                    <Footer serviceItems={serviceItems}/>

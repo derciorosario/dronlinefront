@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import DefaultLayout from '../../layout/DefaultLayout'
 import { t } from 'i18next'
 import MuiCalendar from '../../components/Calendar/mui-calendar'
-import PopOver from '../../components/PopOver'
 import toast from 'react-hot-toast'
 import FormLayout from '../../layout/DefaultFormLayout'
 import AdditionalMessage from '../messages/additional'
@@ -128,17 +127,7 @@ function index() {
      },[dateView,specificList])
 
     useEffect(()=>{
-
-       /* let has_items_selected=false
-        weeks.forEach(d=>{
-            if(days[d].length || urgent_days[d].length ) {
-                has_items_selected=true
-            }
-        })
-        setValid(has_items_selected)*/
-
         setValid(true)
-
     },[days])
 
 
@@ -469,15 +458,13 @@ function index() {
                                                   setUrgentAvailableSpecific({...urgentAvailableSpecific,[date]:urgentAvailableSpecific[date].filter(i=>i!=f)})
                                                }else{
                                                   setUrgentAvailableSpecific({...urgentAvailableSpecific,[date]:[...urgentAvailableSpecific[date],f]})
-                                                  //setAvailableSpecific({...availableSpecific,[date]:availableSpecific[date].filter(i=>i!=f)})
-                                               }
+                                                }
                                             }else{
                                                 if(availableSpecific[date].includes(f)){
                                                     setAvailableSpecific({...availableSpecific,[date]:availableSpecific[date].filter(i=>i!=f)})
                                                  }else{
                                                     setAvailableSpecific({...availableSpecific,[date]:[...availableSpecific[date],f]})
-                                                    //setUrgentAvailableSpecific({...urgentAvailableSpecific,[date]:urgentAvailableSpecific[date].filter(i=>i!=f)})
-                                                 }
+                                                  }
                                             }
                                             return
                                           }

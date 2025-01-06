@@ -31,14 +31,15 @@ export const HomeDataProvider = ({ children }) => {
     useEffect(()=>{
             setIsLoading(false)
     },[])
-
     
     const [_openPopUps, _setOpenPopUps] = useState(initial_popups);
+    
   
     function _closeAllPopUps(){
           _setOpenPopUps(initial_popups)
           document.removeEventListener('click', handleOutsideClick)
     }
+
  
     const handleOutsideClick = (event) => {
      // if(isDeleting) return

@@ -344,7 +344,7 @@ console.log({vvvvvvvvv:form.urgent_consultation_end_hour})
                      </div>
 
                      <div className="flex gap-x-4 flex-wrap mt-4 w-full">
-                              <FileInput _upload={{key:'stamp_filename',filename:form?.stamp_filename}} res={({filename})=>{
+                              <FileInput onlyImages={true} _upload={{key:'stamp_filename',filename:form?.stamp_filename}} res={({filename})=>{
                                    setForm({...form,stamp_filename:filename})
                               }} label={t('common.stamp')} r={true}/>
                              <div className="w-full">

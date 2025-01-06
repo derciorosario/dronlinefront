@@ -32,6 +32,9 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
 
   
   const [file,setFile]=useState({})
+
+  const acceptedImageFileTypes = ['.jpg', '.jpeg', '.png'];
+
    
   const handleSubmit = async (event) => {
    
@@ -42,6 +45,11 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
       return
     }
 
+    
+    if(!acceptedImageFileTypes.includes(`.${(f.name.split('.')[f.name.split('.').length - 1]).toLowerCase()}`)){
+      toast.error(t('common.file-not-allowed'))
+      return
+    }
     const formData = new FormData();
     formData.append('file', f);
     let fileName = uuidv4();
@@ -121,7 +129,7 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
                            
                            <label htmlFor="_file_logo_input_2" className="absolute cursor-pointer active:opacity-50 right-0 bottom-6 rounded-full w-[30px] h-[30px] bg-honolulu_blue-400 flex items-center justify-center">
                               <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"  fill="#fff"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
-                              <input id="_file_logo_input_2" accept=".png,.jpg" ref={fileInputRef_2} type="file" onChange={handleSubmit} className="w-full h-full absolute opacity-0 left-0 top-0"/> 
+                              <input accept={acceptedImageFileTypes} id="_file_logo_input_2" ref={fileInputRef_2} type="file" onChange={handleSubmit} className="w-full h-full absolute opacity-0 left-0 top-0"/> 
                             
                            </label>
                     </div> : (
@@ -137,7 +145,7 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
                    
                            <label htmlFor="_file_logo_input" className="flex relative items-center">
                    
-                             <input id="_file_logo_input" accept=".png,.jpg" ref={fileInputRef_1} type="file" onChange={handleSubmit} className="w-full h-full absolute opacity-0 left-0 top-0"/> 
+                             <input accept={acceptedImageFileTypes} id="_file_logo_input" ref={fileInputRef_1} type="file" onChange={handleSubmit} className="w-full h-full absolute opacity-0 left-0 top-0"/> 
                              {!upload.uploading && <button type="button" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">{upload.filename ? t('common.change') : t('common.select-image')} </button>}
                             
                              {upload.uploading && <div className="w-[150px] h-[4px] bg-gray-400 rounded-[0.4rem] relative">

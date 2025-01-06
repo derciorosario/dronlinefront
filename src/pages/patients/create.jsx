@@ -265,7 +265,7 @@ function addPatients({ShowOnlyInputs}) {
                   <div className={`${user?.role=="doctor" ? 'hidden':''} mt-5`}>
                     <span className="flex mb-5 items-center hidden">{t('common.documents')}  <label className="text-[0.9rem] ml-2">({t('messages.add-atleast-one-document')})</label> <span className="text-red-500">*</span></span>
                     <div className="flex gap-x-4 flex-wrap gap-y-8">
-                        {form.identification_document=="identification_number" &&  <FileInput _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-doc')} r={true}/>}
+                        {form.identification_document=="identification_number" &&  <FileInput  _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('form.identification-doc')} r={true}/>}
                         {form.identification_document=="birth_certificate" &&  <FileInput _upload={{key:'birth_certificate_filename',filename:form.birth_certificate_filename}} res={handleUploadedFiles} label={t('form.birth-certificate')} r={true}/>}
                         {form.identification_document=="passport_number" &&  <FileInput _upload={{key:'passport_number_filename',filename:form.passport_number_filename}} res={handleUploadedFiles} label={t('form.passport')} r={true}/>}
                     </div>

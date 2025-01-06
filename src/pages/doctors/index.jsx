@@ -109,6 +109,10 @@ function App() {
    if(action=="see-availabilty"){
       navigate('/consultation-availability/'+id)
    }
+
+   if(action=="see-scheduler"){
+      navigate('/scheduler/'+id)
+   }
  }
 
  useEffect(()=>{
@@ -142,9 +146,7 @@ function getDoctorAmountEarned(i){
            
             
         <div className="flex">
-
-           <BasicFilter dateFilters={dateFilters} setDateFilter={setDateFilter} setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
-          
+           <BasicFilter dateFilters={dateFilters} setDateFilter={setDateFilter} setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>
            <div className="flex-1">
           
            <BasicSearch total={data._doctors?.total} from={'doctors'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
@@ -187,12 +189,11 @@ function getDoctorAmountEarned(i){
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.name}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
-                                
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.email}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.main_contact}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{(i.use_app_gain_percentage ? JSON.parse(user?.app_settings?.[0]?.value)?.gain_percentage : i.gain_percentage) || 0}{'%'}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{(i.total_payment_amount || 0) - (i.total_refund_amount || 0)}</BaiscTable.Td>
-                                 <BaiscTable.Td url={`/doctor/`+i.id}>{getDoctorAmountEarned(i)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{getDoctorAmountEarned(i)}</BaiscTable.Td>
                                 {/** <BaiscTable.Td url={`/doctor/`+i.id}>{data.getDoctorIRPC(i)}</BaiscTable.Td> */}
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t('common.'+i.gender)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t(i.address)}</BaiscTable.Td>
@@ -200,16 +201,17 @@ function getDoctorAmountEarned(i){
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                 <BaiscTable.AdvancedActions hide={!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor_availability?.includes('update')))} w={200} id={i.id} items={[
                                     {name:t('common.availability'),onClick:()=>{handleItems({action:'see-availabilty',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M580-240q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>)},
+                                    {name:t('menu.scheduler'),onClick:()=>{handleItems({action:'see-scheduler',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg>)},
                                 ]}/>
+                                
+
                             </BaiscTable.Tr>
                         ))}
 
                       
-              />
-
-<BasicPagination show={data._loaded.includes('doctors')} from={'doctors'} setCurrentPage={setCurrentPage} total={data._doctors?.total}  current={data._doctors?.current_page} last={data._doctors?.last_page}/>
-          
-
+          />
+       <BasicPagination show={data._loaded.includes('doctors')} from={'doctors'} setCurrentPage={setCurrentPage} total={data._doctors?.total}  current={data._doctors?.current_page} last={data._doctors?.last_page}/>
+      
             </div>
 
             

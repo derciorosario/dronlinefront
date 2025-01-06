@@ -162,7 +162,7 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
 
                  <div className="w-full">
                         <div className="w-full mt-8">
-                            <span className="font-medium">{t('common.appointments')}</span>
+                            <span className="font-medium">{t('common.upcoming-appointments')}</span>
                             <span className="text-gray-500 ml-2">({upcomingAppointments.length})</span>
                         </div>
 

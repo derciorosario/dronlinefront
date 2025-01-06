@@ -58,6 +58,10 @@ function App() {
     pageContent={{page:'doctor_requests',title:t('menu.membership-requests'),desc:''}}>
 
       <BaiscTable canAdd={false}  loaded={data._loaded.includes('doctor_requests') && !loading} header={[
+                   <BaiscTable.MainActions options={{
+                        deleteFunction:'default',
+                        deleteUrl:'api/doctor-requests/delete'}
+                   } items={data._doctor_requests?.data || []}/>,
                    'ID',
                    t('form.full-name'),
                    t('form.main-contact'),
@@ -71,6 +75,13 @@ function App() {
 
                 body={(data._doctor_requests?.data || []).map((i,_i)=>(
                        <BaiscTable.Tr>
+                         <BaiscTable.Td>
+                            <BaiscTable.Actions  options={{
+                                  deleteFunction:'default',
+                                  deleteUrl:'api/doctor-requests/delete',
+                                  id:i.id}
+                            }/>
+                         </BaiscTable.Td>
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.id}</BaiscTable.Td>
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.name}</BaiscTable.Td>
                          <BaiscTable.Td url={`/membership-requests/`+i.id}>{i.main_contact_code+" "+i.contact}</BaiscTable.Td>

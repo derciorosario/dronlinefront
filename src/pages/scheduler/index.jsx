@@ -4,7 +4,7 @@ import i18next, { t } from 'i18next'
 import Calendar from '../../components/Calendar/basic'
 import { useData } from '../../contexts/DataContext'
 import { useAuth } from '../../contexts/AuthContext'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
 
 function index() {
@@ -14,13 +14,15 @@ function index() {
   const {user} = useAuth()
   let required_data=['specialty_categories','upcoming_appointments']
   const {pathname} = useLocation()
+  const { id } = useParams()
 
 
-      useEffect(()=>{
-            if(!user) return
-            data.handleLoaded('remove',['upcoming_appointments'])
-            data._get(required_data)
-      },[user,pathname])
+  useEffect(()=>{
+      if(!user) return
+      data.handleLoaded('remove',['upcoming_appointments'])
+      data._get(required_data,{upcoming_appointments:{doctor_id:id}}) 
+      data._get(required_data)
+  },[user,pathname])
 
   
   useEffect(()=>{

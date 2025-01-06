@@ -159,8 +159,6 @@ export default function SinglePrint({item,setItem}) {
     }
 
 
-    
-    console.log({item})
   
    
     return (

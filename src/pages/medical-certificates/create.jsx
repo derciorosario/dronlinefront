@@ -333,7 +333,7 @@ const [form,setForm]=useState(initial_form)
                                       })})
                                   }}   class={`bg-gray border border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
                                   
-                                  <FileInput  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
+                                  <FileInput onlyImages={true}  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
 
                             </div>
                               

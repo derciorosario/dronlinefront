@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import Logo from '../../assets/images/light-logo-2.png'
 import { t } from 'i18next'
-import i18n from '../../i18n'
 import {useNavigate,useLocation} from 'react-router-dom'
 import { useHomeData } from '../../contexts/DataContext'
 import { useAuth } from '../../../contexts/AuthContext'
-function Footer({serviceItems}) {
+import partnerImage1 from '../../assets/images/partners/alinvest.png'
+import partnerImage2 from '../../assets/images/partners/cortex.png'
 
+function Footer({serviceItems}) {
   const {pathname} = useLocation()
   const navigate=useNavigate()
-
   const {serverTime} = useAuth()
 
   const data=useHomeData()
 
   function goto(){
-  
     if(window.location.href.includes('/?about')){
          data._scrollToSection('about')
     }else if(window.location.href.includes('/?contact')){
@@ -25,7 +24,6 @@ function Footer({serviceItems}) {
     }else if(pathname=="/"){
         data._scrollToSection('home')
     }
-
   }
   
   useEffect(()=>{
@@ -33,12 +31,15 @@ function Footer({serviceItems}) {
   },[])
 
 
+  const partners=[
+    {name:'Alinvest',image:partnerImage1,url:'https://alinvest-group.com'},
+    {name:'Cortex LDA',image:partnerImage2,url:'https://www.cortex-moz.com'}
+  ]
+
+
   return (
     <>
-          
-  
-
-<div className="w-full bg-honolulu_blue-700" id="contact">
+     <div className="w-full bg-honolulu_blue-700" id="contact">
             <div className="flex px-[100px] max-lg:px-[20px] py-[60px] gap-4 max-md:flex-wrap max-md:gap-y-10">
                 <div className="w-full max-md:w-[33%] max-sm:w-full">
                    
@@ -66,6 +67,7 @@ function Footer({serviceItems}) {
                       {name:t('common.service-2'),desc:t('common.service-2-desc')},
                       {name:t('common.service-3'),desc:t('common.service-3-desc')},
                       {name:t('common.service-4'),desc:t('common.service-4-desc')}
+
                     ]).map((i,_i)=>(
                         
                         <span onClick={()=>{
@@ -133,6 +135,17 @@ function Footer({serviceItems}) {
 
 
 
+            </div>
+
+            <div className="w-full px-[100px] pb-5 max-lg:px-[20px]">
+                 <span className="text-gray-300 mb-2 flex">{t('common.partners')}</span>
+                 <div className="flex items-center gap-x-4">
+                  {partners.map((i,_i)=>(
+                      <a href={i.url} className="hover:scale(0.8) hover:opacity-80" target="_blank">
+                          <img className="w-[40px] h-auto" src={i.image}/>
+                      </a>
+                  ))}
+                 </div>
             </div>
     </div>
 

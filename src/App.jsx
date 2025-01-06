@@ -144,6 +144,7 @@ function App() {
          
 
          <Route path="/scheduler"  element={<Scheduler/>} />
+         <Route path="/scheduler/:id"  element={<Scheduler/>} />
 
          <Route path="/logs"  element={<Logs/>} />
          <Route path="/user-activities"  element={<UserActivities/>} />

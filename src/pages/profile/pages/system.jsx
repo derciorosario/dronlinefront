@@ -14,7 +14,7 @@ function SystemPage({form,setForm}) {
         
        <div>
             <div className="flex gap-x-4 flex-wrap mt-4">
-                              <FileInput _upload={{key:'stamp_filename',filename:form?.app_settings?.value?.stamp_filename}} res={({filename})=>{
+                              <FileInput onlyImages={true} _upload={{key:'stamp_filename',filename:form?.app_settings?.value?.stamp_filename}} res={({filename})=>{
                                    setForm({...form,app_settings:{...form.app_settings,value:{...form.app_settings.value,stamp_filename:filename}}})
                               }} label={t('common.stamp')} r={true}/>
                               <div className="w-[300px] flex items-center justify-center bg-gray-300 h-[100px] rounded-[0.3rem]">

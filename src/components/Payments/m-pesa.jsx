@@ -50,9 +50,13 @@ function Mpesa({info}) {
 
     return (
         <div>
+
+            <div className="mt-8 mb-0">
+                <span className="">{t('common.reference-name')}: <label className="italic">Cortex LDA</label></span>
+            </div>
+
             <h3 className="mt-3 font-medium text-[20px] mb-2">{t('common.select-your-mpesa-number')}</h3>
-    
-          
+
             <div class="mb-3">
                         <div className="flex items-center">
                               <div class={`bg-gray w-[70px] mr-1 border border-gray-300  text-gray-900 text-sm rounded-[0.4rem] focus:ring-blue-500 focus:border-blue-500 block p-2.5`}>
