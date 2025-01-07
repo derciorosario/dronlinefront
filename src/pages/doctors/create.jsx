@@ -171,7 +171,12 @@ useEffect(()=>{
     try{
 
       let response=await data.makeRequest({method:'get',url:`api/doctor-requests/`+res.add_from_doctor_request_id,withToken:true, error: ``},0);
-      setForm({...form,...response,main_contact:response.contact,residential_address:response.address,identification_document:'identification_number'})
+      setForm({...form,...response,
+        main_contact:response.contact,
+        residential_address:response.address,
+        identification_document:'identification_number',
+        pt_long_biography:response.additional_info
+      })
       console.log({response})
       setDoctorRequestToBeLoaded(true)
 

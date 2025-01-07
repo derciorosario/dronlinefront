@@ -192,8 +192,8 @@ function getDoctorAmountEarned(i){
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.email}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.main_contact}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{(i.use_app_gain_percentage ? JSON.parse(user?.app_settings?.[0]?.value)?.gain_percentage : i.gain_percentage) || 0}{'%'}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/doctor/`+i.id}>{(i.total_payment_amount || 0) - (i.total_refund_amount || 0)}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/doctor/`+i.id}>{getDoctorAmountEarned(i)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{parseFloat((i.total_payment_amount || 0) - (i.total_refund_amount || 0)).toFixed(2)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{parseFloat(getDoctorAmountEarned(i)).toFixed(2)}</BaiscTable.Td>
                                 {/** <BaiscTable.Td url={`/doctor/`+i.id}>{data.getDoctorIRPC(i)}</BaiscTable.Td> */}
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t('common.'+i.gender)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t(i.address)}</BaiscTable.Td>
