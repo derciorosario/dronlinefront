@@ -3,6 +3,8 @@ import { t } from 'i18next'
 import { useHomeData } from '../../contexts/DataContext'
 import DefaultLayout from '../../layout/DefaultLayout'
 import Footer from '../../components/Footer'
+import TopImage from '../../assets/images/cancelation-terms.jpg'
+
 
 function Terms() {
 
@@ -17,9 +19,15 @@ useEffect(()=>{
   return (
     <DefaultLayout>
 
-    <div className="w-full min-h-[200px]  flex items-center p-6 bg-honolulu_blue-500">
-        <h2 className="text-white text-[31px]">{t('appointment-cancelation.t')}</h2>
-    </div>
+    
+               <div  className="w-full h-[280px] flex _cancel_consultation bg-gray-400 relative">
+                             <img src={TopImage} className="w-full h-full object-cover"/>
+                             <div className="absolute left-0 top-0 w-full h-full bg-[rgba(0,0,0,0.3)] flex items-center px-[100px] max-md:px-6">
+                             <h2 className="text-white text-[31px]">{t('appointment-cancelation.t')}</h2>
+                             </div>
+                </div>
+
+
            
     <div className="px-7 my-14">
             <h3 className="max-w-[700px] mx-auto text-center text-[45px] font-semibold mb-6 max-md:text-[27px]">{t('appointment-cancelation.t')}</h3>    

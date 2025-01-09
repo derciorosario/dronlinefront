@@ -8,14 +8,12 @@ import { useLocation, useParams } from 'react-router-dom'
 
 
 function index() {
-
   const [items,setItems]=useState([])
   const data=useData()
   const {user} = useAuth()
   let required_data=['specialty_categories','upcoming_appointments']
   const {pathname} = useLocation()
   const { id } = useParams()
-
 
   useEffect(()=>{
       if(!user) return
@@ -33,7 +31,7 @@ function index() {
             end: new Date(`${i.consultation_date.replaceAll('-','/')} ${data.timeAfter30Minutes(i.scheduled_hours)}`),
             color: i.status=="pending" ? 'orange':i.status=="approved" ? 'green' : i.status=="canceled" ? 'red' : 'blue',
       })))
-},[data._upcoming_appointments,data._specialty_categories,data.updateTable])
+   },[data._upcoming_appointments,data._specialty_categories,data.updateTable])
   
       return (
             <DefaultLayout  refreshOnUpdate={true} pageContent={{title:t('menu.scheduler'),desc:t('titles.scheduler')}}>

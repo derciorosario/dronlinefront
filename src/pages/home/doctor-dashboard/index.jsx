@@ -127,11 +127,11 @@ export default function DoctorDashboard({startDate,endDate,setStartDate,setEndDa
                  <svg className="fill-white" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m363-390 117-71 117 71-31-133 104-90-137-11-53-126-53 126-137 11 104 90-31 133ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
               )},
 
-              {hide:hideAmounts,name:t('common.total_amount_collected'),value:((data._doctor_dashboard?.totalInvoiceAmountByType?.payment || 0) - (data._doctor_dashboard?.totalInvoiceAmountByType?.refund || 0)),icon:(         
+              {hide:hideAmounts,name:t('common.total_amount_collected'),value:((data._doctor_dashboard?.totalInvoiceAmountByType?.payment || 0) - (data._doctor_dashboard?.totalInvoiceAmountByType?.refund || 0)).toFixed(2),icon:(         
                 <svg className="fill-white" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M856-390 570-104q-12 12-27 18t-30 6q-15 0-30-6t-27-18L103-457q-11-11-17-25.5T80-513v-287q0-33 23.5-56.5T160-880h287q16 0 31 6.5t26 17.5l352 353q12 12 17.5 27t5.5 30q0 15-5.5 29.5T856-390ZM513-160l286-286-353-354H160v286l353 354ZM260-640q25 0 42.5-17.5T320-700q0-25-17.5-42.5T260-760q-25 0-42.5 17.5T200-700q0 25 17.5 42.5T260-640Zm220 160Z"/></svg>
               )},
              
-              {hide:hideAmounts,name:t('common.amount_earned'),value:getDoctorAmountEarned((data._doctor_dashboard?.doctor || {}), (data._doctor_dashboard?.totalInvoiceAmountByType?.payment || 0)),icon:(         
+              {hide:hideAmounts,name:t('common.amount_earned'),value:getDoctorAmountEarned((data._doctor_dashboard?.doctor || {}), (data._doctor_dashboard?.totalInvoiceAmountByType?.payment || 0)).toFixed(2),icon:(         
                 <svg className="fill-white" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M444-200h70v-50q50-9 86-39t36-89q0-42-24-77t-96-61q-60-20-83-35t-23-41q0-26 18.5-41t53.5-15q32 0 50 15.5t26 38.5l64-26q-11-35-40.5-61T516-710v-50h-70v50q-50 11-78 44t-28 74q0 47 27.5 76t86.5 50q63 23 87.5 41t24.5 47q0 33-23.5 48.5T486-314q-33 0-58.5-20.5T390-396l-66 26q14 48 43.5 77.5T444-252v52Zm36 120q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
               )},
              

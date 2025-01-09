@@ -94,7 +94,8 @@ function addAppointments({ShowOnlyInputs}) {
        (selectedDoctor.status!="selected" && form.type_of_care!="requested") ||
        !form.reason_for_consultation ||
        !form.type_of_care ||
-       !form.medical_specialty ||
+       (!form.medical_specialty && form.type_of_care!="requested") ||
+       (!form.scheduled_hours && form.type_of_care=="requested") ||
        form.is_for_dependent==null ||
        (form.is_for_dependent && !form.dependent_id) ||
        ((!form.scheduled_hours || !form.consultation_date) && form.type_of_care=="requested")
@@ -104,6 +105,8 @@ function addAppointments({ShowOnlyInputs}) {
     setValid(v)
 
  },[form])
+
+ console.log((form.scheduled_hours))
 
 
  useEffect(()=>{
@@ -149,13 +152,13 @@ async function getAppointmentUnreadMessages(){
 
 
  useEffect(()=>{
+  
   if(!user || !id){
       return
   }
 
-
   (async()=>{
-
+    
     try{
 
      let response=await data.makeRequest({method:'get',url:`api/appointments/`+id,withToken:true, error: ``},0);
@@ -193,13 +196,9 @@ useEffect(()=>{
 },[data.updateTable])
 
 
-
-
 useEffect(()=>{
   (async()=>{
     try{
-
-
       let res=data._sendFilter(searchParams)
       if(res.scheduled_type_of_care=="requested"){
         setForm({...form,type_of_care:'requested'})
@@ -307,26 +306,22 @@ function getAvailableHours(item,type,date,selectedWeekDays,canceled_appointment_
 
 
 function isUrgentByLimit(hour,date){
+    if(!user) return
+    let {urgent_consultation_limit_duration_hours,urgent_consultation_limit_duration_minutes} = JSON.parse(user?.app_settings?.[0]?.value)
+    let selected_hour=hour
+    let selected_date=date
 
-  if(!user) return
-  let {urgent_consultation_limit_duration_hours,urgent_consultation_limit_duration_minutes} = JSON.parse(user?.app_settings?.[0]?.value)
-  let selected_hour=hour
-  let selected_date=date
-
-  if(selected_date && selected_hour && data.serverTime?.date){
-    const currentTime = new Date(`${data.serverTime?.date}T${formatTime(data.serverTime?.hour)}:00`);
-    const consultationTime = new Date(`${selected_date}T${formatTime(selected_hour)}:00`);
-    let {minutes} = data.getTimeDifference(currentTime,consultationTime)
-    let minutes_limit=(urgent_consultation_limit_duration_hours * 60) + urgent_consultation_limit_duration_minutes;
-    return minutes < minutes_limit
-  }
-
+    if(selected_date && selected_hour && data.serverTime?.date){
+      const currentTime = new Date(`${data.serverTime?.date}T${formatTime(data.serverTime?.hour)}:00`);
+      const consultationTime = new Date(`${selected_date}T${formatTime(selected_hour)}:00`);
+      let {minutes} = data.getTimeDifference(currentTime,consultationTime)
+      let minutes_limit=(urgent_consultation_limit_duration_hours * 60) + urgent_consultation_limit_duration_minutes;
+      return minutes < minutes_limit
+    }
 }
 
-
- async function SubmitForm(){
+async function SubmitForm(){
     setLoading(true)
-
     try{
       if(id){
         let r=await data.makeRequest({method:'post',url:`api/appointments/`+id,withToken:true,data:{
@@ -342,7 +337,7 @@ function isUrgentByLimit(hour,date){
 
       }else{
 
-        let response=await data.makeRequest({method:'post',url:`api/appointments`,withToken:true,data:{
+        await data.makeRequest({method:'post',url:`api/appointments`,withToken:true,data:{
 
           ...form,
           scheduled_date:form.type_of_care=="requested" ? form.consultation_date : form.scheduled_date,
@@ -350,6 +345,8 @@ function isUrgentByLimit(hour,date){
           patient_id:user?.data?.id
 
         }, error: ``},0);
+
+        data._showPopUp('basic_popup','request-will-be-sent-to-assistant-sent')
 
         localStorage.removeItem('saved_appointment_url')
   
@@ -359,20 +356,13 @@ function isUrgentByLimit(hour,date){
         setLoading(false)
         data._scrollToSection('center-content')
         setVerifiedInputs([])
-        setMessageBtnSee({onClick:()=>{
-                navigate('/appointment/'+response.id)
-                setItemToEditLoaded(false)
-                setMessage('')
-                if(document.querySelector('#center-content')) {
-                  document.querySelector('#center-content').scrollTop=0
-                }
-        }})
+       
         if(form.type_of_care=="urgent"){
           data._showPopUp('basic_popup','contact-us-if-delay')
         }
         setSelectedDoctor({...selectedDoctor,status:'not_selected'})
         data.handleLoaded('remove','appointments')
-        let new_params={scheduled_date:'',scheduled_doctor:'',scheduled_hours:'',scheduled_weekday:''}
+        let new_params={scheduled_date:'',scheduled_doctor:'',scheduled_hours:'',scheduled_weekday:'',canceled_appointment_id:'',reason_for_consultation:''}
         data._updateFilters(new_params,setSearchParams)
       }
 
@@ -464,8 +454,6 @@ function isUrgentByLimit(hour,date){
 
 
  useEffect(()=>{
-
-
     if(user?.role!="patient" && !id){
            navigate('/dashboard')
     }
@@ -488,11 +476,9 @@ function isUrgentByLimit(hour,date){
 
 
  useEffect(()=>{
-
   if(form.type_of_care=="requested"){
     setSelectedDoctor({status:'not_selected'})
   }
-
  },[form.type_of_care])
 
 
@@ -545,6 +531,8 @@ function isUrgentByLimit(hour,date){
 
 const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
+
+console.log({form})
 return (
 <div>  
    <div className=" absolute left-0 top-0 w-full">
@@ -639,19 +627,25 @@ return (
   bottomContent={(
     <div></div>
   )}
-  
 
   button={(
-    <div className={`mt-[40px] ${user?.role=="doctor" ? 'hidden':''}`}>
+    <div className={`mt-[40px]  ${user?.role=="doctor" || !form.type_of_care ? 'hidden':''}`}>
 
-     {(user?.data?.gender)  && <FormLayout.Button onClick={()=>{
-         if(id){
+     {(form.type_of_care=="requested" && !id) && <div className="flex items-center mb-3">
+           <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+               <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+            </svg>
+            <span className="ml-2">{t('common.request-will-be-sent-to-assistant')}</span>
+     </div>}
+ 
+     {(user?.data?.gender) && <FormLayout.Button onClick={()=>{
+         if(id || form.type_of_care=="requested"){
             SubmitForm()
          }else{
             data.setPaymentInfo(({...data.paymentInfo,step:1,...form,user_id:user?.id}))
          }
          
-      }} valid={valid} loading={loading} label={id ? t('common.update') :t('common.proceed-with-payment')}/>
+      }} valid={valid} loading={loading} label={id ? t('common.update') : form.type_of_care=="requested" ? t('common.send')  :  t('common.proceed-with-payment')}/>
    }
     </div>
   )}
@@ -709,7 +703,7 @@ return (
     },
     
     {name:t('common.doctor'),value:form.doctor?.name || t('common.dronline-team')},
-    {name:t('form.medical-specialty'),value:data._specialty_categories.filter(i=>i.id==form.medical_specialty)?.[0]?.[i18next.language+"_name"]},
+    {name:t('form.medical-specialty'),hide:form.type_of_care=="requested",value:data._specialty_categories.filter(i=>i.id==form.medical_specialty)?.[0]?.[i18next.language+"_name"]},
     {name:t('form.consultation-date'),value:`${form.consultation_date} (${t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})`,color:'#0b76ad'},
     {name:t('form.consultation-hour'),value:form.scheduled_hours,color:'#0b76ad'},
     {name:t('form.estimated-consultation-duration'),value:form.estimated_consultation_duration,hide:true},
@@ -770,7 +764,10 @@ return (
       onBlur={()=>setVerifiedInputs([...verified_inputs,'type_of_care'])}
       label={t('form.type-of-care')}
       onChange={(e)=>{
-        setForm({...form,type_of_care:e.target.value})
+        setForm({...form,type_of_care:e.target.value,
+          medical_specialty:e.target.value=="requested" ? null: form.medical_specialty,
+          scheduled_hours:e.target.value=="requested" ? null : scheduled_hours
+        })
       }}
       field={'type_of_care'}
       disabled={Boolean(id)}
@@ -831,7 +828,7 @@ return (
                 <div className="flex items-center max-md:flex-col max-md:items-start">
                     <span className="text-[13px]">{form.consultation_date} ({t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})</span>
                     <span className="mx-2 max-md:hidden">-</span>
-                    {form.scheduled_hours.split(',').map((i,_i)=>(
+                    {form.scheduled_hours?.split(',')?.map((i,_i)=>(
                       <span className="mr-1">{i}{_i!=form.scheduled_hours.split(',').length - 1 ? ',':''}</span>
                     ))}
                     <span className="mx-2 max-md:hidden">-</span>
@@ -851,7 +848,7 @@ return (
                   verified_inputs={verified_inputs} 
                   form={form} 
                   r={true} 
-                  hide={form.type_of_care!="requested" || id}
+                  hide={true}
                   selectOptions={
                     data._specialty_categories.map((i,_i)=>({
                        name:i[i18next.language+"_name"] ? i[i18next.language+"_name"] : i[i18next.language+"_name"],

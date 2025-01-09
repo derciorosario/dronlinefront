@@ -14,7 +14,7 @@ function BaiscTable({header,body,loaded,addPath,canAdd,notClickable,hide}) {
           <thead class="text-xs text-gray-700 bg-gray-50">
               <tr>
 
-                {header.filter(i=>i).map((i,_i)=>(
+                {header.filter(i=>i || i===undefined).map((i,_i)=>(
                     <th key={_i} scope="col" class="px-6 py-3">
                       {i}
                     </th>

@@ -34,27 +34,27 @@ export const AuthProvider = ({ children }) => {
   };
 
   async function logoutFromServer(){
-         try{
-           await makeRequest({method:'post',url:'api/logout',withToken:true, error: ``},0);
-         }catch(e){
-           console.log({e})
-           if(e.message=='Failed to fetch'){
-            return false
-           }
-         }
-         return true
-    }
+      try{
+          await makeRequest({method:'post',url:'api/logout',withToken:true, error: ``},0);
+        }catch(e){
+          console.log({e})
+          if(e.message=='Failed to fetch'){
+          return false
+          }
+        }
+        return true
+  }
 
-    const logout =  async() => {
+  const logout =  async() => {
 
       if(recoveringPassword) return
-     
+      
       if(!window.location.href.includes('/login')) {
           setIsLoading(true)
       }
 
 
-     if(localStorage.getItem('token')){
+      if(localStorage.getItem('token')){
       
       if(!await logoutFromServer()){
         toast.error(t('common.check-network'))
@@ -62,17 +62,17 @@ export const AuthProvider = ({ children }) => {
         return
       }
 
-     }
+      }
 
-     console.log('2:'+localStorage.getItem('token'))
+      console.log('2:'+localStorage.getItem('token'))
     
-     if(window.location.href.includes('/login')) {
+      if(window.location.href.includes('/login')) {
         localStorage.removeItem('token')
-     }
+      }
 
 
     if(!window.location.href.includes('/login') && pathname!="/" && pathname && !window.location.href.includes('/register')) {
-       window.location.href="/login"
+        window.location.href="/login"
     }
   };
 
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
 
 
 
-   async function check_user(){
+ async function check_user(){
        try{
           await makeRequest({method:'get',url:`api/user`, error: ``,withToken:true},0);
           return true
@@ -96,12 +96,11 @@ export const AuthProvider = ({ children }) => {
        }
    }
 
-    useEffect(() => {
-
+   useEffect(() => {
 
       const fetchUserData = async () => {
+
         try {
-         
           let response=await makeRequest({method:'get',url:`api/user`, error: ``,withToken:true},1);
           login(response, localStorage.getItem('token'));
           setAuth(true)
@@ -113,8 +112,6 @@ export const AuthProvider = ({ children }) => {
           logout()
         } 
       };
-
-
       
       if (isAuthenticated && !user && loading && token) {
         fetchUserData();

@@ -41,7 +41,12 @@ export default function CancelAppointmentModel({}) {
   }
 
   useEffect(()=>{
-      if(data.appointmentcancelationData?.consultation?.id){
+
+      if(data.appointmentcancelationData?.consultation?.type_of_care=="requested" && selectReason){
+         cancelRequestedConsultation()
+      }
+
+      if(data.appointmentcancelationData?.consultation?.id && data.appointmentcancelationData?.consultation?.type_of_care!="requested"){
           data.handleLoaded('remove',required_data)
           data._get(required_data)
           getAppointment()
@@ -59,10 +64,46 @@ export default function CancelAppointmentModel({}) {
   },[invoice,data._loaded])
 
 
+  async function cancelRequestedConsultation(){
+   
+    data.setIsLoading(true)
+    toast.remove()
+     
+     try{
+          await data.makeRequest({method:'post',url:`api/cancel-requested-appointment`,withToken:true,data:{
+            appointment_id:data.appointmentcancelationData.consultation.id,
+            cancelation_reason:selectReason
+          }, error: ``},0);
+          toast.success(t('messages.canceled-successfully'))
+          data.setAppointmentcancelationData({})
+          setShowReasons(false)
+          setSelectedReason(null)
+          data.setUpdateTable(Math.random())
+
+     }catch(e){
+
+        console.log({e})
+        data.setUpdateTable(Math.random())
+        setSelectedReason(null)
+
+        if(e.message==500){
+            toast.error(t('common.unexpected-error'))
+        }else  if(e.message=='Failed to fetch'){
+            toast.error(t('common.check-network'))
+        }else{
+            toast.error(t('common.unexpected-error'))
+        }
+
+     }
+
+     data.setIsLoading(false)
+    
+  }
+
+
  
 
   function getAmount(){
-
     
     if(invoice && data._loaded.includes('cancellation_taxes')){
        let price=parseFloat(invoice?.amount || 0)
@@ -92,15 +133,14 @@ export default function CancelAppointmentModel({}) {
 
 
 
+
   useEffect(()=>{
+    setShowReasons(data.appointmentcancelationData?.consultation?.type_of_care=="requested" ? true : false)
+  },[data.updateTable])
 
-    if(!data.setAppointmentcancelationData.consultation){
-          setShowReasons(false)
-          setSelectedReason(null)
-    }
 
-  },[data.setAppointmentcancelationData])
 
+  
  
 
   async function createRefund(){
@@ -232,9 +272,7 @@ export default function CancelAppointmentModel({}) {
                     {options.map(i=>(
                         <li  className={`${i.hide ? 'hidden':''}`} onClick={()=>{
                             handleOptions(i.action)
-                            //data.setIsLoading(true)
                         }}>
-                           
                             <label for="job-1" class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer  hover:text-gray-900 hover:bg-gray-100">                           
                                 <div class="block flex-1">
                                     <div class="w-full text-lg font-semibold">{i.name}</div>

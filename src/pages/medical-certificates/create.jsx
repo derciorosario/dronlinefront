@@ -62,7 +62,6 @@ const [form,setForm]=useState(initial_form)
     let v=true
 
     if(
-       !form.disease ||
        !form.date_of_leave
     ){
       v=false
@@ -284,7 +283,7 @@ const [form,setForm]=useState(initial_form)
             advancedActions={{hide:!form.id,id:form.id, items:[
               {hide:form.status=="approved" || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.medical_certificates?.includes('approve')) ),name:t('common.approve'),onClick:()=>{handleItems({status:'approved',id:form.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
               {hide:form.status=="rejected" || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.medical_certificates?.includes('reject')) ),name:t('common.reject'),onClick:()=>{handleItems({status:'rejected',id:form.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>)}
-            ] }}
+            ]}}
           
             topBarContent={
                 (<button onClick={()=>setShowComment(true)} type="button" class={`text-white hidden ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
@@ -357,57 +356,38 @@ const [form,setForm]=useState(initial_form)
                </div>
             )}
             >
-
-
-
-                    <FormCard  hide={(itemToShow?.action!="update" && !id) || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
-                        {name:'ID',value:form.id},
-                        {name:t('common.date_of_leave'),value:form.date_of_leave},
-                        {name:t('common.disease'),value:form.disease},
-                        {name:t('form.medical-specialty'),value:data._specialty_categories.filter(i=>i.id==form.appointment?.medical_specialty)[0]?.[`${i18next.language}_name`]},
-                        {name:t('common.details'),value:form.details},
-                    ]}/>
- 
-                 
-                   <FormLayout.Input 
-                    verified_inputs={verified_inputs} 
-                    form={form} 
-                    r={true} 
-                    hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                    type={'date'}
-                    onBlur={() => setVerifiedInputs([...verified_inputs, 'date_of_leave'])} 
-                    label={t('common.date_of_leave')} 
-                    onChange={(e) => setForm({...form, date_of_leave: e.target.value})} 
-                    field={'date_of_leave'} 
-                    value={form.date_of_leave}
-                  />
-
-               <FormLayout.Input 
-                  verified_inputs={verified_inputs} 
-                  form={form} 
-                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                  onBlur={() => setVerifiedInputs([...verified_inputs, 'disease'])} 
-                  label={t('common.disease')} 
-                  onChange={(e) => setForm({...form, disease: e.target.value})} 
-                  field={'disease'} 
-                  value={form.disease}
-                />
-                 
-
-               <FormLayout.Input 
-                  verified_inputs={verified_inputs} 
-                  form={form} 
-                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                  textarea={true}
-                  onBlur={() => setVerifiedInputs([...verified_inputs, 'details'])} 
-                  label={t('common.details')} 
-                  onChange={(e) => setForm({...form, details: e.target.value})} 
-                  field={'details'} 
-                  value={form.details}
-                />
               
+            <FormCard  hide={(itemToShow?.action!="update" && !id) || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
+                {name:'ID',value:form.id},
+                {name:t('common.date_of_leave'),value:form.date_of_leave},
+                {name:t('common.disease'),value:form.disease},
+                {name:t('form.medical-specialty'),value:data._specialty_categories.filter(i=>i.id==form.appointment?.medical_specialty)[0]?.[`${i18next.language}_name`]},
+                {name:t('common.details'),value:form.details},
+            ]}/>
+            
+            <FormLayout.Input 
+              verified_inputs={verified_inputs} 
+              form={form} 
+              r={true} 
+              hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+              type={'date'}
+              onBlur={() => setVerifiedInputs([...verified_inputs, 'date_of_leave'])} 
+              label={t('common.date_of_leave')} 
+              onChange={(e) => setForm({...form, date_of_leave: e.target.value})} 
+              field={'date_of_leave'} 
+              value={form.date_of_leave}
+            />
 
-
+            <FormLayout.Input 
+              verified_inputs={verified_inputs} 
+              form={form} 
+              hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+              onBlur={() => setVerifiedInputs([...verified_inputs, 'disease'])} 
+              label={t('common.disease')} 
+              onChange={(e) => setForm({...form, disease: e.target.value})} 
+              field={'disease'} 
+              value={form.disease}
+            />
 
             </FormLayout>
 

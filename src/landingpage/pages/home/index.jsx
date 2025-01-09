@@ -98,10 +98,9 @@ function App() {
   function serviceImages(_i,size,fill){
     return (
         <>
-          {_i==0 && <svg xmlns="http://www.w3.org/2000/svg"  height={size} viewBox="0 -960 960 960"  fill={fill}><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>}
-          {_i==1 && <svg xmlns="http://www.w3.org/2000/svg"  height={size} viewBox="0 -960 960 960"  fill={fill}><path d="M80-600v-120q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v120h-80v-120H160v120H80Zm80 440q-33 0-56.5-23.5T80-240v-120h80v120h640v-120h80v120q0 33-23.5 56.5T800-160H160Zm240-120q11 0 21-5.5t15-16.5l124-248 44 88q5 11 15 16.5t21 5.5h240v-80H665l-69-138q-5-11-15-15.5t-21-4.5q-11 0-21 4.5T524-658L400-410l-44-88q-5-11-15-16.5t-21-5.5H80v80h215l69 138q5 11 15 16.5t21 5.5Zm80-200Z"/></svg>}
-          {_i==2 &&  <svg xmlns="http://www.w3.org/2000/svg" height={size} viewBox="0 -960 960 960"  fill={fill}><path d="M200-160v-80h64l79-263q8-26 29.5-41.5T420-560h120q26 0 47.5 15.5T617-503l79 263h64v80H200Zm148-80h264l-72-240H420l-72 240Zm92-400v-200h80v200h-80Zm238 99-57-57 142-141 56 56-141 142Zm42 181v-80h200v80H720ZM282-541 141-683l56-56 142 141-57 57ZM40-360v-80h200v80H40Zm440 120Z"/></svg>}
-          {_i==3 &&  <svg xmlns="http://www.w3.org/2000/svg" height={size} viewBox="0 -960 960 960"  fill={fill}><path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>}
+           {_i==0 && <svg xmlns="http://www.w3.org/2000/svg"  height={size} viewBox="0 -960 960 960"  fill={fill}><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>}
+           {_i==1 &&  <svg xmlns="http://www.w3.org/2000/svg" height={size} viewBox="0 -960 960 960"  fill={fill}><path d="M200-160v-80h64l79-263q8-26 29.5-41.5T420-560h120q26 0 47.5 15.5T617-503l79 263h64v80H200Zm148-80h264l-72-240H420l-72 240Zm92-400v-200h80v200h-80Zm238 99-57-57 142-141 56 56-141 142Zm42 181v-80h200v80H720ZM282-541 141-683l56-56 142 141-57 57ZM40-360v-80h200v80H40Zm440 120Z"/></svg>}
+           {_i==2 &&  <svg xmlns="http://www.w3.org/2000/svg" height={size} viewBox="0 -960 960 960"  fill={fill}><path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>}
         </>
     )
   }
@@ -121,7 +120,7 @@ function App() {
 
     setServiceItems([
       {name:t('common.service-1'),desc:t('common.service-1-desc')},
-      {name:t('common.service-2'),desc:t('common.service-2-desc')},
+     // {name:t('common.service-2'),desc:t('common.service-2-desc')},
       {name:t('common.service-3'),desc:t('common.service-3-desc')},
       {name:t('common.service-4'),desc:t('common.service-4-desc')}
     ])

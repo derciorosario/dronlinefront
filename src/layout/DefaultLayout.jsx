@@ -26,6 +26,7 @@ import DownloadProgress from '../components/Loaders/download-progress.jsx'
 import SupportBadge from '../components/Badges/support-badge.jsx'
 import ChangePasswordModal from '../components/modals/change-password.jsx'
 import UserWaitingInTheRoom from '../components/modals/user-waiting-in-meeting-room.jsx'
+import SelectExams from '../components/modals/select-exams.jsx'
 
 function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate,hideSupportBadges,startDate,endDate,setStartDate,setEndDate,hideSidebar,headerLeftContent}) {
     
@@ -118,7 +119,7 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
                  }}: {}}
                 
               message={
-                 data._openPopUps.basic_popup=="printing-images-missing" ? t('common.printing-images-missing') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('messages.you-have-saved-appointment') : data._openPopUps.basic_popup=="conclude_patient_info" ?
+                data._openPopUps.basic_popup=="request-will-be-sent-to-assistant-sent" ? t('messages.request-will-be-sent-to-assistant-sent') :   data._openPopUps.basic_popup=="printing-images-missing" ? t('common.printing-images-missing') : data._openPopUps.basic_popup=="you-have-saved-appointment" ? t('messages.you-have-saved-appointment') : data._openPopUps.basic_popup=="conclude_patient_info" ?
                  t('messages.conclude_patient_info'): data._openPopUps.basic_popup=="contact-us-if-delay" ? t('messages.contact-us-if-delay') : data._openPopUps.basic_popup=="login-to-proceed-with-consultation" ? t('messages.login-to-proceed-with-consultation')  : ''} />
 
               {!hide && <div className="h-full">

@@ -183,3 +183,9 @@ iframe{
   transform: rotate(180deg);
 }
 
+
+._watermark{
+   transform: rotate(-45deg) translateX(-50%);
+   left: 50%;
+}
+

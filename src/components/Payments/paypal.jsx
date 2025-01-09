@@ -31,6 +31,7 @@ const PayPal = ({info}) => {
 
  
   useEffect(() => {
+       console.log({info})
        _dataRef.current={
          server_url:d.APP_BASE_URL,
           ...info,

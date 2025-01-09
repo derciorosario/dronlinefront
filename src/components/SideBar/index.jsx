@@ -20,6 +20,7 @@ import StatsIcon from '../../assets/images/menu-icons/stats.svg'
 import SpecialtyCategoriesIcon from '../../assets/images/menu-icons/specialty-categories.svg'
 import MoreIcon from '../../assets/images/menu-icons/more.svg'
 import MedicalCerificateIcon from '../../assets/images/menu-icons/medical-certificate.svg'
+import AvailabilityIcon from '../../assets/images/menu-icons/availability.svg'
 
 import { t } from 'i18next';
 import { useAuth } from '../../contexts/AuthContext';
@@ -77,7 +78,6 @@ function SideBar({hideSidebar}) {
         {name:t('common.duration-logs'),path:'/user-activities',paths:['/user-activities'],manager_access:{name:'stats',per:['read']}},
       ],access:['admin'],manager_access:{name:'stats',per:['read']}},
      
-     
      {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient'],showInMobile:true},
       
      //{name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
@@ -87,7 +87,6 @@ function SideBar({hideSidebar}) {
       {name:t('common.refunds'),path:'/refunds',paths:['/refunds'],manager_access:true},
      ],access:['admin','patient'],manager_access:{name:'payment_management',per:['read','reject','approve']},showInMobile:true},
     
-
      {name:t('common.medical-certificates'),path:'/medical-certificates',paths:['/medical-certificates','medical-certificate/:id'], field:'medical-certificate',icon:'medical_certificate',access:['admin','manager','patient','doctor'],manager_access:{name:'medical_certificates',per:['read','reject','approve']}},
 
      {name:'Feedback',path:'/app-feedback',field:'app-feedback',icon:'feedback',sub_menus:[
@@ -100,10 +99,11 @@ function SideBar({hideSidebar}) {
       {name:t('common.app-settings'),path:'/app-settings',paths:['app-settings'],manager_access:{name:'app_settings',per:['update']}},
      ],access:['admin'],manager_access:{name:'app_settings',per:['read']}},
 
-      {name:t('menu.settings'),path:'/profile',field:'settings',icon:'settings',sub_menus:[
+     {name:t('menu.consultation-availability'),path:'/consultation-availability',paths:['consultation-availability'],field:'consultation-availability',icon:'consultation_availability',access:['doctor']},
+     
+     {name:t('menu.settings'),path:'/profile',field:'settings',icon:'settings',sub_menus:[
         {name:t('menu.profile'),path:'/profile',paths:['profile'],access:['all'],manager_access:true},
-        {name:t('menu.consultation-availability'),path:'/consultation-availability',paths:['consultation-availability'],access:['doctor']}, //manager_access:{name:'doctor_availability',per:['read','update']}
-      ],access:['patient','doctor','admin'],manager_access:true},
+     ],access:['patient','doctor','admin'],manager_access:true},
       
       {name:t('menu.more'),path:'/more',paths:['/more'],field:'more',icon:'more',access:['all'],manager_access:true,showInMobile:true},
   ]
@@ -129,7 +129,8 @@ function SideBar({hideSidebar}) {
       logs:StatsIcon,
       medical_certificate:MedicalCerificateIcon,
       specialty_categories:SpecialtyCategoriesIcon,
-      more:MoreIcon
+      more:MoreIcon,
+      consultation_availability:AvailabilityIcon
 
   }
 

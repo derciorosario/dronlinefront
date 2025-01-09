@@ -140,7 +140,7 @@ useEffect(()=>{
             <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
         </div>}
 
-        <DefaultLayout hide={hideLayout} pageContent={{title:t('common.medical-certificates'),desc:itemToShow ? t('titles.medical-certificates') : null}}>   
+        <DefaultLayout hide={hideLayout} pageContent={{title:t('common.medical-certificates'),desc:itemToShow ? t('titles.previous-medical-certificates') : null}}>   
        
         <div className={`flex items-center mb-4 w-full flex-wrap md:gap-2 ${!data._loaded.includes('medical_certificates') ? 'hidden':''}`}>
           {['pending','approved','rejected'].map((i,_i)=>(
@@ -178,7 +178,7 @@ useEffect(()=>{
                           deleteFunction:'default',
                           deleteUrl:'api/delete/medical-certificates'}
                          } items={data._medical_certificates?.certificates?.data || []}/>,
-                         selectedTab=="approved" ? '.' : null,
+                         selectedTab=="approved" ? undefined : null,
                          'ID',
                           t('common.disease'),
                           t('common.date_of_leave'),
@@ -210,7 +210,7 @@ useEffect(()=>{
                                       i,
                                       appointment:i.appointment,
                                       title: t('menu.medical-certificate'),
-                                      from:'medical-certificates',
+                                      from:'medical-certificate',
                                       content: [
                                          [
                                           {...i,disease:i.disease,date_of_leave:i.date_of_leave,medical_specialty:data._specialty_categories.filter(f=>f.id==i.appointment.medical_specialty)[0]?.[`${i18next.language}_name`]},

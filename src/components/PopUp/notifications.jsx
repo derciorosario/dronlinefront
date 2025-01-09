@@ -115,6 +115,7 @@ function getMessageContent(i){
                     setTimeout(()=>{
                         data._closeAllPopUps()
                     },100)
+                    
               }} type="button" class="text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-full mb-2 mt-1 text-sm px-3 py-1 text-center inline-flex items-center me-2">
                                             <div>{btnLinkText}</div>
                 </button>

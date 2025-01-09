@@ -217,7 +217,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                 <BaiscTable hide={(data._patient_dashboard?.recentItems?.exams || []).length==0}  canAdd={false} loaded={data._loaded.includes('patient_dashboard')} header={[
                        
                       
-                         '.',
+                         undefined,
                          'ID',
                           t('form.requested-on'),
                           t('form.clinical-information'),
@@ -237,10 +237,11 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                       patient: i.patient,
                                       doctor:i.doctor,
                                       title: t('menu.exam'),
-
+                                      from:'exam',
+                                      i,
                                       content: [
                                          [{name:t('form.clinical-information'),value:i.clinical_information},
-                                          {name:t('form.requested-exams'),value:i.requested_exams},
+                                          {name:t('form.requested-exams'),value:i.exam_items.map(g=>g.name).join(', ')},
                                           {name:t('form.results-report'),value:i.results_report},
                                           {name:t('form.requested-on'),value:i.requested_at}
                                         ]
@@ -285,7 +286,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
 
                 
                 <BaiscTable  canAdd={false} hide={(data._patient_dashboard?.recentItems?.medicalPrescriptions || []).length==0} loaded={data._loaded.includes('patient_dashboard')} header={[
-                            '.',
+                             undefined,
                             'ID',
                              t('form.medication-names'),
                            ]
@@ -300,9 +301,11 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                           patient: i.patient,
                                           doctor:i.doctor,
                                           title: t('menu.medical-prescription'),
+                                          from:'medical-prescription',
+                                          i,
                                           content: 
                                              i.medical_prescription_items.map(f=>[
-                                              {name:t('form.medication'),value:`${t('form.medication-name')}:${f.name ? `${_medications.filter(g=>g.ITEM==f.name)?.[0]?.name} - ${_medications.filter(g=>g.ITEM==f.name)?.[0]?.active_substance}` : f.custom_name}(${f.prescribed_quantity});   ${t('form.dosage')}:${f.dosage};  ${t('form.prescribed-quantity')}:${f.prescribed_quantity}`},
+                                              {name:t('form.medication'),value:`${t('form.medication-name')}:${f.name ? `${_medications.filter(g=>g.ITEM==f.name)?.[0]?.name}` : f.custom_name}(${f.prescribed_quantity}); ${t('form.dosage')}:${f.dosage};  ${t('form.prescribed-quantity')}:${f.prescribed_quantity}`},
                                               {name:t('form.treatment-duration'),value:f.treatment_duration},
                                               {name:t('form.pharmaceutical-form'),value:f.pharmaceutical_form}
                                              ])
@@ -314,7 +317,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
                                    </BaiscTable.Td>
                                    <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
-                                   <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name} - ${_medications.filter(f=>f.ITEM==i.name)?.[0]?.active_substance}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')}</BaiscTable.Td>
+                                   <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')}</BaiscTable.Td>
                              
                                </BaiscTable.Tr>
                            ))}
@@ -339,7 +342,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
 
                 
                 <BaiscTable  canAdd={false} hide={(data._patient_dashboard?.recentItems?.medicalCertificates || []).length==0} loaded={data._loaded.includes('patient_dashboard')} header={[
-                            '.',
+                            undefined,
                             'ID',
                             t('common.disease'),
                             t('common.date_of_leave'),
@@ -362,7 +365,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                     appointment:i.appointment,
                                     i,
                                     title: t('menu.medical-certificate'),
-                                    from:'medical-certificates',
+                                    from:'medical-certificate',
                                     content: [
                                        [
                                         {...i,disease:i.disease,date_of_leave:i.date_of_leave,medical_specialty:data._specialty_categories.filter(f=>f.id==i.appointment?.medical_specialty)[0]?.[`${i18next.language}_name`]},
@@ -407,8 +410,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
 
                 
                 <BaiscTable canAdd={false} hide={(data._patient_dashboard?.recentItems?.clinicalDiaries || []).length==0} loaded={data._loaded.includes('patient_dashboard')} header={[
-                        
-                         '.',
+                          undefined,
                          'ID',
                           t('form.main-complaint'),
                           t('form.current-illness-history'),
@@ -437,6 +439,8 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                       patient: i.patient,
                                       doctor:i.doctor,
                                       title: t('menu.clinical-diary'),
+                                      from:'clinical-diary',
+                                      i,
                                       content: [
                                           [{name: t('form.main-complaint'), value: i.main_complaint},
                                           {name: t('form.current-illness-history'), value: i.current_illness_history},

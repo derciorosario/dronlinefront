@@ -431,9 +431,44 @@ export const HomeDataProvider = ({ children }) => {
     xhr.send();
   };
 
-    
+  function encodeBase64Multiple(url, times=1) {
+    let encoded = url;
+    for (let i = 0; i < times; i++) {
+        encoded = btoa(encoded);
+    }
+    return encoded;
+  }
+
+  function decodeBase64Multiple(encoded, times=1) {
+    let decoded = encoded;
+    for (let i = 0; i < times; i++) {
+        decoded = atob(decoded);
+    }
+    return decoded;
+  }
+
+
+  function getDocumentLetterCodeFrom(from){
+    if(from=="medical-prescription"){
+       return 'p'
+    }
+    if(from=="medical-certificate"){
+       return 'a'
+    }
+    if(from=="exam"){
+     return 'e'
+    }
+    if(from=="clinical-diary"){
+     return 'd'
+    }
+    return ''
+}
+
     const value = {
+      getDocumentLetterCodeFrom,
       showFilters,
+      encodeBase64Multiple,
+      decodeBase64Multiple,
       setShowFilters,
       handleSelectDoctorAvailability,
       selectedDoctors,

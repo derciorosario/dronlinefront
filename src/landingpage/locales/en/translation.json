@@ -39,7 +39,7 @@
 },
 "appointment-cancelation": {
     "t": "Cancellation Policy",
-    "p-1": "If you wish to cancel your video consultation before it is conducted, you can do so up to 3 hours before its start. To do so, please send us an email at info@dronlinemz.com with your details, including full name, patient number, and the scheduled date and time of the consultation.",
+    "p-1": "If you wish to cancel your video consultation before it is conducted, you can do so up to 3 hours before its start. To do so, please send us an email at dronline@dronlinemz.com with your details, including full name, patient number, and the scheduled date and time of the consultation.",
     "p-2": "Please note that in most cases, refunds are issued using the same method you used for payment. Refunds are processed within a maximum of 3 business days after your request.",
     "p-3": "It is important to note that urgent consultations are non-refundable.",
     "p-4": "If, for any reason due to your responsibility, you are unable to attend the video consultation without expressing your intent to cancel, Dr. Online will not issue a refund for the amount paid."
@@ -71,11 +71,11 @@
     "t-10": "Contacts",
     "p-10": "For questions or additional information, contact us at dronline@dronlinemz.com during office hours, Monday to Friday, from 8 am to 4 pm."
 },
-"medical-certification-t-1": "I, {{doctor_name}}, a doctor providing service at Dr. Online, declare under my honor that {{patient_name}}, holder of Identity Card No. {{identification_number}}, issued by the identity archive of {{place_of_issuance_of_the_identity_card}}, on {{date_of_issuance_of_the_identity_card}}, was observed by me today in the consultation (or Service) of {{medical_specialty}}, having determined that they will likely be unable to attend work until {{date_of_leave}}.",
+"medical-certification-t-1": "I, {{doctor_name}}, a doctor providing service at Dr. Online, declare under my honor that {{patient_name}}, holder of Identity Card No. {{identification_number}}, issued by the identity archive of {{place_of_issuance_of_the_identity_card}}, on {{date_of_issuance_of_the_identity_card}}, was observed by me today in the consultation of {{medical_specialty}}, having determined that they will likely be unable to attend work until {{date_of_leave}}.",
   "medical-certification-t-2": "At the express request of the patient, I declare that they suffer from {{disease}}.",
   "medical-certification-t-3": "I recognize the above signature as belonging to an entity authorized to issue this certificate.",
   "medical-certification-t-4": "The Secretary Chief",
-  "medical-certification-t-5": "This certificate is only valid if the signature of the Secretary Chief is made over a fiscal stamp of 15.00MT and authenticated with the embossed seal in use at the Health Unit.",
+  "medical-certification-t-5": "This certificate is only valid if the signature of the Secretary Chief is made over",
     "menu": {
         "home": "Home",
         "more":"More",
@@ -437,9 +437,19 @@
         "receiver-invalid": "Invalid receiver",
         "insufficient-balance": "Insufficient balance",
         "msisdn-invalid": "Invalid MSISDN",
-        "language-code-invalid": "Invalid language code"
+        "language-code-invalid": "Invalid language code",
+        "request-will-be-sent-to-assistant-sent":"The service request has been sent to the administrative assistant. Please wait for our response. If you have any questions, please contact us at: +258 861024024.",
+        "medications-creation-details":"(Below is the complete list of prescribed medications on {{date}} at {{hour}})"
     },
     "common":{
+           "none-added":"None added",
+           "request-will-be-sent-to-assistant":"The service request will be sent to the administrative assistant.",
+           "medications":"Medications",
+           "code-verification":"Code verification",
+           "quantity-to-dispense":"Quantity to dispense",
+           "route_of_administration":"Route of administration",
+           "duration_of_treatment":"Duration of treatment",
+           "additional-recommendations":"Adicional recommendations",
            "upcoming-consultations":"Upcoming appointments",
            "partners":"Partners",
            "file-not-allowed":"File not allowed",

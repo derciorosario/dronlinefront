@@ -27,8 +27,6 @@ function App() {
   const [search,setSearch]=useState('')
 
 
-
-
   useEffect(()=>{ 
     if(!user) return
     data._get(required_data,{doctor_requests:{name:search,page:currentPage}}) 

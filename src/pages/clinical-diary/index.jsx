@@ -66,7 +66,7 @@ function globalOnclick(id){
  
   return (
    
-         <DefaultLayout hide={hideLayout} pageContent={{title:t('menu.clinical-diary'),desc:t('titles.clinical-diary'),btn:{onClick:(e)=>{
+         <DefaultLayout hide={hideLayout} pageContent={{title:t('menu.clinical-diary'),desc:t('titles.previous-clinical-diary'),btn:{onClick:(e)=>{
                  
           navigate('/add-doctors')
 
@@ -77,12 +77,12 @@ function globalOnclick(id){
 
            <div className="flex-1">
           
-           <BasicSearch loaded={data._loaded.includes('clinical_diary')} hideFilters={true} search={search}   printAction={()=>{
-
+           <BasicSearch loaded={data._loaded.includes('clinical_diary')} hideFilters={true} search={search}   __printAction={()=>{
                 data.setSinglePrintContent({
                     patient: itemToShow.appointment.patient,
                     doctor:itemToShow.appointment.doctor,
                     title: t('menu.clinical-diary'),
+                    from:'clinical-diary',
                     content: (data._clinical_diary?.data || []).map(i=>{
                       return [
                         {name: t('form.main-complaint'), value: i.main_complaint},
@@ -112,7 +112,7 @@ function globalOnclick(id){
                           deleteFunction:'default',
                           deleteUrl:'api/delete/clinical-diary'}
                          } items={data._clinical_diary?.data || []}/>,
-                         '.',
+                         undefined,
                          'ID',
                           t('form.main-complaint'),
                           t('form.current-illness-history'),
@@ -146,9 +146,11 @@ function globalOnclick(id){
                                     data.setSinglePrintContent({
                                       patient: itemToShow.appointment.patient,
                                       doctor:itemToShow.appointment.doctor,
+                                      from:'clinical-diary',
+                                      i,
                                       title: t('menu.clinical-diary'),
                                       content: [
-                                          [{name: t('form.main-complaint'), value: i.main_complaint},
+                                         [{name: t('form.main-complaint'), value: i.main_complaint},
                                           {name: t('form.current-illness-history'), value: i.current_illness_history},
                                           {name: t('form.past-medical-history'), value: i.past_medical_history},
                                           {name: t('form.psychosocial-history'), value: i.psychosocial_history},

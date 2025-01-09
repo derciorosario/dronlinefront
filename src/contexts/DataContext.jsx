@@ -35,7 +35,8 @@ export const DataProvider = ({ children }) => {
       cancel_appointment:false,
       mobile_menu:false,
       lang:false,
-      appointment_messages:false
+      appointment_messages:false,
+      select_exams:false,
     }
     let not_closing_popups=[
       'support_messages'
@@ -844,11 +845,47 @@ function isSetAsUrgentHour(hour,AppSettings){
 
 
 
+    function encodeBase64Multiple(url, times=1) {
+      let encoded = url;
+      for (let i = 0; i < times; i++) {
+          encoded = btoa(encoded);
+      }
+      return encoded;
+    }
+ 
+    function decodeBase64Multiple(encoded, times=1) {
+      let decoded = encoded;
+      for (let i = 0; i < times; i++) {
+          decoded = atob(decoded);
+      }
+      return decoded;
+    }
+
+    function getDocumentLetterCodeFrom(from){
+         if(from=="medical-prescription"){
+            return 'p'
+         }
+         if(from=="medical-certificate"){
+            return 'a'
+         }
+         if(from=="exam"){
+          return 'e'
+         }
+         if(from=="clinical-diary"){
+          return 'd'
+         }
+         return ''
+    }
+    
+
     useEffect(()=>{
       setSelectedTableItems([])
     },[updateTable])
 
     const value = {
+      getDocumentLetterCodeFrom,
+      encodeBase64Multiple,
+      decodeBase64Multiple,
       env,
       lastJoinMeetingID,
       setLastJoinMeetingID,

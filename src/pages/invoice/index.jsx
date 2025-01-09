@@ -235,16 +235,10 @@ if(loading || !appSettings){
            </div>
      </div>
 
-                        <div className="hidden">
-                           {/***8<QRCodeGenerator link={`${data.server_url}/api/v1/invoice/`+invoice_number} /> */}
-                        </div>
-
-                       
-
+                        
 
                         <div className="flex justify-center mt-40"><span className="mr-3">{t('invoice.generated-in')}:</span><label>{serverTime?.date} {serverTime?.hour} </label></div>
                         <div className="w-full text-[0.8rem] flex-wrap max-md:text-[0.7rem] flex justify-between mt-10 border-t border-t-gray-200 py-3">
-                                <span>{appSettings?.address}</span>
                                 <span>{appSettings?.name}</span>
                                 <div className="flex max-sm:flex-col">
                                     <span>{appSettings?.email}</span>

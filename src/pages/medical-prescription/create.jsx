@@ -50,7 +50,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
 
   let initial_form={
     medical_prescription_items:[
-      {id:Math.random(),name:'',dosage:'',pharmaceutical_form:'',treatment_duration:'',prescribed_quantity:'',dosing_instructions:''}
+      {id:Math.random(),name:'',dosage:'',pharmaceutical_form:'',treatment_duration:'',prescribed_quantity:'',dosing_instructions:'',route_of_administration:''}
     ],
     uploaded_files:[],
     comments:[]
@@ -67,13 +67,13 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
     let v=true
 
     if(
-       form.medical_prescription_items.some(i=>(!i.name && !i.custom_name) || !i.prescribed_quantity || !i.treatment_duration || !i.dosage || !i.pharmaceutical_form) 
+       form.medical_prescription_items.some(i=>(!i.name && !i.custom_name) || !i.prescribed_quantity || !i.treatment_duration || !i.dosage || !i.pharmaceutical_form || !i.treatment_duration  || !i.route_of_administration || !i.dosing_instructions) 
     ){
       v=false
     }
 
     setValid(v)
-    console.log({form})
+   // console.log({form})
 
  },[form])
 
@@ -277,7 +277,6 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                             </div>}
 
                            <div className="w-full">
-
                            <div className={`w-[360px] ${cannotEdit ? 'opacity-40 pointer-events-none':''}`}>
                                   <SearchInput canAdd={false} r={true} placeholder={t('form.medication-name')} id={i.name}  label={t('form.medication-name')} loaded={true}
                                    res={(id) => {
@@ -295,7 +294,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                                     return i.id==f.id ? {...f,custom_name:input,name:null} : f
                                    })}))}             
                                    
-                                   items={_medications.map(i=>({...i,id:i.ITEM,name:`${i.name} (${i.active_substance})`}))}/>
+                                   items={_medications.map(i=>({...i,id:i.ITEM,name:`${i.name}`}))}/>
 
                             </div>
                           </div>
@@ -318,21 +317,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                               value={i.name}
                             />
 
-                            <FormLayout.Input 
-                              verified_inputs={verified_inputs} 
-                              form={form} 
-                              width={'220px'}
-                              r={true} 
-                              onBlur={() => setVerifiedInputs([...verified_inputs, 'dosage'+i.id])} 
-                              label={t('form.dosage')} 
-                              onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
-                                return i.id==f.id ? {...f,dosage:e.target.value} : f
-                              })})} 
-                              disabled={cannotEdit}
-                              ignoreVilidation={true}
-                              field={'dosage'+i.id} 
-                              value={i.dosage}
-                            />
+                        
 
                             <FormLayout.Input 
                               verified_inputs={verified_inputs} 
@@ -350,6 +335,42 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                               value={i.pharmaceutical_form}
                             />
 
+
+                           <FormLayout.Input 
+                              verified_inputs={verified_inputs} 
+                              form={form} 
+                              width={'220px'}
+                              r={true} 
+                              onBlur={() => setVerifiedInputs([...verified_inputs, 'dosage'+i.id])} 
+                              label={t('form.dosage')} 
+                              onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
+                                return i.id==f.id ? {...f,dosage:e.target.value} : f
+                              })})} 
+                              disabled={cannotEdit}
+                              ignoreVilidation={true}
+                              field={'dosage'+i.id} 
+                              value={i.dosage}
+                            />
+
+                            <FormLayout.Input 
+                              verified_inputs={verified_inputs} 
+                              form={form} 
+                              width={'220px'}
+                              r={true} 
+                              onBlur={() => setVerifiedInputs([...verified_inputs, 'route_of_administration'+i.id])} 
+                              label={t('common.route_of_administration')} 
+                              onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
+                                return i.id==f.id ? {...f,route_of_administration:e.target.value} : f
+                              })})} 
+                              disabled={cannotEdit}
+                              ignoreVilidation={true}
+                              field={'route_of_administration'+i.id} 
+                              value={i.route_of_administration}
+                            />
+
+
+   
+
                             <FormLayout.Input 
                               verified_inputs={verified_inputs} 
                               form={form} 
@@ -365,14 +386,15 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                               field={'treatment-duration'+i.id} 
                               value={i.treatment_duration}
                             />
+
                              <FormLayout.Input 
                               verified_inputs={verified_inputs} 
                               form={form} 
                               width={'220px'}
-                              ignoreVilidation={true}
+                              ignoreVilidation={true}s
                               r={true}
                               onBlur={() => setVerifiedInputs([...verified_inputs, 'prescribed_quantity'+i.id])} 
-                              label={t('form.quantity')} 
+                              label={t('common.quantity-to-dispense')} 
                               onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
                                 return i.id==f.id ? {...f,prescribed_quantity:e.target.value.replace(/[^0-9]/g, '')} : f
                               })})} 
@@ -380,8 +402,9 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                               field={'prescribed_quantity'+i.id} 
                               value={i.prescribed_quantity}
                             />
-                            
-                            <div className="w-[300px]">
+
+
+                           <div className="w-[300px]">
                               <FormLayout.Input 
                                 verified_inputs={verified_inputs} 
                                 form={form} 
@@ -389,6 +412,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                                 ignoreVilidation={true}
                                 textarea={true}
                                 height={'100%'}
+                                r={true}
                                 inputStyle={{height:60}}
                                 onBlur={() => setVerifiedInputs([...verified_inputs, 'dosing-instructions'+i.id])} 
                                 label={t('form.dosing-instructions')} 
@@ -400,7 +424,26 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                               />
                             </div>
 
-                       
+
+                            <div className="w-[300px]">
+                              <FormLayout.Input 
+                                verified_inputs={verified_inputs} 
+                                form={form} 
+                                disabled={cannotEdit}
+                                ignoreVilidation={true}
+                                textarea={true}
+                                height={'100%'}
+                                inputStyle={{height:60}}
+                                onBlur={() => setVerifiedInputs([...verified_inputs, 'recommendations'+i.id])} 
+                                label={t('common.additional-recommendations')} 
+                                onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
+                                  return i.id==f.id ? {...f,recommendations:e.target.value} : f
+                                })})} 
+                                field={'recommendations'+i.id} 
+                                value={i.recommendations}
+                              />
+                            </div>
+
                           </div>
                       ))}
                   </div>

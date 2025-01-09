@@ -35,8 +35,6 @@ export default function ZoomMeeting() {
     return minutes
   }
 
-
-  
   /**
      useEffect(()=>{
           if(data.waitingParticipantInfo?.id==data.lastJoinMeetingID && data.waitingParticipantInfo?.id){
@@ -46,14 +44,9 @@ export default function ZoomMeeting() {
 
    */
 
-
-
   useEffect(() => {
     
       const interval = setInterval(() => {
-
-
-
         if(user?.role=="patient" && sessionName) {
             data.handleZoomMeetings('check',sessionName)
         }
@@ -393,7 +386,7 @@ export default function ZoomMeeting() {
                 </div>}
 
                  <div className={`flex  ${(itemToEditLoaded && !hideConsultationDetails && img1Loaded) ? '':'pointer-events-none opacity-0 fixed'} justify-center w-full`}>
-                    <div class={`mt-6 w-[800px] bg-white md:flex shadow py-5 px-4 rounded-[0.5rem]`}> 
+                    <div class={`mt-6 w-[800px] bg-white md:flex shadow py-4 px-4 rounded-[0.5rem]`}> 
                         
                         <div className="md:w-[300px] md:mr-3">
 
@@ -420,32 +413,32 @@ export default function ZoomMeeting() {
                         <div class="flow-root mt-5 md:flex-1">
                             <div class="-my-3 divide-y divide-gray-200">
 
-                                    {user?.role!="patient" && <dl class="flex items-center justify-between gap-4 py-5">
+                                    {user?.role!="patient" && <dl class="flex items-center justify-between gap-4 py-4">
                                     <dt class="text-base font-normal text-gray-500">{t('form.patient-name')}</dt>
                                     <dd class="text-base font-medium text-gray-900 text-right">{form.is_for_dependent ? form.dependent?.name : form?.user?.name}</dd>
                                     </dl>}
 
-                                    {user?.role=="patient" &&<dl class="flex items-center justify-between gap-4 py-5">
+                                    {user?.role=="patient" &&<dl class="flex items-center justify-between gap-4 py-4">
                                     <dt class="text-base font-normal text-gray-500">{t('common.doctor')}</dt>
                                     <dd class="text-base font-medium text-gray-900  text-right">{form.doctor?.name || t('common.dronline-team')}</dd>
                                     </dl>}
 
-                                    <dl class="flex items-center justify-between gap-4 py-5">
+                                    <dl class="flex items-center justify-between gap-4 py-4">
                                     <dt class="text-base font-normal text-gray-500">{t('form.consultation-date')}</dt>
                                     <dd class="text-base font-medium text-gray-900  text-right">{`${form.consultation_date} (${t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})`}</dd>
                                     </dl>
 
-                                    <dl class="flex items-center justify-between gap-4 py-5">
+                                    <dl class="flex items-center justify-between gap-4 py-4">
                                     <dt class="text-base font-normal text-gray-500">{t('form.consultation-date')}</dt>
                                     <dd class="text-base font-medium text-gray-900  text-right">{`${form.scheduled_hours}`}</dd>
                                     </dl>
 
-                                   <dl class="flex items-center justify-between gap-4 py-5">
+                                   <dl class="flex items-center justify-between gap-4 py-4">
                                     <dt class="text-base font-normal text-gray-500">{t('form.type-of-care')}</dt>
                                     <dd class="text-base font-medium text-gray-900  text-right">{t('form.'+form?.type_of_care+"-c")} {form?.type_of_care=="scheduled"  ? `(Normal)` :''}</dd>
                                    </dl>
                       
-                                    <dl class="flex items-center justify-between gap-4 py-5">
+                                    <dl class="flex items-center justify-between gap-4 py-4">
                                     <dt class="text-base font-normal text-gray-500">{t('form.reason-for-consultation')}</dt>
                                     <dd class="text-base font-medium text-gray-900  text-right">{form.reason_for_consultation}</dd>
                                     </dl>      

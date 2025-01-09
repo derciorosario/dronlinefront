@@ -15,6 +15,7 @@ import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
 import FormCard from '../../components/Cards/form'
 import Comment from '../../components/modals/comments'
 import SearchInput from '../../components/Inputs/search'
+import SelectExams from '../../components/modals/select-exams'
 
 function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
 
@@ -53,7 +54,8 @@ let initial_form={
     "results_report":"",
     "requested_at":"",
     uploaded_files:[],
-    comments:[]
+    comments:[],
+    exam_items:[]
 }
 
 const [form,setForm]=useState(initial_form)
@@ -64,7 +66,7 @@ const [form,setForm]=useState(initial_form)
 
     if(
        !form.requested_at ||
-       !form.requested_exams ||
+       !form.exam_items.length ||
        !form.results_report ||
        !form.clinical_information 
     ){
@@ -83,7 +85,6 @@ const [form,setForm]=useState(initial_form)
   }
 
 },[pathname])
- 
 
 
  useEffect(()=>{
@@ -118,7 +119,6 @@ const [form,setForm]=useState(initial_form)
         ...itemToShow,
         name:itemToShow.name.replace('create','all')
       }) 
-      
 
   }
   
@@ -139,7 +139,6 @@ const [form,setForm]=useState(initial_form)
 
 
       if(itemToShow.action=="update"){
-
 
         let r=await data.makeRequest({method:'post',url:`api/exam/`+itemToShow.update_id,withToken:true,data:{
           ...form
@@ -198,7 +197,6 @@ const [form,setForm]=useState(initial_form)
 
   
   function handleUploadeduploaded_files(upload){
-
     setForm({...form,uploaded_files:form.uploaded_files.map(i=>{
         if(i.id==upload.key){
           return {...i,filename:upload.filename}
@@ -206,14 +204,15 @@ const [form,setForm]=useState(initial_form)
          return i
         }
     })})
-
   }
 
+  const [showExamsDialog,setShowExamsDialog]=useState(false)
 
   return (
      <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
 
       
+            <SelectExams show={showExamsDialog} setShow={setShowExamsDialog} form={form} setForm={setForm}/>
 
             <Comment comments={form.comments} form={form} setForm={setForm} from={from} show={showComment} setShow={setShowComment}/>
 
@@ -221,7 +220,7 @@ const [form,setForm]=useState(initial_form)
               <AdditionalMessage btnSee={MessageBtnSee} float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
            </div>}
 
-           {!itemToEditLoaded && itemToShow.action=="update" && <div className="mt-10">
+            {!itemToEditLoaded && itemToShow.action=="update" && <div className="mt-10">
               <DefaultFormSkeleton/>
             </div>}
             
@@ -240,12 +239,9 @@ const [form,setForm]=useState(initial_form)
             }
 
             bottomContent={(
-
               <div className={`mt-5 ${user?.role!="doctor" ? 'hidden':''}`}>
                   <span className="flex mb-5 items-center">
-
                       {t('common.documents')} 
-                    
                       <button onClick={()=>{
                           let id=Math.random().toString().replace('.','')
                           setForm({...form,uploaded_files:[{
@@ -338,10 +334,45 @@ const [form,setForm]=useState(initial_form)
                   value={form.clinical_information}
                 />
 
+                <div className="w-full">
+                   <label  class="flex items-center mb-2 text-sm  text-gray-900">{t('form.requested-exams')} <span className="text-red-500">*</span></label>
+                   <div className="flex items-center">
+                      <div class={`bg-gray border flex  flex-wrap border-gray-300 text-gray-900 text-sm  rounded-[0.3rem]  w-[400px] max-md:w-auto max-md:flex-1 px-1.5 py-1`}>
+                          {!form.exam_items.length && <span className="py-1">{t('common.none-added')}</span>}
+                          {form.exam_items.map(i=>(
+
+                              <div className="bg-gray-200 rounded-[0.3rem] my-[1px] px-2 py-1 inline-flex items-center mr-1">
+                               <span className="text-[14px]">{i.name}</span>
+                               
+                                 <div  onClick={() => {
+                                    setForm({...form,exam_items:form.exam_items.filter(g=>g.name!=i.name)})
+                                 }}
+                                 className="ml-1 cursor-pointer rounded-[0.3rem] hover:opacity-40  flex items-center justify-center"
+                                 >
+                                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368">
+                                     <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                                     </svg>
+                                 </div>
+                             </div>
+
+
+
+                          ))}
+                      </div> 
+
+                      <button onClick={()=>{
+                        setShowExamsDialog(true)
+                    }} type="button" class={`text-white ml-2 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                       
+                    </button>
+                   </div>
+                </div>
+
                 <FormLayout.Input 
                   verified_inputs={verified_inputs} 
                   form={form} 
-                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                  hide={true || (user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
                   r={true} 
                   textarea={true}
                   onBlur={() => setVerifiedInputs([...verified_inputs, 'requested_exams'])} 

@@ -52,6 +52,7 @@ import HowToCancelConsultation from './landingpage/pages/how-to-cancel-my-consul
 import LandingPageFaq from './landingpage/pages/faq'
 import Terms from './landingpage/pages/terms-and-conditions';
 import AppointmentCancelationTerms from './landingpage/pages/appointment-cancelation-terms';
+import VerifyCode from './landingpage/pages/verify-doc-qrcode/index.jsx'
 
 function App() {
 
@@ -68,7 +69,7 @@ function App() {
          <Route path="/doctors-list" element={<DoctorList/>}/>
          <Route path="/dashboard" element={<ProtectedRoute redirectTo="/login"><Home/></ProtectedRoute>}/>
          <Route path="/appointment-cancelation-terms" element={ <AppointmentCancelationTerms/>} />
-      
+         <Route path="/qrcode/:id" element={ <VerifyCode/>} />
          <Route path="/register"  element={<Register/>} />
          <Route path="/login"  element={<Login/>} />
          <Route path="/specialists" element={<Specialists/>} />

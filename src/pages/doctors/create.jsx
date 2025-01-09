@@ -86,6 +86,9 @@ function addPatients({ShowOnlyInputs}) {
        !form.date_of_birth ||
        !form.identification_document ||
 
+       !form.stamp_filename ||
+       !form.signature_filename ||
+
        ((!form.passport_number || !form.passport_number_filename) && form.identification_document=="passport_number") ||
        ((!form.identification_number || !form.identification_number_filename) && form.identification_document=="identification_number") ||
        ((!form.birth_certificate || !form.birth_certificate_filename) && form.identification_document=="birth_certificate") ||

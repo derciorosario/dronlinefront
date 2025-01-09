@@ -1,0 +1,155 @@
+[
+    {
+      "category": "HEMATOLOGIA",
+      "items": [
+        { "name": "Coombs Direto", "abbreviation": "H08" },
+        { "name": "Coombs Indireto", "abbreviation": "H09" },
+        { "name": "Esfregaço de Sangue", "abbreviation": "H10" },
+        { "name": "Eletroforese de Hb", "abbreviation": "H12" },
+        { "name": "Grupo Sanguíneo", "abbreviation": "H13" },
+        { "name": "Hemograma", "abbreviation": "H17" },
+        { "name": "Reticulócitos", "abbreviation": "H21" },
+        { "name": "VS Velocidade Sediment", "abbreviation": "H57" }
+      ]
+    },
+   
+    {
+      "category": "PERFIL ANÊMICO",
+      "items": [
+        { "name": "Ferritina", "abbreviation": "C27" },
+        { "name": "Ferro", "abbreviation": "C28" },
+        { "name": "Transferrina", "abbreviation": "C29" },
+        { "name": "Folato", "abbreviation": "C30" },
+        { "name": "TIBC", "abbreviation": "C31" }
+      ]
+    },
+    {
+      "category": "PERFIL HEPÁTICO",
+      "items": [
+        { "name": "ALT (Alanina T)", "abbreviation": "C56" },
+        { "name": "AST/GOT (Aspartato T)", "abbreviation": "C55" },
+        { "name": "GGT (Gama Glutamil T)", "abbreviation": "C54" },
+        { "name": "Bilirrubina (Conj+Tot)", "abbreviation": "C34" },
+        { "name": "ALP (Fosfatase Alcalina)", "abbreviation": "C36" },
+        { "name": "LDH", "abbreviation": "C38" },
+        { "name": "Albumina", "abbreviation": "C39" },
+        { "name": "Proteína total", "abbreviation": "C51" }
+      ]
+    },
+    {
+      "category": "PERFIL TIREÓIDEO",
+      "items": [
+        { "name": "FT3 livre", "abbreviation": "M06" },
+        { "name": "FT4 livre", "abbreviation": "M05" },
+        { "name": "TSH", "abbreviation": "M04" },
+        { "name": "Anti Tireoglobulina anti Tg", "abbreviation": "R15" },
+        { "name": "Anti Microsomal TPO", "abbreviation": "R16" },
+        { "name": "Anti Receptor TSH (TRab)", "abbreviation": "O37" }
+      ]
+    },
+    {
+      "category": "PERFIL COAGULAÇÃO",
+      "items": [
+        { "name": "D Dímero", "abbreviation": "C75" },
+        { "name": "Fibrinogênio", "abbreviation": "H15" },
+        { "name": "TP-INR (PI)", "abbreviation": "H54" },
+        { "name": "PTTA", "abbreviation": "H56" }
+      ]
+    },
+    {
+      "category": "PRÉ-TRANSFUSÕES",
+      "items": [
+        { "name": "Concentrado Glóbulos", "abbreviation": "S56" },
+        { "name": "Concentrado Plasma", "abbreviation": "R45" },
+        { "name": "Concentrado Plaqueta", "abbreviation": "C55" }
+      ]
+    },
+    {
+      "category": "PERFIL CARDÍACO",
+      "items": [
+        { "name": "CK", "abbreviation": "C13" },
+        { "name": "CK-MB", "abbreviation": "C14" },
+        { "name": "Troponina T", "abbreviation": "C15" },
+        { "name": "Troponina I", "abbreviation": "C16" },
+        { "name": "Perfil Cardíaco", "abbreviation": "C17" },
+        { "name": "NT-PROBNP", "abbreviation": "C18" }
+      ]
+    },
+    {
+      "category": "PERFIL LIPÍDICO",
+      "items": [
+        { "name": "Colesterol Total", "abbreviation": "S38" },
+        { "name": "HDL Colesterol", "abbreviation": "S39" },
+        { "name": "LDL Colesterol", "abbreviation": "S40" },
+        { "name": "Triglicerídeos", "abbreviation": "S41" }
+      ]
+    },
+    {
+        "category": "MALÁRIA",
+        "items": [
+          { "name": "Malária antígeno", "abbreviation": "C08" },
+          { "name": "Malária lâmina", "abbreviation": "C07" }
+        ]
+      },
+    {
+      "category": "PERFIL GLICÊMICO",
+      "items": [
+        { "name": "HbA1c", "abbreviation": "S36" },
+        { "name": "Glicemia aleatória", "abbreviation": "C42" },
+        { "name": "Glicemia em jejum", "abbreviation": "C43" },
+        { "name": "Glicemia 1h 50G", "abbreviation": "C44" },
+        { "name": "Glicemia 2h 75G", "abbreviation": "C45" },
+        { "name": "Insulina", "abbreviation": "Q25" },
+        { "name": "Frutosamina", "abbreviation": "Q26" },
+        { "name": "Anti-GAD", "abbreviation": "Q27" },
+        { "name": "Peptídeo C", "abbreviation": "Q28" }
+      ]
+    },
+    {
+      "category": "HEPATITES",
+      "items": [
+        { "name": "Hepatite B perfil", "abbreviation": "C51" },
+        { "name": "Hepatite B imunidade", "abbreviation": "C52" },
+        { "name": "HBsAG", "abbreviation": "C53" },
+        { "name": "Carga viral Hepatite B", "abbreviation": "F38" },
+        { "name": "Genótipo Hepatite B", "abbreviation": "F37" },
+        { "name": "Hepatite C (IgG+IgM)", "abbreviation": "R38" },
+        { "name": "Carga viral Hepatite C", "abbreviation": "R63" },
+        { "name": "Genótipo Hepatite C", "abbreviation": "R64" },
+        { "name": "Hepatite Delta IgG/IgM", "abbreviation": "R62" }
+      ]
+    },
+    {
+      "category": "IONOGRAMA/RENAL",
+      "items": [
+        { "name": "K (Potássio)", "abbreviation": "D01" },
+        { "name": "Na (Sódio)", "abbreviation": "D02" },
+        { "name": "Cl (Cloretos)", "abbreviation": "D03" },
+        { "name": "Creatinina", "abbreviation": "C10" },
+        { "name": "Ureia", "abbreviation": "C11" }
+      ]
+    }
+    ,{
+        "category": "BIOQUÍMICA",
+        "items": [
+          { "name": "Ácido Úrico", "abbreviation": "C56" },
+          { "name": "ACE (Enz Convers Angiotensina)", "abbreviation": "M21" },
+          { "name": "ADA (LCR)", "abbreviation": "C57" },
+          { "name": "ADA (soro)", "abbreviation": "C58" },
+          { "name": "Amilase", "abbreviation": "C59" },
+          { "name": "Cálcio Total", "abbreviation": "M03" },
+          { "name": "Fosfatos", "abbreviation": "C04" },
+          { "name": "Lipase", "abbreviation": "C05" },
+          { "name": "Magnésio", "abbreviation": "M02" },
+          { "name": "Proteína C Reactiva PCR", "abbreviation": "C61" },
+          { "name": "Procalcitonina", "abbreviation": "C62" },
+          { "name": "Tacrolimus", "abbreviation": "C63" },
+          { "name": "Vitamina A", "abbreviation": "C64" },
+          { "name": "Vitamina B12", "abbreviation": "C65" },
+          { "name": "Vitamina C", "abbreviation": "F03" },
+          { "name": "Vitamina D", "abbreviation": "R03" },
+          { "name": "Vitamina D3", "abbreviation": "R63" }
+        ]
+      }
+  ]
+  

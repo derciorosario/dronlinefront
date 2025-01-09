@@ -163,10 +163,6 @@ function App() {
 
 
 
-
- 
-
-       
   return (
    
          <DefaultLayout
@@ -203,7 +199,6 @@ function App() {
                      {data._appointments?.status_counts?.[i] && <div className="ml-2 bg-honolulu_blue-400 text-white rounded-full px-2 flex items-center justify-center">
                          <span>{data._appointments?.status_counts?.[i]}</span>
                      </div>}
-
                    </div>
                  ))}
              </div>
@@ -218,7 +213,6 @@ function App() {
              <div className="absolute w-full">
 
                <BaiscTable canAdd={user?.role=="patient"} addPath={'/add-appointments'} loaded={data._loaded.includes('appointments') && !loading} header={[
-                        
                          /***<BaiscTable.MainActions options={{
                             deleteFunction:'default',
                             deleteUrl:'api/delete/appointments'}
@@ -287,10 +281,8 @@ function App() {
                                 </BaiscTable.Td>
 
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
-                               
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.reason_for_consultation?.length > 40 ? i.reason_for_consultation?.slice(0,40)+"..." : i.reason_for_consultation}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.additional_observations?.length > 40 ? i.additional_observations?.slice(0,40)+"..." : i.additional_observations}</BaiscTable.Td>
-                               
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                
@@ -303,7 +295,7 @@ function App() {
                                 </BaiscTable.Td> */}
 
                                 <BaiscTable.Td hide={selectedTab!="approved"}>
-                                   <div onClick={()=>{
+                                   <div className={`${i.type_of_care=="requested" ? 'hidden':''}`} onClick={()=>{
                                          window.open(`${data.APP_FRONDEND}/meeting/zoom/appointment/`+i.id, '_blank')
                                     }}>
                                      <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
@@ -317,7 +309,10 @@ function App() {
                                     {hide:user?.role!="doctor" || i.status!="completed",name:t('common.set-as-approved'),onClick:()=>{handleItems({status:'approved',id:i.id})},icon:(<svg  xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M438-226 296-368l58-58 84 84 168-168 58 58-226 226ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>)},
                                     {hide:data.hasConsultationTimePassed(i) || (i.status=="completed" && (user?.role!="admin" && user?.role!="manager")) || i.status=="canceled" || !(user?.role=="admin" || user?.role=="patient" || (user?.role=="manager" && user?.data?.permissions?.appointments?.includes('cancel')) || (i.status=="completed" && user?.role=="doctor")),name:t('common.cancel'),onClick:()=>{handleItems({status:'canceled',id:i.id,appointment:i})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m388-212-56-56 92-92-92-92 56-56 92 92 92-92 56 56-92 92 92 92-56 56-92-92-92 92ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>)},
                                     {hide:i.status=="completed" || i.status=="canceled" || !i.payment_confirmed || (user?.role!="doctor" && i.doctor_id) || ((user?.role!="manager" && user?.role!="admin") && !i.doctor_id),name:t('common.complete'),onClick:()=>{handleItems({status:'completed',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
+                                    {hide:i.status=="approved" || i.type_of_care!="requested"  || (user?.role!="manager" && user?.role!="admin"),name:t('common.approve'),onClick:()=>{handleItems({status:'approved',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
+                                    
                                    
+
                                 ]}/>
 
            
