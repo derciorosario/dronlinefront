@@ -141,7 +141,7 @@ export const HomeDataProvider = ({ children }) => {
     ]
 
     const [specialty,setSpecialty]=useState([])
-    
+    const [app_settings,setAppSettings]=useState({})
     let medical_specialities=[]
 
     let required_data=['specialty_categories','medical_specialities']
@@ -160,6 +160,10 @@ export const HomeDataProvider = ({ children }) => {
      setSpecialty(_specialty_categories.filter(i=>_medical_specialities.some(id=>id==i.id)).map(i=>({name:i[i18next.language+"_name"],id:i.id})))
 
     },[_medical_specialities,_specialty_categories])
+
+    useEffect(()=>{
+      setAppSettings(_settings[0]?.value || {})
+    },[_settings])
 
 
     function handleLoaded(action,item){
@@ -516,7 +520,8 @@ export const HomeDataProvider = ({ children }) => {
       selectedDoctorToSchedule,
       setSelectedDoctorToSchedule,
       isLoading, setIsLoading,
-      _settings
+      _settings,
+      app_settings
 
     };
 

@@ -50,7 +50,7 @@ function FindSpecialist() {
                              <span onClick={()=>setSelected1(null)} className="cursor-pointer hover:opacity-50"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#111"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span>
                          </div>}
 
-                         {(data._openPopUps.show_specialist_list && (data._loaded.includes('specialty_categories') && data._loaded.includes('medical_specialities'))) && <div className="w-full shadow z-40 max-h-[300px] overflow-y-auto absolute left-0 top-[100%] px-2 bg-white rounded-[0.3rem]">
+                           {(data._openPopUps.show_specialist_list && (data._loaded.includes('specialty_categories') && data._loaded.includes('medical_specialities'))) && <div className="w-full shadow z-40 max-h-[300px] overflow-y-auto absolute left-0 top-[100%] px-2 bg-white rounded-[0.3rem]">
                           
                             {searchedData1.map((i,_i)=>(
                                  <div onClick={()=>setSelected1(i)} className="w-full flex  items-center p-2 hover:bg-slate-100 cursor-pointer rounded-[0.3rem]">
@@ -60,7 +60,7 @@ function FindSpecialist() {
                                  </div>
                             ))}
 
-                            {(!data._loaded.includes('specialty_categories') || !data._loaded.includes('medical_specialities')) && <div className="w-full flex  items-center p-2 rounded-[0.3rem]">
+                            {(data.specialty.length==0) && <div className="w-full flex  items-center p-2 rounded-[0.3rem]">
                                     <div className="flex flex-col">
                                         <span className="text-gray-400">{t('common.loading')}...</span>
                                     </div>

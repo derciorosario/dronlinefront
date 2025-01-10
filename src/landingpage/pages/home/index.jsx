@@ -41,7 +41,6 @@ function App() {
     script.async = true;
 
     document.body.appendChild(script);
-
    
     return () => {
       document.body.removeChild(script);
@@ -88,7 +87,7 @@ function App() {
   ]
 
 
-
+  console.log(data.app_settings)
 
   const [selectedAboutImgIndex,setSelectedAboutImgIndex]=useState(0)
   const [benefitItems,setBenefitItems]=useState([])

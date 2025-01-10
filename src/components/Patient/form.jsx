@@ -3,8 +3,8 @@ import React, { useEffect } from 'react'
 import FormLayout from '../../layout/DefaultFormLayout'
 import { useData } from '../../contexts/DataContext'
 import { useAuth } from '../../contexts/AuthContext'
-import i18n from '../../../../landingpage/src/i18n'
 import _var from '../../assets/vaiables.json'
+import i18n from '../../i18n'
 
 
 

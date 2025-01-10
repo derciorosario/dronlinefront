@@ -209,23 +209,28 @@ export default function SinglePrint({item,setItem}) {
 
       
                    
-                 <div className="justify-around flex w-full">
-                      <img className="w-[160px] h-[60px]" src={Logo}/>
-                      <h2 className="text-[26px] font-medium flex flex-col items-center">
-                         <span>{item?.title}</span>
-                      </h2>
+                 <div className="px-5">
+                  <div className="justify-between flex w-full items-center">
+                        <img className="w-[160px] h-[60px]" src={Logo}/>
+                        <h2 className="text-[26px] font-medium flex flex-col items-center">
+                          <span>{item?.title}</span>
+                        </h2>
+                  </div>
                  </div>
           
                  <div className={`${item?.from=="medical-certificate" ? 'hidden':''}`}>
-                        <div className="flex px-5 mt-5 justify-between">
-                            <div className="flex flex-col w-[140px]">
-                                  <span>Nome do paciente:</span>
-                                  <span>Patient name:</span>
+                        <div className="flex px-5 mt-2 justify-between">
+                           
+                            <div className="flex flex-col w-[80px]">
+                                  <span>Paciente:</span>
+                                  <span>Patient:</span>
                             </div>
+
                             <div  className="w-[300px] border-b border-b-gray-600 flex items-end mx-2">
                                   <span className="font-medium">{item?.appointment?.is_for_dependent ? item?.appointment?.dependent?.name  :  item?.patient?.name }</span>
                             </div>
-                           <div className="flex flex-1">
+
+                            <div className="flex flex-1">
                                <div className="flex items-end ml-5 w-[170px]">
                                   <span>Pro. No:</span>
                                   <span className="flex border-b border-b-gray-600 ml-4 min-w-[140px]">{(item?.appointment?.dependent?.created_at || item?.patient?.created_at)?.split('T')?.[0]?.split('-')?.[0]}/{(item?.patient?.id || '').toString().padStart(4, '0')} {item?.appointment?.is_for_dependent ? ' - '+(item?.appointment?.dependent?.id || '').toString().padStart(3, '0') : ''}</span>
@@ -234,14 +239,12 @@ export default function SinglePrint({item,setItem}) {
                                 <span>Sex.</span>
                                 <span className="flex border-b border-b-gray-600 ml-4 min-w-[50px]">{(item?.appointment?.dependent?.gender || item?.patient?.gender)?.charAt()?.toUpperCase() || '-'}</span>
                               </div>
-                           </div>
-                            
-
+                            </div>                          
                         </div>
           
                         <div className="flex px-5 mt-3 justify-between">
           
-                            <div className="flex flex-col w-[140px]">
+                            <div className="flex flex-col w-[80px]">
                                   <span>Endereço:</span>
                                   <span>Address:</span>
                             </div>
@@ -268,7 +271,7 @@ export default function SinglePrint({item,setItem}) {
 
 
                   {item?.from=="medical-prescription" ? (
-                      <div className="w-full py-10 px-5">
+                      <div className="w-full py-2 px-5">
                           <h2 className="mb-4 text-[20px] font-medium">{t('common.medications')}</h2>
                           <p className="my-1 mb-5 text-gray-600"> 
                              {t('messages.medications-creation-details',{date:item?.i.created_at?.split('T')?.[0],hour:item?.i.created_at?.split('T')?.[1]?.slice(0,5)})}
@@ -292,7 +295,7 @@ export default function SinglePrint({item,setItem}) {
                       </div>
                   ) : item?.from=="medical-certificate" ? (
 
-                      <div className="w-full py-10 px-5">
+                      <div className="w-full py-2 px-5">
 
                              {(item?.content || []).map(f=>{
                                  f=f[0]
@@ -408,7 +411,7 @@ export default function SinglePrint({item,setItem}) {
                     </div>
                </div>
 
-               <div className="w-full text-[0.8rem] text-gray-500 flex justify-between mt-10 border-t border-t-gray-200 pt-3">
+               <div className="w-full text-[0.8rem] text-gray-500 flex justify-between mt-4 border-t border-t-gray-200 pt-3">
                     <span>
                        <QRCodeGenerator  code={`${(item?.i?.id || '').toString().padStart(5, '0')}${data?.getDocumentLetterCodeFrom(item?.from)}`} link={`${data.APP_FRONDEND}/qrcode/${data.encodeBase64Multiple(`${(item?.i?.id || '').toString().padStart(5, '0')}---${item?.from}---${item?.appointment?.is_for_dependent ? item?.appointment?.dependent?.name  :  item?.patient?.name}---${item?.i?.created_at}`)}`}/>
                     </span>
