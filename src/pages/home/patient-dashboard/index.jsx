@@ -233,6 +233,7 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                
                                 <BaiscTable.Td onClick={()=>{
 
+                                   
                                     data.setSinglePrintContent({
                                       patient: i.patient,
                                       doctor:i.doctor,

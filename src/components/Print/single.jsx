@@ -23,6 +23,7 @@ export default function SinglePrint({item,setItem}) {
     function estimateA4Pages() {
       const a4HeightPixels = 1123; 
       const pages = Math.ceil(document.querySelector('#last-print-element').offsetTop / a4HeightPixels);
+      console.log({pages})
       return pages;
    }
     
@@ -99,9 +100,9 @@ export default function SinglePrint({item,setItem}) {
 
           await Promise.all(promises);
 
-          setTimeout(()=>{
+          setEstimatedNumberOfPages(estimateA4Pages())
 
-                setEstimatedNumberOfPages(estimateA4Pages())
+          setTimeout(()=>{
 
                 window.print()
 

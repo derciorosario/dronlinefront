@@ -766,7 +766,7 @@ return (
       onChange={(e)=>{
         setForm({...form,type_of_care:e.target.value,
           medical_specialty:e.target.value=="requested" ? null: form.medical_specialty,
-          scheduled_hours:e.target.value=="requested" ? null : scheduled_hours
+          scheduled_hours:e.target.value=="requested" ? null : form.scheduled_hours
         })
       }}
       field={'type_of_care'}

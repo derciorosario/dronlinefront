@@ -35,7 +35,7 @@ function Footer({serviceItems}) {
   const partners=[
     {name:'Alinvest',image:partnerImage1,url:'https://alinvest-group.com'},
     {name:'Cortex LDA',image:partnerImage2,url:'https://www.cortex-moz.com'},
-    {name:'WeCare',image:partnerImage3,url:''}
+    {name:'WeCare',image:partnerImage3,url:null}
   ]
 
 
@@ -145,7 +145,7 @@ function Footer({serviceItems}) {
                  <div className="flex items-center gap-x-4">
 
                   {partners.map((i,_i)=>(
-                      <a href={i.url} className="hover:scale(0.8) hover:opacity-80" target="_blank">
+                      <a href={i.url} className={`hover:scale(0.8) hover:opacity-80 ${!i.url ? 'pointer-events-none':''}`} target="_blank">
                           <img className="w-[50px] h-auto" src={i.image}/>
                       </a>
                   ))}
