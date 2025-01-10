@@ -863,16 +863,16 @@ function isSetAsUrgentHour(hour,AppSettings){
 
     function getDocumentLetterCodeFrom(from){
          if(from=="medical-prescription"){
-            return 'p'
+            return 'PM'
          }
          if(from=="medical-certificate"){
-            return 'a'
+            return 'AM'
          }
-         if(from=="exam"){
-          return 'e'
+         if(from=="exam-request"){
+          return 'PE'
          }
          if(from=="clinical-diary"){
-          return 'd'
+          return 'DC'
          }
          return ''
     }

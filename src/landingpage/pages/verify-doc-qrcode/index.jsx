@@ -16,13 +16,17 @@ export default function index() {
 
   useEffect(()=>{
            try{
-            let [code,from,name,date]=data.decodeBase64Multiple(id)?.split('---')
 
-                if(!code || !from || !name || !date){
+          
+            let [code,created_by,created_for,from,date]=data.decodeBase64Multiple(id)?.split('---')
+
+            console.log({a:data.decodeBase64Multiple(id)?.split('---')})
+
+                if(!code || !from || !created_by || !created_for || !date){
                     setIsCodeOk(false)
                 }else{
                     setIsCodeOk(true)
-                    setInfo({from,code:code+data.getDocumentLetterCodeFrom(from),name,date})
+                    setInfo({code,created_by,created_for,from,date})
                 }
              
             }catch(e){
@@ -34,7 +38,7 @@ export default function index() {
   return (
      <DefaultLayout>
       <div className="w-full flex-col flex h-[100vh] items-center justify-center bg-honolulu_blue-500">
-              <div className="rounded bg-white py-5 px-4 flex items-center justify-center flex-col min-w-[300px]">
+              <div className="rounded bg-white py-5 px-4 flex items-center justify-center flex-col min-w-[340px] max-sm:min-w-0 max-sm:px-5 max-sm:text-[0.9rem]">
                     <span className="text-gray-500 text-[0.9rem] mb-3 flex">{t('common.code-verification')}</span>
                     
                     {isCodeOk &&  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" height={60} fill="green"><path d="m344-60-76-128-144-32 14-148-98-112 98-112-14-148 144-32 76-128 136 58 136-58 76 128 144 32-14 148 98 112-98 112 14 148-144 32-76 128-136-58-136 58Zm34-102 102-44 104 44 56-96 110-26-10-112 74-84-74-86 10-112-110-24-58-96-102 44-104-44-56 96-110 24 10 112-74 86 74 84-10 114 110 24 58 96Zm102-318Zm-42 142 226-226-56-58-170 170-86-84-56 56 142 142Z"/></svg>}
@@ -44,14 +48,34 @@ export default function index() {
 
                      {isCodeOk && (
                           <>
-                            <div className="w-full flex mt-3 justify-center">
-                                <span className="mr-2 font-medium">{info.name}</span>
-                            </div>
 
                             <div className="w-full flex mt-3 justify-center">
                                <span className="mr-2">{t('common.'+info?.from)}</span>
-                               <span className="font-medium">#{info?.code}</span>
                             </div>
+
+                           
+                            <div className="w-full flex mt-3 justify-center">
+                                <div className="flex items-center">
+                                    <span className="text-gray-500">Doc. Ref: </span>
+                                    <span className="mr-2 font-medium">{info?.code}</span>
+                                </div>
+                            </div>
+                            
+
+                            <div className="w-full flex mt-3 justify-center">
+                                <div className="flex items-center">
+                                    <span className="text-gray-500">{t('common._created_by')}: </span>
+                                    <span className="mr-2 font-medium">{info.created_by}</span>
+                                </div>
+                            </div>
+
+                            <div className="w-full flex mt-3 justify-center">
+                                <div className="flex items-center">
+                                    <span className="text-gray-500">{t('common._created_for')}: </span>
+                                    <span className="mr-2 font-medium">{info.created_for}</span>
+                                </div>
+                            </div>
+
                             <span className="w-full flex mt-2 text-gray-500 text-[0.7rem] justify-center">{t('common.created_at')}: {info?.date?.split('T')?.[0]} {info.date?.split('T')?.[1]?.slice(0,5)}</span>
                           </>
                     )}

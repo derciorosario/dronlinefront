@@ -237,8 +237,8 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                                     data.setSinglePrintContent({
                                       patient: i.patient,
                                       doctor:i.doctor,
-                                      title: t('menu.exam'),
-                                      from:'exam',
+                                      title: t('menu.exam-request'),
+                                      from:'exam-request',
                                       i,
                                       content: [
                                          [{name:t('form.clinical-information'),value:i.clinical_information},

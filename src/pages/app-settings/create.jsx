@@ -13,6 +13,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import PreLoader from '../../components/Loaders/preloader'
 import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
 import FormCard from '../../components/Cards/form'
+import _var from '../../assets/vaiables.json'
 
 function index({ShowOnlyInputs}) {
 
@@ -45,7 +46,9 @@ function index({ShowOnlyInputs}) {
 },[user,pathname])
 
 let initial_form={
-  do_not_define_urgent_hours:false
+  do_not_define_urgent_hours:false,
+  main_contact_code:'258',
+  alternative_contact_code:'258'
 }
 
   const [form,setForm]=useState(initial_form)
@@ -68,6 +71,9 @@ let initial_form={
     if(
        ((!form.urgent_consultation_limit_duration_hours && !form.urgent_consultation_limit_duration_minutes)) ||
        ((!form.urgent_consultation_end_hour || !form.urgent_consultation_start_hour) && !form.do_not_define_urgent_hours) ||
+       !form.administrative_assistant_name ||
+       !form.stamp_filename ||
+       !form.signature_filename ||
        urgentHourMessages
     ){
       v=false
@@ -88,7 +94,7 @@ useEffect(()=>{
 
     try{
      let response=await data.makeRequest({method:'get',url:`api/userdata/`,withToken:true, error: ``},0);
-     setForm(JSON.parse(response.app_settings[0].value))
+     setForm({...initial_form,...JSON.parse(response.app_settings[0].value)})
      setLoadedData(response.app_settings[0])
      setLoading(false)
      setItemToEditLoaded(true)
@@ -167,7 +173,6 @@ async function updateSystemSettings() {
 ];  
 
 
-console.log({vvvvvvvvv:form.urgent_consultation_end_hour})
 
 
   return (
@@ -201,8 +206,26 @@ console.log({vvvvvvvvv:form.urgent_consultation_end_hour})
                        <FormLayout.Input  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'name'])} label={t('form.name')} onChange={(e)=>setForm({...form,name:e.target.value})} field={'name'} value={form.name}/>
                        <FormLayout.Input  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'email'])} label={'Email'} onChange={(e)=>setForm({...form,email:e.target.value})} field={'email'} value={form.email}/>
                        <FormLayout.Input  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'nuit'])} label={'nuit'} onChange={(e)=>setForm({...form,nuit:e.target.value})} field={'nuit'} value={form.nuit}/>
-                       <FormLayout.Input  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'main_contact'])} label={t('form.main-contact')} onChange={(e)=>setForm({...form,main_contact:e.target.value.replace(/[^0-9]/g, '')})} field={'main_contact'} value={form.main_contact}/>
-                       <FormLayout.Input  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'address'])} label={t('common.address')} onChange={(e)=>setForm({...form,address:e.target.value})} field={'address'} value={form.address}/>
+                       <FormLayout.Input inputLeftContent={(
+                 
+                          <select  value={form.main_contact_code} onChange={(e)=>setForm({...form,main_contact_code:e.target.value})} class={`bg-gray w-[90px] mr-1 border border-gray-300  text-gray-900 text-sm rounded-[0.4rem] focus:ring-blue-500 focus:border-blue-500 block py-2.5 px-2`}>
+                              {_var.contry_codes.map(i=>(
+                                  <option selected={form.main_contact_code==i.code ? true : false}  value={i.code}>+{i.code}</option>
+                              ))}
+                            </select>
+
+                        )}  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'main_contact'])} label={t('form.main-contact')} onChange={(e)=>setForm({...form,main_contact:e.target.value.replace(/[^0-9]/g, '')})} field={'main_contact'} value={form.main_contact}/>
+
+                       <FormLayout.Input inputLeftContent={(
+
+                              <select  value={form.alternative_contact_code} onChange={(e)=>setForm({...form,alternative_contact_code:e.target.value})} class={`bg-gray w-[90px] mr-1 border border-gray-300  text-gray-900 text-sm rounded-[0.4rem] focus:ring-blue-500 focus:border-blue-500 block py-2.5 px-2`}>
+                                {_var.contry_codes.map(i=>(
+                                    <option selected={form.alternative_contact_code==i.code ? true : false}  value={i.code}>+{i.code}</option>
+                                ))}
+                              </select>
+                              )} verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'alternative_contact'])} label={t('form.alternative-contact')} onChange={(e)=>setForm({...form,alternative_contact:e.target.value.replace(/[^0-9]/g, '')})} field={'alternative_contact'} value={form.alternative_contact}/>
+
+                       <FormLayout.Input  verified_inputs={verified_inputs} form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'address'])} label={t('common.address')} onChange={(e)=>setForm({...form,address:e.target.value})} field={'address'} value={form.address}/>
 
                    </div>
 
@@ -331,22 +354,41 @@ console.log({vvvvvvvvv:form.urgent_consultation_end_hour})
                     <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'iva'])} label={t('common.iva-percentage')} onChange={(e)=>setForm({...form,iva:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'iva'} value={form.iva}/>
                     <div>
                       <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'gain_percentage'])} label={t('common.gain_percentage')} onChange={(e)=>setForm({...form,gain_percentage:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'gain_percentage'} value={form.gain_percentage}/>
-                      
-
-                     {form.gain_percentage && <button onClick={()=>{
+                      {form.gain_percentage && <button onClick={()=>{
                          localStorage.setItem('gain_percentage',form.gain_percentage)
                          data._showPopUp('basic_popup','define-same-gain-perentage-for-all')
                         }} _ type="button" class="text-white mt-2 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
                           {t('common.define-same-gain-perentage-for-all',{gain:`${form.gain_percentage}%`})}
                     </button>}
-
                     </div>
                      </div>
+
+                     <div className="w-full mt-14">
+                          <span className="flex w-full">{t('common.administrative-assistant')}</span>
+                          <div>
+                              <FormLayout.Input  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'administrative_assistant_name'])} label={t('common.administrative-assistant-name')} onChange={(e)=>setForm({...form,administrative_assistant_name:e.target.value})} field={'administrative_assistant_name'} value={form.administrative_assistant_name}/>
+                          </div>
+                     </div>
+
+                     <div className="flex gap-x-4 flex-wrap mt-4 w-full">
+                              <FileInput onlyImages={true} _upload={{key:'signature_filename',filename:form?.signature_filename}} res={({filename})=>{
+                                   setForm({...form,signature_filename:filename})
+                              }} label={t('common.signature-of-the-secretary')} r={true}/>
+                             <div className="w-full">
+                                 <div className="w-[300px] flex items-center justify-center bg-gray-300 h-[100px] rounded-[0.3rem]">
+                                        {!form?.signature_filename &&  <svg class="w-8 h-8 stroke-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M20.5499 15.15L19.8781 14.7863C17.4132 13.4517 16.1808 12.7844 14.9244 13.0211C13.6681 13.2578 12.763 14.3279 10.9528 16.4679L7.49988 20.55M3.89988 17.85L5.53708 16.2384C6.57495 15.2167 7.09388 14.7059 7.73433 14.5134C7.98012 14.4396 8.2352 14.4011 8.49185 14.3993C9.16057 14.3944 9.80701 14.7296 11.0999 15.4M11.9999 21C12.3154 21 12.6509 21 12.9999 21C16.7711 21 18.6567 21 19.8283 19.8284C20.9999 18.6569 20.9999 16.7728 20.9999 13.0046C20.9999 12.6828 20.9999 12.3482 20.9999 12C20.9999 11.6845 20.9999 11.3491 20.9999 11.0002C20.9999 7.22883 20.9999 5.34316 19.8283 4.17158C18.6568 3 16.7711 3 12.9998 3H10.9999C7.22865 3 5.34303 3 4.17145 4.17157C2.99988 5.34315 2.99988 7.22877 2.99988 11C2.99988 11.349 2.99988 11.6845 2.99988 12C2.99988 12.3155 2.99988 12.651 2.99988 13C2.99988 16.7712 2.99988 18.6569 4.17145 19.8284C5.34303 21 7.22921 21 11.0016 21C11.3654 21 11.7021 21 11.9999 21ZM7.01353 8.85C7.01353 9.84411 7.81942 10.65 8.81354 10.65C9.80765 10.65 10.6135 9.84411 10.6135 8.85C10.6135 7.85589 9.80765 7.05 8.81354 7.05C7.81942 7.05 7.01353 7.85589 7.01353 8.85Z" stroke="stroke-current" stroke-width="1.6" stroke-linecap="round"></path>
+                                        </svg>}
+                                        {form?.signature_filename && <img className="object-cover border w-auto h-full" src={form?.signature_filename}/>}
+                                  
+                                  </div>
+                             </div>
+                      </div>
 
                      <div className="flex gap-x-4 flex-wrap mt-4 w-full">
                               <FileInput onlyImages={true} _upload={{key:'stamp_filename',filename:form?.stamp_filename}} res={({filename})=>{
                                    setForm({...form,stamp_filename:filename})
-                              }} label={t('common.stamp')} r={true}/>
+                              }} label={t('common.stamp-of-the-secretary')} r={true}/>
                              <div className="w-full">
                                  <div className="w-[300px] flex items-center justify-center bg-gray-300 h-[100px] rounded-[0.3rem]">
                                         {!form?.stamp_filename &&  <svg class="w-8 h-8 stroke-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -356,7 +398,13 @@ console.log({vvvvvvvvv:form.urgent_consultation_end_hour})
                                   
                                   </div>
                              </div>
-                  </div>
+                      </div>
+
+                    
+
+
+                 
+
 
             </FormLayout>
 

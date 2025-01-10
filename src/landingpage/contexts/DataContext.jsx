@@ -33,17 +33,14 @@ export const HomeDataProvider = ({ children }) => {
     },[])
     
     const [_openPopUps, _setOpenPopUps] = useState(initial_popups);
-    
   
     function _closeAllPopUps(){
           _setOpenPopUps(initial_popups)
           document.removeEventListener('click', handleOutsideClick)
     }
-
  
     const handleOutsideClick = (event) => {
      // if(isDeleting) return
-
       let close=true
       Object.keys(initial_popups).forEach(f=>{
           if(event?.target?.closest(`._${f}`))  {
@@ -454,16 +451,16 @@ export const HomeDataProvider = ({ children }) => {
 
   function getDocumentLetterCodeFrom(from){
     if(from=="medical-prescription"){
-       return 'p'
+       return 'PM'
     }
     if(from=="medical-certificate"){
-       return 'a'
+       return 'AM'
     }
-    if(from=="exam"){
-     return 'e'
+    if(from=="exam-request"){
+     return 'PE'
     }
     if(from=="clinical-diary"){
-     return 'd'
+     return 'DC'
     }
     return ''
 }

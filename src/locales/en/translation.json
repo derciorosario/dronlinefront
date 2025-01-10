@@ -437,6 +437,10 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+            "expiration-date":"Expiration date",
+            "_created_by":"Created by",
+            "_created_for":"Created for",
+            "emission-date":"Creation date",
             "upcoming-consultations":"Upcoming appointments",
             "developed-by":"Developed by",
             "in-partnership-with":"in partnership with",
@@ -456,6 +460,7 @@
             "update-manager":"Update manager",
             "medical-prescription": "Medical prescription",
             "exam":"Exam",
+            "exam-request":"Exam request",
             "clinical-diary": "Clinical diary",
             "medical-certificates": "Medical Certificates",
             "disease":"Disease",

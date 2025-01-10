@@ -52,6 +52,7 @@ export default function SinglePrint({item,setItem}) {
       useEffect(()=>{
 
          if(item && appSettings){
+
           setDoctorSignature(item.doctor?.signature_filename)
           setDoctorStamp(item.doctor?.stamp_filename)
           setSecretaryChiefSignature(item?.i?.status_changer?.signature_filename)
@@ -196,78 +197,82 @@ export default function SinglePrint({item,setItem}) {
       
       <>
       
-      <div id="_print" className={`w-full text-[0.9rem]  flex flex-col overflow-y-auto h-[100vh] ${!item ? '':'_print'} opacity-0 pointer-events-none    fixed left-0 top-0 z-50 px-10 bg-white`} style={{zIndex:9999}}>
-                 
-                   <div className="absolute left-0 right-0 z-50 opacity-15">
+      <div id="_print" className={`w-full text-[0.9rem] justify-between  flex flex-col overflow-y-auto h-[100vh] ${!item ? '':'_print'} opacity-0 pointer-events-none    fixed left-0 top-0 z-50 px-10 bg-white`} style={{zIndex:9999}}>
+                
+                <div className="absolute left-0 right-0 z-50 opacity-15">
                          {Array.from({ length: estimatedNumberOfPages }, () => []).map((_,_i)=>(
-                           <div className="w-full -translate-y-[70px] h-[100vh] flex items-center justify-center">
-                              <img className="w-[80%]" src={Logo} style={{transform:'rotate(-75deg)'}}/>
+                           <div className="w-full h-[100vh] flex items-center justify-center">
+                              <img className="w-[80%]" src={Logo} style={{transform:'rotate(25deg)'}}/>
                            </div>
                          ))}
-                   </div>
-      
+                </div>
                    
                  <div className="px-5">
-                  <div className="justify-between flex w-full items-center">
-                        <img className="w-[160px] h-[60px]" src={Logo}/>
-                        <h2 className="text-[26px] font-medium flex flex-col items-center">
-                          <span>{item?.title}</span>
-                        </h2>
+                  <div className="justify-between flex w-full border-b border-b-gray-300 pb-2">
+                        <div>
+                            <div className="h-[70]">
+                              <img className="w-auto h-[60px]" src={Logo}/>
+                            </div>
+                            <div className="mt-4 flex flex-col">
+                                <span>
+                                   <label className="font-bold">NUIT: </label>
+                                   <label>{appSettings?.nuit}</label>
+                                </span>
+                                <span>
+                                   <label className="font-bold">Email: </label>
+                                   <label>{appSettings?.email}</label>
+                                </span>
+                                <span>
+                                   <label className="font-bold">Cell: </label>
+                                   <label>({appSettings?.main_contact_code}) {appSettings?.main_contact}</label>
+                                </span>
+                                <span>
+                                   <label className="font-bold">{t('common.address')}: </label>
+                                   <label>{appSettings?.address}</label>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div>
+                          <div className="h-[70]">
+                            <h2 className="flex flex-col">
+                              <span className="text-[26px] font-bold">{item?.title}</span>
+                              <span>
+                                <label className="font-bold">Doc. Ref.: </label>
+                                <label>{(item?.i?.id || '').toString().padStart(5, '0')}/{item?.i?.created_at?.split('T')?.[0]?.split('-')?.[1]}/{item?.i?.created_at?.split('T')?.[0]?.split('-')?.[0]}/{data?.getDocumentLetterCodeFrom(item?.from)}/ADM</label>
+                              </span>
+                            </h2>
+                          </div>
+
+                          <div className="mt-4 flex flex-col">
+                                <span>
+                                   <label className="font-bold">{t('common._created_by')}: </label>
+                                   <label>{item?.doctor?.name || ((item?.i?.status_changer?.role=="admin" ? appSettings?.administrative_assistant_name : item?.i?.status_changer?.name) || appSettings?.administrative_assistant_name)}</label>
+                                </span> 
+                                <span>
+                                   <label className="font-bold">{t('common._created_for')}: </label>
+                                   <label>{item?.appointment?.dependent?.name  || item?.patient?.name}</label>
+                                </span>
+                                <span>
+                                   <label className="font-bold">{t('common.emission-date')}: </label>
+                                   <label>{item?.i?.created_at?.split('T')?.[0]}</label>
+                                </span>
+                                <span>
+                                   <label className="font-bold">{t('common.expiration-date')}: </label>
+                                   <label className="lowercase">15 {t('common.days')}</label>
+                                </span>
+                          </div>
+
+                        </div>
+
+                  </div>
+                  <div>
+                       
                   </div>
                  </div>
+
+
           
-                 <div className={`${item?.from=="medical-certificate" ? 'hidden':''}`}>
-                        <div className="flex px-5 mt-2 justify-between">
-                           
-                            <div className="flex flex-col w-[80px]">
-                                  <span>Paciente:</span>
-                                  <span>Patient:</span>
-                            </div>
-
-                            <div  className="w-[300px] border-b border-b-gray-600 flex items-end mx-2">
-                                  <span className="font-medium">{item?.appointment?.is_for_dependent ? item?.appointment?.dependent?.name  :  item?.patient?.name }</span>
-                            </div>
-
-                            <div className="flex flex-1">
-                               <div className="flex items-end ml-5 w-[170px]">
-                                  <span>Pro. No:</span>
-                                  <span className="flex border-b border-b-gray-600 ml-4 min-w-[140px]">{(item?.appointment?.dependent?.created_at || item?.patient?.created_at)?.split('T')?.[0]?.split('-')?.[0]}/{(item?.patient?.id || '').toString().padStart(4, '0')} {item?.appointment?.is_for_dependent ? ' - '+(item?.appointment?.dependent?.id || '').toString().padStart(3, '0') : ''}</span>
-                              </div>
-                              <div className="flex items-end ml-5 w-[100px]">
-                                <span>Sex.</span>
-                                <span className="flex border-b border-b-gray-600 ml-4 min-w-[50px]">{(item?.appointment?.dependent?.gender || item?.patient?.gender)?.charAt()?.toUpperCase() || '-'}</span>
-                              </div>
-                            </div>                          
-                        </div>
-          
-                        <div className="flex px-5 mt-3 justify-between">
-          
-                            <div className="flex flex-col w-[80px]">
-                                  <span>Endereço:</span>
-                                  <span>Address:</span>
-                            </div>
-          
-                            <div  className="w-[300px] border-b border-b-gray-600 flex items-end mx-2">
-                                  <span className="font-medium">{item?.appointment?.dependent?.address || item?.patient?.address}</span>
-                            </div>
-
-                            <div className="flex flex-1">
-                              <div className="flex items-end ml-5 mr-5 w-[170px]">
-                                  <span>Tel:</span>
-                                  <span className="flex border-b border-b-gray-600 ml-4 min-w-[140px]">{item?.appointment?.dependent?.main_contact  || item?.patient?.main_contact}</span>
-                              </div>
-                              <div className="flex items-end w-[100px]">
-                                <span>Idade/Age</span>
-                                <span className="flex border-b border-b-gray-600 ml-4">{calculateAge((item?.appointment?.dependent?.date_of_birth || item?.patient?.date_of_birth))}</span>
-                              </div>
-                           </div>
-          
-                         
-
-                          </div>
-                  </div>
-
-
                   {item?.from=="medical-prescription" ? (
                       <div className="w-full py-7 px-5">
                           <h2 className="mb-3 text-[20px] font-medium">{t('common.medications')}</h2>
@@ -293,7 +298,7 @@ export default function SinglePrint({item,setItem}) {
                       </div>
                   ) : item?.from=="medical-certificate" ? (
 
-                      <div className="w-full py-2 px-5">
+                      <div className="w-full py-2 px-[20px] mt-5">
 
                              {(item?.content || []).map(f=>{
                                  f=f[0]
@@ -310,38 +315,21 @@ export default function SinglePrint({item,setItem}) {
                                   
                                 }
 
+                                let v=variables
+
                                  return (
                                   <>
                                       <div>
                                         <div className="text-justify">
-                                        
-                                        <p className="leading-relaxed" style={{lineHeight:2}}>{t('medical-certification-t-1',variables)}</p>
-                                        <p className="leading-relaxed" style={{lineHeight:2}}>{t('medical-certification-t-2',variables)}</p>
-                                        <p className="mt-5 text-[18px] flex justify-center">{formatDate(f.created_at.split('T')[0],i18next.language)}</p>
 
-                                        </div>
-                                        <div className="flex justify-center mt-2">
-                                              {item?.doctor && <img width={100} className="h-auto ml-2" src={doctorSignature}/>}
-                                              {item?.doctor && <img width={100}  className="h-auto" src={doctorStamp}/>}
-                                              {(user?.app_settings?.[0]?.value && !item?.doctor) && <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>}
-                                        </div>
+                                          {i18next.language=="pt" && <p className="leading-relaxed" style={{lineHeight:2}}>Eu, <label className="font-bold">{v.doctor_name}</label>, prestando serviços na plataforma de atendimento médico Dr. Online, declaro por minha honra que o(a) Sr.(a) <label className="font-bold">{v.patient_name}</label>, titular do <label className="font-bold">Bilhete de identidade n.° </label><label className="font-bold">{v.identification_number}</label>, passado pelo arquivo de iden ficação de/da <label className="font-bold">{v.place_of_issuance_of_the_identity_card}</label>, a <label className="font-bold">{v.date_of_issuance_of_the_identity_card}</label>, foi por mim observado(a) em uma consulta de <label className="font-bold">{v.medical_specialty}</label>, tendo sido constatado que o(a) paciente sofre de  <label className="font-bold">{v.disease}</label> sendo por isso recomendado como parte do seu tratamento o repouso e consumo de medicação controlada, tornando-o(a) indisponível para comparecer às suas actividades <label className="font-bold">Laborais</label> ou <label className="font-bold">Estudantis</label> por um prazo de 15 dias, a contar da data de emissão do presente atestado médico.</p>}
+                                          {i18next.language=="en" && <p className="leading-relaxed" style={{lineHeight:2}}>I, <label className="font-bold">{v.doctor_name}</label>, providing services on the Dr. Online medical care platform, hereby declare on my honor that Mr./Ms. <label className="font-bold">{v.patient_name}</label>, holder of Identity Card No. <label className="font-bold">{v.identification_number}</label>, issued by the Identification Archive of <label className="font-bold">{v.place_of_issuance_of_the_identity_card}</label> on <label className="font-bold">{v.date_of_issuance_of_the_identity_card}</label>, was examined by me during a <label className="font-bold">{v.medical_specialty}</label> consultation. It was determined that the patient is suffering from <label className="font-bold">{v.disease}</label>. Therefore, as part of their treatment, rest and the use of controlled medication are recommended, rendering them unavailable to attend their <label className="font-bold">professional</label> or <label className="font-bold">academic</label> activities for a period of 15 days, starting from the date of issuance of this medical certificate.</p>}
 
-                                        <div className="border-t border-t-gray-400 w-full mt-10">
-                                          <p className="leading-relaxed" style={{lineHeight:2}}>{t('medical-certification-t-3',variables)}</p>
-                                          <p className="mt-5 text-[18px] mb-2 flex justify-center">{formatDate(f.status_changed_at?.split('T')?.[0] || f?.created_at?.split('T')[0],i18next.language)}</p>
-                                          <p className="leading-relaxed mt-3 flex justify-center" style={{lineHeight:2}}>{t('medical-certification-t-4',variables)}</p>
-                                        </div>
-                                      
-                                         <div className="flex justify-center w-full">
-                                             {(user?.app_settings?.[0]?.value && item?.i?.status_changer?.role=="admin") ? (
-                                                <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>
-                                             ) : (
-                                                <img width={100}  className="h-auto" src={secretaryChiefSignature}/>
-                                             )}
-                                        </div>
-
-                                        <div className="border-t border-t-gray-400 w-full mt-10">
-                                          <p className="leading-relaxed" style={{lineHeight:2}}>{t('medical-certification-t-5',variables)}</p>
+                                          <div className="mt-1">
+                                            {i18next.language=="pt" && <p className="leading-relaxed" style={{lineHeight:2}}>E por este atestado cconsƟtuir a verdade, adiciono a minha assinatura e carimbo.</p>}
+                                            {i18next.language=="en" && <p className="leading-relaxed" style={{lineHeight:2}}>And to certify the truth of this statement, I add my signature and stamp.</p>}
+                                          </div>
+                             
                                         </div>
 
                                       </div>
@@ -389,42 +377,64 @@ export default function SinglePrint({item,setItem}) {
              
                     
 
-               <div style={{width:'100%'}} className={`flex-1 ${item?.from=="medical-certificate" ? 'hidden':''}  flex flex-col justify-end w-full`}>
-                      <div className="mt-2 flex justify-between">
-                          <span className="ml-5 flex">{t('common.date')}: <label className="font-medium">{new Date().toISOString().split('T')[0]}</label></span>
-  
-                          <div className="flex-1 flex justify-end">
-                            <div>
-                              <div className="mb-2 flex justify-end flex-1 w-[400px]">
-                                 {(user?.app_settings?.[0]?.value && item?.from!="medical-certificate") && <img width={70}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>}
-                          
-                                  {item?.doctor && <img width={70} className="h-auto mr-2" src={doctorSignature}/>}
-                                  {item?.doctor && <img width={70}  className="h-auto" src={doctorStamp}/>}
-                               </div>
 
-                              <div className="flex justify-end">
-                                  <span className="min-w-[100px] flex border-black border-b border-dashed  items-center" >Dr. {item?.doctor?.name || t('common.dronline-team')}</span>
-                              </div>
-                            </div>
-                          </div>
-                         
-                    </div>
-               </div>
 
-               <div className="w-full text-[0.8rem] text-gray-500 flex justify-between mt-4 border-t border-t-gray-200 pt-3">
-                    <span>
-                       <QRCodeGenerator  code={`${(item?.i?.id || '').toString().padStart(5, '0')}${data?.getDocumentLetterCodeFrom(item?.from)}`} link={`${data.APP_FRONDEND}/qrcode/${data.encodeBase64Multiple(`${(item?.i?.id || '').toString().padStart(5, '0')}---${item?.from}---${item?.appointment?.is_for_dependent ? item?.appointment?.dependent?.name  :  item?.patient?.name}---${item?.i?.created_at}`)}`}/>
-                    </span>
-                    <span className="translate-y-3">{appSettings?.name}</span>
-                    <div className="flex translate-y-3">
-                      <span>{appSettings?.email}</span>
-                      <label className="mx-2">|</label>
-                      <span>{appSettings?.main_contact}</span>
-                    </div>
+                <div>
+
+                                     <div className="flex-col flex items-center justify-center">
+                                          <p className="font-bold mt-6">{t('common.signature-and-stamp-of-the-doctor')}</p>
+                                          <div className="min-h-[50px] flex justify-end flex-col mt-3">
+                                              <div className="flex items-center justify-center">
+                                                  {item?.doctor && <img width={80} className="h-auto mr-2" src={doctorSignature}/>}
+                                                  {item?.doctor && <img width={80}  className="h-auto" src={doctorStamp}/>}
+                                                  {!item?.doctor && <>
+                                                    {item?.i?.status_changer?.signature_filename || appSettings?.signature_filename && <img width={80} className="h-auto mr-2" src={item?.i?.status_changer?.signature_filename || appSettings?.signature_filename}/>}
+                                                    {appSettings?.stamp_filename && <img width={80}  className="h-auto" src={appSettings?.stamp_filename}/>}
+                                                  </>}
+                                              </div>
+                                              <span className="w-[350px] flex h-[2px] bg-black"></span>
+                                          </div>
+                                          {!item?.doctor && <p className="mt-3 mb-2 font-bold">{t('common.dronline-team')}</p>}
+                                          {item?.doctor && <p className="mt-3 mb-2 font-bold">{t('common.dr')} {item?.doctor?.name}</p>}
+                                          {item?.doctor && <p>{t('common.doctor-of')} {data._specialty_categories.filter(f=>f.id==item?.appointment?.medical_specialty)[0]?.[i18next.language+"_name"]}</p>}     
+                                          {item?.doctor?.order_number && <p>{t('common.medical-council-number')} - {item?.doctor?.order_number}</p>}
+                                        </div>
+
+
+                                        <div className="flex-col flex items-center justify-center">
+                                          <p className="font-bold mt-10">{t('common.signature-and-stamp-of-the-Secretary')}</p>
+                                          <div className="min-h-[50px] flex justify-end flex-col mt-3">
+                                              <div className="flex items-center justify-center">
+                                                  {(item?.i?.status_changer?.signature_filename || appSettings?.signature_filename) && <img width={80} className="h-auto mr-2" src={item?.i?.status_changer?.signature_filename || appSettings?.signature_filename}/>}
+                                                  {appSettings?.stamp_filename && <img width={80}  className="h-auto" src={appSettings?.stamp_filename}/>}
+                                              </div>
+                                              <span className="w-[350px] flex h-[2px] bg-black"></span>
+                                          </div>
+                                          <p className="mt-3 mb-2 font-bold">{t('common.administrative-assistant')}</p>
+                                          <p>{(item?.i?.status_changer?.role=="admin" ? appSettings?.administrative_assistant_name : item?.i?.status_changer?.name) || appSettings?.administrative_assistant_name}</p>
+                                        </div>
+
+                      </div>
+              
+
+
+               <div className="w-full flex-1 relative  text-[0.8rem] text-gray-500 flex justify-between mt-4 border-t border-t-gray-300 pt-3">
+                     <span></span>
+                     <div className="flex absolute left-0">
+                        <span>
+                          <QRCodeGenerator  link={`${data.APP_FRONDEND}/qrcode/${data.encodeBase64Multiple(`${`${(item?.i?.id || '').toString().padStart(5, '0')}/${item?.i?.created_at?.split('T')?.[0]?.split('-')?.[1]}/${item?.i?.created_at?.split('T')?.[0]?.split('-')?.[0]}/${data?.getDocumentLetterCodeFrom(item?.from)}/ADM`}---${item?.doctor?.name || ((item?.i?.status_changer?.role=="admin" ? appSettings?.administrative_assistant_name : item?.i?.status_changer?.name) || appSettings?.administrative_assistant_name)}---${item?.appointment?.is_for_dependent ? item?.appointment?.dependent?.name  :  item?.patient?.name}---${item?.from}---${item?.i?.created_at}`)}`}/>
+                        </span>
+                        <span className="w-[300px] -translate-x-[30px]">{t('messages.confirm-code-authenticity')}</span>
+                     </div>
+
+                     <div className="flex flex-col">
+                         <span>{t('messages.this-document-is-a-propriety-of')}</span>
+                         <span className="font-bold">
+                              {appSettings?.name}
+                         </span>
+                     </div>
                </div>
                <span id="last-print-element"></span>
-
-
       </div>
       </>
     )

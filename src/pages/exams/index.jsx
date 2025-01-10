@@ -78,7 +78,7 @@ function globalOnclick(id){
                   doctor:itemToShow.appointment.doctor,
                   appointment:itemToShow.appointment,
                   title: t('menu.exams'),
-                  from:'exam',
+                  from:'exam-request',
                   content: (data._exams?.data || []).map(f=>{
                     return [
                       {name:t('form.clinical-information'),value:f.clinical_information},
@@ -127,8 +127,8 @@ function globalOnclick(id){
                                     data.setSinglePrintContent({
                                       patient: itemToShow.appointment.patient,
                                       doctor:itemToShow.appointment.doctor,
-                                      title: t('menu.exam'),
-                                      from:'exam',
+                                      title: t('menu.exam-request'),
+                                      from:'exam-request',
                                       i,
                                       appointment:itemToShow.appointment,
                                       content: [

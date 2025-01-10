@@ -437,6 +437,10 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "expiration-date":"Prazo de validade",
+        "_created_by":"Emitido por",
+        "_created_for":"Emitido para",
+        "emission-date":"Data de emissão",
         "upcoming-consultations":"Consultas futuras",
         "developed-by":"Desenvolvido por",
         "in-partnership-with":"em parceria com",
@@ -458,6 +462,7 @@
         "update-manager":"Actualizar gestor",
         "medical-prescription": "Prescrição Médica",
         "exam":"Exame",
+        "exam-request":"Exam request",
         "clinical-diary":"Diário Clínico",
         "medical-certificates": "Atestados médicos",
         "disease":"Doença",
