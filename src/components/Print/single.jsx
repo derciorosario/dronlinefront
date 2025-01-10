@@ -6,7 +6,6 @@ import PrintTable from '../Tables/print'
 import { useAuth } from '../../contexts/AuthContext'
 import toast from 'react-hot-toast'
 import BaiscTable from '../Tables/basic'
-import WaterMark from '../../assets/images/dronline-watermark.svg'
 import QRCodeGenerator from '../Scan/QR-code'
 import _medications from '../../assets/medications.json'
 
@@ -206,7 +205,6 @@ export default function SinglePrint({item,setItem}) {
                            </div>
                          ))}
                    </div>
-
       
                    
                  <div className="px-5">
@@ -271,9 +269,9 @@ export default function SinglePrint({item,setItem}) {
 
 
                   {item?.from=="medical-prescription" ? (
-                      <div className="w-full py-2 px-5">
-                          <h2 className="mb-4 text-[20px] font-medium">{t('common.medications')}</h2>
-                          <p className="my-1 mb-5 text-gray-600"> 
+                      <div className="w-full py-7 px-5">
+                          <h2 className="mb-3 text-[20px] font-medium">{t('common.medications')}</h2>
+                          <p className="mb-3 text-gray-600"> 
                              {t('messages.medications-creation-details',{date:item?.i.created_at?.split('T')?.[0],hour:item?.i.created_at?.split('T')?.[1]?.slice(0,5)})}
                           </p>
                           {(item?.i?.medical_prescription_items || []).map((f,_f)=>{
@@ -393,18 +391,20 @@ export default function SinglePrint({item,setItem}) {
 
                <div style={{width:'100%'}} className={`flex-1 ${item?.from=="medical-certificate" ? 'hidden':''}  flex flex-col justify-end w-full`}>
                       <div className="mt-2 flex justify-between">
-                          <span>{t('common.date')}: <label className="font-medium">{new Date().toISOString().split('T')[0]}</label></span>
+                          <span className="ml-5 flex">{t('common.date')}: <label className="font-medium">{new Date().toISOString().split('T')[0]}</label></span>
   
-                          <div>
+                          <div className="flex-1 flex justify-end">
+                            <div>
+                              <div className="mb-2 flex justify-end flex-1 w-[400px]">
+                                 {(user?.app_settings?.[0]?.value && item?.from!="medical-certificate") && <img width={70}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>}
+                          
+                                  {item?.doctor && <img width={70} className="h-auto mr-2" src={doctorSignature}/>}
+                                  {item?.doctor && <img width={70}  className="h-auto" src={doctorStamp}/>}
+                               </div>
 
-                            <div className="mb-2 flex justify-between">
-                                {item?.doctor && <img width={100} className="h-auto mr-2" src={doctorSignature}/>}
-                                {item?.doctor && <img width={100}  className="h-auto" src={doctorStamp}/>}
-                                {(user?.app_settings?.[0]?.value && item?.from!="medical-certificate") && <img width={100}  className="h-auto" src={JSON.parse(user?.app_settings?.[0]?.value).stamp_filename}/>}
-                            </div>
-
-                            <div className="flex">
-                                <span className="min-w-[100px] flex border-black border-b border-dashed  items-center" >Dr. {item?.doctor?.name || t('common.dronline-team')}</span>
+                              <div className="flex justify-end">
+                                  <span className="min-w-[100px] flex border-black border-b border-dashed  items-center" >Dr. {item?.doctor?.name || t('common.dronline-team')}</span>
+                              </div>
                             </div>
                           </div>
                          

@@ -131,7 +131,7 @@ function App() {
                           <BaiscTable.Td url={`/faq/`+i.id}>{i.id}</BaiscTable.Td>
                           <BaiscTable.Td url={`/faq/`+i.id}>{t('common.'+i.type)}</BaiscTable.Td>
                           <BaiscTable.Td url={`/faq/`+i.id}>{i[`title_${i18next.language}`]}</BaiscTable.Td>
-                          <BaiscTable.Td url={`/faq/`+i.id}>{i[`content_${i18next.language}`].slice(0,100)}</BaiscTable.Td>
+                          <BaiscTable.Td url={`/faq/`+i.id}>{data.text_l(i[`content_${i18next.language}`],100)}</BaiscTable.Td>
                           <BaiscTable.Td url={`/faq/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                           <BaiscTable.Td url={`/faq/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                      </BaiscTable.Tr>

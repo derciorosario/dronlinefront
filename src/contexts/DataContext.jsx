@@ -882,7 +882,16 @@ function isSetAsUrgentHour(hour,AppSettings){
       setSelectedTableItems([])
     },[updateTable])
 
+
+    function text_l(text,max=50){
+        if(text?.length > max){
+           text=text.slice(0,max)+"..."
+        }
+        return text
+    }
+
     const value = {
+      text_l,
       getDocumentLetterCodeFrom,
       encodeBase64Multiple,
       decodeBase64Multiple,

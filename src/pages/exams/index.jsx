@@ -146,9 +146,9 @@ function globalOnclick(id){
 
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.requested_at}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.clinical_information}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.clinical_information,40)}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.exam_items.map(g=>g.name).join(', ')}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.results_report}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.results_report,40)}</BaiscTable.Td>
                             
                             </BaiscTable.Tr>
                         ))}
