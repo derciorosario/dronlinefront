@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [pathname,setPathName]=useState(null)
   const [recoveringPassword,setRecoveringPassword]=useState(false)
   
-  let env="pro"
+  let env="dev"
   const APP_BASE_URL = env == "pro" ? "https://api.dronlinemz.com": 'http://127.0.0.1:8000'
   const SERVER_FILE_STORAGE_PATH=`storage/uploads`
   const APP_FRONDEND=env == "dev" ? "http://localhost:5173" : "https://dronlinemz.com" 

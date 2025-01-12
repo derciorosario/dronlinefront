@@ -16,7 +16,6 @@ import SelectDoctorAvailability from '../components/Cards/selectDoctorAvailabili
 import PaymentProcess from '../components/Payments/index.jsx'
 import AddDependentPopUp from '../components/modals/add-dependent.jsx'
 import PreLoader from '../components/Loaders/preloader.jsx'
-import SinglePrint from '../components/Print/single.jsx'
 import Notifications from '../components/PopUp/notifications.jsx'
 import SupportChat from '../components/modals/support-chat.jsx'
 import Feedback from '../components/PopUp/feedback.jsx'
@@ -26,7 +25,7 @@ import DownloadProgress from '../components/Loaders/download-progress.jsx'
 import SupportBadge from '../components/Badges/support-badge.jsx'
 import ChangePasswordModal from '../components/modals/change-password.jsx'
 import UserWaitingInTheRoom from '../components/modals/user-waiting-in-meeting-room.jsx'
-import SelectExams from '../components/modals/select-exams.jsx'
+import AddStampAndSignature from '../components/PopUp/add-stamp-and-signature.jsx'
 
 function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate,hideSupportBadges,startDate,endDate,setStartDate,setEndDate,hideSidebar,headerLeftContent}) {
     
@@ -57,6 +56,7 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
 
     <div id={'top'} className={`flex ${!hide ? 'bg-[#F9F9F9]':''} w-full  `}>
                
+              {/*** <AddStampAndSignature/> */}
                <UserWaitingInTheRoom/>
                <ChangePasswordModal/>
                <Reviews show={data._openPopUps.reviews}/>

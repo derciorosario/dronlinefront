@@ -3,20 +3,18 @@ import { useAuth } from './AuthContext';
 import html2pdf from 'html2pdf.js';
 import toast from 'react-hot-toast';
 
-let env="pro"
+let env="dev"
 import io from 'socket.io-client';
 import { t } from 'i18next';
 const socket_server=env!="dev" ? 'https://socket.dronlinemz.com' : 'http://localhost:3001'
 const socket = io(socket_server)
+
 let log_id=Math.random().toString()
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-  
-    const [dialogs,setDialogs]=useState({
-      
-    })
 
+    const [dialogs,setDialogs]=useState({})
     const [isDeleting,setIsDeleting]=useState(false)
 
     let initial_popups={
@@ -228,7 +226,7 @@ export const DataProvider = ({ children }) => {
           try{
             let response=await makeRequest({params:params?.[items[f]],method:'get',url:`api/${items[f].replaceAll('_','-')}`,withToken:true, error: ``},100);
             handleLoaded('add',items[f])
-            selected.update(response)
+            selected.update(response?.filter(i=>i.email!="marcia.chiluvane@ins.gov.mz"))
             _data[items[f]]=response
           }catch(e){
             console.log(items[f])

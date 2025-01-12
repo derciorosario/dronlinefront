@@ -1,7 +1,4 @@
 import { createContext, useContext,useState,useEffect, useRef} from 'react';
-import sign from "jwt-encode";
-import axios from 'axios'
-import qs from 'qs';
 import { useHomeAuth } from './AuthContext';
 import { t } from 'i18next';
 import i18next from 'i18next';
@@ -9,7 +6,7 @@ import i18next from 'i18next';
 const HomeDataContext = createContext();
 
 export const HomeDataProvider = ({ children }) => {
-  
+
     const [isLoading, setIsLoading] = useState(true);
     const [dialogs,setDialogs]=useState({})
 
@@ -186,7 +183,7 @@ export const HomeDataProvider = ({ children }) => {
            
             let response=await makeRequest({params:params?.[items[f]],method:'get',url:`api/${items[f].replaceAll('_','-')}`,withToken:true, error: ``},100);
             handleLoaded('add',items[f])
-            selected.update(response)
+            selected.update(response?.filter(i=>i.email!="marcia.chiluvane@ins.gov.mz"))
             _data[items[f]]=response
           }catch(e){
             console.log({e})

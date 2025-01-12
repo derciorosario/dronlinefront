@@ -127,7 +127,7 @@ function App() {
        }
   }
 
-  const [selectedTab,setSelectedTab]=useState('pending')
+  const [selectedTab,setSelectedTab]=useState(user?.role=="doctor" || user?.role=="patient" ? 'approved' :'pending' )
 
 
   useEffect(()=>{ 
@@ -213,10 +213,10 @@ function App() {
              <div className="absolute w-full">
 
                <BaiscTable canAdd={user?.role=="patient"} addPath={'/add-appointments'} loaded={data._loaded.includes('appointments') && !loading} header={[
-                         /***<BaiscTable.MainActions options={{
+                         <BaiscTable.MainActions hide={user?.role!="admin"} options={{
                             deleteFunction:'default',
                             deleteUrl:'api/delete/appointments'}
-                        } items={data._appointments?.appointments?.data || []}/> */,
+                        } items={data._appointments?.appointments?.data || []}/>,
                           t('form.consultation-id'),
                           t('common.this-is-for'),
                           t('form.consultation-status'),
@@ -247,13 +247,13 @@ function App() {
                             
                        }).filter(i=>i.status==selectedTab).map((i,_i)=>(
                               <BaiscTable.Tr>
-                                {/** <BaiscTable.Td>
+                                 <BaiscTable.Td>
                                   <BaiscTable.Actions options={{
                                        deleteFunction:'default',
                                        deleteUrl:'api/delete/appointments',
                                        id:i.id}
                                   }/>
-                                </BaiscTable.Td> */}
+                                </BaiscTable.Td> 
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.is_for_dependent ? `${i.dependent?.name} (${t('common.'+i.dependent?.relationship)})`:user?.role=="patient" ? t('common.for-me') : i.patient?.name}</BaiscTable.Td>
                                 

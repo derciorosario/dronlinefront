@@ -307,6 +307,14 @@ function getAvailableHours(item,type,date,selectedWeekDays,canceled_appointment_
 
 function isUrgentByLimit(hour,date){
     if(!user) return
+
+    if(data.serverTime?.date){
+      if(new Date(data.serverTime?.date==0) || new Date(data.serverTime?.date==6)){
+         return true
+      }
+    }
+
+
     let {urgent_consultation_limit_duration_hours,urgent_consultation_limit_duration_minutes} = JSON.parse(user?.app_settings?.[0]?.value)
     let selected_hour=hour
     let selected_date=date
@@ -327,7 +335,6 @@ async function SubmitForm(){
         let r=await data.makeRequest({method:'post',url:`api/appointments/`+id,withToken:true,data:{
           ...form,
           dependent_id:form.is_for_dependent ? form.dependent_id : null
-        
         }, error: ``},0);
   
         setForm({...form,r})
@@ -443,7 +450,6 @@ async function SubmitForm(){
     (async()=>{
       try{
         let _dependents=await data.makeRequest({method:'get',url:`api/all-patient-dependens`,withToken:true, error: ``},0);
-        console.log({_dependents})
         setDependents(_dependents)
         setDependesLoaded(true)
       }catch(e){
@@ -454,10 +460,10 @@ async function SubmitForm(){
 
 
  useEffect(()=>{
+
     if(user?.role!="patient" && !id){
            navigate('/dashboard')
     }
-
 
     if(!user || user?.role!="patient"){
           return
@@ -483,7 +489,6 @@ async function SubmitForm(){
 
 
  async function handleItems({status,id,payment_confirmed,invoice_id,appointment}){
-
   data._closeAllPopUps()
   toast.remove()
 
@@ -515,7 +520,6 @@ async function SubmitForm(){
    setLoading(false)
 
   }catch(e){
-
      setLoading(false)
      toast.remove()
      if(e.message==500){
@@ -525,14 +529,11 @@ async function SubmitForm(){
      }else{
        toast.error(t('common.unexpected-error'))
      }
-
   }
 }
 
 const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-
-console.log({form})
 return (
 <div>  
    <div className=" absolute left-0 top-0 w-full">

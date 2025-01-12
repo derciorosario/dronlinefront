@@ -105,6 +105,16 @@ function SelectDoctorAvailability({ item }) {
 
   function isUrgentByLimit(hour){
 
+
+
+       if(data.serverTime?.date){
+         if(new Date(data.serverTime?.date==0) || new Date(data.serverTime?.date==6)){
+            return true
+         }
+       }
+
+         
+
         if(!settings) return
         let {urgent_consultation_limit_duration_hours,urgent_consultation_limit_duration_minutes} = settings
         let selected_hour=hour

@@ -116,7 +116,9 @@ function Login() {
 
  function validadeErrors(e){
 
-    if(e.message==404){
+    if(e.message==403){
+      setMessage(t('common.user-inactive-contact-support'))
+    }else if(e.message==404){
         setMessage(t('common.user-not-found'))
     }else if(e.message==401){
       setMessage(t('common.wrong-password'))
@@ -231,7 +233,6 @@ async function VerifyCode(){
 async function SubmitForm(options){
 
     setMessage('')
-
     if(!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) && options?.register_method!="google"){
        setMessage(t('common.invalid-email'))
        document.querySelector('#_login_msg').scrollTop=0
@@ -258,7 +259,6 @@ async function SubmitForm(options){
         setLoading(false)
         validadeErrors(e)
     }
-
   }
 
 
@@ -267,9 +267,9 @@ async function SubmitForm(options){
 
 
   async function SendCode(){
-   
+
     setMessage('')
-  
+
     if(!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))){
        setMessage(t('common.invalid-email'))
        data._scrollToSection('top')
@@ -277,7 +277,6 @@ async function SubmitForm(options){
     }
   
     setLoading(true)
-
     setForm({...form,code:''})
   
   

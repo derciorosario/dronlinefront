@@ -450,6 +450,15 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "signature-and-stamp-needed-for-docs": "Signature and stamp are needed to add documents",
+        "want-to-save-signs-for-all-docs": "I want to save for all future documents",
+        "add-signature-and-stamp":"Adicione assinatura e carimbo",
+        "fill-all-required-fills":"Empreecha todos os campos obrigatórios",
+        "active":"Activo",
+        "inactive":"Inactivo",
+        "user-inactive-contact-support":"Sua conta foi desabilitada. Entre em contato com o suporte.",
+        "activate-account":"Activar conta",
+        "inactivate-account":"Desativar conta",
         "expiration-date":"Prazo de validade",
         "_created_by":"Emitido por",
         "_created_for":"Emitido para",

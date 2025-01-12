@@ -263,8 +263,6 @@
         "health-unit": "Health Unit",
         "age": "Age",
         "weight": "Weight",
-
-
         "diagnosis": "Diagnosis",
         "generic-name": "Generic Name",
         "medication-name": "Medication Name",
@@ -319,8 +317,6 @@
         "type-of-care": "Type of Care",
         "virtual-consultation": "Virtual Consultation"
     },
-
-    
     "notification-titles":{
         "consultation": "Consultation",
         "upcoming-consultation": "Upcoming Consultation",
@@ -445,6 +441,15 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },
     "common":{
+           "signature-and-stamp-needed-for-docs": "Signature and stamp are needed to add documents",
+           "want-to-save-signs-for-all-docs": "I want to save for all future documents",
+           "add-signature-and-stamp":"Add signature and stamp",
+           "fill-all-required-fills":"Fill all required fields",
+           "active":"Active",
+           "inactive":"Inactive",
+           "user-inactive-contact-support":"Your account has been disabled. Please contact support.",
+           "activate-account":"Activate account",
+           "inactivate-account":"inactivate account",
            "expiration-date":"Expiration date",
            "_created_by":"Created by",
            "_created_for":"Created for",

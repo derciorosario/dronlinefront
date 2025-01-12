@@ -119,7 +119,7 @@ function FileInput({_upload,label,res,r,onlyImages}) {
 
     <div className="w-[500px] max-md:w-full">
       
-       {label &&   <span class="block mb-2 text-sm text-gray-900" for={id}>{label} {r && <span className="text-red-500">*</span>}</span>}
+       {label &&   <span class="block mb-2 text-sm text-gray-900" for={id}>{label} {!r && <span className="text-gray-500 ml-1">{`(${t('common.optional')})`.toLowerCase()}</span>} {r && <span className="text-red-500">*</span>}</span>}
         
         <div className={`flex items-center w-full text-sm h-[40px] text-gray-900 border overflow-hidden border-gray-300 rounded-[0.3rem]   bg-gray-50`}>
              

@@ -177,13 +177,6 @@ function index() {
 
       }else if(currentPage=="signature"){
 
-        if(
-          !form.signature_filename ||
-          !form.stamp_filename
-       ){
-         v=false
-       }
-
       }
       setValid(v)
    },[form,currentPage])
@@ -280,12 +273,6 @@ async function updateSystemSettings() {
           
             try{
                 
-                  if(!form.signature_filename || !form.stamp_filename){
-                    toast.error(t('common.fill-all-required-fills'))
-                    setLoading(false)
-                    return
-                  }
-              
                   await data.makeRequest({method:'post',url:`api/doctor/`+user?.data.id,withToken:true,data:{
                     ...form
                   }, error: ``},0);
@@ -294,8 +281,6 @@ async function updateSystemSettings() {
                   toast.success(t('messages.updated-successfully'))
                   setLoading(false)
       
-      
-              
           
             }catch(e){
       
@@ -519,8 +504,8 @@ async function updateSystemSettings() {
 
                      
                    {(user?.role=="patient" || currentPage=="login-and-password" || currentPage=="system-info" || currentPage=="signature") && <div className={`mt-10`}>
+                         
                           <FormLayout.Button onClick={()=>{
-                            
                              if(currentPage=="personal-info"){
                                  SubmitForm()
                              }else if(currentPage=="signature"){
@@ -531,6 +516,9 @@ async function updateSystemSettings() {
                                  updateCredentials()
                              }
                           }} valid={valid} loading={loading} label={loading ? t('common.loading') : t('common.update') }/>
+
+                          
+                 
                   </div>}
 
                   </div>

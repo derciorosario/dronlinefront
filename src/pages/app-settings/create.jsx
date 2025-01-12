@@ -276,9 +276,6 @@ async function updateSystemSettings() {
                    </div>
                   
                    
-
-
-
                     <div className="w-full mt-6 hidden">
                        <div className="flex items-center mb-3">
                           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"></path></svg>
@@ -295,6 +292,7 @@ async function updateSystemSettings() {
 
 
                     <div className="w-full mt-10">
+
                         <span className="flex">{t('common.define-urgent-hours')}</span>
 
                         <div className="w-full flex items-center">
@@ -334,20 +332,18 @@ async function updateSystemSettings() {
                         <div className="flex items-center mt-2">
                            <label>
                             <input onClick={()=>{
-
                              
                               setForm({...form,
                                 do_not_define_urgent_hours:!Boolean(form.do_not_define_urgent_hours),
                                 urgent_consultation_end_hour:form.do_not_define_urgent_hours ? form.urgent_consultation_end_hour : '',
                                 urgent_consultation_start_hour:form.do_not_define_urgent_hours ? form.urgent_consultation_start_hour : ''
                               })
-                              
+
                             }} checked={form.do_not_define_urgent_hours} type="checkbox" className="mr-2"/>
                             <span>{t('common.do-not-define-urgent-hours')}</span>
                            </label>
                         </div>
                     </div>
-
 
                     <div>
                     
@@ -399,12 +395,6 @@ async function updateSystemSettings() {
                                   </div>
                              </div>
                       </div>
-
-                    
-
-
-                 
-
 
             </FormLayout>
 

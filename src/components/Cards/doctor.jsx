@@ -1,27 +1,19 @@
 import i18next, { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
 import { useData } from '../../contexts/DataContext'
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 function DoctorCard({item={}}) {
-    
-  const [selectedWeekDays,setSelectedWeekDays] = useState({})
-  const [selectedDates,setSelectedDates] = useState({})
-  const {handleSelectDoctorAvailability,selectedDoctors,setSelectedDoctors} = useData()
-  const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
-  const navigate = useNavigate()
   const data=useData()
-
   const {user} = useAuth()
-
   let required_data=['specialty_categories']
+
   useEffect(()=>{
     if(!user) return
     setTimeout(()=>(
       data._get(required_data) 
     ),500)
-},[user])
+  },[user])
 
 
 
@@ -50,11 +42,6 @@ function DoctorCard({item={}}) {
 
                 <p class="mb-3 font-normal text-gray-700">{item[`${i18next.language}_short_biography`]}</p>
                 
-               
-
-              
-                
-
                 <div className="flex gap-3 bg-white py-2 px-1 border-t mb-6">
 
                            <div className="flex flex-col items-center w-full">

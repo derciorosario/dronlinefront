@@ -199,7 +199,7 @@ Header.BottomBar=()=>{
 
                <div className="ml-6 max-lg:hidden">
                       <button onClick={()=>{
-                           navigate(user?.role=="patient" ? '/doctors' : '/doctors-list')
+                           navigate(user?.role=="patient" ? '/specialists' : '/doctors-list')
                       }} className="px-5 py-4 bg-[rgba(255,255,255,0.7)] text-honolulu_blue-300 uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('menu.add-appointment')}</button>
                </div>
           </div>

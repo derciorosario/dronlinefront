@@ -9,7 +9,6 @@ import CardSkeleton from '../../components/Skeleton/cards';
 import BasicFilter from '../../components/Filters/basic';
 import BasicSearch from '../../components/Search/basic';
 import BasicPagination from '../../components/Pagination/basic';
-import SelectDoctorAvailability from '../../components/Cards/selectDoctorAvailability';
 
 
 
@@ -78,7 +77,7 @@ function App({showOnlyList}) {
   
   useEffect(()=>{ 
         if(!user) return
-        data._get(required_data,{doctors:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+        data._get(required_data,{doctors:{status:'active',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
   },[user,pathname,search,currentPage,updateFilters,data.updateTable])
 
 useEffect(()=>{
