@@ -3,7 +3,7 @@ import { useAuth } from './AuthContext';
 import html2pdf from 'html2pdf.js';
 import toast from 'react-hot-toast';
 
-let env="dev"
+let env="pro"
 import io from 'socket.io-client';
 import { t } from 'i18next';
 const socket_server=env!="dev" ? 'https://socket.dronlinemz.com' : 'http://localhost:3001'
@@ -226,7 +226,11 @@ export const DataProvider = ({ children }) => {
           try{
             let response=await makeRequest({params:params?.[items[f]],method:'get',url:`api/${items[f].replaceAll('_','-')}`,withToken:true, error: ``},100);
             handleLoaded('add',items[f])
-            selected.update(response?.filter(i=>i.email!="marcia.chiluvane@ins.gov.mz"))
+            if(selected?.name=="doctors"){
+              selected.update({...response,total:response.total - 1,data:response.data.filter(i=>i.email!="marcia.chiluvane@ins.gov.mz")}) 
+            }else{
+              selected.update(response) 
+            }
             _data[items[f]]=response
           }catch(e){
             console.log(items[f])

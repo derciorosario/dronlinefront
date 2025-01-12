@@ -9,7 +9,7 @@ export const HomeAuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [auth, setAuth] = useState(false);
 
-  let env="dev"
+  let env="pro"
   const APP_BASE_URL  = env == "pro" ? "https://api.dronlinemz.com": 'http://127.0.0.1:8000'
   const SERVER_FILE_STORAGE_PATH=`storage/uploads`
   const APP_FRONDEND=env == "dev" ? "http://localhost:5173" : "https://dronlinemz.com" 
