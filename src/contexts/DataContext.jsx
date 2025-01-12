@@ -13,7 +13,6 @@ let log_id=Math.random().toString()
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-
     const [dialogs,setDialogs]=useState({})
     const [isDeleting,setIsDeleting]=useState(false)
 
@@ -226,11 +225,7 @@ export const DataProvider = ({ children }) => {
           try{
             let response=await makeRequest({params:params?.[items[f]],method:'get',url:`api/${items[f].replaceAll('_','-')}`,withToken:true, error: ``},100);
             handleLoaded('add',items[f])
-            if(selected?.name=="doctors"){
-              selected.update({...response,total:response.total - 1,data:response.data.filter(i=>i.email!="marcia.chiluvane@ins.gov.mz")}) 
-            }else{
-              selected.update(response) 
-            }
+            selected.update(response) 
             _data[items[f]]=response
           }catch(e){
             console.log(items[f])

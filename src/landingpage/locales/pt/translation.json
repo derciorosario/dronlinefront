@@ -450,8 +450,10 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
-        "signature-and-stamp-needed-for-docs": "Signature and stamp are needed to add documents",
-        "want-to-save-signs-for-all-docs": "I want to save for all future documents",
+        "get-from-profile":"Buscar do perfil",
+        "update-signature-and-stamp":"Actualizar assinatura e carimbo",
+        "signature-and-stamp-needed-for-docs":"Assinatura e carimbo são necessários para adicionar documentos",
+        "want-to-save-signs-for-all-docs":"Salvar para todos documentos futuros",
         "add-signature-and-stamp":"Adicione assinatura e carimbo",
         "fill-all-required-fills":"Empreecha todos os campos obrigatórios",
         "active":"Activo",

@@ -348,7 +348,6 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                             t('common.disease'),
                             t('common.date_of_leave'),
                             t('common.details'),
-                            t('form.medical-specialty'),
                             t('common.patient'),
                             t('common.doctor')
                            ]
@@ -384,7 +383,6 @@ export default function PatientDashboard({startDate,endDate,setStartDate,setEndD
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.disease}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.date_of_leave}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.details}</BaiscTable.Td>
-                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{data._specialty_categories.filter(f=>f.id==i.appointment?.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.patient?.name}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
                           </BaiscTable.Tr>

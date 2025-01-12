@@ -280,6 +280,15 @@ async function updateSystemSettings() {
         
                   toast.success(t('messages.updated-successfully'))
                   setLoading(false)
+
+                  setUser({...user,
+                    data:{...user.data,
+                            signature_filename:form.signature_filename,
+                            stamp_filename:form.stamp_filename
+                    }
+                  })
+
+                  console.log('------------')
       
           
             }catch(e){

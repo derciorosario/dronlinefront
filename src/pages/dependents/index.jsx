@@ -58,7 +58,7 @@ function App() {
  
   
   useEffect(()=>{ 
-    if(!user) return
+    if(!user || user?.role=="doctor") return
     data._get(required_data,{dependents:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
   },[user,pathname,search,currentPage,updateFilters])
 

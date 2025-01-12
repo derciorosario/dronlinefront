@@ -53,8 +53,8 @@ export default function SinglePrint({item,setItem}) {
 
          if(item && appSettings){
 
-          setDoctorSignature(item.doctor?.signature_filename)
-          setDoctorStamp(item.doctor?.stamp_filename)
+          setDoctorSignature(item.doctor?.signature_filename || item.i?.signature_filename)
+          setDoctorStamp(item.doctor?.stamp_filename || item.i?.stamp_filename)
           setSecretaryChiefSignature(item?.i?.status_changer?.signature_filename)
         
           if(!localStorage.getItem('print_single'))  {

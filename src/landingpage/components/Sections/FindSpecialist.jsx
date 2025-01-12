@@ -31,7 +31,7 @@ function FindSpecialist() {
 
 
   useEffect(()=>{ 
-    data._get('doctors',{doctors:{all:true}}) 
+    data._get('doctors',{doctors:{all:true,status:'active'}}) 
   },[])
 
 

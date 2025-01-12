@@ -13,19 +13,16 @@ import BasicPagination from '../../components/Pagination/basic';
 
 
 function App({showOnlyList}) {
+
   const data=useData()
   const {user} =  useAuth()
   const { t, i18n } = useTranslation();
 
   const navigate = useNavigate()
 
-  let required_data=['doctors']
+  let required_data=['doctors'];
   const {pathname} = useLocation()
   const [search,setSearch]=useState('')
-
-
-
-
 
   const [filterOptions,setFilterOptions]=useState([
     {
@@ -76,8 +73,10 @@ function App({showOnlyList}) {
   const [updateFilters,setUpdateFilters]=useState(null)
   
   useEffect(()=>{ 
+
         if(!user) return
-        data._get(required_data,{doctors:{status:'active',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+        data._get(required_data,{doctors:{status:(user?.role=="admin" || user?.role=="manager") ? '' : 'active',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+
   },[user,pathname,search,currentPage,updateFilters,data.updateTable])
 
 useEffect(()=>{

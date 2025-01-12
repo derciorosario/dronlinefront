@@ -55,8 +55,8 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
   return ( 
 
     <div id={'top'} className={`flex ${!hide ? 'bg-[#F9F9F9]':''} w-full  `}>
-               
-              {/*** <AddStampAndSignature/> */}
+            
+            
                <UserWaitingInTheRoom/>
                <ChangePasswordModal/>
                <Reviews show={data._openPopUps.reviews}/>

@@ -16,7 +16,7 @@ function App({hideLayout,itemToShow,setItemToShow}) {
 
  
   const data=useData()
-  const {user} =  useAuth()
+  const {user,setUser} =  useAuth()
   const { t } = useTranslation();
 
   const navigate = useNavigate()

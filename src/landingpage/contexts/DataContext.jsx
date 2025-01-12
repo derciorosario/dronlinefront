@@ -185,11 +185,7 @@ export const HomeDataProvider = ({ children }) => {
             handleLoaded('add',items[f])
             console.log(selected,response)
 
-            if(selected?.name=="doctors"){
-              selected.update({...response,total:response.total - 1,data:response.data.filter(i=>i.email!="marcia.chiluvane@ins.gov.mz")}) 
-            }else{
-              selected.update(response) 
-            }
+            selected.update(response)
            
             _data[items[f]]=response
           }catch(e){

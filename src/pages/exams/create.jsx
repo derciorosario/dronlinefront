@@ -16,6 +16,7 @@ import FormCard from '../../components/Cards/form'
 import Comment from '../../components/modals/comments'
 import SearchInput from '../../components/Inputs/search'
 import SelectExams from '../../components/modals/select-exams'
+import AddStampAndSignature from '../../components/PopUp/add-stamp-and-signature'
 
 function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
 
@@ -31,7 +32,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
   const { id } = useParams()
   const {pathname} = useLocation()
   const navigate = useNavigate()
-  const {user}=useAuth()
+  const {user,setUser}=useAuth()
   const [loading,setLoading]=useState(itemToShow.action=="update" ? true : false);
   const [showComment,setShowComment]=useState(false)
   const [itemToEditLoaded,setItemToEditLoaded]=useState(false)
@@ -85,6 +86,10 @@ const [form,setForm]=useState(initial_form)
   }
 
 },[pathname])
+
+
+
+
 
 
  useEffect(()=>{
@@ -149,10 +154,19 @@ const [form,setForm]=useState(initial_form)
         setLoading(false)
         data._scrollToSection('center-content')
 
+        if(form.save_signatures_in_profile){
+          setUser({...user,
+            data:{...user.data,
+                    signature_filename:form.signature_filename,
+                    stamp_filename:form.stamp_filename
+            }
+          })
+        }
+
 
       }else{
 
-        let response=await data.makeRequest({method:'post',url:`api/exam`,withToken:true,data:{
+        await data.makeRequest({method:'post',url:`api/exam`,withToken:true,data:{
           ...form,
           patient_id:itemToShow.appointment.patient_id,
           doctor_id:itemToShow.appointment.doctor_id,
@@ -160,7 +174,16 @@ const [form,setForm]=useState(initial_form)
           user_id:user?.id
         }, error: ``},0);
 
-      
+
+        if(form.save_signatures_in_profile){
+          setUser({...user,
+            data:{...user.data,
+                    signature_filename:form.signature_filename,
+                    stamp_filename:form.stamp_filename
+            }
+          })
+        }
+
   
         setForm({...initial_form})
         setMessageType('green')
@@ -176,6 +199,8 @@ const [form,setForm]=useState(initial_form)
      
 
     }catch(e){
+
+      console.log({e})
 
       if(e.message==404){
         toast.error(t('common.item-not-found'))
@@ -197,6 +222,7 @@ const [form,setForm]=useState(initial_form)
 
   
   function handleUploadeduploaded_files(upload){
+
     setForm({...form,uploaded_files:form.uploaded_files.map(i=>{
         if(i.id==upload.key){
           return {...i,filename:upload.filename}
@@ -204,204 +230,237 @@ const [form,setForm]=useState(initial_form)
          return i
         }
     })})
+
   }
 
   const [showExamsDialog,setShowExamsDialog]=useState(false)
+  const [showSignatureDialog,setShowSignatureDialog]=useState(false)
+  
 
-  return (
-     <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
-
-      
-            <SelectExams show={showExamsDialog} setShow={setShowExamsDialog} form={form} setForm={setForm}/>
-
-            <Comment comments={form.comments} form={form} setForm={setForm} from={from} show={showComment} setShow={setShowComment}/>
-
-            {message && <div className="px-[20px] mt-9" id="_register_msg">
-              <AdditionalMessage btnSee={MessageBtnSee} float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
-           </div>}
-
-            {!itemToEditLoaded && itemToShow.action=="update" && <div className="mt-10">
-              <DefaultFormSkeleton/>
-            </div>}
-            
-           
-
-           <FormLayout hideInputs={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-exams') : t('common.add-exam')} verified_inputs={verified_inputs} form={form}
-          
-            topBarContent={
-                (<button onClick={()=>setShowComment(true)} type="button" class={`text-white hidden ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
-                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
-                 <span className="ml-2">Chat</span>
-                 {(form.comments.length!=0 && id) && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full px-2 flex items-center justify-center">
-                     {form.comments.length}
-                 </div>}
-              </button>)
-            }
-
-            bottomContent={(
-              <div className={`mt-5 ${user?.role!="doctor" ? 'hidden':''}`}>
-                  <span className="flex mb-5 items-center">
-                      {t('common.documents')} 
-                      <button onClick={()=>{
-                          let id=Math.random().toString().replace('.','')
-                          setForm({...form,uploaded_files:[{
-                            name:'',src:'',id
-                          },...form.uploaded_files]})
-                          setTimeout(() => {
-                             document.getElementById(id).focus()
-                          }, 200);
-                      }} type="button" class="text-white ml-4 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
-                        {t('common.add-document')}
-                      </button>
-                  
-                  </span>
-                  <div className="flex gap-x-4 flex-wrap gap-y-4">
-                      
-                      {form.uploaded_files.map(i=>(
-
-                          <div className="flex items-center">
-                            
-                            <div>
-                            <input id={i.id} style={{borderBottom:'0'}} value={i.name} placeholder={t('common.document-name')} onChange={(e)=>{
-                                 setForm({...form,uploaded_files:form.uploaded_files.map(f=>{
-                                    if(f.id==i.id){
-                                      return {...f,name:e.target.value}
-                                    }else{
-                                      return f
-                                    }
-                                 })})
-                            }}   class={`bg-gray border border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
-                             <FileInput  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
-                            </div>
-                              
-                            <span onClick={()=>{
-                                setForm({...form,uploaded_files:form.uploaded_files.filter(f=>f.id!=i.id)})
-                              }} className="ml-2 cursor-pointer hover:opacity-65"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span>
-                           
-
-                            </div>
-                      ))}
-                      
-                  </div>
-                </div>
-            )}
-
-            button={(
-               <div className={`mt-[40px] ${(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient" ? 'hidden':''}`}>
-                 <FormLayout.Button onClick={()=>{
-                     SubmitForm()
-                 }} valid={valid} loading={loading} label={itemToShow.action=="update" ? t('common.update') :t('common.send')}/>
-               </div>
-            )}
-            >
-
-
-
-            <FormCard  hide={itemToShow.action!="update" || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
-                {name:'ID',value:form.id},
-                {name:t('form.clinical-information'),value:form.clinical_information},
-                {name:t('form.requested-exams'),value:form.requested_exams},
-                {name:t('form.results-report'),value:form.results_report},
-                {name:t('form.requested-on'),value:form.requested_at}
-             ]}/>
  
-                  {/*<SearchInput r={true} label={t('form.patient-name')} loaded={data._loaded.includes('patients')} res={setPatientId} items={data._patients} />*/}
+  return (
 
-                  <FormLayout.Input 
-                    verified_inputs={verified_inputs} 
-                    form={form} 
-                    r={true} 
-                    hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                    type={'date'}
-                    onBlur={() => setVerifiedInputs([...verified_inputs, 'requested-on'])} 
-                    label={t('form.requested-on')} 
-                    onChange={(e) => setForm({...form, requested_at: e.target.value})} 
-                    field={'requested_at'} 
-                    value={form.requested_at}
-                  />
+       <>
+      <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
 
-                  <FormLayout.Input 
-                  verified_inputs={verified_inputs} 
-                  form={form} 
-                  r={true} 
-                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                  textarea={true}
-                  onBlur={() => setVerifiedInputs([...verified_inputs, 'clinical_information'])} 
-                  label={t('form.clinical-information')} 
-                  onChange={(e) => setForm({...form, clinical_information: e.target.value})} 
-                  field={'clinical_information'} 
-                  value={form.clinical_information}
-                />
+            <AddStampAndSignature
+            itemToShow={itemToShow}
+            SubmitForm={SubmitForm}
+            show={showSignatureDialog} setShow={setShowSignatureDialog}
+            loading={loading} setLoading={true}
+            form={form} setForm={setForm}/>
+      
+           <SelectExams show={showExamsDialog} setShow={setShowExamsDialog} form={form} setForm={setForm}/>
 
-                <div className="w-full">
-                   <label  class="flex items-center mb-2 text-sm  text-gray-900">{t('form.requested-exams')} <span className="text-red-500">*</span></label>
-                   <div className="flex items-center">
-                      <div class={`bg-gray border flex  flex-wrap border-gray-300 text-gray-900 text-sm  rounded-[0.3rem]  w-[400px] max-md:w-auto max-md:flex-1 px-1.5 py-1`}>
-                          {!form.exam_items.length && <span className="py-1">{t('common.none-added')}</span>}
-                          {form.exam_items.map(i=>(
+           <Comment comments={form.comments} form={form} setForm={setForm} from={from} show={showComment} setShow={setShowComment}/>
 
-                              <div className="bg-gray-200 rounded-[0.3rem] my-[1px] px-2 py-1 inline-flex items-center mr-1">
-                               <span className="text-[14px]">{i.name}</span>
-                               
-                                 <div  onClick={() => {
-                                    setForm({...form,exam_items:form.exam_items.filter(g=>g.name!=i.name)})
-                                 }}
-                                 className="ml-1 cursor-pointer rounded-[0.3rem] hover:opacity-40  flex items-center justify-center"
-                                 >
-                                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368">
-                                     <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                                     </svg>
-                                 </div>
-                             </div>
+           {message && <div className="px-[20px] mt-9" id="_register_msg">
+             <AdditionalMessage btnSee={MessageBtnSee} float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
+          </div>}
+
+           {!itemToEditLoaded && itemToShow.action=="update" && <div className="mt-10">
+             <DefaultFormSkeleton/>
+           </div>}
+           
+          
+
+          <FormLayout hideInputs={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-exams') : t('common.add-exam')} verified_inputs={verified_inputs} form={form}
+         
+           topBarContent={
+               (<button onClick={()=>setShowComment(true)} type="button" class={`text-white hidden ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
+                <span className="ml-2">Chat</span>
+                {(form.comments.length!=0 && id) && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full px-2 flex items-center justify-center">
+                    {form.comments.length}
+                </div>}
+             </button>)
+           }
+
+           bottomContent={(
+             <div className={`mt-5 ${user?.role!="doctor" ? 'hidden':''}`}>
+                 <span className="flex mb-5 items-center">
+                     {t('common.documents')} 
+                     <button onClick={()=>{
+                         let id=Math.random().toString().replace('.','')
+                         setForm({...form,uploaded_files:[{
+                           name:'',src:'',id
+                         },...form.uploaded_files]})
+                         setTimeout(() => {
+                            document.getElementById(id).focus()
+                         }, 200);
+                     }} type="button" class="text-white ml-4 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
+                       <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                       {t('common.add-document')}
+                     </button>
+                 
+                 </span>
+                 <div className="flex gap-x-4 flex-wrap gap-y-4">
+                     
+                     {form.uploaded_files.map(i=>(
+
+                         <div className="flex items-center">
+                           
+                           <div>
+                           <input id={i.id} style={{borderBottom:'0'}} value={i.name} placeholder={t('common.document-name')} onChange={(e)=>{
+                                setForm({...form,uploaded_files:form.uploaded_files.map(f=>{
+                                   if(f.id==i.id){
+                                     return {...f,name:e.target.value}
+                                   }else{
+                                     return f
+                                   }
+                                })})
+                           }}   class={`bg-gray border border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
+                            <FileInput  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
+                           </div>
+                             
+                           <span onClick={()=>{
+                               setForm({...form,uploaded_files:form.uploaded_files.filter(f=>f.id!=i.id)})
+                             }} className="ml-2 cursor-pointer hover:opacity-65"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span>
+                          
+
+                           </div>
+                     ))}
+                     
+                 </div>
+               </div>
+           )}
+
+           button={(
+
+              <div className={`mt-[40px] ${(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient" ? 'hidden':''}`}>
+                {((!user?.data?.signature_filename || !user?.data?.stamp_filename) && itemToShow.action=="update") && <div className="w-full mb-6">
+                   <button onClick={()=>{
+                      setShowSignatureDialog(true)
+                   }} className="flex items-center">
+                      <svg className="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill={'#5f6368'}><path d="M563-491q73-54 114-118.5T718-738q0-32-10.5-47T679-800q-47 0-83 79.5T560-541q0 14 .5 26.5T563-491ZM120-120v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80ZM136-280l-56-56 64-64-64-64 56-56 64 64 64-64 56 56-64 64 64 64-56 56-64-64-64 64Zm482-40q-30 0-55-11.5T520-369q-25 14-51.5 25T414-322l-28-75q28-10 53.5-21.5T489-443q-5-22-7.5-48t-2.5-56q0-144 57-238.5T679-880q52 0 85 38.5T797-734q0 86-54.5 170T591-413q7 7 14.5 10.5T621-399q26 0 60.5-33t62.5-87l73 34q-7 17-11 41t1 42q10-5 23.5-17t27.5-30l63 49q-26 36-60 58t-63 22q-21 0-37.5-12.5T733-371q-28 25-57 38t-58 13Z"/></svg>
+                      <span className="text-honolulu_blue-300 underline cursor-pointer">{t('common.update-signature-and-stamp')}</span> 
+                   </button>
+                </div>}
+                <FormLayout.Button onClick={()=>{
+
+                    if((!user?.data?.signature_filename || !user?.data?.stamp_filename) && (!form.signature_filename || !form.stamp_filename)){
+                      setShowSignatureDialog(true)
+                    }else{
+                      SubmitForm()
+                    }
+                   
+                }} valid={valid} loading={loading} label={itemToShow.action=="update" ? t('common.update') :t('common.send')}/>
+              </div>
+
+           )}
+           >
 
 
 
-                          ))}
-                      </div> 
+           <FormCard  hide={itemToShow.action!="update" || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
+               {name:'ID',value:form.id},
+               {name:t('form.clinical-information'),value:form.clinical_information},
+               {name:t('form.requested-exams'),value:form.requested_exams},
+               {name:t('form.results-report'),value:form.results_report},
+               {name:t('form.requested-on'),value:form.requested_at}
+            ]}/>
 
-                      <button onClick={()=>{
-                        setShowExamsDialog(true)
-                    }} type="button" class={`text-white ml-2 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
-                       
-                    </button>
-                   </div>
-                </div>
+                 {/*<SearchInput r={true} label={t('form.patient-name')} loaded={data._loaded.includes('patients')} res={setPatientId} items={data._patients} />*/}
 
-                <FormLayout.Input 
-                  verified_inputs={verified_inputs} 
-                  form={form} 
-                  hide={true || (user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                  r={true} 
-                  textarea={true}
-                  onBlur={() => setVerifiedInputs([...verified_inputs, 'requested_exams'])} 
-                  label={t('form.requested-exams')} 
-                  onChange={(e) => setForm({...form, requested_exams: e.target.value})} 
-                  field={'requested_exams'} 
-                  value={form.requested_exams}
+                 <FormLayout.Input 
+                   verified_inputs={verified_inputs} 
+                   form={form} 
+                   r={true} 
+                   hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                   type={'date'}
+                   onBlur={() => setVerifiedInputs([...verified_inputs, 'requested-on'])} 
+                   label={t('form.requested-on')} 
+                   onChange={(e) => setForm({...form, requested_at: e.target.value})} 
+                   field={'requested_at'} 
+                   value={form.requested_at}
+                 />
 
-                />
+                 <FormLayout.Input 
+                 verified_inputs={verified_inputs} 
+                 form={form} 
+                 r={true} 
+                 hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                 textarea={true}
+                 onBlur={() => setVerifiedInputs([...verified_inputs, 'clinical_information'])} 
+                 label={t('form.clinical-information')} 
+                 onChange={(e) => setForm({...form, clinical_information: e.target.value})} 
+                 field={'clinical_information'} 
+                 value={form.clinical_information}
+               />
+
+               <div className="w-full">
+                  <label  class="flex items-center mb-2 text-sm  text-gray-900">{t('form.requested-exams')} <span className="text-red-500">*</span></label>
+                  <div className="flex items-center">
+                     <div class={`bg-gray border flex  flex-wrap border-gray-300 text-gray-900 text-sm  rounded-[0.3rem]  w-[400px] max-md:w-auto max-md:flex-1 px-1.5 py-1`}>
+                         {!form.exam_items.length && <span className="py-1">{t('common.none-added')}</span>}
+                         {form.exam_items.map(i=>(
+
+                             <div className="bg-gray-200 rounded-[0.3rem] my-[1px] px-2 py-1 inline-flex items-center mr-1">
+                              <span className="text-[14px]">{i.name}</span>
+                              
+                                <div  onClick={() => {
+                                   setForm({...form,exam_items:form.exam_items.filter(g=>g.name!=i.name)})
+                                }}
+                                className="ml-1 cursor-pointer rounded-[0.3rem] hover:opacity-40  flex items-center justify-center"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368">
+                                    <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                                    </svg>
+                                </div>
+                            </div>
+
+
+
+                         ))}
+                     </div> 
+
+                     <button onClick={()=>{
+                       setShowExamsDialog(true)
+                   }} type="button" class={`text-white ml-2 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
+                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                      
+                   </button>
+                  </div>
+               </div>
 
                <FormLayout.Input 
-                  verified_inputs={verified_inputs} 
-                  form={form} 
-                  r={true} 
-                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                  textarea={true}
-                  onBlur={() => setVerifiedInputs([...verified_inputs, 'results_report'])} 
-                  label={t('form.results-report')} 
-                  onChange={(e) => setForm({...form, results_report: e.target.value})} 
-                  field={'results_report'} 
-                  value={form.results_report}
-                />
+                 verified_inputs={verified_inputs} 
+                 form={form} 
+                 hide={true || (user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                 r={true} 
+                 textarea={true}
+                 onBlur={() => setVerifiedInputs([...verified_inputs, 'requested_exams'])} 
+                 label={t('form.requested-exams')} 
+                 onChange={(e) => setForm({...form, requested_exams: e.target.value})} 
+                 field={'requested_exams'} 
+                 value={form.requested_exams}
+
+               />
+
+              <FormLayout.Input 
+                 verified_inputs={verified_inputs} 
+                 form={form} 
+                 r={true} 
+                 hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                 textarea={true}
+                 onBlur={() => setVerifiedInputs([...verified_inputs, 'results_report'])} 
+                 label={t('form.results-report')} 
+                 onChange={(e) => setForm({...form, results_report: e.target.value})} 
+                 field={'results_report'} 
+                 value={form.results_report}
+               />
+
+
               
+             
 
 
 
-            </FormLayout>
+           </FormLayout>
 
-     </DefaultLayout>
+    </DefaultLayout>
+       
+       </>
   )
 }
 
