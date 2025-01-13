@@ -437,6 +437,8 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+           "medical-certificate": "Medical Certificate",
+            "validated":"Validated",
             "mark-urgent-exams":"Mark urgent exams",
             "number-of-days":"Number of days",
             "expiration-date":"Expiration date",

@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react'
 import i18n from '../../i18n'
 import { useHomeData } from '../../contexts/DataContext'
 import toast from 'react-hot-toast';
-import {useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 
 function FindSpecialist() {
     
-  const [form,setForm]=useState({})
   const data = useHomeData()
+  const {pathname} = useLocation()
 
   const [searchInput1,setSearch1] = useState('')
   const [searchedData1,setSearchedData1] = useState([])
@@ -32,7 +32,7 @@ function FindSpecialist() {
 
   useEffect(()=>{ 
     data._get('doctors',{doctors:{all:true,status:'active'}}) 
-  },[])
+  },[pathname])
 
 
   return (
@@ -82,7 +82,7 @@ function FindSpecialist() {
                                 <div onClick={()=>setSelected2(f)} className="w-full flex items-center p-2 hover:bg-slate-100 cursor-pointer rounded-[0.3rem]">
                                 <div className="w-[50px] h-[50px] relative overflow-hidden mr-3 rounded-full bg-slate-100 flex items-center justify-center">
                                     {f.name.charAt().toUpperCase()}
-                                    {f.profile_picture_filename && <img className="w-full object-cover absolute" src={f.profile_picture_filename}/>}
+                                    {f.profile_picture_filename && <img className="w-full object-cover absolute object-top" src={f.profile_picture_filename}/>}
                                 </div>
                                     <div className="flex flex-col">
                                         <span className="mt-medium">{f.name}</span>

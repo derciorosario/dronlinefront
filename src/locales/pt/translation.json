@@ -437,6 +437,7 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "validated":"Validado",
         "mark-urgent-exams":"Marcar exames urgentes",
         "number-of-days":"Número de dias",
         "expiration-date":"Prazo de validade",
@@ -467,6 +468,7 @@
         "exam-request":"Exam request",
         "clinical-diary":"Diário Clínico",
         "medical-certificates": "Atestados médicos",
+        "medical-certificate": "Atestado médico",
         "disease":"Doença",
         "date_of_leave":"Data de afastamento",
         "unread-messages":"Mensagens não lidas",
