@@ -186,8 +186,8 @@ useEffect(()=>{
                          'ID',
                           t('common.disease'),
                           t('common.date_of_leave'),
-                         // t('common.activities-to-do'),
-                         // t('common.expiration-date'),
+                          t('common.activities-to-do'),
+                          t('common.expiration-date'),
                           t('common.patient'),
                           t('common.doctor'),
                           selectedTab=="approved" ? t('common.approved-by') : null
@@ -232,8 +232,8 @@ useEffect(()=>{
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.disease}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.date_of_leave}</BaiscTable.Td>
-                                {/** <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.activity ? t('common.'+i.activity) : '-'}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.expiration_period} {t('common.days')}</BaiscTable.Td> */}
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.activity ? t('common.'+i.activity) : '-'}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.expiration_period} {i.expiration_period ? t('common.days') : ''}</BaiscTable.Td>                                                        
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.patient?.name}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
                                 <BaiscTable.Td hide={selectedTab!="approved"} onClick={()=>globalOnclick(i.id)}>{i.status_changer?.role=="admin" ? t('common.dronline-team') : (i.status_changer?.name || '-')}</BaiscTable.Td>

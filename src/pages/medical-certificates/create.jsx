@@ -53,6 +53,7 @@ let initial_form={
     date_of_leave:'',
     details:'',
     activity:'',
+    expiration_period:'',
     uploaded_files:[],
     comments:[]
 }
@@ -62,9 +63,8 @@ const [form,setForm]=useState(initial_form)
   useEffect(()=>{
     let v=true
     if(
-       !form.date_of_leave
-       //!form.activity ||
-     //  !form.expiration_period
+       !form.date_of_leave ||
+       !form.activity 
     ){
       v=false
     }
@@ -433,11 +433,9 @@ const [form,setForm]=useState(initial_form)
               value={form.disease}
             />
 
-
-           {/** <FormLayout.Input 
+           <FormLayout.Input 
               verified_inputs={verified_inputs} 
               form={form} 
-              r={true}
               hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
               onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
               label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
@@ -454,7 +452,7 @@ const [form,setForm]=useState(initial_form)
                             { "name": t('common.labor-and-student-related'), "value": "labor-and-student-related"},
                            ]
             } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'activity'])} label={t('common.activities-to-do')} onChange={(e)=>setForm({...form,activity:e.target.value})} field={'relationship'} value={form.activity}/>
-                */}           
+                          
 
             </FormLayout>
 

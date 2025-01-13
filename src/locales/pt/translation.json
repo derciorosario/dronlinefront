@@ -437,6 +437,7 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "mark-urgent-exams":"Marcar exames urgentes",
         "number-of-days":"Número de dias",
         "expiration-date":"Prazo de validade",
         "_created_by":"Emitido por",
@@ -763,7 +764,7 @@
         "user-not-authorized":"Usuário não autenticado",
         "session-expired":"Sessão expirou",
         "years_of_experience":"Anos de experiençia",
-        "update-exams":"Actualzar exame",
+        "update-exams":"Actualizar exame",
         "payment-management":"Gestão de Pagamentos",
         "previous":"Anterior",
         "next":"Proximo",
@@ -816,8 +817,8 @@
         "updated":"Actualizados",
         "created":"Criados",
         "add-form":"Adicionador formulário",
-        "update-clinical-diary":"Actualzar Diário Clínico",
-        "update-medical-prescription":"Actualzar Prescrição Medica",
+        "update-clinical-diary":"Actualizar Diário Clínico",
+        "update-medical-prescription":"Actualizar Prescrição Medica",
         "add-medical-certificate":"Adicionar atestado médico",
         "update-medical-certificate":"Actualizar atestado médico",
         "search-patients":"Pesquisar pacientes",

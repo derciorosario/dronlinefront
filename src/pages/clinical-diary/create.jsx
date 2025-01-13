@@ -460,16 +460,7 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow,setI
               value={form.diagnoses} 
             />
 
-           {/*** <FormLayout.Input 
-              verified_inputs={verified_inputs} 
-              form={form} 
-              textarea={true}
-              onBlur={() => setVerifiedInputs([...verified_inputs, 'therapeutic_plan'])}  
-              label={t('form.therapeutic-plan')}  
-              onChange={(e) => setForm({...form, therapeutic_plan: e.target.value})} 
-              field={'therapeutic_plan'}  
-              value={form.therapeutic_plan} 
-            /> */}
+          
 
             <FormLayout.Input 
               verified_inputs={verified_inputs} 
@@ -504,8 +495,17 @@ function addClinicalDiary({ShowOnlyInputs,hideLayout,appointment,itemToShow,setI
               value={form.other_instructions} 
             />
 
-
-
+            <FormLayout.Input 
+                          verified_inputs={verified_inputs} 
+                          form={form} 
+                          hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                          onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
+                          label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
+                          placeholder={t('common.number-of-days')}
+                          onChange={(e) => setForm({...form, expiration_period:e.target.value.startsWith('0') ? form.expiration_period : e.target.value.replace(/[^0-9]/g, '')})} 
+                          field={'expiration_period'} 
+                          value={form.expiration_period}
+           />
 
             </FormLayout>
 

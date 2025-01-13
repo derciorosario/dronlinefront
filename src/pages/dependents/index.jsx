@@ -85,12 +85,8 @@ function App() {
              navigate('/add-dependent')
 
           },text:t('menu.add-dependents')}:{}}}>
-           
-
              <div className="flex">
-
                 <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>    
-
                 <div className="flex-1">
 
                    <BasicSearch loaded={data._loaded.includes('dependents')} search={search} total={data._dependents?.total} from={'dependents'} setCurrentPage={setCurrentPage} setSearch={setSearch} />

@@ -74,7 +74,6 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
     }
 
     setValid(v)
-   // console.log({form})
 
  },[form])
 
@@ -488,6 +487,18 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                                 value={i.recommendations}
                               />
                             </div>
+                            
+                              <FormLayout.Input 
+                                          verified_inputs={verified_inputs} 
+                                          form={form} 
+                                          hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                                          onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
+                                          label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
+                                          placeholder={t('common.number-of-days')}
+                                          onChange={(e) => setForm({...form, expiration_period:e.target.value.startsWith('0') ? form.expiration_period : e.target.value.replace(/[^0-9]/g, '')})} 
+                                          field={'expiration_period'} 
+                                          value={form.expiration_period}
+                              />
 
                           </div>
                       ))}

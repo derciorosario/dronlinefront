@@ -441,7 +441,14 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },
     "common":{
-          "number-of-days":"Number of days",
+           "normal-consultation-are-urgent-on-the-weekends": "Normal consultations become urgent during the weekends",
+           "emission":"Emission",
+           "evaluation-area":"Evaluation Area",
+           "exams-information":"Exams information",
+           "type-of-exam":"Type of exam",
+           "priority":"Priority",
+           "mark-urgent-exams":"Mark urgent exams",
+           "number-of-days":"Number of days",
            "activities-to-do":"Activities do do",
            "labor":"Labor",
            "student-related":"Student-related",

@@ -106,19 +106,16 @@ function SelectDoctorAvailability({ item }) {
   function isUrgentByLimit(hour){
 
 
-
-       if(data.serverTime?.date){
-         if(new Date(data.serverTime?.date)==0 || new Date(data.serverTime?.date)==6){
-           return true
-         }
-       }
-
-         
-
         if(!settings) return
         let {urgent_consultation_limit_duration_hours,urgent_consultation_limit_duration_minutes} = settings
         let selected_hour=hour
         let selected_date=selectedDates?.[item?.id] || data.serverTime?.date
+
+        if(selected_date){
+          if(new Date(selected_date).getDay()==0 || new Date(selected_date).getDay()==6){
+            return true
+          }
+        }
 
         if(selected_date && selected_hour && data.serverTime?.date){
 
@@ -307,6 +304,13 @@ function SelectDoctorAvailability({ item }) {
                       <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                     </svg>
                     <span className="ml-2 text-[13px] text-orange-500">{(urgentLimits.minutes && urgentLimits.hours) ? t('messages.urgent-consultation-limit-with-hours-and-minutes',{minutes:urgentLimits.minutes,hours:urgentLimits.hours}) : urgentLimits.minutes ? t('messages.urgent-consultation-limit-with-minutes',{minutes:urgentLimits.minutes}) : t('messages.urgent-consultation-limit-with-hours',{hours:urgentLimits.hours})}</span>
+                 </div>}
+
+                  {(new Date(selectedDates?.[item?.id] || data.serverTime?.date).getDay()==0 || new Date(selectedDates?.[item?.id] || data.serverTime?.date).getDay()==6) && <div className="flex items-center mb-5">
+                    <svg class="flex-shrink-0 inline w-4 h-4 opacity-60" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                    </svg>
+                    <span className="ml-2 text-[13px] text-orange-500">{t('common.normal-consultation-are-urgent-on-the-weekends')}</span>
                  </div>}
                  
           <div className="w-full flex max-md:flex-col">

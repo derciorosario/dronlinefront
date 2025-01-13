@@ -127,7 +127,8 @@ function globalOnclick(id){
                           t('form.therapeutic-plan'),
                           t('form.prescribed-medications'),
                           t('form.therapeutic-recommendations'),
-                          t('form.other-instructions')
+                          t('form.other-instructions'),
+                          t('common.expiration-date'),
                         ]
                       }
 
@@ -149,6 +150,10 @@ function globalOnclick(id){
                                       doctor:itemToShow.appointment.doctor,
                                       from:'clinical-diary',
                                       i,
+                                      header:[
+                                        t('common.evaluation-area'),
+                                        t('invoice.description')
+                                      ],
                                       title: t('menu.clinical-diary'),
                                       content: [
                                          [{name: t('form.main-complaint'), value: i.main_complaint},
@@ -185,6 +190,8 @@ function globalOnclick(id){
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.prescribed_medications,40)}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.therapeutic_recommendations,40)}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.other_instructions,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.expiration_period} {i.expiration_period ? t('common.days') : ''}</BaiscTable.Td>
+                                
                             </BaiscTable.Tr>
                         ))}
 

@@ -223,14 +223,7 @@ export default function SinglePrint({item,setItem}) {
                                    <label className="font-bold">Email: </label>
                                    <label>{appSettings?.email}</label>
                                 </span>
-                                <span>
-                                   <label className="font-bold">Cell: </label>
-                                   <label>({appSettings?.main_contact_code}) {appSettings?.main_contact}</label>
-                                </span>
-                                <span>
-                                   <label className="font-bold">{t('common.address')}: </label>
-                                   <label>{appSettings?.address}</label>
-                                </span>
+                              
                             </div>
                         </div>
 
@@ -255,12 +248,12 @@ export default function SinglePrint({item,setItem}) {
                                    <label>{item?.appointment?.dependent?.name  || item?.patient?.name}</label>
                                 </span>
                                 <span>
-                                   <label className="font-bold">{t('common.emission-date')}: </label>
-                                   <label>{item?.i?.created_at?.split('T')?.[0]}</label>
+                                   <label className="font-bold">{t('common.emission')}: </label>
+                                   <label>{item?.i?.created_at?.split('T')?.[0]} {item?.i?.created_at?.split('T')?.[1]?.slice(0,5)}</label>
                                 </span>
                                 <span>
                                    <label className="font-bold">{t('common.expiration-date')}: </label>
-                                   <label className="lowercase">15 {t('common.days')}</label>
+                                   <label className="lowercase">{item?.i?.expiration_period || '-'} {item?.i?.expiration_period ? t('common.days') : ''}</label>
                                 </span>
                           </div>
 
@@ -310,7 +303,8 @@ export default function SinglePrint({item,setItem}) {
                                   patient_name:item?.patient?.name,
                                   doctor_name:item?.doctor?.name,
                                   identification_number:item?.patient?.identification_number,
-                                  disease:f.disease || ' -',
+                                  disease:f.disease || ' - ',
+                                  activity:f.activity,
                                   place_of_issuance_of_the_identity_card:item?.patient?.place_of_issuance_of_the_identity_card || `(${t('form.place_of_issuance_of_the_identity_card')})` ,
                                   date_of_issuance_of_the_identity_card:item?.patient?.date_of_issuance_of_the_identity_card?.split('T')?.[0] || `(${t('form.date_of_issuance_of_the_identity_card')})` 
                                   
@@ -322,11 +316,11 @@ export default function SinglePrint({item,setItem}) {
                                   <>
                                       <div>
                                         <div className="text-justify">
-                                          {i18next.language=="pt" && <p className="leading-relaxed" style={{lineHeight:2}}>Eu, <label className="font-bold">{v.doctor_name}</label>, prestando serviços na plataforma de atendimento médico Dr. Online, declaro por minha honra que o(a) Sr.(a) <label className="font-bold">{v.patient_name}</label>, titular do <label className="font-bold">Bilhete de identidade n.° </label><label className="font-bold">{v.identification_number}</label>, passado pelo arquivo de iden ficação de/da <label className="font-bold">{v.place_of_issuance_of_the_identity_card}</label>, a <label className="font-bold">{v.date_of_issuance_of_the_identity_card}</label>, foi por mim observado(a) em uma consulta de <label className="font-bold">{v.medical_specialty}</label>, tendo sido constatado que o(a) paciente sofre de  <label className="font-bold">{v.disease}</label> sendo por isso recomendado como parte do seu tratamento o repouso e consumo de medicação controlada, tornando-o(a) indisponível para comparecer às suas actividades <label className="font-bold">Laborais</label> ou <label className="font-bold">Estudantis</label> por um prazo de 15 dias, a contar da data de emissão do presente atestado médico.</p>}
-                                          {i18next.language=="en" && <p className="leading-relaxed" style={{lineHeight:2}}>I, <label className="font-bold">{v.doctor_name}</label>, providing services on the Dr. Online medical care platform, hereby declare on my honor that Mr./Ms. <label className="font-bold">{v.patient_name}</label>, holder of Identity Card No. <label className="font-bold">{v.identification_number}</label>, issued by the Identification Archive of <label className="font-bold">{v.place_of_issuance_of_the_identity_card}</label> on <label className="font-bold">{v.date_of_issuance_of_the_identity_card}</label>, was examined by me during a <label className="font-bold">{v.medical_specialty}</label> consultation. It was determined that the patient is suffering from <label className="font-bold">{v.disease}</label>. Therefore, as part of their treatment, rest and the use of controlled medication are recommended, rendering them unavailable to attend their <label className="font-bold">professional</label> or <label className="font-bold">academic</label> activities for a period of 15 days, starting from the date of issuance of this medical certificate.</p>}
+                                          {i18next.language=="pt" && <p className="leading-relaxed" style={{lineHeight:2}}>Eu, <label className="font-bold">{v.doctor_name}</label>, prestando serviços na plataforma de atendimento médico Dr. Online, declaro por minha honra que o(a) Sr.(a) <label className="font-bold">{v.patient_name}</label>, titular do <label className="font-bold">Bilhete de identidade n.° </label><label className="font-bold">{v.identification_number}</label>, passado pelo arquivo de iden ficação de/da <label className="font-bold">{v.place_of_issuance_of_the_identity_card}</label>, a <label className="font-bold">{v.date_of_issuance_of_the_identity_card}</label>, foi por mim observado(a) em uma consulta de <label className="font-bold">{v.medical_specialty}</label>, tendo sido constatado que o(a) paciente sofre de  <label className="font-bold">{v.disease}</label> sendo por isso recomendado como parte do seu tratamento o repouso, tornando-o(a) indisponível para comparecer às suas actividades <label className="font-bold">{t('common.'+v.activity)}</label> por um prazo de 15 dias, a contar da data de emissão do presente atestado médico.</p>}
+                                          {i18next.language=="en" && <p className="leading-relaxed" style={{lineHeight:2}}>I, <label className="font-bold">{v.doctor_name}</label>, providing services on the Dr. Online medical care platform, hereby declare on my honor that Mr./Ms. <label className="font-bold">{v.patient_name}</label>, holder of Identity Card No. <label className="font-bold">{v.identification_number}</label>, issued by the Identification Archive of <label className="font-bold">{v.place_of_issuance_of_the_identity_card}</label> on <label className="font-bold">{v.date_of_issuance_of_the_identity_card}</label>, was examined by me during a <label className="font-bold">{v.medical_specialty}</label> consultation. It was determined that the patient is suffering from <label className="font-bold">{v.disease}</label>. Therefore, as part of their treatment, rest and the use of controlled medication are recommended, rendering them unavailable to attend their <label className="font-bold">{t('common.'+v.activity)}</label> activities for a period of 15 days, starting from the date of issuance of this medical certificate.</p>}
 
                                           <div className="mt-1">
-                                            {i18next.language=="pt" && <p className="leading-relaxed" style={{lineHeight:2}}>E por este atestado cconsƟtuir a verdade, adiciono a minha assinatura e carimbo.</p>}
+                                            {i18next.language=="pt" && <p className="leading-relaxed" style={{lineHeight:2}}>E por este atestado  constituir a verdade, adiciono a minha assinatura e carimbo.</p>}
                                             {i18next.language=="en" && <p className="leading-relaxed" style={{lineHeight:2}}>And to certify the truth of this statement, I add my signature and stamp.</p>}
                                           </div>
                              
@@ -338,13 +332,47 @@ export default function SinglePrint({item,setItem}) {
                              })}
                             
                       </div>
-                  ) : (
+                  )  : item?.from=="exam-request" ? <div  className="w-full py-2 px-[20px] mt-5">
+
+                                     <div className="mb-5">
+                                         <h2 className="font-bold">{t('form.requested-on')}:</h2>
+                                         <p>{item?.i?.requested_at}</p>
+                                     </div>
+
+                                     <div className="mb-5">
+                                         <h2 className="font-bold">{t('form.clinical-information')}:</h2>
+                                         <p>{item?.i?.clinical_information}</p>
+                                     </div>
+
+                                     <div className="mb-5">
+                                         <h2 className="font-bold">{t('form.results-report')}:</h2>
+                                         <p>{item?.i?.results_report}</p>
+                                     </div>
+
+                                    
+                                     <div className="mt-10">
+                                         <h2 className="font-bold">{t('common.exams-information')}:</h2>
+                                     </div>
+
+                                     <PrintTable header={[
+                                        t('common.type-of-exam'),
+                                        t('common.priority')
+                                      ]} body={item?.i?.exam_items.map(i=>(
+                                            <PrintTable.Tr>
+                                                    <PrintTable.Td>{i.name}</PrintTable.Td>
+                                                    <PrintTable.Td>{i.is_urgent ? t('common.urgent') : '-'}</PrintTable.Td>
+                                            </PrintTable.Tr>
+                                        ))}>
+                                     </PrintTable>
+
+                    
+                  </div> : (
 
                     <div className="w-full py-5">
 
                                 {item?.type!="table" && (item?.content || []).map(f=>(
                                     <>
-                                        <PrintTable header={[t('common.name'),'']} body={f.filter(i=>i.name || i.value).map(i=>(
+                                        <PrintTable header={item?.header || [t('common.name'),'']} body={f.filter(i=>i.name || i.value).map(i=>(
                                             <PrintTable.Tr>
                                                     <PrintTable.Td>{i.name}</PrintTable.Td>
                                                     <PrintTable.Td>{i.value}</PrintTable.Td>
@@ -379,10 +407,10 @@ export default function SinglePrint({item,setItem}) {
 
 
 
-                <div>
+                <div className="justify-between flex mt-6 items-start">
 
                                      <div className="flex-col flex items-center justify-center">
-                                          <p className="font-bold mt-6">{t('common.signature-and-stamp-of-the-doctor')}</p>
+                                          <p className="font-bold">{t('common.signature-and-stamp-of-the-doctor')}</p>
                                           <div className="min-h-[50px] flex justify-end flex-col mt-3">
                                               <div className="flex items-center justify-center">
                                                   {item?.doctor && <img width={80} className="h-auto mr-2" src={doctorSignature}/>}
@@ -402,7 +430,7 @@ export default function SinglePrint({item,setItem}) {
 
 
                                         <div className="flex-col flex items-center justify-center">
-                                          <p className="font-bold mt-10">{t('common.signature-and-stamp-of-the-Secretary')}</p>
+                                          <p className="font-bold">{t('common.signature-and-stamp-of-the-Secretary')}</p>
                                           <div className="min-h-[50px] flex justify-end flex-col mt-3">
                                               <div className="flex items-center justify-center">
                                                   {(item?.i?.status_changer?.signature_filename || appSettings?.signature_filename) && <img width={80} className="h-auto mr-2" src={item?.i?.status_changer?.signature_filename || appSettings?.signature_filename}/>}

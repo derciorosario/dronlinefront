@@ -106,6 +106,7 @@ function globalOnclick(id){
                              undefined,
                             'ID',
                              t('form.medication-names'),
+                             t('common.expiration-date'),
                            ]
                          }
    
@@ -142,6 +143,8 @@ function globalOnclick(id){
                                    </BaiscTable.Td>
                                    <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
                                    <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')}</BaiscTable.Td>
+                                   <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.expiration_period} {i.expiration_period ? t('common.days') : ''}</BaiscTable.Td>
+                                                                   
                                </BaiscTable.Tr>
                            ))}
    

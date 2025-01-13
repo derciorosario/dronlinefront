@@ -69,8 +69,7 @@ const [form,setForm]=useState(initial_form)
        !form.requested_at ||
        !form.exam_items.length ||
        !form.results_report ||
-       !form.clinical_information 
-      // !form.expiration_period
+       !form.clinical_information  
     ){
       v=false
     }
@@ -238,6 +237,8 @@ const [form,setForm]=useState(initial_form)
   const [showSignatureDialog,setShowSignatureDialog]=useState(false)
   
 
+  console.log({form})
+
  
   return (
 
@@ -389,13 +390,15 @@ const [form,setForm]=useState(initial_form)
                  value={form.clinical_information}
                />
 
-               <div className="w-full">
+
+             
+
+               <div className="w-full mt-4">
                   <label  class="flex items-center mb-2 text-sm  text-gray-900">{t('form.requested-exams')} <span className="text-red-500">*</span></label>
                   <div className="flex items-center">
                      <div class={`bg-gray border flex  flex-wrap border-gray-300 text-gray-900 text-sm  rounded-[0.3rem]  w-[400px] max-md:w-auto max-md:flex-1 px-1.5 py-1`}>
                          {!form.exam_items.length && <span className="py-1">{t('common.none-added')}</span>}
                          {form.exam_items.map(i=>(
-
                              <div className="bg-gray-200 rounded-[0.3rem] my-[1px] px-2 py-1 inline-flex items-center mr-1">
                               <span className="text-[14px]">{i.name}</span>
                               
@@ -438,6 +441,31 @@ const [form,setForm]=useState(initial_form)
 
                />
 
+              <div className={`w-full mt-5 ${!form.exam_items.length ? 'hidden':''}`}>
+
+                  <label class="flex items-center mb-2 text-sm  text-gray-900">{t('common.mark-urgent-exams')} <span className="text-gray-500 ml-1">{`(${t('common.optional')})`.toLowerCase()}</span></label>
+                  <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
+                    {form.exam_items.map((f,_f)=>(
+                        <li onClick={()=>{
+                            setForm({...form,exam_items:form.exam_items.map(g=>{
+                                   if(f.name==g.name){
+                                      return {...g,is_urgent:!g.is_urgent}
+                                   }else{
+                                      return g
+                                   }
+                            })})
+                        }} class="flex items-center cursor-pointer">
+                            <input id={_f+f.name} checked={f.is_urgent} type="checkbox" value=""
+                            class="w-4 h-4 bg-gray-100 cursor-pointer border-gray-300 rounded text-primary-600 focus:ring-primary-500  focus:ring-2" />
+
+                            <label for={_f+f.name} class="ml-2 text-sm font-medium text-gray-900">
+                                {f.name}
+                            </label>
+                      </li>
+                    ))}
+                  </ul>
+              </div>
+
               <FormLayout.Input 
                  verified_inputs={verified_inputs} 
                  form={form} 
@@ -452,10 +480,9 @@ const [form,setForm]=useState(initial_form)
                />
 
 
-               {/** <FormLayout.Input 
+                <FormLayout.Input 
                              verified_inputs={verified_inputs} 
-                             form={form} 
-                             r={true}
+                             form={form}
                              hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
                              onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
                              label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
@@ -463,7 +490,7 @@ const [form,setForm]=useState(initial_form)
                              onChange={(e) => setForm({...form, expiration_period:e.target.value.startsWith('0') ? form.expiration_period : e.target.value.replace(/[^0-9]/g, '')})} 
                              field={'expiration_period'} 
                              value={form.expiration_period}
-                /> */}
+                /> 
 
            </FormLayout>
 

@@ -308,8 +308,8 @@ function getAvailableHours(item,type,date,selectedWeekDays,canceled_appointment_
 function isUrgentByLimit(hour,date){
     if(!user) return
 
-    if(data.serverTime?.date){
-      if(new Date(data.serverTime?.date)==0 || new Date(data.serverTime?.date)==6){
+    if(date){
+      if(new Date(date).getDay()==0 || new Date(date).getDay()==6){
          return true
       }
     }
