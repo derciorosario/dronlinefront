@@ -83,6 +83,7 @@ function globalOnclick(id){
                     doctor:itemToShow.appointment.doctor,
                     title: t('menu.clinical-diary'),
                     from:'clinical-diary',
+                    i,
                     content: (data._clinical_diary?.data || []).map(i=>{
                       return [
                         {name: t('form.main-complaint'), value: i.main_complaint},

@@ -89,6 +89,7 @@ function globalOnclick(id){
                       doctor:itemToShow.appointment.doctor,
                       from:'medical-prescription',
                       title: t('menu.medical-prescription'),
+                      i,
                       content
                   })
 

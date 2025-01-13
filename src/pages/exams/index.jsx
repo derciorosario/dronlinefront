@@ -79,6 +79,7 @@ function globalOnclick(id){
                   appointment:itemToShow.appointment,
                   title: t('menu.exams'),
                   from:'exam-request',
+                  i,
                   content: (data._exams?.data || []).map(f=>{
                     return [
                       {name:t('form.clinical-information'),value:f.clinical_information},

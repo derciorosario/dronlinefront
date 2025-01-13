@@ -108,8 +108,8 @@ function SelectDoctorAvailability({ item }) {
 
 
        if(data.serverTime?.date){
-         if(new Date(data.serverTime?.date==0) || new Date(data.serverTime?.date==6)){
-            return true
+         if(new Date(data.serverTime?.date)==0 || new Date(data.serverTime?.date)==6){
+           return true
          }
        }
 
