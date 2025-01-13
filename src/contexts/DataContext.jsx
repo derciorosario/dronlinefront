@@ -887,7 +887,16 @@ function isSetAsUrgentHour(hour,AppSettings){
         return text
     }
 
+    const daysBetween=(date1,date2)=>{
+      const milliseconds1 = date1.getTime();
+      const milliseconds2 = date2.getTime();
+      const diff = milliseconds2 - milliseconds1;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      return days;
+    }
+
     const value = {
+      daysBetween,
       text_l,
       getDocumentLetterCodeFrom,
       encodeBase64Multiple,

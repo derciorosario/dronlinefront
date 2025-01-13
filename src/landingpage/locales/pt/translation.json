@@ -450,6 +450,12 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "number-of-days":"Número de dias",
+        "activities-to-do":"Actividades a exercer",
+        "labor":"Laborais",
+        "student-related":"Estudantis",
+        "labor-and-student-related":"Laborais e Estudantis",
+        "home-consultation":"Consulta domiciliar",
         "get-from-profile":"Buscar do perfil",
         "update-signature-and-stamp":"Actualizar assinatura e carimbo",
         "signature-and-stamp-needed-for-docs":"Assinatura e carimbo são necessários para adicionar documentos",

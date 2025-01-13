@@ -437,6 +437,7 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "number-of-days":"Número de dias",
         "expiration-date":"Prazo de validade",
         "_created_by":"Emitido por",
         "_created_for":"Emitido para",

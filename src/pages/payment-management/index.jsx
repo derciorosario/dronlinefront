@@ -72,9 +72,6 @@ function App() {
 
   }
 
-
-
-  
   const [filterOptions,setFilterOptions]=useState([
     {
       open:false,

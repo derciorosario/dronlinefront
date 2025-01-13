@@ -70,6 +70,7 @@ const [form,setForm]=useState(initial_form)
        !form.exam_items.length ||
        !form.results_report ||
        !form.clinical_information 
+      // !form.expiration_period
     ){
       v=false
     }
@@ -451,10 +452,18 @@ const [form,setForm]=useState(initial_form)
                />
 
 
-              
-             
-
-
+               {/** <FormLayout.Input 
+                             verified_inputs={verified_inputs} 
+                             form={form} 
+                             r={true}
+                             hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                             onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
+                             label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
+                             placeholder={t('common.number-of-days')}
+                             onChange={(e) => setForm({...form, expiration_period:e.target.value.startsWith('0') ? form.expiration_period : e.target.value.replace(/[^0-9]/g, '')})} 
+                             field={'expiration_period'} 
+                             value={form.expiration_period}
+                /> */}
 
            </FormLayout>
 

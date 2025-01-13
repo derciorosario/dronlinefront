@@ -41,7 +41,7 @@ export default function SelectExams({show,setShow,form,setForm}) {
                                         class="w-4 h-4 bg-gray-100 cursor-pointer border-gray-300 rounded text-primary-600 focus:ring-primary-500  focus:ring-2" />
 
                                         <label for={_f+f.name} class="ml-2 text-sm font-medium text-gray-900">
-                                          {f.abbreviation}: {f.name}
+                                           {f.name}
                                         </label>
                                    </li>
                                 ))}

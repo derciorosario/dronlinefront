@@ -9,7 +9,7 @@ import _medications from '../../../assets/medications.json'
 import SinglePrint from '../../../components/Print/single'
 import { useNavigate } from 'react-router-dom'
 
-export default function PatientDashboard({startDate,endDate,setStartDate,setEndDate}) {
+export default function PatientDashboard({startDate,endDate}) {
 
     const data=useData()
     const {user,serverTime} = useAuth()

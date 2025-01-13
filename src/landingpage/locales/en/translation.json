@@ -441,6 +441,12 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },
     "common":{
+          "number-of-days":"Number of days",
+           "activities-to-do":"Activities do do",
+           "labor":"Labor",
+           "student-related":"Student-related",
+           "labor-and-student-related":"Labor and Student-related",
+           "home-consultation":"Home consultation",
            "get-from-profile":"Get from profile",
            "update-signature-and-stamp":"Update signature and stamp",
            "signature-and-stamp-needed-for-docs": "Signature and stamp are needed to add documents",

@@ -52,6 +52,7 @@ let initial_form={
     disease:'',
     date_of_leave:'',
     details:'',
+    activity:'',
     uploaded_files:[],
     comments:[]
 }
@@ -59,15 +60,14 @@ let initial_form={
 const [form,setForm]=useState(initial_form)
   
   useEffect(()=>{
-
     let v=true
-
     if(
        !form.date_of_leave
+       //!form.activity ||
+     //  !form.expiration_period
     ){
       v=false
     }
-
     setValid(v)
     console.log({form})
  },[form])
@@ -142,9 +142,6 @@ const [form,setForm]=useState(initial_form)
       }
 
       console.log(e)
-
-      
-
      
   }
   
@@ -253,6 +250,7 @@ const [form,setForm]=useState(initial_form)
   }
 
 
+
   async function handleItems({status,id}){
     data._closeAllPopUps()
     toast.remove()
@@ -291,14 +289,13 @@ const [form,setForm]=useState(initial_form)
   return (
      <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
 
+
             <AddStampAndSignature
-            
               itemToShow={itemToShow}
               SubmitForm={SubmitForm}
               show={showSignatureDialog} setShow={setShowSignatureDialog}
               loading={loading} setLoading={true}
               form={form} setForm={setForm}
-            
             />
 
             <Comment comments={form.comments} form={form} setForm={setForm} from={from} show={showComment} setShow={setShowComment}/>
@@ -384,7 +381,7 @@ const [form,setForm]=useState(initial_form)
             button={(
                <div className={`mt-[40px] ${(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient" ? 'hidden':''}   ${(user?.role=="manager" && !user?.data?.permissions?.medical_certificates?.includes('update') && id) ? 'hidden':''}`}>
                  
-                 {((!user?.data?.signature_filename || !user?.data?.stamp_filename) && itemToShow.action=="update") && <div className="w-full mb-6">
+                 {((!user?.data?.signature_filename || !user?.data?.stamp_filename) && itemToShow?.action=="update" || (id && !itemToShow)) && <div className="w-full mb-6">
                                    <button onClick={()=>{
                                       setShowSignatureDialog(true)
                                    }} className="flex items-center">
@@ -435,6 +432,29 @@ const [form,setForm]=useState(initial_form)
               field={'disease'} 
               value={form.disease}
             />
+
+
+           {/** <FormLayout.Input 
+              verified_inputs={verified_inputs} 
+              form={form} 
+              r={true}
+              hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+              onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
+              label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
+              placeholder={t('common.number-of-days')}
+              onChange={(e) => setForm({...form, expiration_period:e.target.value.startsWith('0') ? form.expiration_period : e.target.value.replace(/[^0-9]/g, '')})} 
+              field={'expiration_period'} 
+              value={form.expiration_period}
+            />
+            
+            <FormLayout.Input  verified_inputs={verified_inputs} form={form} selectOptions={
+                          [
+                            { "name": t('common.labor'), "value": "labor" },
+                            { "name": t('common.student-related'), "value": "student-related" },
+                            { "name": t('common.labor-and-student-related'), "value": "labor-and-student-related"},
+                           ]
+            } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'activity'])} label={t('common.activities-to-do')} onChange={(e)=>setForm({...form,activity:e.target.value})} field={'relationship'} value={form.activity}/>
+                */}           
 
             </FormLayout>
 

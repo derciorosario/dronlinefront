@@ -26,7 +26,7 @@ function index() {
   useEffect(()=>{
       setItems(data._upcoming_appointments?.map(i=>({
             event_id:Math.random(),
-            title:`C. ${data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[i18next.language+"_name"]} ${i.scheduled_hours} - ${t('common.'+i.status)}`,
+            title:`${i.type_of_care=="requested" ? t('common.home-consultation') : `C. ${data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[i18next.language+"_name"]}`}`+` - ${i.scheduled_hours} - ${t('common.'+i.status)}`,
             start: new Date(`${i.consultation_date.replaceAll('-','/')} ${i.scheduled_hours}`),
             end: new Date(`${i.consultation_date.replaceAll('-','/')} ${data.timeAfter30Minutes(i.scheduled_hours)}`),
             color: i.status=="pending" ? 'orange':i.status=="approved" ? 'green' : i.status=="canceled" ? 'red' : 'blue',
