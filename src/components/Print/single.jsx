@@ -62,9 +62,10 @@ export default function SinglePrint({item,setItem}) {
            data.setIsLoading(true)
              
           let imagestoLoad=[
-            item.doctor?.signature_filename,
-            item.doctor?.stamp_filename,
-            JSON.parse(user?.app_settings?.[0]?.value).stamp_filename
+            item.doctor?.signature_filename || item.i?.signature_filename,
+            item.doctor?.stamp_filename || item.i?.stamp_filename,
+            JSON.parse(user?.app_settings?.[0]?.value).stamp_filename,
+            JSON.parse(user?.app_settings?.[0]?.value).signature_filename
           ]
 
           if(item?.from=="medical-certificate"){
