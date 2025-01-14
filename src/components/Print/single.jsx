@@ -58,9 +58,6 @@ export default function SinglePrint({item,setItem}) {
           setDoctorStamp(item.doctor?.stamp_filename || item.i?.stamp_filename)
           setSecretaryChiefSignature(item?.i?.status_changer?.signature_filename)
 
-
-         
-        
           if(!localStorage.getItem('print_single'))  {
 
            data.setIsLoading(true)
@@ -203,9 +200,8 @@ export default function SinglePrint({item,setItem}) {
       <>
       
       <div id="_print" className={`w-full text-[0.9rem] justify-between  flex flex-col overflow-y-auto h-[100vh] ${!item ? '':'_print'} opacity-0 pointer-events-none    fixed left-0 top-0 z-50 px-10 bg-white`} style={{zIndex:9999}}>
-   
       <div class="footer">
-                  <div  className="w-full  flex-1 relative text-[0.8rem] text-gray-500 flex justify-between pt-2 mt-4 border-t border-t-gray-300">
+                  <div  className="w-full  flex-1 relative text-[0.8rem] text-gray-500 flex justify-between pt-2  border-t border-t-gray-300">
                      
                       <div className="flex justify-start text-start left-0">
                          <span className="mr-2">
@@ -223,28 +219,7 @@ export default function SinglePrint({item,setItem}) {
 
                 </div>
         </div>
-
-
-        {/***   <div className="w-full flex-1 relative  text-[0.8rem] text-gray-500 flex justify-between mt-4 border-t border-t-gray-300 pt-3">
-                     <span></span>
-                     <div className="flex absolute left-0">
-                        <span>
-                          <QRCodeGenerator  link={`${data.APP_FRONDEND}/qrcode/${data.encodeBase64Multiple(`${`${(item?.i?.id || '').toString().padStart(5, '0')}/${item?.i?.created_at?.split('T')?.[0]?.split('-')?.[1]}/${item?.i?.created_at?.split('T')?.[0]?.split('-')?.[0]}/${data?.getDocumentLetterCodeFrom(item?.from)}/ADM`}---${item?.doctor?.name || ((item?.i?.status_changer?.role=="admin" ? appSettings?.administrative_assistant_name : item?.i?.status_changer?.name) || appSettings?.administrative_assistant_name)}---${item?.appointment?.is_for_dependent ? item?.appointment?.dependent?.name  :  item?.patient?.name}---${item?.from}---${item?.i?.created_at}`)}`}/>
-                        </span>
-                        <span className="w-[300px] -translate-x-[30px]">{t('messages.confirm-code-authenticity')}</span>
-                     </div>
-
-                     <div className="flex flex-col">
-                         <span>{t('messages.this-document-is-a-propriety-of')}</span>
-                         <span className="font-bold">
-                              {appSettings?.name}
-                         </span>
-                     </div>
-        </div>
- */}
-
-
-        
+  
 
                 <div className="absolute left-0 right-0 z-50 opacity-15">
                         
