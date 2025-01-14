@@ -46,8 +46,8 @@ function DoctorList({max,items,animate}) {
     
               <div>
      
-              <div className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden">
-                  <img  src={item.profile_picture_filename} className="h-[300px] w-full object-cover object-top"/> 
+              <div className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden shadow mb-4">
+                  <img  src={item.profile_picture_filename} className={`h-[300px] w-full object-cover object-top ${!item.profile_picture_filename ? 'opacity-0':''}`}/> 
               </div>
      
 

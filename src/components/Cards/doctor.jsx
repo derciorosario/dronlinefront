@@ -22,7 +22,7 @@ function DoctorCard({item={}}) {
 
         <div  class="md:max-w-sm max-md:w-full bg-white border border-gray-200 rounded-lg shadow-sm">
             <div  className="h-[300px] bg-gray-100">
-                <img  class="rounded-t-lg object-cover w-full h-full" src={item.profile_picture_filename} alt="" />
+                <img  class={`rounded-t-lg object-cover w-full h-full object-top ${!item.profile_picture_filename ? 'opacity-0':''}`} src={item.profile_picture_filename} alt="" />
             </div>
 
             <div class="p-5">
