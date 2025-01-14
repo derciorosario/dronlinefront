@@ -65,7 +65,7 @@ export default function index() {
                             <div className="w-full flex mt-3 justify-center">
                                 <div className="flex items-center">
                                     <span className="text-gray-500">{t('common._created_by')}: </span>
-                                    <span className="mr-2 font-medium">{info.created_by}</span>
+                                    <span className="mr-2 font-medium">Dr.(a) {info.created_by}</span>
                                 </div>
                             </div>
 
