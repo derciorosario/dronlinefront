@@ -441,6 +441,9 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },
     "common":{
+           "timetables":"Timetable",
+           "medication":"Medication",
+           "validated":"Validated",
            "normal-consultation-are-urgent-on-the-weekends": "Normal consultations become urgent during the weekends",
            "emission":"Emission",
            "evaluation-area":"Evaluation Area",
@@ -483,6 +486,7 @@
            "medications":"Medications",
            "code-verification":"Code verification",
            "quantity-to-dispense":"Quantity to dispense",
+           "quantity-to-dispense_short":"Qtd to dispense",
            "route_of_administration":"Route of administration",
            "duration_of_treatment":"Duration of treatment",
            "additional-recommendations":"Adicional recommendations",

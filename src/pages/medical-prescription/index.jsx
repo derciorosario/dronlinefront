@@ -88,6 +88,7 @@ function globalOnclick(id){
                       patient: itemToShow.appointment.patient,
                       doctor:itemToShow.appointment.doctor,
                       from:'medical-prescription',
+                      appointment:i.appointment,
                       title: t('menu.medical-prescription'),
                       i,
                       content
@@ -129,6 +130,7 @@ function globalOnclick(id){
                                           title: t('menu.medical-prescription'),
                                           from:'medical-prescription',
                                           i,
+                                          appointment:i.appointment,
                                           content: 
                                              i.medical_prescription_items.map(f=>[
                                                 {name:t('form.medication'),value:`${t('form.medication-name')}:${f.name ? `${_medications.filter(g=>g.ITEM==f.name)?.[0]?.name}` : f.custom_name}(${f.prescribed_quantity});   ${t('form.dosage')}:${f.dosage};  ${t('form.prescribed-quantity')}:${f.prescribed_quantity}`},

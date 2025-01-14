@@ -117,7 +117,7 @@ function addAppointments({ShowOnlyInputs}) {
 },[pathname])
  
 const [dependents,setDependents]=useState([])
-const [dependensLoaded,setDependesLoaded]=useState([])
+const [dependensLoaded,setDependentsLoaded]=useState(false)
 const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':')
 
 
@@ -451,7 +451,7 @@ async function SubmitForm(){
       try{
         let _dependents=await data.makeRequest({method:'get',url:`api/all-patient-dependens`,withToken:true, error: ``},0);
         setDependents(_dependents)
-        setDependesLoaded(true)
+        setDependentsLoaded(true)
       }catch(e){
         console.log({e})
       }

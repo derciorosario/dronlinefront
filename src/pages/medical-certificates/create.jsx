@@ -64,7 +64,8 @@ const [form,setForm]=useState(initial_form)
     let v=true
     if(
        !form.date_of_leave ||
-       !form.activity 
+       !form.activity ||
+       !form.expiration_period 
     ){
       v=false
     }
@@ -436,6 +437,7 @@ const [form,setForm]=useState(initial_form)
            <FormLayout.Input 
               verified_inputs={verified_inputs} 
               form={form} 
+              r={true}
               hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
               onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
               label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 

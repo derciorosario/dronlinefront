@@ -102,7 +102,7 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
                 {searched.length==0 && <span className="px-4 py-2 text-gray-500 flex items-center justify-between">
                     {!loaded ? t('common.loading')+"..." : t('common.no-data-found')}
 
-                    {btnAddRes && <span onClick={() => {
+                    {(btnAddRes && loaded) && <span onClick={() => {
                         btnAddRes()
                         setInput('')
                         inputRes('')

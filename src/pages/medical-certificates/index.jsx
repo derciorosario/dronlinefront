@@ -231,7 +231,7 @@ useEffect(()=>{
                                 </BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.disease}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.date_of_leave}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.date_of_leave?.split('-')?.reverse()?.join('/')}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.activity ? t('common.'+i.activity) : '-'}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.expiration_period} {i.expiration_period ? t('common.days') : ''}</BaiscTable.Td>                                                        
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.patient?.name}</BaiscTable.Td>

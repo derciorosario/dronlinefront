@@ -51,7 +51,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
 
   let initial_form={
     medical_prescription_items:[
-      {id:Math.random(),name:'',dosage:'',pharmaceutical_form:'',treatment_duration:'',prescribed_quantity:'',dosing_instructions:'',route_of_administration:''}
+         {id:Math.random(),name:'',dosage:'',pharmaceutical_form:'',treatment_duration:'',prescribed_quantity:'',dosing_instructions:'',route_of_administration:''}
     ],
     uploaded_files:[],
     comments:[]
@@ -66,13 +66,11 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
   useEffect(()=>{
 
     let v=true
-
     if(
-       form.medical_prescription_items.some(i=>(!i.name && !i.custom_name) || !i.prescribed_quantity || !i.treatment_duration || !i.dosage || !i.pharmaceutical_form || !i.treatment_duration  || !i.route_of_administration || !i.dosing_instructions) 
+       form.medical_prescription_items.some(i=>(!i.name && !i.custom_name) || !i.prescribed_quantity || !i.treatment_duration || !i.dosage || !i.pharmaceutical_form || !i.treatment_duration  || !i.route_of_administration || !i.dosing_instructions || !i.timetable) 
     ){
       v=false
     }
-
     setValid(v)
 
  },[form])
@@ -468,6 +466,30 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                               />
                             </div>
 
+                            <div className="w-[300px]">
+
+                            <FormLayout.Input 
+                              verified_inputs={verified_inputs} 
+                              form={form} 
+                              width={'220px'}
+                              r={true} 
+                              onBlur={() => setVerifiedInputs([...verified_inputs, 'timetable'+i.id])} 
+                              label={t('common.timetables')} 
+                              onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
+                                return i.id==f.id ? {...f,timetable:e.target.value} : f
+                              })})} 
+                              textarea={true}
+                              height={'100%'}
+                              inputStyle={{height:60}}
+                              disabled={cannotEdit}
+                              ignoreVilidation={true}
+                              field={'timetable'+i.id} 
+                              value={i.timetable}
+                            />
+
+                            
+                            </div>
+
 
                             <div className="w-[300px]">
                               <FormLayout.Input 
@@ -488,21 +510,13 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                               />
                             </div>
                             
-                              <FormLayout.Input 
-                                          verified_inputs={verified_inputs} 
-                                          form={form} 
-                                          hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                                          onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
-                                          label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
-                                          placeholder={t('common.number-of-days')}
-                                          onChange={(e) => setForm({...form, expiration_period:e.target.value.startsWith('0') ? form.expiration_period : e.target.value.replace(/[^0-9]/g, '')})} 
-                                          field={'expiration_period'} 
-                                          value={form.expiration_period}
-                              />
+                             
 
                           </div>
                       ))}
                   </div>
+
+                 
 
                   <div className="w-full mt-5">
                      {!cannotEdit && <button onClick={()=>{
@@ -513,6 +527,20 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                       </button>}
 
                   </div>
+
+                  <div className="w-full mt-5">
+                    <FormLayout.Input 
+                        verified_inputs={verified_inputs} 
+                        form={form} 
+                        hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                        onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
+                        label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
+                        placeholder={t('common.number-of-days')}
+                        onChange={(e) => setForm({...form, expiration_period:e.target.value.startsWith('0') ? form.expiration_period : e.target.value.replace(/[^0-9]/g, '')})} 
+                        field={'expiration_period'} 
+                        value={form.expiration_period}
+                   />
+               </div>
 
                
 

@@ -303,6 +303,7 @@ export default function PatientDashboard({startDate,endDate}) {
                                           doctor:i.doctor,
                                           title: t('menu.medical-prescription'),
                                           from:'medical-prescription',
+                                          appointment:i.appointment,
                                           i,
                                           content: 
                                              i.medical_prescription_items.map(f=>[

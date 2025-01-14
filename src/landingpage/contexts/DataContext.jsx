@@ -465,7 +465,16 @@ export const HomeDataProvider = ({ children }) => {
     return ''
 }
 
+function text_l(text,max=50){
+  if(text?.length > max){
+     text=text.slice(0,max)+"..."
+  }
+  return text
+}
+
+
     const value = {
+      text_l,
       getDocumentLetterCodeFrom,
       showFilters,
       encodeBase64Multiple,

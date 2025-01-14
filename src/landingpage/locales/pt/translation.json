@@ -450,6 +450,8 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "timetables":"Horários",
+        "medication":"Médicação",
         "normal-consultation-are-urgent-on-the-weekends": "Consultas normais passam a ser urgentes durante os fins de semana",
         "emission":"Emissão",
         "evaluation-area":"Área de Avaliação",
@@ -494,6 +496,7 @@
         "code-is-invalid":"Código inválido",
         "code-verification":"Verificação de código",
         "quantity-to-dispense":"Quantidade a dispensar",
+        "quantity-to-dispense_short":"Qtd a dispensar",
         "route_of_administration":"Via de administração",
         "duration_of_treatment":"Duração de tratamento",
         "additional-recommendations":"Recomendações adicionais",

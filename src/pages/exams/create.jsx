@@ -68,7 +68,6 @@ const [form,setForm]=useState(initial_form)
     if(
        !form.requested_at ||
        !form.exam_items.length ||
-       !form.results_report ||
        !form.clinical_information  
     ){
       v=false
@@ -469,7 +468,6 @@ const [form,setForm]=useState(initial_form)
               <FormLayout.Input 
                  verified_inputs={verified_inputs} 
                  form={form} 
-                 r={true} 
                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
                  textarea={true}
                  onBlur={() => setVerifiedInputs([...verified_inputs, 'results_report'])} 

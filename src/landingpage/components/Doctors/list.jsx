@@ -42,7 +42,7 @@ function DoctorList({max,items,animate}) {
             
            {items.filter((i,_i)=>_i <= max || !max).map((item,_item)=>(
             
-             <div className={`flex w-[46%] max-md:w-full gap-2 flex-col max-lg:w-full`}>
+              <div className={`flex w-[46%] max-md:w-full gap-2 flex-col max-lg:w-full`}>
     
               <div>
      
@@ -94,7 +94,7 @@ function DoctorList({max,items,animate}) {
                      <span className="text-honolulu_blue-300 text-[17px] uppercase mt-bold">{item.name}</span>
                      <span className="text-honolulu_blue-500 mt-bold text-[20px] uppercase">{data._specialty_categories.filter(i=>i.id==item.medical_specialty)[0]?.[i18next.language+"_name"]}</span>
                      <p className="text-justify mt-5 text-gray-500 mb-4">
-                       {item[`${i18next.language}_short_biography`]}
+                       {data.text_l(item[`${i18next.language}_short_biography`],300)}
                      </p>
 
 

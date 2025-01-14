@@ -76,7 +76,7 @@ export default function index() {
                                 </div>
                             </div>
 
-                            <span className="w-full flex mt-2 text-gray-500 text-[0.7rem] justify-center">{t('common.created_at')}: {info?.date?.split('T')?.[0]} {info.date?.split('T')?.[1]?.slice(0,5)}</span>
+                            <span className="w-full flex mt-2 text-gray-500 text-[0.7rem] justify-center">{t('common.created_at')}: {info?.date?.split('T')?.[0]?.split('-')?.reverse()?.join('/')} {info.date?.split('T')?.[1]?.slice(0,5)}</span>
                           </>
                     )}
 

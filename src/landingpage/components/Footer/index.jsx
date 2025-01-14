@@ -34,7 +34,7 @@ function Footer({serviceItems}) {
 
   const partners=[
     {name:'Alinvest',image:partnerImage1,url:'https://alinvest-group.com'},
-    {name:'Cortex LDA',image:partnerImage2,url:'https://www.cortex-moz.com'},
+    {name:'Cortex LDA',image:partnerImage2,url:null},
     {name:'WeCare',image:partnerImage3,url:null}
   ]
 
