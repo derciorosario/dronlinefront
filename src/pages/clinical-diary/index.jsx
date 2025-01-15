@@ -84,6 +84,7 @@ function globalOnclick(id){
                     title: t('menu.clinical-diary'),
                     from:'clinical-diary',
                     i,
+                    appointment:i.appointment,
                     content: (data._clinical_diary?.data || []).map(i=>{
                       return [
                         {name: t('form.main-complaint'), value: i.main_complaint},
@@ -150,6 +151,7 @@ function globalOnclick(id){
                                       doctor:itemToShow.appointment.doctor,
                                       from:'clinical-diary',
                                       i,
+                                      appointment:i.appointment,
                                       header:[
                                         t('common.evaluation-area'),
                                         t('invoice.description')

@@ -240,6 +240,7 @@ export default function PatientDashboard({startDate,endDate}) {
                                       title: t('menu.exam-request'),
                                       from:'exam-request',
                                       i,
+                                      appointment:i.appointment,
                                       content: [
                                          [{name:t('form.clinical-information'),value:i.clinical_information},
                                           {name:t('form.requested-exams'),value:i.exam_items.map(g=>g.name).join(', ')},
@@ -440,6 +441,7 @@ export default function PatientDashboard({startDate,endDate}) {
                                       doctor:i.doctor,
                                       title: t('menu.clinical-diary'),
                                       from:'clinical-diary',
+                                      appointment:i.appointment,
                                       i,
                                       content: [
                                           [{name: t('form.main-complaint'), value: i.main_complaint},
