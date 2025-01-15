@@ -30,6 +30,7 @@
     "@mui/x-date-pickers": "^7.21.0",
     "@paypal/react-paypal-js": "^8.5.0",
     "@react-oauth/google": "^0.12.1",
+    "@react-pdf/renderer": "^4.1.6",
     "@zoom/videosdk": "^1.12.12",
     "@zoom/videosdk-ui-toolkit": "^1.12.1-1",
     "@zoomus/websdk": "^2.18.3",

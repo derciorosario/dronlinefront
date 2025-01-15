@@ -53,6 +53,7 @@ import LandingPageFaq from './landingpage/pages/faq'
 import Terms from './landingpage/pages/terms-and-conditions';
 import AppointmentCancelationTerms from './landingpage/pages/appointment-cancelation-terms';
 import VerifyCode from './landingpage/pages/verify-doc-qrcode/index.jsx'
+import TestReactPdf from './components/Print/renderpdf-test.jsx'
 
 function App() {
 
@@ -62,6 +63,7 @@ function App() {
 
     <Router>
       <Routes>
+         <Route path="/testpdf" element={<TestReactPdf/>} />
          <Route path="/terms" element={ <Terms/>} />
          <Route path="/faq" element={ <LandingPageFaq/>} />
          <Route path="/privacy" element={ <Privacy/>} />
