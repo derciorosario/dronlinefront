@@ -333,7 +333,14 @@
         "consultation-message":"Consultation message",
         "medical-certificate-status":"Medical certificate Status Update",
         "support-message":"Support message",
-        "new-medical-certificate":"New medical certificate"
+        "new-medical-certificate":"New medical certificate",
+        "exam-updated":"Exam request updated",
+        "new-exam":"New exam request was added",
+        "new-medical-prescription":"New medical prescription",
+        "new-clinical-diary":"New clinical diary",
+        "medical-prescription-updated":"Medical prescription updated",
+        "clinical-diary-updated":"Clinical diary updated",
+        "medical-certificate-updated":"Medical certificate updated"
     },
     "notification-messages":{
         "upcoming-consultation": "You have an upcoming consultation scheduled. Consultation time:",
@@ -348,7 +355,14 @@
         "refund-rejected": "Your refund request has been declined",
         "refund-approved": "Your refund request has been approved",
         "medical-certificate-status":"Status:",
-        "support-message":"Mensagem:"
+        "support-message":"Mensagem:",
+        "new-exam":"Reason for consultation:",
+        "exam-updated":"Reason for consultation:",
+        "medical-prescription-updated":"Reason for consultation:",
+        "clinical-diary-updated":"Reason for consultation:",
+        "new-medical-certificate":"Reason for consultation:",
+        "new-clinical-diary":"Reason for consultation:",
+        "medical-certificate-updated":"Reason for consultation:"
     },
 
     "messages":{
@@ -441,6 +455,9 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },
     "common":{
+           "see-consultation":"See consultation",
+           "select-exams-to-define-urgent-exams":"Select exams to define urgent exams",
+           "join-consultation":"Join consultation",
            "timetables":"Timetable",
            "medication":"Medication",
            "validated":"Validated",
@@ -500,7 +517,7 @@
            "assign-app-signature":"Assign app signature",
            "address":"Address",
            "restart-meeting":"Restart meeting",
-           "leave":"Sair",
+           "leave":"Leave",
            "edit-to-add":"Edit for registration",
            "approved-by":"Approved by",
            "print-anyway":"Print anyway",
@@ -577,7 +594,7 @@
             "mobile_payment_method_name": "Mobile wallet",
             "mobile_payment_method_number": "Mobile wallet number",
             "bank_payment_method_name": "Bank name for payment",
-            "bank_payment_method_nib": "Bank NIB",
+            "bank_payment_method_nib": "NIB",
             "hours-cannot-be-the-same": "Urgent hours cannot be the same",
             "do-not-define-urgent-hours": "Do not define urgent hours",
             "start-date": "Start time",

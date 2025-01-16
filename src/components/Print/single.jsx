@@ -255,18 +255,21 @@ export default function SinglePrint({item,setItem}) {
                                    <label className="font-bold">{t('common._created_by')}: </label>
                                    <label>Dr.(a) {item?.doctor?.name || ((item?.i?.status_changer?.role=="admin" ? appSettings?.administrative_assistant_name : item?.i?.status_changer?.name) || appSettings?.administrative_assistant_name)}</label>
                                 </span> 
+
                                 <span>
                                    <label className="font-bold">{t('common._created_for')}: </label>
                                    <label>{item?.appointment?.dependent?.name  || item?.patient?.name}</label>
                                 </span>
+
                                 <span>
                                    <label className="font-bold">{t('common.emission')}: </label>
                                    <label>{item?.i?.created_at?.split('T')?.[0]?.split('-')?.reverse()?.join('/')} {item?.i?.created_at?.split('T')?.[1]?.slice(0,5)}</label>
                                 </span>
-                                <span>
+                                
+                                {(item?.from=="medical-prescription" && item?.i?.expiration_period) && <span>
                                    <label className="font-bold">{t('common.expiration-date')}: </label>
                                    <label className="lowercase">{item?.i?.expiration_period || '-'} {item?.i?.expiration_period ? t('common.days') : ''}</label>
-                                </span>
+                                </span>}
                           </div>
 
                         </div>

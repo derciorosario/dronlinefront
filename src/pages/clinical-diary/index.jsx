@@ -125,11 +125,9 @@ function globalOnclick(id){
                           t('form.physical-exam'),
                           t('form.complementary-exams'),
                           t('form.diagnoses'),
-                          t('form.therapeutic-plan'),
                           t('form.prescribed-medications'),
                           t('form.therapeutic-recommendations'),
                           t('form.other-instructions'),
-                          t('common.expiration-date'),
                         ]
                       }
 
@@ -167,7 +165,6 @@ function globalOnclick(id){
                                           {name: t('form.physical-exam'), value: i.physical_exam},
                                           {name: t('form.complementary-exams'), value: i.complementary_exams},
                                           {name: t('form.diagnoses'), value: i.diagnoses},
-                                          {name: t('form.therapeutic-plan'), value: i.therapeutic_plan},
                                           {name: t('form.prescribed-medications'), value: i.prescribed_medications},
                                           {name: t('form.therapeutic-recommendations'), value: i.therapeutic_recommendations},
                                           {name: t('form.other-instructions'), value: i.other_instructions},]
@@ -188,11 +185,9 @@ function globalOnclick(id){
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.physical_exam,40)}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.complementary_exams,40)}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.diagnoses,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.therapeutic_plan,40)}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.prescribed_medications,40)}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.therapeutic_recommendations,40)}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.other_instructions,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.expiration_period} {i.expiration_period ? t('common.days') : ''}</BaiscTable.Td>
                                 
                             </BaiscTable.Tr>
                         ))}

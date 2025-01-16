@@ -136,8 +136,9 @@ function App() {
          <Route path="/medical-certificate/:id" element={<CreateMedicalCertificates/>} />
          <Route path="/medical-certificates" element={<MedicalCertificates/>} />
 
-         <Route path="/exams/:id" element={<CreateExams/>} />
+         <Route path="/exam/:id" element={<CreateExams/>} />
          <Route path="/add-exams" element={<CreateExams/>} />
+         
 
          <Route path="/profile" element={<Profile/>} />  
 

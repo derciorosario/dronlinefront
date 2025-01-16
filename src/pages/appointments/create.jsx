@@ -668,7 +668,8 @@ return (
             {(form.status=="approved") && <div onClick={()=>{
                 //window.open(`${data.APP_FRONDEND}/meeting/zoom/appointment/`+form.id, '_blank')
                 navigate(`/meeting/zoom/appointment/`+form.id)
-            }} className="cursor-pointer hover:opacity-85 active:opacity-65 mr-4">
+            }} className="text-white border border-honolulu_blue-200 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 cursor-pointer hover:opacity-85 active:opacity-65 mr-4">
+              <span className="text-honolulu_blue-500 font-medium mr-1">{t('common.join-consultation')}</span>
               <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>                 
             </div>}
 
@@ -705,7 +706,7 @@ return (
     
     {name:t('common.doctor'),value:form.doctor?.name || t('common.dronline-team')},
     {name:t('form.medical-specialty'),hide:form.type_of_care=="requested",value:data._specialty_categories.filter(i=>i.id==form.medical_specialty)?.[0]?.[i18next.language+"_name"]},
-    {name:t('form.consultation-date'),value:`${form.consultation_date} (${t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})`,color:'#0b76ad'},
+    {name:t('form.consultation-date'),value:`${form.consultation_date?.split('-')?.reverse()?.join('/')} (${t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})`,color:'#0b76ad'},
     {name:t('form.consultation-hour'),value:form.scheduled_hours,color:'#0b76ad'},
     {name:t('form.estimated-consultation-duration'),value:form.estimated_consultation_duration,hide:true},
     {name:t('form.type-of-care'),value:t(`form.${form.type_of_care}-c`)},

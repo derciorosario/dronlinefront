@@ -34,7 +34,7 @@ function App({hideLayout,itemToShow,setItemToShow}) {
   useEffect(()=>{ 
 
     if(!user) return
-    data._get(required_data,{exams:{appointment_id:itemToShow.appointment.id,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}})
+    data._get(required_data,{exams:{appointment_id:itemToShow?.appointment?.id || '',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}})
 
   },[user,pathname,search,currentPage,updateFilters])
 
@@ -48,7 +48,7 @@ function App({hideLayout,itemToShow,setItemToShow}) {
          data.setUpdateTable(null)
          data.handleLoaded('remove','exams')
          setCurrentPage(1)
-         data._get(required_data,{exams:{appointment_id:itemToShow.appointment.id,name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
+         data._get(required_data,{exams:{appointment_id:itemToShow?.appointment?.id || '',name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
     }
  },[data.updateTable])
 
@@ -65,6 +65,10 @@ function globalOnclick(id){
   return (
 
        <>
+        {!itemToShow && <div className=" absolute left-0 top-0 w-full">
+                   <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
+        </div>}
+       
        
         <DefaultLayout hide={hideLayout} pageContent={{title:t('menu.exams'),desc:t('titles.previous-exams')}}>   
             
@@ -75,9 +79,9 @@ function globalOnclick(id){
            <BasicSearch loaded={data._loaded.includes('exams')} search={search} __printAction={()=>{
 
               data.setSinglePrintContent({
-                  patient: itemToShow.appointment.patient,
-                  doctor:itemToShow.appointment.doctor,
-                  appointment:itemToShow.appointment,
+                  patient: itemToShow?.appointment?.patient,
+                  doctor:itemToShow?.appointment?.doctor,
+                  appointment:itemToShow?.appointment,
                   title: t('menu.exams'),
                   from:'exam-request',
                   i,
@@ -109,7 +113,6 @@ function globalOnclick(id){
                           t('form.clinical-information'),
                           t('form.requested-exams'),
                           t('form.results-report'),
-                          t('common.expiration-date'),
                         ]
                       }
 
@@ -126,12 +129,12 @@ function globalOnclick(id){
                                 </BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>{
                                     data.setSinglePrintContent({
-                                      patient: itemToShow.appointment.patient,
-                                      doctor:itemToShow.appointment.doctor,
+                                      patient: itemToShow?.appointment?.patient,
+                                      doctor:itemToShow?.appointment?.doctor,
                                       title: t('menu.exam-request'),
                                       from:'exam-request',
                                       i,
-                                      appointment:itemToShow.appointment,
+                                      appointment:itemToShow?.appointment,
                                       content: [
                                          [{name:t('form.clinical-information'),value:i.clinical_information},
                                           {name:t('form.requested-exams'),value:i.exam_items.map(g=>g.name).join(', ')},
@@ -149,7 +152,6 @@ function globalOnclick(id){
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.clinical_information,40)}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.exam_items.map(g=>g.name).join(', ')}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.results_report,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.expiration_period} {i.expiration_period ? t('common.days') : ''}</BaiscTable.Td>
                                                                 
                             
                             </BaiscTable.Tr>

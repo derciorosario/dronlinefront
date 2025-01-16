@@ -85,8 +85,7 @@ function getTitle(type){
 function getMessageContent(i){
   
   //upcoming-consultation
-
-  let link=(i.type=="new-medical-certificate") ? '/medical-certificate/'+i.data.details?.id : (i.type=="participant-is-waiting") ? `/meeting/zoom/appointment/`+i.data.details?.id  : (i.type=="upcoming-consultation"  || i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="consultation-message")  ?  '/appointment/'+i.data.details?.id :  (i.type=="medical-certificate-status") ? '/medical-certificate/'+i.data.details?.id :  (i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-paypal-payment" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected") ? '/payment-management/'+i.data.details?.id : ''
+  let link=(i.type=="new-clinical-diary" || i.type=="clinical-diary-updated") ? '/clinical-diary/'+i.data.details?.id :  (i.type=="new-medical-prescription" || i.type=="medical-prescription-updated") ? '/medical-prescription/'+i.data.details?.id : (i.type=="new-exam" || i.type=="exam-updated") ? '/exam/'+i.data.details?.id  : (i.type=="new-medical-certificate" || i.type=="medical-certificate-status" || i.type=="medical-certificate-updated") ? '/medical-certificate/'+i.data.details?.id : (i.type=="participant-is-waiting") ? `/meeting/zoom/appointment/`+i.data.details?.id  : (i.type=="upcoming-consultation"  || i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="consultation-message")  ?  '/appointment/'+i.data.details?.id :  (i.type=="medical-certificate-status") ? '/medical-certificate/'+i.data.details?.id :  (i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-paypal-payment" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected") ? '/payment-management/'+i.data.details?.id : ''
   let btnLinkText=(i.type=="participant-is-waiting") ?  t('common.to_start') : t('common.see')
 
   return (
@@ -94,15 +93,16 @@ function getMessageContent(i){
       <div class="ms-3 text-sm font-normal">
       <div class="text-sm font-semibold text-gray-900">{getTitle(i.type)}</div>
       <div class="text-sm font-normal">
-        {(i.type=="participant-is-waiting" || i.type=="new-medical-certificate") ? '': i.type=="consultation-message" || i.type=="support-message" ? `${t('common.message')}: ${i.data.message}` : t('notification-messages.'+i.type)}
+        {(i.type=="participant-is-waiting") ? '': i.type=="consultation-message" || i.type=="support-message" ? `${t('common.message')}: ${i.data.message}` : t('notification-messages.'+i.type)}
         {(i.type=="upcoming-consultation") && <span>{i.data.details?.scheduled_date} {i.data.details?.scheduled_hours}</span>}
         {(i.type=="consultation-status" || i.type=="invoice-status" || i.type=="medical-certificate-status") && <span className={`font-medium ${i.data?.status=="rejected" || i.data?.status=="canceled" ? 'text-red-500':i.data?.status=="completed" || i.data?.status=="done"  ? "text-green-500" : i.data?.status =="pending" ? "text-orange-400":"text-honolulu_blue-400"} `}> {t('common.'+i.data?.status)}</span>}
         {(i.type=="new-mpesa-payment" || i.type=="new-paypal-payment")  &&  <span> #{i.data.details?.patient_id}</span>}
         {(i.type=="consultation-status" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="participant-is-waiting") && <p>{t('common.consultation-timetable')}:   {i.data.details?.scheduled_date} {i.data.details?.scheduled_hours}</p>}
         {(i.type=="invoice-status" || i.type=="new-pending-invoice" || i.type=="refund-request") && <p>{t('common.reference')}:   #{i.data.details?.ref_id}</p>}
+        {(i.type=="new-medical-certificate" || i.type=="medical-certificate-updated" || i.type=="new-exam" || i.type=="exam-updated" || i.type=="new-medical-prescription" || i.type=="medical-prescription-updated" || i.type=="new-clinical-diary" || i.type=="clinical-diary-updated") && <span>{i.data.details?.appointment?.reason_for_consultation}</span>}
+        {(i.type=="medical-certificate-status") && <p>{t('notification-messages.new-medical-certificate')} {i.data.details?.appointment?.reason_for_consultation}</p>}
       </div> 
-
-      {(i.type=="participant-is-waiting" || i.type=="upcoming-consultation" || i.type=="consultation-status" || i.type=="medical-certificate-status" || i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-paypal-payment" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected" || i.type=="consultation-message" || i.type=="support-message" || i.type=="new-medical-certificate") && <div className="flex items-center flex-wrap">
+      {(i.type=="new-medical-certificate" || i.type=="medical-certificate-status" || i.type=="medical-certificate-updated" || i.type=="new-medical-prescription" || i.type=="medical-prescription-updated" || i.type=="new-clinical-diary" || i.type=="clinical-diary-updated" || i.type=="new-exam" || i.type=="exam-updated" || i.type=="participant-is-waiting" || i.type=="upcoming-consultation" || i.type=="consultation-status" || i.type=="medical-certificate-status" || i.type=="invoice-status" || i.type=="new-mpesa-payment" || i.type=="new-paypal-payment" || i.type=="new-consultation-added" || i.type=="new-consultation-request" || i.type=="new-pending-invoice" || i.type=="refund-request" || i.type=="refund-approved" || i.type=="refund-rejected" || i.type=="consultation-message" || i.type=="support-message" || i.type=="new-medical-certificate") && <div className="flex items-center flex-wrap">
            <div className="w-full">
               <button onClick={()=>{
 

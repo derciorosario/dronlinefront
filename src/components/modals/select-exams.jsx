@@ -34,13 +34,13 @@ export default function SelectExams({show,setShow,form,setForm}) {
                                          if(form.exam_items.some(g=>g.name==f.name)){
                                             setForm({...form,exam_items:form.exam_items.filter(g=>g.name!=f.name)})
                                          }else{
-                                            setForm({...form,exam_items:[...form.exam_items,f]})
+                                            setForm({...form,exam_items:[...form.exam_items,{...f,is_urgent:false}]})
                                          }
                                     }} class="flex items-center cursor-pointer">
-                                        <input id={_f+f.name} checked={form.exam_items.some(g=>g.name==f.name)} type="checkbox" value=""
+                                        <input  checked={form.exam_items.some(g=>g.name==f.name)} type="checkbox" value=""
                                         class="w-4 h-4 bg-gray-100 cursor-pointer border-gray-300 rounded text-primary-600 focus:ring-primary-500  focus:ring-2" />
 
-                                        <label for={_f+f.name} class="ml-2 text-sm font-medium text-gray-900">
+                                        <label  class="ml-2 text-sm font-medium text-gray-900">
                                            {f.name}
                                         </label>
                                    </li>

@@ -36,7 +36,6 @@ function getAdvancedActions(items=[],id=null,w=undefined){
           </div>}
        </div>
        )
-
 }
 
 return (
@@ -81,7 +80,7 @@ return (
                    
                     { textarea ? (
                         <>
-                         <textarea style={inputStyle ? inputStyle : {}} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id} rows="4" className={` p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300`} placeholder={placeholder}></textarea>
+                         <textarea style={inputStyle ? inputStyle : {}} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id} rows="4" className={`${Boolean(disabled) ? 'opacity-55':''} p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300`} placeholder={placeholder}></textarea>
                         </>
                     ) : type=="item-list" ? (
 

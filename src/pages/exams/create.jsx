@@ -17,6 +17,7 @@ import Comment from '../../components/modals/comments'
 import SearchInput from '../../components/Inputs/search'
 import SelectExams from '../../components/modals/select-exams'
 import AddStampAndSignature from '../../components/PopUp/add-stamp-and-signature'
+import SinglePrint from '../../components/Print/single'
 
 function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
 
@@ -33,7 +34,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
   const {pathname} = useLocation()
   const navigate = useNavigate()
   const {user,setUser}=useAuth()
-  const [loading,setLoading]=useState(itemToShow.action=="update" ? true : false);
+  const [loading,setLoading]=useState(itemToShow?.action=="update" || (id && !itemToShow) ? true : false);
   const [showComment,setShowComment]=useState(false)
   const [itemToEditLoaded,setItemToEditLoaded]=useState(false)
   const [MessageBtnSee,setMessageBtnSee]=useState(null)
@@ -80,7 +81,7 @@ const [form,setForm]=useState(initial_form)
 
  useEffect(()=>{
 
-  if(itemToShow.action=="create" && form.id){
+  if(itemToShow?.action=="create" && form.id){
     setForm(initial_form)
   }
 
@@ -93,13 +94,13 @@ const [form,setForm]=useState(initial_form)
 
  useEffect(()=>{
   
-  if(!user || itemToShow.action=="create"){
+  if(!user || itemToShow?.action=="create"){
       return
   }
   
   (async()=>{
     try{
-      let response=await data.makeRequest({method:'get',url:`api/exam/`+itemToShow.update_id,withToken:true, error: ``},0);
+      let response=await data.makeRequest({method:'get',url:`api/exam/`+(itemToShow?.update_id || id),withToken:true, error: ``},0);
 
      setForm({...form,...response})
 
@@ -109,20 +110,27 @@ const [form,setForm]=useState(initial_form)
 
     }catch(e){
 
+
       if(e.message==404){
-        toast.error(t('common.item-not-found'))
+       toast.error(t('common.item-not-found'))
+       if(!itemToShow) navigate('/dashboard')
       }else if(e.message==500){
         toast.error(t('common.unexpected-error'))
+        if(!itemToShow) navigate('/dashboard')
       }else  if(e.message=='Failed to fetch'){
         toast.error(t('common.check-network'))
+        if(!itemToShow)  navigate('/dashboard')
       }else{
         toast.error(t('common.unexpected-error'))
+        if(!itemToShow)  navigate('/dashboard')
       }
 
-      setItemToShow({
-        ...itemToShow,
-        name:itemToShow.name.replace('create','all')
-      }) 
+      if(itemToShow){
+        setItemToShow({
+          ...itemToShow,
+          name:itemToShow.name.replace('create','all')
+        })
+      }
 
   }
   
@@ -142,9 +150,9 @@ const [form,setForm]=useState(initial_form)
     try{
 
 
-      if(itemToShow.action=="update"){
+      if(itemToShow?.action=="update" || (id && !itemToShow)){
 
-        let r=await data.makeRequest({method:'post',url:`api/exam/`+itemToShow.update_id,withToken:true,data:{
+        let r=await data.makeRequest({method:'post',url:`api/exam/`+(itemToShow?.update_id || id),withToken:true,data:{
           ...form
         }, error: ``},0);
   
@@ -236,12 +244,14 @@ const [form,setForm]=useState(initial_form)
   const [showSignatureDialog,setShowSignatureDialog]=useState(false)
   
 
-  console.log({form})
-
- 
   return (
 
        <>
+
+        {!itemToShow && <div className=" absolute left-0 top-0 w-full">
+                      <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
+       </div>}
+              
       <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
 
             <AddStampAndSignature
@@ -259,22 +269,44 @@ const [form,setForm]=useState(initial_form)
              <AdditionalMessage btnSee={MessageBtnSee} float={true} type={messageType}  setMessage={setMessage} title={message} message={message}/>
           </div>}
 
-           {!itemToEditLoaded && itemToShow.action=="update" && <div className="mt-10">
+           {!itemToEditLoaded && (itemToShow?.action=="update" || (id && !itemToShow)) && <div className="mt-10">
              <DefaultFormSkeleton/>
            </div>}
            
           
 
-          <FormLayout hideInputs={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}  hide={!itemToEditLoaded && itemToShow.action=="update"} hideTitle={ShowOnlyInputs} title={itemToShow.action=="update" ? t('common.update-exams') : t('common.add-exam')} verified_inputs={verified_inputs} form={form}
+          <FormLayout  hideInputs={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}  hide={!itemToEditLoaded && (itemToShow?.action=="update" || (id && !itemToShow))} hideTitle={ShowOnlyInputs} title={user?.role=="patient" && !itemToShow ? t('common.exam') : (itemToShow?.action=="update" || (id && !itemToShow)) ? t('common.update-exams') : t('common.add-exam')} verified_inputs={verified_inputs} form={form}
          
            topBarContent={
-               (<button onClick={()=>setShowComment(true)} type="button" class={`text-white hidden ${user?.role=="admin" ? 'hidden':''} bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
-                <span className="ml-2">Chat</span>
-                {(form.comments.length!=0 && id) && <div className="ml-2 bg-white text-honolulu_blue-500 rounded-full px-2 flex items-center justify-center">
-                    {form.comments.length}
-                </div>}
-             </button>)
+               (<div className="flex items-center">
+               
+            
+
+                  {(id && !itemToShow) && <div onClick={()=>{
+                         navigate('/appointment/'+form.appointment_id)            
+                 }} className="text-white border border-honolulu_blue-200 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 cursor-pointer hover:opacity-85 active:opacity-65 mr-4">
+                              <span className="text-honolulu_blue-500 font-medium mr-1">{t('common.see-consultation')}</span>
+                    </div>}
+                  
+                  {(id && !itemToShow && user?.role=="patient")  && <button onClick={()=>{
+
+
+                        data.setSinglePrintContent({
+                          patient: form?.patient,
+                          doctor:form?.doctor,
+                          title: t('menu.exam-request'),
+                          from:'exam-request',
+                          i:form,
+                          appointment:form?.appointment,
+                        })
+
+                    
+                  }} type="button" class={`text-white  bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 ${!id || !itemToEditLoaded ? 'hidden':''}`}>
+                      <svg  className="fill-white" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
+                      <span className="ml-2">{t('invoice.print')}</span>
+                  </button>}
+              
+               </div>)
            }
 
            bottomContent={(
@@ -329,7 +361,7 @@ const [form,setForm]=useState(initial_form)
            button={(
 
               <div className={`mt-[40px] ${(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient" ? 'hidden':''}`}>
-                {((!user?.data?.signature_filename || !user?.data?.stamp_filename) && itemToShow.action=="update") && <div className="w-full mb-6">
+                 {((!user?.data?.signature_filename || !user?.data?.stamp_filename) && (itemToShow?.action=="update" || (id && !itemToShow))) && <div className="w-full mb-6">
                    <button onClick={()=>{
                       setShowSignatureDialog(true)
                    }} className="flex items-center">
@@ -345,7 +377,7 @@ const [form,setForm]=useState(initial_form)
                       SubmitForm()
                     }
                    
-                }} valid={valid} loading={loading} label={itemToShow.action=="update" ? t('common.update') :t('common.send')}/>
+                }} valid={valid} loading={loading} label={(itemToShow?.action=="update" || (id && !itemToShow)) ? t('common.update') :t('common.send')}/>
               </div>
 
            )}
@@ -353,15 +385,14 @@ const [form,setForm]=useState(initial_form)
 
 
 
-           <FormCard  hide={itemToShow.action!="update" || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
+           <FormCard  hide={(itemToShow?.action!="update" && !id) || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
                {name:'ID',value:form.id},
                {name:t('form.clinical-information'),value:form.clinical_information},
                {name:t('form.requested-exams'),value:form.requested_exams},
                {name:t('form.results-report'),value:form.results_report},
-               {name:t('form.requested-on'),value:form.requested_at}
+               {name:t('form.requested-on'),value:form.requested_at},
+               {name:t('form.requested-exams'),value:form.exam_items.map(i=>`${i.name} ${i.is_urgent ? `(${t('common.urgent')})` : ''}`).join(', ')}
             ]}/>
-
-                 {/*<SearchInput r={true} label={t('form.patient-name')} loaded={data._loaded.includes('patients')} res={setPatientId} items={data._patients} />*/}
 
                  <FormLayout.Input 
                    verified_inputs={verified_inputs} 
@@ -390,9 +421,7 @@ const [form,setForm]=useState(initial_form)
                />
 
 
-             
-
-               <div className="w-full mt-4">
+               <div className={`w-full mt-4 ${((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient") ? 'hidden':''}`}>
                   <label  class="flex items-center mb-2 text-sm  text-gray-900">{t('form.requested-exams')} <span className="text-red-500">*</span></label>
                   <div className="flex items-center">
                      <div class={`bg-gray border flex  flex-wrap border-gray-300 text-gray-900 text-sm  rounded-[0.3rem]  w-[400px] max-md:w-auto max-md:flex-1 px-1.5 py-1`}>
@@ -404,7 +433,8 @@ const [form,setForm]=useState(initial_form)
                                 <div  onClick={() => {
                                    setForm({...form,exam_items:form.exam_items.filter(g=>g.name!=i.name)})
                                 }}
-                                className="ml-1 cursor-pointer rounded-[0.3rem] hover:opacity-40  flex items-center justify-center"
+                                
+                                className={` ml-1 cursor-pointer rounded-[0.3rem] hover:opacity-40  flex items-center justify-center`}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368">
                                     <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
@@ -419,7 +449,7 @@ const [form,setForm]=useState(initial_form)
 
                      <button onClick={()=>{
                        setShowExamsDialog(true)
-                   }} type="button" class={`text-white ml-2 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
+                   }} type="button" class={`text-white ml-2  bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                       
                    </button>
@@ -440,12 +470,14 @@ const [form,setForm]=useState(initial_form)
 
                />
 
-              <div className={`w-full mt-5 ${!form.exam_items.length ? 'hidden':''}`}>
+              <div className={`w-full mt-5 ${((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient") ? 'hidden':''}`}>
 
                   <label class="flex items-center mb-2 text-sm  text-gray-900">{t('common.mark-urgent-exams')} <span className="text-gray-500 ml-1">{`(${t('common.optional')})`.toLowerCase()}</span></label>
                   <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
                     {form.exam_items.map((f,_f)=>(
                         <li onClick={()=>{
+                           
+              
                             setForm({...form,exam_items:form.exam_items.map(g=>{
                                    if(f.name==g.name){
                                       return {...g,is_urgent:!g.is_urgent}
@@ -454,15 +486,18 @@ const [form,setForm]=useState(initial_form)
                                    }
                             })})
                         }} class="flex items-center cursor-pointer">
-                            <input id={_f+f.name} checked={f.is_urgent} type="checkbox" value=""
+                            <input  checked={f.is_urgent} type="checkbox" value=""
                             class="w-4 h-4 bg-gray-100 cursor-pointer border-gray-300 rounded text-primary-600 focus:ring-primary-500  focus:ring-2" />
 
-                            <label for={_f+f.name} class="ml-2 text-sm font-medium text-gray-900">
+                            <label  class="ml-2 text-sm font-medium text-gray-900">
                                 {f.name}
                             </label>
                       </li>
                     ))}
                   </ul>
+                       
+                  {form.exam_items.length==0 && <span className="text-gray-600 text-[0.9rem] italic">{t('common.select-exams-to-define-urgent-exams')}</span>}
+
               </div>
 
               <FormLayout.Input 
@@ -478,18 +513,7 @@ const [form,setForm]=useState(initial_form)
                />
 
 
-                <FormLayout.Input 
-                             verified_inputs={verified_inputs} 
-                             form={form}
-                             hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                             onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
-                             label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
-                             placeholder={t('common.number-of-days')}
-                             onChange={(e) => setForm({...form, expiration_period:e.target.value.startsWith('0') ? form.expiration_period : e.target.value.replace(/[^0-9]/g, '')})} 
-                             field={'expiration_period'} 
-                             value={form.expiration_period}
-                /> 
-
+               
            </FormLayout>
 
     </DefaultLayout>

@@ -336,7 +336,8 @@
         "refund-rejected":"Pedido de reembolso rejeitado",
         "refund-approved":"Pedido de reembolso aprovado",
         "consultation-message":"Messagem de consulta",
-        "medical-certificate-status":"Actualização do estado do atestado médico"
+        "medical-certificate-status":"Actualização do estado do atestado médico",
+        "new-exam":"Nova requisição de exame foi adicionada"
     },
 
     "notification-messages":{
@@ -351,7 +352,8 @@
        "refund-request":"Foi efetuado um pedido cancelamento  e reembolso",
        "refund-rejected":"Seu pedido de reembolso foi recusado",
        "refund-approved":"Seu pedido de reembolso foi aprovado",
-       "medical-certificate-status":"Estado:"
+       "medical-certificate-status":"Estado:",
+       "new-exam":"Detalhes da consulta:"
     },
 
     "messages":{

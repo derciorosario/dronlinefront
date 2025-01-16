@@ -40,7 +40,7 @@ function DoctorCard({item={}}) {
                     </div>
                 </div>
 
-                <p class="mb-3 font-normal text-gray-700">{data.text_l(item[`${i18next.language}_short_biography`],300)}</p>
+                <p class="mb-3 font-normal text-gray-700">{item[`${i18next.language}_short_biography`]}</p>
                 
                 <div className="flex gap-3 bg-white py-2 px-1 border-t mb-6">
 

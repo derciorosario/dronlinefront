@@ -72,7 +72,7 @@
         { "name": "Troponina T", "abbreviation": "C15" },
         { "name": "Troponina I", "abbreviation": "C16" },
         { "name": "Perfil Cardíaco", "abbreviation": "C17" },
-        { "name": "NT-PROBNP", "abbreviation": "C18" }
+        { "name": "NT-PROBPN", "abbreviation": "C18" }
       ]
     },
     {
@@ -113,6 +113,7 @@
         { "name": "HBsAG", "abbreviation": "C53" },
         { "name": "Carga viral Hepatite B", "abbreviation": "F38" },
         { "name": "Genótipo Hepatite B", "abbreviation": "F37" },
+        { "name": "Hepatite A (IgG+IgM)", "abbreviation": "S37" },
         { "name": "Hepatite C (IgG+IgM)", "abbreviation": "R38" },
         { "name": "Carga viral Hepatite C", "abbreviation": "R63" },
         { "name": "Genótipo Hepatite C", "abbreviation": "R64" },

@@ -259,7 +259,7 @@ export default function PatientDashboard({startDate,endDate}) {
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.requested_at}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.clinical_information}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.requested_exams}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.exam_items.map(g=>g.name).join(', ')}</BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.results_report}</BaiscTable.Td>
                             </BaiscTable.Tr>
                         ))}
@@ -291,6 +291,7 @@ export default function PatientDashboard({startDate,endDate}) {
                              undefined,
                             'ID',
                              t('form.medication-names'),
+                             t('common.expiration-date'),
                            ]
                          }
                           body={(data._patient_dashboard?.recentItems?.medicalPrescriptions || []).map((i,_i)=>(
@@ -312,7 +313,6 @@ export default function PatientDashboard({startDate,endDate}) {
                                               {name:t('form.treatment-duration'),value:f.treatment_duration},
                                               {name:t('form.pharmaceutical-form'),value:f.pharmaceutical_form}
                                              ])
-                                          
                                         })
 
                              
@@ -321,6 +321,8 @@ export default function PatientDashboard({startDate,endDate}) {
                                    </BaiscTable.Td>
                                    <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
                                    <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')}</BaiscTable.Td>
+                                   <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.expiration_period} {i.expiration_period ? t('common.days') : ''}</BaiscTable.Td>
+                                                                         
                              
                                </BaiscTable.Tr>
                            ))}
@@ -349,7 +351,6 @@ export default function PatientDashboard({startDate,endDate}) {
                             'ID',
                             t('common.disease'),
                             t('common.date_of_leave'),
-                            t('common.details'),
                             t('common.patient'),
                             t('common.doctor')
                            ]
@@ -384,7 +385,6 @@ export default function PatientDashboard({startDate,endDate}) {
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.id}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.disease}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.date_of_leave}</BaiscTable.Td>
-                              <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.details}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.patient?.name}</BaiscTable.Td>
                               <BaiscTable.Td onClick={()=>globalOnclick(i.id,'/medical-certificate/'+i.id)}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
                           </BaiscTable.Tr>
@@ -422,7 +422,6 @@ export default function PatientDashboard({startDate,endDate}) {
                           t('form.physical-exam'),
                           t('form.complementary-exams'),
                           t('form.diagnoses'),
-                          t('form.therapeutic-plan'),
                           t('form.prescribed-medications'),
                           t('form.therapeutic-recommendations'),
                           t('form.other-instructions')
@@ -443,7 +442,12 @@ export default function PatientDashboard({startDate,endDate}) {
                                       from:'clinical-diary',
                                       appointment:i.appointment,
                                       i,
+                                      header:[
+                                        t('common.evaluation-area'),
+                                        t('invoice.description')
+                                      ],
                                       content: [
+
                                           [{name: t('form.main-complaint'), value: i.main_complaint},
                                           {name: t('form.current-illness-history'), value: i.current_illness_history},
                                           {name: t('form.past-medical-history'), value: i.past_medical_history},
@@ -453,7 +457,6 @@ export default function PatientDashboard({startDate,endDate}) {
                                           {name: t('form.physical-exam'), value: i.physical_exam},
                                           {name: t('form.complementary-exams'), value: i.complementary_exams},
                                           {name: t('form.diagnoses'), value: i.diagnoses},
-                                          {name: t('form.therapeutic-plan'), value: i.therapeutic_plan},
                                           {name: t('form.prescribed-medications'), value: i.prescribed_medications},
                                           {name: t('form.therapeutic-recommendations'), value: i.therapeutic_recommendations},
                                           {name: t('form.other-instructions'), value: i.other_instructions},]
@@ -464,20 +467,20 @@ export default function PatientDashboard({startDate,endDate}) {
                                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
                                
                                 </BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.main_complaint}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.current_illness_history}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.past_medical_history}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.psychosocial_history}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.family_history}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.gynecological_history}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.physical_exam}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.complementary_exams}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.diagnoses}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.therapeutic_plan}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.prescribed_medications}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.therapeutic_recommendations}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.other_instructions}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.main_complaint,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.current_illness_history,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.past_medical_history,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.psychosocial_history,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.family_history,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.gynecological_history,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.physical_exam,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.complementary_exams,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.diagnoses,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.prescribed_medications,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.therapeutic_recommendations,40)}</BaiscTable.Td>
+                                  <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.other_instructions,40)}</BaiscTable.Td>
+                                                                
                             </BaiscTable.Tr>
                         ))}
 
