@@ -9,6 +9,7 @@ import BasicFilter from '../../components/Filters/basic';
 import BasicSearch from '../../components/Search/basic';
 import SelectedFilters from '../../components/Filters/selected-filters';
 import toast from 'react-hot-toast';
+import BasicPagination from '../../components/Pagination/basic';
 
 
 
@@ -192,6 +193,9 @@ async function handleItems({action,id,status}){
 
                       
                     />
+
+                   <BasicPagination show={data._loaded.includes('patients')} from={'patients'} setCurrentPage={setCurrentPage} total={data._patients?.total}  current={data._patients?.current_page} last={data._patients?.last_page}/>
+      
 
 
                            </div>
