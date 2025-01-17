@@ -455,6 +455,8 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },
     "common":{
+           "write-exam-name":"Write exam name",
+           "select-from-list":"Selecionar na lista",
            "see-consultation":"See consultation",
            "select-exams-to-define-urgent-exams":"Select exams to define urgent exams",
            "join-consultation":"Join consultation",

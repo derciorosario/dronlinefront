@@ -183,8 +183,7 @@ export const HomeDataProvider = ({ children }) => {
            
             let response=await makeRequest({params:params?.[items[f]],method:'get',url:`api/${items[f].replaceAll('_','-')}`,withToken:true, error: ``},100);
             handleLoaded('add',items[f])
-            console.log(selected,response)
-
+           
             selected.update(response)
            
             _data[items[f]]=response

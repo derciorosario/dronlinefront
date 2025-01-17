@@ -217,8 +217,9 @@ export const AuthProvider = ({ children }) => {
               return
             }
         }
-    
-        if (maxRetries > 0) {
+
+      
+        if (maxRetries > 0 && error.message!=403 && error.message!=404) {
           await new Promise(resolve => setTimeout(resolve, retryDelay));
           return makeRequest(options, maxRetries - 1, retryDelay);
         } else {

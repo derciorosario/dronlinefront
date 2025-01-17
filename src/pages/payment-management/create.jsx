@@ -3,16 +3,11 @@ import FormLayout from '../../layout/DefaultFormLayout'
 import DefaultLayout from '../../layout/DefaultLayout'
 import { t } from 'i18next'
 import { useData } from '../../contexts/DataContext'
-import AdditionalMessage from '../messages/additional'
 import toast from 'react-hot-toast'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
 import FormCard from '../../components/Cards/form'
-import Comment from '../../components/modals/comments'
-import Loader from '../../components/Loaders/loader'
-import AppointmentItems from '../../components/Cards/appointmentItems'
-import SearchInput from '../../components/Inputs/search'
 
 function AppointmentInvoice({ShowOnlyInputs}) {
 
@@ -35,17 +30,17 @@ function AppointmentInvoice({ShowOnlyInputs}) {
   let required_data=['doctors','specialty_categories','dependents']
   useEffect(()=>{   
         if(!user) return
-        setTimeout(()=>(
+        setTimeout(()=>{
           data._get(required_data) 
-        ),500)
+        },500)
   },[user,pathname])
 
 
   useEffect(()=>{
     if(!user) return
-    setTimeout(()=>(
+    setTimeout(()=>{
       data._get(required_data) 
-    ),500)
+    },500)
 },[user,pathname])
 
 

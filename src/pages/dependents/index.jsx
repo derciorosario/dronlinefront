@@ -72,7 +72,7 @@ function App() {
          data.setUpdateTable(null)
          data.handleLoaded('remove','dependents')
          setCurrentPage(1)
-         data._get(required_data,{dependents:{name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
+       data._get(required_data,{dependents:{name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
 
     }
  },[data.updateTable])

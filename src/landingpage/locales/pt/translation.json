@@ -465,6 +465,8 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "write-exam-name":"Escreva o nome do exame",
+        "select-from-list":"Select on the list",
         "see-consultation":"Ver consulta",
         "select-exams-to-define-urgent-exams":"Selecione exames para definir como urgente",
         "join-consultation":"Aceder a consulta",

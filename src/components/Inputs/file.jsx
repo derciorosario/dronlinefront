@@ -5,7 +5,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 
-function FileInput({_upload,label,res,r,onlyImages}) {
+function FileInput({_upload,label,res,r,onlyImages,cannotRemove,cannotUpload}) {
       let id=Math.random()
       const data = useData()
      
@@ -123,8 +123,8 @@ function FileInput({_upload,label,res,r,onlyImages}) {
         
         <div className={`flex items-center w-full text-sm h-[40px] text-gray-900 border overflow-hidden border-gray-300 rounded-[0.3rem]   bg-gray-50`}>
              
-             <label className={`h-full relative ${upload.uploading ? 'pointer-events-none':''} ${!res ? 'hidden':''}  hover:bg-gray-500 cursor-pointer bg-gray-400 text-white inline-flex justify-center items-center px-2`}>
-                 <span className={`${upload.uploading ? 'opacity-0':''} `}>{(file.name || _upload.filename) ? t('common.upload-another-file') : t('common.upload-file')}</span>
+             <label className={`h-full relative ${upload.uploading ? 'pointer-events-none':''} ${!res || cannotUpload ? 'hidden':''}  hover:bg-gray-500 cursor-pointer bg-gray-400 text-white inline-flex justify-center items-center px-2`}>
+                 <span className={`${upload.uploading ? 'opacity-0':''}  `}>{(file.name || _upload.filename) ? t('common.upload-another-file') : t('common.upload-file')}</span>
                  <input accept={onlyImages ? acceptedImageFileTypes : ''} ref={fileInputRef_1} onChange={handleSubmit} type="file" hidden/>
                  {upload.uploading && <div className="flex items-center justify-center absolute w-full top-0 left-0 h-full">{`${upload.progress.toString().split('.')[0]}%`}</div>}
              </label>
@@ -133,21 +133,19 @@ function FileInput({_upload,label,res,r,onlyImages}) {
              
              {upload.uploading && <div style={{width:`${upload.progress.toString().split('.')[0]}%`}} className="bg-[rgba(0,0,0,0.3)] h-full left-0 top-0 absolute"></div>}
 
-             {/** <span className="ml-3 text-[0.8rem] truncate">{file.name ? file.name : _upload.filename ? ' ' : t('common.no-file-selected')}</span> */}
-             
              {!(file.name || _upload.filename) && <span className="ml-3 text-[0.8rem] truncate">{t('common.no-file-selected')}</span>}
             
              {(upload.filename) && <div className="flex-1 justify-end w-full flex px-2">
                     <svg className="opacity-30" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
                     <span onClick={()=>data.handleDownload(file.name)} className="ml-2 cursor-pointer hover:opacity-70"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg></span>
-                    <span onClick={()=>{
+                    {!cannotRemove && <span onClick={()=>{
                           setFile({})
                           setUpload(prev=>({...prev,uploading:true,
                           uploading:false,
                           filename:'',
                           progress:0}))
                           setLastFile(upload.filename)
-                    }} className={`ml-1 hover:*:fill-red-500 cursor-pointer ${!res ? 'hidden':''}`}><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"  fill="#5f6368"><path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/></svg></span>
+                    }} className={`ml-1 hover:*:fill-red-500 cursor-pointer ${!res ? 'hidden':''}`}><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"  fill="#5f6368"><path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/></svg></span>}
              </div>}
 
               {lastFile && <div onClick={()=>{

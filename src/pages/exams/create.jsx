@@ -150,10 +150,18 @@ const [form,setForm]=useState(initial_form)
     try{
 
 
+      if(form.uploaded_files.some(i=>i.filename && !i.name)){
+            toast.error(t('common.add-document-name'))
+            setLoading(false)
+            return
+      }
+
+
       if(itemToShow?.action=="update" || (id && !itemToShow)){
 
         let r=await data.makeRequest({method:'post',url:`api/exam/`+(itemToShow?.update_id || id),withToken:true,data:{
-          ...form
+          ...form,
+          uploaded_files:form.uploaded_files.filter(i=>i.filename)
         }, error: ``},0);
   
         setForm({...form,r})
@@ -175,6 +183,7 @@ const [form,setForm]=useState(initial_form)
 
         await data.makeRequest({method:'post',url:`api/exam`,withToken:true,data:{
           ...form,
+          uploaded_files:form.uploaded_files.filter(i=>i.filename),
           patient_id:itemToShow.appointment.patient_id,
           doctor_id:itemToShow.appointment.doctor_id,
           appointment_id:itemToShow.appointment.id,
@@ -310,10 +319,10 @@ const [form,setForm]=useState(initial_form)
            }
 
            bottomContent={(
-             <div className={`mt-5 ${user?.role!="doctor" ? 'hidden':''}`}>
+             <div className={`mt-5 ${itemToShow?.action=="create" ? 'hidden':''}`}>
                  <span className="flex mb-5 items-center">
                      {t('common.documents')} 
-                     <button onClick={()=>{
+                     {user?.role=="patient" && <button onClick={()=>{
                          let id=Math.random().toString().replace('.','')
                          setForm({...form,uploaded_files:[{
                            name:'',src:'',id
@@ -324,7 +333,7 @@ const [form,setForm]=useState(initial_form)
                      }} type="button" class="text-white ml-4 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                        {t('common.add-document')}
-                     </button>
+                     </button>}
                  
                  </span>
                  <div className="flex gap-x-4 flex-wrap gap-y-4">
@@ -342,14 +351,14 @@ const [form,setForm]=useState(initial_form)
                                      return f
                                    }
                                 })})
-                           }}   class={`bg-gray border border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
-                            <FileInput  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
+                           }}   class={`bg-gray ${user?.role!="patient" ? ' pointer-events-none':'border'}  border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
+                            <FileInput cannotRemove={user?.role!="patient"} cannotUpload={user?.role!="patient"}  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
                            </div>
                              
-                           <span onClick={()=>{
+                           {user?.role=="patient" && <span onClick={()=>{
                                setForm({...form,uploaded_files:form.uploaded_files.filter(f=>f.id!=i.id)})
                              }} className="ml-2 cursor-pointer hover:opacity-65"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span>
-                          
+                          }
 
                            </div>
                      ))}
@@ -360,8 +369,8 @@ const [form,setForm]=useState(initial_form)
 
            button={(
 
-              <div className={`mt-[40px] ${(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient" ? 'hidden':''}`}>
-                 {((!user?.data?.signature_filename || !user?.data?.stamp_filename) && (itemToShow?.action=="update" || (id && !itemToShow))) && <div className="w-full mb-6">
+              <div className={`mt-[40px] ${(user?.role!="doctor" && user?.role!="patient" && itemToShow?.appointment?.doctor_id)  ? 'hidden':''}`}>
+                 {((!user?.data?.signature_filename || !user?.data?.stamp_filename) && (itemToShow?.action=="update" || (id && !itemToShow)) && user?.role!="patient") && <div className="w-full mb-6">
                    <button onClick={()=>{
                       setShowSignatureDialog(true)
                    }} className="flex items-center">
@@ -371,7 +380,7 @@ const [form,setForm]=useState(initial_form)
                 </div>}
                 <FormLayout.Button onClick={()=>{
 
-                    if((!user?.data?.signature_filename || !user?.data?.stamp_filename) && (!form.signature_filename || !form.stamp_filename)){
+                    if(user?.role!="patient" && (!user?.data?.signature_filename || !user?.data?.stamp_filename) && (!form.signature_filename || !form.stamp_filename)){
                       setShowSignatureDialog(true)
                     }else{
                       SubmitForm()
@@ -421,8 +430,32 @@ const [form,setForm]=useState(initial_form)
                />
 
 
+              
+
+
                <div className={`w-full mt-4 ${((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient") ? 'hidden':''}`}>
-                  <label  class="flex items-center mb-2 text-sm  text-gray-900">{t('form.requested-exams')} <span className="text-red-500">*</span></label>
+                  <div className="flex items-center mb-1">
+                     <label  class="flex items-center mb-2 text-sm  text-gray-900">{t('form.requested-exams')} <span className="text-red-500">*</span></label>
+                     <span onClick={()=>{
+                        setShowExamsDialog(true)
+                     }} className="bg-honolulu_blue-400 cursor-pointer ml-10 text-white px-2 py-[2px] rounded-full text-[0.9rem]">{t('common.select-from-list')}</span>
+                  </div>
+                  <div className="flex flex-col w-[400px] mb-1">
+
+                     <input placeholder={t('common.write-exam-name')} value={form.new_editing_exam_item} onChange={(e)=>{
+                         setForm({...form,new_editing_exam_item:e.target.value})
+                     }} class={`bg-gray border border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block  p-2`}/>
+                     <button onClick={()=>{
+                          
+                          if(!(form.exam_items.some(g=>g.name.toLowerCase()==form.new_editing_exam_item.toLowerCase()))){
+                            setForm({...form,new_editing_exam_item:'',exam_items:[...form.exam_items,{name:form.new_editing_exam_item,is_urgent:false}]})
+                          }else{
+                            setForm({...form,new_editing_exam_item:''})
+                          }
+                   }} type="button" class={`text-white mb-1 w-full ${form.new_editing_exam_item ? 'bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4' : 'bg-gray-300 pointer-events-none'} focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-b-[0.3rem] text-sm px-5 py-1 text-center inline-flex justify-center items-center`}>
+                       <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                    </button>
+                  </div>
                   <div className="flex items-center">
                      <div class={`bg-gray border flex  flex-wrap border-gray-300 text-gray-900 text-sm  rounded-[0.3rem]  w-[400px] max-md:w-auto max-md:flex-1 px-1.5 py-1`}>
                          {!form.exam_items.length && <span className="py-1">{t('common.none-added')}</span>}
@@ -447,28 +480,11 @@ const [form,setForm]=useState(initial_form)
                          ))}
                      </div> 
 
-                     <button onClick={()=>{
-                       setShowExamsDialog(true)
-                   }} type="button" class={`text-white ml-2  bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 `}>
-                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
-                      
-                   </button>
+                    
                   </div>
                </div>
 
-               <FormLayout.Input 
-                 verified_inputs={verified_inputs} 
-                 form={form} 
-                 hide={true || (user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                 r={true} 
-                 textarea={true}
-                 onBlur={() => setVerifiedInputs([...verified_inputs, 'requested_exams'])} 
-                 label={t('form.requested-exams')} 
-                 onChange={(e) => setForm({...form, requested_exams: e.target.value})} 
-                 field={'requested_exams'} 
-                 value={form.requested_exams}
-
-               />
+              
 
               <div className={`w-full mt-5 ${((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient") ? 'hidden':''}`}>
 

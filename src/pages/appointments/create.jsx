@@ -106,8 +106,6 @@ function addAppointments({ShowOnlyInputs}) {
 
  },[form])
 
- console.log((form.scheduled_hours))
-
 
  useEffect(()=>{
   if(!id && form.id){
@@ -125,10 +123,12 @@ const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':'
 useEffect(() => {
 
   if(!id) return
-  
+
+  getAppointmentUnreadMessages()
+
   const interval = setInterval(() => {
     getAppointmentUnreadMessages()
-  }, 6000);
+  }, 10000);
 
   return () => clearInterval(interval);
 }, [id]);
@@ -447,6 +447,7 @@ async function SubmitForm(){
 
 
  useEffect(()=>{
+
     (async()=>{
       try{
         let _dependents=await data.makeRequest({method:'get',url:`api/all-patient-dependens`,withToken:true, error: ``},0);

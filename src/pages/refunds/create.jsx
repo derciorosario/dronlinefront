@@ -35,17 +35,17 @@ function AppointmentInvoice({ShowOnlyInputs}) {
   let required_data=['doctors','specialty_categories','dependents']
   useEffect(()=>{   
         if(!user) return
-        setTimeout(()=>(
+        setTimeout(()=>{
           data._get(required_data) 
-        ),500)
+        },500)
   },[user,pathname])
 
 
   useEffect(()=>{
     if(!user) return
-    setTimeout(()=>(
+    setTimeout(()=>{
       data._get(required_data) 
-    ),500)
+    },500)
 },[user,pathname])
 
 

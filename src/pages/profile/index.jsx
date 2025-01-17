@@ -288,8 +288,6 @@ async function updateSystemSettings() {
                     }
                   })
 
-                  console.log('------------')
-      
           
             }catch(e){
       
