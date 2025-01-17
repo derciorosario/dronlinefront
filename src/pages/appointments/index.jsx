@@ -248,7 +248,7 @@ function App() {
                        }).filter(i=>i.status==selectedTab).map((i,_i)=>(
                               <BaiscTable.Tr>
                                  <BaiscTable.Td>
-                                  <BaiscTable.Actions options={{
+                                  <BaiscTable.Actions hide={user?.role!="admin"} options={{
                                        deleteFunction:'default',
                                        deleteUrl:'api/delete/appointments',
                                        id:i.id}

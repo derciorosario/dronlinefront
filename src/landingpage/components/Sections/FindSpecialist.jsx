@@ -80,9 +80,9 @@ function FindSpecialist() {
                             
                              {searchedData2.filter(i=>i.medical_specialty==selected1?.id || !selected1).map(f=>(
                                 <div onClick={()=>setSelected2(f)} className="w-full flex items-center p-2 hover:bg-slate-100 cursor-pointer rounded-[0.3rem]">
-                                <div className="w-[50px] h-[50px] relative overflow-hidden mr-3 rounded-full bg-slate-100 flex items-center justify-center">
+                                <div className="w-[50px] h-[50px] relative overflow-hidden mr-3 rounded-full bg-slate-300 flex items-center justify-center">
                                     {f.name.charAt().toUpperCase()}
-                                    {f.profile_picture_filename && <img className="w-full object-cover absolute object-top" src={f.profile_picture_filename}/>}
+                                    {f.profile_picture_filename && <img className="h-full object-cover absolute object-top" src={f.profile_picture_filename}/>}
                                 </div>
                                     <div className="flex flex-col">
                                         <span className="mt-medium">{f.name}</span>
