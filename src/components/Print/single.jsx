@@ -441,7 +441,7 @@ export default function SinglePrint({item,setItem}) {
 
              )}
 
-<div class="signatures bg-red-400">
+<div class="signatures ">
 <div class="signatures-content">
            <div className="justify-between flex mt-0 items-start">
 
