@@ -319,10 +319,10 @@ const [form,setForm]=useState(initial_form)
            }
 
            bottomContent={(
-             <div className={`mt-5 ${itemToShow?.action=="create" ? 'hidden':''}`}>
+             <div className={`mt-5`}>
                  <span className="flex mb-5 items-center">
-                     {t('common.documents')} 
-                     {user?.role=="patient" && <button onClick={()=>{
+                     {t('common.documents')} <label className="text-gray-400 text-[0.9rem] ml-2">({t('common.optional')} )</label> 
+                     <button onClick={()=>{
                          let id=Math.random().toString().replace('.','')
                          setForm({...form,uploaded_files:[{
                            name:'',src:'',id
@@ -333,14 +333,14 @@ const [form,setForm]=useState(initial_form)
                      }} type="button" class="text-white ml-4 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                        {t('common.add-document')}
-                     </button>}
+                     </button>
                  
                  </span>
                  <div className="flex gap-x-4 flex-wrap gap-y-4">
                      
                      {form.uploaded_files.map(i=>(
 
-                         <div className="flex items-center">
+                         <div key={i.id} className="flex items-center">
                            
                            <div>
                            <input id={i.id} style={{borderBottom:'0'}} value={i.name} placeholder={t('common.document-name')} onChange={(e)=>{
@@ -351,15 +351,13 @@ const [form,setForm]=useState(initial_form)
                                      return f
                                    }
                                 })})
-                           }}   class={`bg-gray ${user?.role!="patient" ? ' pointer-events-none':'border'}  border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
-                            <FileInput cannotRemove={user?.role!="patient"} cannotUpload={user?.role!="patient"}  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
+                           }}   class={`bg-gray border  border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
+                            <FileInput  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
                            </div>
                              
-                           {user?.role=="patient" && <span onClick={()=>{
+                          <span onClick={()=>{
                                setForm({...form,uploaded_files:form.uploaded_files.filter(f=>f.id!=i.id)})
                              }} className="ml-2 cursor-pointer hover:opacity-65"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span>
-                          }
-
                            </div>
                      ))}
                      

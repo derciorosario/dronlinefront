@@ -45,11 +45,10 @@ function DoctorList({max,items,animate}) {
               <div className={`flex w-[46%] max-md:w-full gap-2 flex-col max-lg:w-full`}>
     
               <div>
-     
+
               <div className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden shadow mb-4">
                   <img  src={item.profile_picture_filename} className={`h-[360px] w-full object-cover object-top ${!item.profile_picture_filename ? 'opacity-0':''}`}/> 
               </div>
-     
 
                <div className="flex gap-3 bg-white py-4 px-1">
 

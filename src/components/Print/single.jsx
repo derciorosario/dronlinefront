@@ -183,9 +183,9 @@ export default function SinglePrint({item,setItem}) {
 
 
     const calculateAge = birthDate => {
-
+      
       if(!birthDate) {
-        return '-'
+          return '-'
       }
 
       const birth = new Date(birthDate);
@@ -195,13 +195,8 @@ export default function SinglePrint({item,setItem}) {
              (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate()) ? 1 : 0);
     }
 
-   
-
     return (
-      
       <>
-
-
    <div id="_print" className={`w-full text-[0.9rem] justify-between  flex flex-col overflow-y-auto h-[100vh] ${!item ? '':'_print'} opacity-0 pointer-events-none  fixed left-0 top-0 z-50 px-10 bg-white`} style={{zIndex:9999}}>
    
         <div className="_header relative">
@@ -401,7 +396,7 @@ export default function SinglePrint({item,setItem}) {
 
                                 
 
-                                {item?.i?.medical_prescription_items.map(i=>i.recommendations).filter(i=>i).length && <div className="mb-5 mt-10">
+                                {item?.i?.medical_prescription_items.map(i=>i.recommendations).filter(i=>i).length!=0 && <div className="mb-5 mt-10">
                                     <h2 className="font-bold">{t('common.additional-recommendations')}:</h2>
                                     
                                     {item?.i?.medical_prescription_items.map(i=>i.recommendations).filter(i=>i).map(i=>(
@@ -446,20 +441,19 @@ export default function SinglePrint({item,setItem}) {
 
              )}
 
-<div class="signatures">
+<div class="signatures bg-red-400">
 <div class="signatures-content">
-
-           <div className="justify-between flex mt-12 items-start">
+           <div className="justify-between flex mt-0 items-start">
 
                                 <div className="flex-col flex items-center justify-center">
                                      <p className="font-bold">{t('common.signature-and-stamp-of-the-doctor')}</p>
                                      <div className="min-h-[50px] flex justify-end flex-col mt-3">
                                          <div className="flex items-center justify-center">
-                                             {item?.doctor && <img width={80} className="h-auto mr-2" src={doctorSignature}/>}
-                                             {item?.doctor && <img width={80}  className="h-auto" src={doctorStamp}/>}
+                                             {item?.doctor && <img width={70} className="h-auto mr-2" src={doctorSignature}/>}
+                                             {item?.doctor && <img width={70}  className="h-auto" src={doctorStamp}/>}
                                              {!item?.doctor && <>
-                                               {item?.i?.status_changer?.signature_filename || appSettings?.signature_filename && <img width={80} className="h-auto mr-2" src={item?.i?.status_changer?.signature_filename || appSettings?.signature_filename}/>}
-                                               {appSettings?.stamp_filename && <img width={80}  className="h-auto" src={appSettings?.stamp_filename}/>}
+                                               {item?.i?.status_changer?.signature_filename || appSettings?.signature_filename && <img width={70} className="h-auto mr-2" src={item?.i?.status_changer?.signature_filename || appSettings?.signature_filename}/>}
+                                               {appSettings?.stamp_filename && <img width={70}  className="h-auto" src={appSettings?.stamp_filename}/>}
                                              </>}
                                          </div>
                                          <span className="w-[350px] flex h-[2px] bg-black"></span>
@@ -475,8 +469,8 @@ export default function SinglePrint({item,setItem}) {
                                      <p className="font-bold">{t('common.signature-and-stamp-of-the-Secretary')}</p>
                                      <div className="min-h-[50px] flex justify-end flex-col mt-3">
                                          <div className="flex items-center justify-center">
-                                             {(item?.i?.status_changer?.signature_filename || appSettings?.signature_filename) && <img width={80} className="h-auto mr-2" src={item?.i?.status_changer?.signature_filename || appSettings?.signature_filename}/>}
-                                             {appSettings?.stamp_filename && <img width={80}  className="h-auto" src={appSettings?.stamp_filename}/>}
+                                             {(item?.i?.status_changer?.signature_filename || appSettings?.signature_filename) && <img width={70} className="h-auto mr-2" src={item?.i?.status_changer?.signature_filename || appSettings?.signature_filename}/>}
+                                             {appSettings?.stamp_filename && <img width={70}  className="h-auto" src={appSettings?.stamp_filename}/>}
                                          </div>
                                          <span className="w-[350px] flex h-[2px] bg-black"></span>
                                      </div>

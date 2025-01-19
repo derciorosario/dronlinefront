@@ -151,13 +151,21 @@ let initial_form={
 
     setLoading(true)
 
+    if(form.uploaded_files.some(i=>i.filename && !i.name)){
+      toast.error(t('common.add-document-name'))
+      setLoading(false)
+      return
+     }
+
+
     try{
 
 
       if(itemToShow?.action=="update" || (id && !itemToShow)){
 
         let r=await data.makeRequest({method:'post',url:`api/clinical-diary/`+(itemToShow?.update_id || id),withToken:true,data:{
-          ...form
+          ...form,
+          uploaded_files:form.uploaded_files.filter(i=>i.filename)
         }, error: ``},0);
   
         setForm({...form,r})
@@ -181,7 +189,8 @@ let initial_form={
           patient_id:itemToShow.appointment.patient_id,
           doctor_id:itemToShow.appointment.doctor_id,
           appointment_id:itemToShow.appointment.id,
-          user_id:user?.id
+          user_id:user?.id,
+          uploaded_files:form.uploaded_files.filter(i=>i.filename)
         }, error: ``},0);
 
         if(form.save_signatures_in_profile){
@@ -323,54 +332,57 @@ let initial_form={
       }
 
       bottomContent={(
-          <div className={`mt-5 ${user?.role!="doctor" ? 'hidden':''}`}>
+        <div className="w-full">
+  
+          <div className={`mt-5`}>
             <span className="flex mb-5 items-center">
-              
-                {t('common.documents')} 
-              
-                <button onClick={()=>{
+                {t('common.documents')} <label className="text-gray-400 text-[0.9rem] ml-2">({t('common.optional')} )</label>
+                {user?.role!="patient" && <button onClick={()=>{
                     let id=Math.random().toString().replace('.','')
                     setForm({...form,uploaded_files:[{
                       name:'',src:'',id
                     },...form.uploaded_files]})
                     setTimeout(() => {
-                        document.getElementById(id).focus()
+                      document.getElementById(id).focus()
                     }, 200);
                 }} type="button" class="text-white ml-4 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                   {t('common.add-document')}
-                </button>
-            
+                </button>}
             </span>
+  
             <div className="flex gap-x-4 flex-wrap gap-y-4">
                 
                 {form.uploaded_files.map(i=>(
-
-                    <div className="flex items-center">
+  
+                    <div key={i.id} className="flex items-center">
                       
                       <div>
                       <input id={i.id} style={{borderBottom:'0'}} value={i.name} placeholder={t('common.document-name')} onChange={(e)=>{
-                            setForm({...form,uploaded_files:form.uploaded_files.map(f=>{
+                          setForm({...form,uploaded_files:form.uploaded_files.map(f=>{
                               if(f.id==i.id){
                                 return {...f,name:e.target.value}
                               }else{
                                 return f
                               }
-                            })})
-                      }}   class={`bg-gray border border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
-                        <FileInput  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
+                          })})
+                      }}   class={`bg-gray ${user?.role=="patient" ? ' pointer-events-none':'border'}  border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
+                      <FileInput cannotRemove={user?.role=="patient"} cannotUpload={user?.role=="patient"}  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
                       </div>
                         
-                      <span onClick={()=>{
+                      {user?.role!="patient" && <span onClick={()=>{
                           setForm({...form,uploaded_files:form.uploaded_files.filter(f=>f.id!=i.id)})
                         }} className="ml-2 cursor-pointer hover:opacity-65"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span>
-                      
-
+                    }
+  
                       </div>
                 ))}
                 
-            </div>
+            </div> 
           </div>
+          </div>
+  
+  
       )}
 
       button={(

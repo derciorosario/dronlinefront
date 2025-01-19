@@ -59,21 +59,17 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
     expiration_period:''
   }
 
-
-
   const [form,setForm]=useState(initial_form)
-
-
   
   useEffect(()=>{
 
-    let v=true
+      let v=true
     if(
        form.medical_prescription_items.some(i=>(!i.name && !i.custom_name) || !i.prescribed_quantity || !i.treatment_duration || !i.dosage || !i.pharmaceutical_form || !i.treatment_duration  || !i.route_of_administration || !i.dosing_instructions || !i.timetable) 
     ){
-      v=false
+       v=false
     }
-    setValid(v)
+      setValid(v)
 
  },[form])
 
@@ -142,6 +138,13 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
   async function SubmitForm(){
        setLoading(true)
 
+       if(form.uploaded_files.some(i=>i.filename && !i.name)){
+        toast.error(t('common.add-document-name'))
+        setLoading(false)
+        return
+       }
+
+
     try{
 
 
@@ -150,6 +153,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
 
         let r=await data.makeRequest({method:'post',url:`api/medical-prescriptions/`+itemToShow.update_id,withToken:true,data:{
           ...form,
+          uploaded_files:form.uploaded_files.filter(i=>i.filename)
         }, error: ``},0);
   
         setForm({...form,r})
@@ -175,6 +179,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
           doctor_id:itemToShow.appointment.doctor_id,
           appointment_id:itemToShow.appointment.id,
           user_id:user?.id,
+          uploaded_files:form.uploaded_files.filter(i=>i.filename)
         }, error: ``},0);
 
         if(form.save_signatures_in_profile){
@@ -217,6 +222,18 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
  
   const [cannotEdit,setCannotEdit]=useState(false)
 
+  function handleUploadeduploaded_files(upload){
+
+    setForm({...form,uploaded_files:form.uploaded_files.map(i=>{
+        if(i.id==upload.key){
+          return {...i,filename:upload.filename}
+        }else{
+         return i
+        }
+    })})
+
+  }
+
 
   useEffect(()=>{
       setCannotEdit(((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"))
@@ -254,6 +271,78 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
 
  <FormLayout hideInputs={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}  hide={!itemToEditLoaded && (itemToShow?.action=="update" || (id && !itemToShow))} hideTitle={ShowOnlyInputs} title={user?.role=="patient" && !itemToShow ? t('common.medical-prescription') : (itemToShow?.action=="update" || (id && !itemToShow))  ? t('common.update-medical-prescription') : t('menu.add-medical-prescription')} verified_inputs={verified_inputs} form={form}
 
+
+    bottomContent={(
+      <div className="w-full">
+
+          <div className="w-full mt-5 mb-10">
+            <FormLayout.Input 
+                verified_inputs={verified_inputs} 
+                form={form} 
+                hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
+                label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
+                placeholder={t('common.number-of-days')}
+                onChange={(e) => setForm({...form, expiration_period:e.target.value.startsWith('0') ? form.expiration_period : e.target.value.replace(/[^0-9]/g, '')})} 
+                field={'expiration_period'} 
+                value={form.expiration_period}
+            />
+          </div>
+
+        <div className={`mt-5`}>
+          <span className="flex mb-5 items-center">
+              {t('common.documents')}  <label className="text-gray-400 text-[0.9rem] ml-2">({t('common.optional')} )</label>
+              {user?.role!="patient" && <button onClick={()=>{
+                  let id=Math.random().toString().replace('.','')
+                  setForm({...form,uploaded_files:[{
+                    name:'',src:'',id
+                  },...form.uploaded_files]})
+                  setTimeout(() => {
+                    document.getElementById(id).focus()
+                  }, 200);
+              }} type="button" class="text-white ml-4 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                {t('common.add-document')}
+              </button>}
+          </span>
+
+          <div className="flex gap-x-4 flex-wrap gap-y-4">
+              
+              {form.uploaded_files.map(i=>(
+
+                  <div key={i.id} className="flex items-center">
+                    
+                    <div>
+                    <input id={i.id} style={{borderBottom:'0'}} value={i.name} placeholder={t('common.document-name')} onChange={(e)=>{
+                        setForm({...form,uploaded_files:form.uploaded_files.map(f=>{
+                            if(f.id==i.id){
+                              return {...f,name:e.target.value}
+                            }else{
+                              return f
+                            }
+                        })})
+                    }}   class={`bg-gray ${user?.role=="patient" ? ' pointer-events-none':'border'}  border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1`}/>
+                    <FileInput cannotRemove={user?.role=="patient"} cannotUpload={user?.role=="patient"}  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
+                    </div>
+                      
+                    {user?.role!="patient" && <span onClick={()=>{
+                        setForm({...form,uploaded_files:form.uploaded_files.filter(f=>f.id!=i.id)})
+                      }} className="ml-2 cursor-pointer hover:opacity-65"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></span>
+                  }
+
+                    </div>
+              ))}
+              
+          </div> 
+        </div>
+        </div>
+
+
+    )}
+
+
+
+  
     topBarContent={
           (<div className="flex items-center">
       
@@ -403,8 +492,6 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                     />
 
 
-
-
                     <FormLayout.Input 
                       verified_inputs={verified_inputs} 
                       form={form} 
@@ -460,25 +547,24 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
 
                     <div className="w-[300px]">
 
-                    <FormLayout.Input 
-                      verified_inputs={verified_inputs} 
-                      form={form} 
-                      width={'220px'}
-                      r={true} 
-                      onBlur={() => setVerifiedInputs([...verified_inputs, 'timetable'+i.id])} 
-                      label={t('common.timetables')} 
-                      onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
-                        return i.id==f.id ? {...f,timetable:e.target.value} : f
-                      })})} 
-                      textarea={true}
-                      height={'100%'}
-                      inputStyle={{height:60}}
-                      disabled={cannotEdit}
-                      ignoreVilidation={true}
-                      field={'timetable'+i.id} 
-                      value={i.timetable}
-                    />
-
+                        <FormLayout.Input 
+                          verified_inputs={verified_inputs} 
+                          form={form} 
+                          width={'220px'}
+                          r={true} 
+                          onBlur={() => setVerifiedInputs([...verified_inputs, 'timetable'+i.id])} 
+                          label={t('common.timetables')} 
+                          onChange={(e) => setForm({...form,medical_prescription_items:form.medical_prescription_items.map(f=>{
+                            return i.id==f.id ? {...f,timetable:e.target.value} : f
+                          })})} 
+                          textarea={true}
+                          height={'100%'}
+                          inputStyle={{height:60}}
+                          disabled={cannotEdit}
+                          ignoreVilidation={true}
+                          field={'timetable'+i.id} 
+                          value={i.timetable}
+                        />
                     
                     </div>
 
@@ -501,10 +587,8 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                         value={i.recommendations}
                       />
                     </div>
-                    
-                      
-
                   </div>
+
               ))}
           </div>
 
@@ -520,24 +604,9 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
 
           </div>
 
-          <div className="w-full mt-5">
-            <FormLayout.Input 
-                verified_inputs={verified_inputs} 
-                form={form} 
-                hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                onBlur={() => setVerifiedInputs([...verified_inputs, 'expiration_period'])} 
-                label={t('common.expiration-date') +  ` (${t('common.days').toLowerCase()})`} 
-                placeholder={t('common.number-of-days')}
-                onChange={(e) => setForm({...form, expiration_period:e.target.value.startsWith('0') ? form.expiration_period : e.target.value.replace(/[^0-9]/g, '')})} 
-                field={'expiration_period'} 
-                value={form.expiration_period}
-            />
-        </div>
+         
 
         
-
-
-
     </FormLayout>
 
     </DefaultLayout>
