@@ -327,7 +327,7 @@ const [form,setForm]=useState(initial_form)
       bottomContent={(
         <div className="w-full">
 
-          <div className={`mt-5`}>
+           <div className={`mt-5 ${user?.role=="patient" && form.uploaded_files.length==0 ? 'hidden':''}`}>
             <span className="flex mb-5 items-center">
                 {t('common.documents')} <label className="text-gray-400 text-[0.9rem] ml-2">({t('common.optional')} )</label>
                 {user?.role!="patient" && <button onClick={()=>{
