@@ -107,7 +107,7 @@ function FindSpecialist() {
                          if(!selected2){
                             toast(t('common.select-a-specialist'))
                          }else{
-                            navigate('/doctors-list/?doctor='+selected2.id)
+                            navigate('/doctors-list/?doctor='+selected2.name)
                          }
                     }} className="px-5 py-[0.6rem] max-md:w-full whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] max-sm:text-[12px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('menu.add-appointment')}</button>
               

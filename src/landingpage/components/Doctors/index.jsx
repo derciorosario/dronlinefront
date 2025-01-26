@@ -75,7 +75,7 @@ export default function Doctors() {
     useEffect(()=>{
       const doctor = new URLSearchParams(window.location.search).get('doctor');
       if(doctor){
-        setSearch('id::'+doctor)
+        setSearch(doctor)
       }
 
       setCanFetch(true)

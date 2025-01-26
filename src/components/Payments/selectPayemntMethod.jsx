@@ -6,11 +6,8 @@ import toast from 'react-hot-toast'
 import i18next from 'i18next'
 
 function SelectPayemntMethod({info}) {
-
-
   const data=useData()
   const [invoice,setInvoice]=useState(null)
-
   let required_data=['cancellation_taxes','specialty_categories']
 
   useEffect(() => {
@@ -81,8 +78,6 @@ function SelectPayemntMethod({info}) {
   function getAmount(){
 
     let cat=data._specialty_categories.filter(i=>i.id==info?.medical_specialty)[0]
-
-
     if(cat && data._loaded.includes('cancellation_taxes') && info?.payment_method && (info?.canceled_appointment_id && invoice || !info?.canceled_appointment_id)){
        
        let price=0

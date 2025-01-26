@@ -8,7 +8,7 @@ import { useHomeAuth } from '../../contexts/AuthContext'
 
 
 
-function DoctorList({max,items,animate}) {
+function DoctorList({max,items}) {
 
 
   const [selectedWeekDays,setSelectedWeekDays] = useState({})
