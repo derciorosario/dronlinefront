@@ -165,7 +165,6 @@ async function handleItems({action,id,status}){
 function getDoctorAmountEarned(i){
   let percentage=i.use_app_gain_percentage ? JSON.parse(user?.app_settings?.[0]?.value)?.gain_percentage : i.gain_percentage
   percentage=parseInt(percentage || 0)
-  
   let collected=parseFloat((i.total_payment_amount || 0) - (i.total_refund_amount || 0))
   return collected * (percentage / 100)
 }
@@ -199,8 +198,9 @@ function getDoctorAmountEarned(i){
                           t('form.main-contact'),
                           t('common.gain_percentage'),
                           t('common.total_amount_collected'),
+                          `${ t('common.total_amount_collected')} (- IVA)`,
                           t('common.amount_earned'),
-                         // `IRPC (${JSON.parse(user?.app_settings?.[0]?.value)?.irpc || 0}%)`,
+                          `${ t('common.amount_earned')} (- IRPS)`,
                           t('form.gender'),
                           t('form.address'),
                           (user?.role=="admin" || user?.role=="manager") ? 'Status' : undefined,
@@ -226,9 +226,13 @@ function getDoctorAmountEarned(i){
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.email}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.main_contact}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{(i.use_app_gain_percentage ? JSON.parse(user?.app_settings?.[0]?.value)?.gain_percentage : i.gain_percentage) || 0}{'%'}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/doctor/`+i.id}>{parseFloat((i.total_payment_amount || 0) - (i.total_refund_amount || 0)).toFixed(2)}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/doctor/`+i.id}>{parseFloat(getDoctorAmountEarned(i)).toFixed(2)}</BaiscTable.Td>
-                                {/** <BaiscTable.Td url={`/doctor/`+i.id}>{data.getDoctorIRPC(i)}</BaiscTable.Td> */}
+                                {/**<BaiscTable.Td url={`/doctor/`+i.id}>{parseFloat((i.total_payment_amount || 0) - (i.total_refund_amount || 0)).toFixed(2)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{parseFloat(getDoctorAmountEarned(i)).toFixed(2)}</BaiscTable.Td> */}
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{data._cn(parseFloat(i.total_payment_amount).toFixed(2))}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{data._cn(parseFloat(i.total_point_1).toFixed(2))}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{data._cn(parseFloat(i.total_point_2).toFixed(2))}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{data._cn(parseFloat(i.total_point_3).toFixed(2))}</BaiscTable.Td>
+                                
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t('common.'+i.gender)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t(i.address)}</BaiscTable.Td>
                                 <BaiscTable.Td hide={!(user?.role=="admin" || user?.role=="manager")} url={`/appointment/`+i.id}>

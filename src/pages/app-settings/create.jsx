@@ -74,7 +74,10 @@ let initial_form={
        !form.administrative_assistant_name ||
        !form.stamp_filename ||
        !form.signature_filename ||
-       urgentHourMessages
+       !form.iva ||
+       !form.gain_percentage ||
+       !form.irpc ||
+        urgentHourMessages
     ){
       v=false
     }
@@ -110,10 +113,18 @@ useEffect(()=>{
 
 
 async function updateSystemSettings() {
-  setLoading(true)
-  try{
 
-    let r=await data.makeRequest({method:'post',url:`api/settings/`+loadedData.id,withToken:true,data:{...loadedData,value:JSON.stringify({...form,iva:form.iva || 0})}, error: ``},0);
+  setLoading(true)
+
+  try{
+    
+    let new_form={...form,
+      iva:parseFloat(form.iva || 0),
+      irpc:parseFloat(form.irpc),
+      gain_percentage:parseFloat(form.gain_percentage)
+    }
+
+    await data.makeRequest({method:'post',url:`api/settings/`+loadedData.id,withToken:true,data:{...loadedData,value:JSON.stringify(new_form)}, error: ``},0);
     setLoading(false)
     toast.success(t('messages.updated-successfully'))
 
@@ -348,8 +359,10 @@ async function updateSystemSettings() {
                     <div>
                     
                     <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'iva'])} label={t('common.iva-percentage')} onChange={(e)=>setForm({...form,iva:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'iva'} value={form.iva}/>
+                    <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'irpc'])} label={t('common.irpc-percentage')} onChange={(e)=>setForm({...form,irpc:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'irpc'} value={form.irpc}/>
+                   
                     <div>
-                      <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'gain_percentage'])} label={t('common.gain_percentage')} onChange={(e)=>setForm({...form,gain_percentage:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'gain_percentage'} value={form.gain_percentage}/>
+                      <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'gain_percentage'])} label={t('common.doctor_gain_percentage')} onChange={(e)=>setForm({...form,gain_percentage:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'gain_percentage'} value={form.gain_percentage}/>
                       {form.gain_percentage && <button onClick={()=>{
                          localStorage.setItem('gain_percentage',form.gain_percentage)
                          data._showPopUp('basic_popup','define-same-gain-perentage-for-all')

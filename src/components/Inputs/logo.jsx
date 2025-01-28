@@ -35,7 +35,6 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
 
   const acceptedImageFileTypes = ['.jpg', '.jpeg', '.png'];
 
-   
   const handleSubmit = async (event) => {
    
     let f = event.target.files[0];

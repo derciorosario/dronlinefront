@@ -83,6 +83,7 @@ function addPatients({ShowOnlyInputs}) {
        !form.en_short_biography  ||
        !form.date_of_birth ||
        !form.identification_document ||
+       !form.province_of_residence ||
 
        ((!form.passport_number || !form.passport_number_filename) && form.identification_document=="passport_number") ||
        ((!form.identification_number || !form.identification_number_filename) && form.identification_document=="identification_number") ||
@@ -304,6 +305,7 @@ useEffect(()=>{
   }
 
 
+  console.log({form})
 
 
   return (

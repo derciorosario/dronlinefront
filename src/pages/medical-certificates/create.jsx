@@ -483,6 +483,7 @@ const [form,setForm]=useState(initial_form)
                       { "name": t('common.labor'), "value": "labor" },
                       { "name": t('common.student-related'), "value": "student-related" },
                       { "name": t('common.labor-and-student-related'), "value": "labor-and-student-related"},
+                      { "name": t('common.no-activity'), "value": "no-activity" },
                     ]
       } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'activity'])} label={t('common.activities-to-do')} onChange={(e)=>setForm({...form,activity:e.target.value})} field={'relationship'} value={form.activity}/>
                     

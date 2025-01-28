@@ -11,8 +11,6 @@ import Faq from './pages/faq'
 
 
 function App() {
-
-
   return (
     <Router>
       <Routes>

@@ -35,10 +35,10 @@ export const DataProvider = ({ children }) => {
       appointment_messages:false,
       select_exams:false,
     }
+
     let not_closing_popups=[
       'support_messages'
     ]
-
   
     const [_openPopUps, _setOpenPopUps] = useState(initial_popups);
   
@@ -51,9 +51,7 @@ export const DataProvider = ({ children }) => {
     }
 
     const handleOutsideClick = (event) => {
-     // if(isDeleting) 
-
-
+   
       let close=true
       Object.keys(initial_popups).forEach(f=>{
           if(event?.target?.closest(`._${f}`))  {
