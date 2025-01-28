@@ -465,6 +465,7 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "bank_receipt":"Comprovativo bancário",
         "write-exam-name":"Escreva o nome do exame",
         "select-from-list":"Select on the list",
         "see-consultation":"Ver consulta",

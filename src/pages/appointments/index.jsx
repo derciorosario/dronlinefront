@@ -18,7 +18,7 @@ function App() {
 
  
   const data=useData()
-  const {user} =  useAuth()
+  const {user,APP_BASE_URL} =  useAuth()
   const { t, i18n } = useTranslation();
 
   const navigate = useNavigate()
@@ -225,11 +225,11 @@ function App() {
                           t('form.medical-specialty'),
                           t('form.type-of-care'),
                           t('common.unread-messages'),
-                         // t('form.consultation-method'),
                           t('form.payment-confirmed'),
                           t('common.doctor'),
                           t('form.reason-for-consultation'),
                           t('form.additional-observations'),
+                          user?.role=="admin" || user?.role=="manager" ? t('common.bank_receipt') : null,
                           t('common.created_at'),
                           t('common.last-update'),
                           selectedTab=="approved" ? t('common.meeting-link') : null,
@@ -281,8 +281,16 @@ function App() {
                                 </BaiscTable.Td>
 
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
+                              
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.reason_for_consultation?.length > 40 ? i.reason_for_consultation?.slice(0,40)+"..." : i.reason_for_consultation}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.additional_observations?.length > 40 ? i.additional_observations?.slice(0,40)+"..." : i.additional_observations}</BaiscTable.Td>
+                                <BaiscTable.Td hide={!(user?.role=="admin" || user?.role=="manager")}>
+                                    <span className={`${!i.bank_receipt_filename ? 'hidden':''}`} onClick={()=>{
+                                        window.open(APP_BASE_URL+"/storage/proofs/"+i.bank_receipt_filename, '_blank')
+                                    }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
+                                    </span>
+                                </BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.created_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.updated_at?.split('-')?.reverse()?.join('/') ? i.updated_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                

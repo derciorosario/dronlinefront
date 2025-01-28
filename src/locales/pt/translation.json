@@ -439,6 +439,7 @@
         "language-code-invalid": "Código de idioma inválido."
     },
     "common":{
+        "bank_receipt":"Comprovativo bancário",
         "validated":"Validado",
         "mark-urgent-exams":"Marcar exames urgentes",
         "number-of-days":"Número de dias",

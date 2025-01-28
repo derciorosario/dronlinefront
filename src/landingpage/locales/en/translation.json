@@ -414,7 +414,6 @@
         "payment-cancelled": "Request canceled",
         "something-went-wrong": "Something went wrong",
         "try-again": "Something went wrong. Please try again.",
-
         "request-processed-successfully": "Request processed successfully",
         "internal-error": "Internal error",
         "invalid-api-key": "Invalid API key",
@@ -455,6 +454,7 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },
     "common":{
+           "bank_receipt":"Bank receipt",
            "write-exam-name":"Write exam name",
            "select-from-list":"Selecionar na lista",
            "see-consultation":"See consultation",
