@@ -390,8 +390,6 @@ const [form,setForm]=useState(initial_form)
            )}
            >
 
-
-
            <FormCard  hide={(itemToShow?.action!="update" && !id) || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
                {name:'ID',value:form.id},
                {name:t('form.requested-on'),value:form.requested_at},
@@ -427,9 +425,6 @@ const [form,setForm]=useState(initial_form)
                />
 
 
-              
-
-
                <div className={`w-full mt-4 ${((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient") ? 'hidden':''}`}>
                   <div className="flex items-center mb-1">
                      <label  class="flex items-center mb-2 text-sm  text-gray-900">{t('form.requested-exams')} <span className="text-red-500">*</span></label>
@@ -453,9 +448,11 @@ const [form,setForm]=useState(initial_form)
                        <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                     </button>
                   </div>
+
                   <div className="flex items-center">
+
                      <div class={`bg-gray border flex  flex-wrap border-gray-300 text-gray-900 text-sm  rounded-[0.3rem]  w-[400px] max-md:w-auto max-md:flex-1 px-1.5 py-1`}>
-                         {!form.exam_items.length && <span className="py-1">{t('common.none-added')}</span>}
+                         {form.exam_items.length==0 && <span className="py-1">{t('common.none-added')}</span>}
                          {form.exam_items.map(i=>(
                              <div className="bg-gray-200 rounded-[0.3rem] my-[1px] px-2 py-1 inline-flex items-center mr-1">
                               <span className="text-[14px]">{i.name}</span>
@@ -471,14 +468,10 @@ const [form,setForm]=useState(initial_form)
                                     </svg>
                                 </div>
                             </div>
-
-
-
                          ))}
-                     </div> 
+                     </div>
 
-                    
-                  </div>
+                   </div>
                </div>
 
               

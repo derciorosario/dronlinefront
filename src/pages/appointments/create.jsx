@@ -206,9 +206,7 @@ useEffect(()=>{
       }
 
       if(res.scheduled_doctor && res.scheduled_hours && res.scheduled_weekday && res.scheduled_date && res.type_of_care){
-          
           setSelectedDoctor({status:'loading',hours:[]})
-          
           let response
 
             try{ 
@@ -216,7 +214,9 @@ useEffect(()=>{
               if(res.canceled_appointment_id){
                 let canceled_appointment=await data.makeRequest({method:'get',url:`api/appointments/`+res.canceled_appointment_id,withToken:true, error: ``},0);
                 if(canceled_appointment?.status=="canceled"){
-                  data._showPopUp('basic_popup','consultation-is-already-canceled')
+                   if(user?.role=="patient") {
+                    data._showPopUp('basic_popup','consultation-is-already-canceled')
+                   }
                   setSelectedDoctor({status:'not_selected'})
                 }
                
@@ -229,6 +229,8 @@ useEffect(()=>{
 
           let is_urgent=res.type_of_care=="urgent"
 
+          let scheduled_weekday=res.scheduled_weekday=='undefined' ? weeks[new Date(res.scheduled_date).getDay()] : res.scheduled_weekday
+
           let new_form={...form,
             reason_for_consultation:res.reason_for_consultation || '',
             name:response.name,
@@ -240,7 +242,7 @@ useEffect(()=>{
             scheduled_date:res.scheduled_date,
             scheduled_doctor:res.scheduled_doctor,
             scheduled_hours:res.scheduled_hours,
-            scheduled_weekday:res.scheduled_weekday,
+            scheduled_weekday,
             type_of_care:is_urgent ? 'urgent': 'scheduled'
           }
 
@@ -248,7 +250,7 @@ useEffect(()=>{
             new_form.canceled_appointment_id=res.canceled_appointment_id
           }
 
-          let available_hours=getAvailableHours(response,new_form.type_of_care,res.scheduled_date,{[response.id]:res.scheduled_weekday},res.canceled_appointment_id)
+          let available_hours=getAvailableHours(response,new_form.type_of_care,res.scheduled_date,{[response.id]:scheduled_weekday},res.canceled_appointment_id)
 
         
           if(isUrgentByLimit(res.scheduled_hours,res.scheduled_date) || data.isSetAsUrgentHour(res.scheduled_hours,JSON.parse(user?.app_settings?.[0]?.value))){

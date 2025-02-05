@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 import {useLocation, useNavigate} from 'react-router-dom'
 
 function FindSpecialist() {
-    
   const data = useHomeData()
   const {pathname} = useLocation()
 
@@ -17,23 +16,20 @@ function FindSpecialist() {
   const [selected1,setSelected1]=useState(null)
   const [selected2,setSelected2]=useState(null)
 
-  
- const navigate=useNavigate()
+  const navigate=useNavigate()
 
   useEffect(()=>{
     setSearchedData1(data.specialty.filter(i=>(i.name)?.toLowerCase()?.includes(searchInput1.toLowerCase())))
   },[searchInput1,data._loaded,data.specialty])
 
+
   useEffect(()=>{
     setSearchedData2(data._search(searchInput2,data._doctors?.data || []))
   },[searchInput2,data._loaded])
 
-
-
   useEffect(()=>{ 
     data._get('doctors',{doctors:{all:true,status:'active'}}) 
   },[pathname])
-
 
   return (
     <div style={{zIndex:9}} className="w-full max-md:px-[15px] px-[50px] z-40 relative">

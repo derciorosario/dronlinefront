@@ -115,6 +115,7 @@ export default function WorkWithUsForm({}) {
   return (
             
         <div style={{zIndex:999}} id="crud-modal" tabindex="-1" aria-hidden="true" class={`overflow-y-auto _doctor_reuqest_form  bg-[rgba(0,0,0,0.7)] flex ease-in delay-100 transition-all ${!data._openPopUps.doctor_reuqest_form ? 'opacity-0 pointer-events-none translate-y-[50px]':''} overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
+            
             <div class="relative p-4 w-full max-w-[600px] max-h-full">
                 <div class="relative bg-white rounded-lg shadow">
 
@@ -237,6 +238,9 @@ export default function WorkWithUsForm({}) {
                 }} className="w-[30px] cursor-pointer h-[30px] absolute right-5 top-5 rounded-full bg-gray-300 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                 </div>
+
+
+                <div className="h-[75px]">{/*** for iphone browser bar */}</div>
 
 
             </div>
