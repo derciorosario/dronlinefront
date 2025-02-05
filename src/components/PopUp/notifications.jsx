@@ -204,8 +204,11 @@ return (
 
        <div>
           <BasicPagination show={data._loaded.includes('notifications')} from={'notifications'} setCurrentPage={setCurrentPage} total={data._notifications?.total}  current={data._notifications?.current_page} last={data._notifications?.last_page}/>
+          <div className="h-[70px] sm:hidden">{/*** for iphone browser bar */}</div>
        </div>
      </div>
+
+     
 
 
     </div>

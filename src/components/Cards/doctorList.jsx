@@ -29,10 +29,13 @@ function DoctorList({show}) {
 
           <div className="overflow-y-auto h-full flex-1">
               <Specialists showOnlyList={true}/>
+              <div className="h-[100px] sm:hidden">{/*** for iphone browser bar */}</div>
           </div>
 
 
-           </div>
+        
+
+          </div>
      </div>
            
   )
