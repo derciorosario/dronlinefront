@@ -41,6 +41,9 @@ import ZoomMeeting from './pages/meetings/zoom/index.jsx';
 import CancellationTaxes from './pages/cancellation-taxes/index.jsx'
 import CreateCancellationTaxes from './pages/cancellation-taxes/create.jsx'
 import AppSettings from './pages/app-settings/create.jsx'
+import WaitingList from './pages/waiting-list/index.jsx'
+import CreateWaitingList from './pages/waiting-list/create.jsx'
+import WaitingListStats from './pages/waiting-list/stats.jsx'
 
 import MedicalCertificates from './pages/medical-certificates/index.jsx'
 import CreateMedicalCertificates from './pages/medical-certificates/create.jsx'
@@ -91,6 +94,11 @@ function App() {
          <Route path="/cancellation-taxes" element={<ProtectedRoute redirectTo="/login"><CancellationTaxes/></ProtectedRoute>}/>
          <Route path="/cancellation-taxes/:id" element={<ProtectedRoute redirectTo="/login"><CreateCancellationTaxes/></ProtectedRoute>}/>
          
+         <Route path="/waiting-list" element={<ProtectedRoute redirectTo="/login"><WaitingList/></ProtectedRoute>}/>
+         <Route path="/waiting-list/:id" element={<ProtectedRoute redirectTo="/login"><CreateWaitingList/></ProtectedRoute>}/>
+         <Route path="/waiting-list-stats" element={<ProtectedRoute redirectTo="/login"><WaitingListStats/></ProtectedRoute>}/>
+         
+
          <Route path="/add-doctors" element={<ProtectedRoute redirectTo="/login"><CreateDoctors/></ProtectedRoute>}/>
          <Route path="/doctor/:id" element={<ProtectedRoute redirectTo="/login"><CreateDoctors/></ProtectedRoute>}/>
 

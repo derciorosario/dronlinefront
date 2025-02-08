@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TableSkeleton from '../Skeleton/table'
 import { t } from 'i18next'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useData } from '../../contexts/DataContext'
 
 function BaiscTable({header,body,loaded,addPath,canAdd,notClickable,hide}) {
   const navigate=useNavigate()
+
 
   return (
     <div className={`${notClickable ? '_not_clickable_table':''} ${hide ? 'hidden':''} max-h-[1300px] overflow-y-auto`}>

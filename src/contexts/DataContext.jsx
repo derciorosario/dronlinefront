@@ -148,10 +148,12 @@ export const DataProvider = ({ children }) => {
     const [_doctor_dashboard,setDoctorDashboard]=useState([])
     const [_patient_dashboard,setPatientDashboard]=useState([])
     const [_medical_certificates,setMedicalCertificates]=useState([])
+    const [_waiting_list,setWaitingList]=useState([])
     const [updateTable,setUpdateTable]=useState(null)
     
 
     let dbs=[
+      {name:'waiting_list',update:setWaitingList,get:_waiting_list},
       {name:'settings',update:setSettings,get:_settings},
       {name:'appointments',update:setAppointments,get:_appointments},
       {name:'doctors',update:setDoctors,get:_doctors},
@@ -893,7 +895,53 @@ function isSetAsUrgentHour(hour,AppSettings){
       return days;
     }
 
+    const waitingListOptions = [
+      {
+        name: "used_telemedicine_before",
+        items: ["yes", "no"]
+      },
+      {
+        name: "medical_visits_per_year",
+        items: ["1_3_times", "4_6_times", "more_than_6"]
+      },
+     
+      {
+        name: "willing_to_pay_online_consultation",
+        items: ["less_than_1000", "between_1000_1500", "between_1500_2000", "above_2000"]
+      },
+      {
+        name: "preferred_payment_method",
+        items: ["mpesa", "bank_card", "other"]
+      },
+      {
+        name: "biggest_healthcare_challenge",
+        items: ["long_queues", "lack_of_specialists", "high_costs", "other"]
+      },
+      {
+        name: "most_important_benefit",
+        items: ["fast_service", "affordable_consultations", "specialist_access", "other"]
+      },
+      {
+        name: "join_whatsapp_group",
+        items: ["video_call_consultation", "chat_24_7", "online_prescription", "other"]
+      },
+      {
+          name: "most_frequent_consultation",
+          items: [
+            "general_practitioner", "specialist", "other","allergy_immunology", "anesthesiology", "cardiology", "dermatology",
+            "endocrinology", "gastroenterology", "geriatrics", "gynecology",
+            "hematology", "infectious_diseases", "neurology", "nephrology",
+            "oncology", "ophthalmology", "orthopedics", "otolaryngology",
+            "pathology", "pediatrics", "plastic_surgery", "psychiatry",
+            "pulmonology", "radiology", "rheumatology", "sports_medicine",
+            "urology", "vascular_surgery"
+          ]
+        }
+    ];
+
     const value = {
+      waitingListOptions,
+      _waiting_list,
       daysBetween,
       text_l,
       getDocumentLetterCodeFrom,

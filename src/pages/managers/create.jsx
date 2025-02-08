@@ -85,7 +85,8 @@ const default_selected_permissions= {
   support:[],
   app_settings:[],
   stats:[],
-  medical_certificates:[]
+  medical_certificates:[],
+  waiting_list:[]
  }
 
 const [selectedPermissions,setSelectedPermissions]=useState(default_selected_permissions)
@@ -140,7 +141,12 @@ const [permissions,setPermissions]=useState([
   {
     "resource":"stats",
     "actions":['read']
+  },
+  {
+    "resource":"waiting_list",
+    "actions":['read']
   }
+  
 ])
 
   

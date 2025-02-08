@@ -1,15 +1,18 @@
 import { t } from 'i18next'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ButtonLoader from '../components/Loaders/button';
 import PopOver from '../components/PopOver';
 import _var from '../assets/vaiables.json'
 import { useData } from '../contexts/DataContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function FormLayout({advancedActions,hideInputs,children,title,form, verified_inputs,bottomContent,button,hideTitle,hide,topBarContent}) {
 
 const childrenWithProps = React.Children.map(children, child => {
     return React.cloneElement(child, { form, verified_inputs,hideInputs});
 });
+
+
 
 function getAdvancedActions(items=[],id=null,w=undefined){
 
@@ -65,7 +68,7 @@ return (
        
     </div>
   )
- }
+ } 
 
 
     FormLayout.Input = ({max,min,inputLeftContent,contact_code_field,hideErrorMsg,placeholder,ignoreVilidation,inputStyle,width,hideInputs,confirmContent,popOver,listContent,has_items_to_add,style,label,type,onChange,value,field,verified_inputs,onBlur,onClick,form,r,selectOptions,disabled,errorMsg,noBorder,hide,textarea,custom_invalid_validation,height}) => {

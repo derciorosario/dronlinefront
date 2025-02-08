@@ -2,7 +2,7 @@ import { t } from 'i18next'
 import React, { useState } from 'react'
 import { useData } from '../../contexts/DataContext'
 
-export default function BasicSearch({search,setSearch,setCurrentPage,show,from,total,hideFilters,hideSearch,printAction,loaded}) {
+export default function BasicSearch({hideResults,search,setSearch,setCurrentPage,show,from,total,hideFilters,hideSearch,printAction,loaded}) {
   const data=useData()
   return (
     <div className={`flex items-center mb-2  ${show ? 'opacity-0 pointer-events-none':''}`}>
@@ -37,7 +37,7 @@ export default function BasicSearch({search,setSearch,setCurrentPage,show,from,t
             </button>}
         </div>}
 
-        {loaded && <div className={`${!hideSearch ? 'ml-2':''}`}> 
+        {(loaded && !hideResults) && <div className={`${!hideSearch ? 'ml-2':''}`}> 
             <div type="button" class={`py-[13px] px-5 me-2  text-sm font-medium text-gray-900 focus:outline-none rounded-lg border border-gray-200`}>
                 <span className="max-md:hidden">{total ? total +" "+ t('common.results') :  t('common.no-data-found')}</span>
                 <span className={"md:hidden"}>{total}</span>
