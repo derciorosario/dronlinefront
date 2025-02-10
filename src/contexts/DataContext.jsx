@@ -923,6 +923,10 @@ function isSetAsUrgentHour(hour,AppSettings){
       },
       {
         name: "join_whatsapp_group",
+        items: ["yes", "no", "maybe"]
+      },
+      {
+        name: "most_useful_feature",
         items: ["video_call_consultation", "chat_24_7", "online_prescription", "other"]
       },
       {
@@ -939,7 +943,19 @@ function isSetAsUrgentHour(hour,AppSettings){
         }
     ];
 
+
+    const handleCopyClick = (text) => {
+
+      navigator.clipboard.writeText(text).then(() => {
+         toast.success(t('common.text-copied'));
+      }).catch(err => {
+         alert('Failed to copy text: ', err);
+      })
+
+   }
+
     const value = {
+      handleCopyClick,
       waitingListOptions,
       _waiting_list,
       daysBetween,

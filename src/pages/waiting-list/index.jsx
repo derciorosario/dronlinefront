@@ -131,7 +131,7 @@ useEffect(()=>{
                         <BaiscTable.Td url={`/waiting-list/`+i.id}>{i.name}</BaiscTable.Td>
                         <BaiscTable.Td url={`/waiting-list/`+i.id}>{i.contact}</BaiscTable.Td>
                         <BaiscTable.Td url={`/waiting-list/`+i.id}>{i.email}</BaiscTable.Td>
-                        <BaiscTable.Td url={`/waiting-list/`+i.id}>{i.province}</BaiscTable.Td>
+                        <BaiscTable.Td url={`/waiting-list/`+i.id}>{t('wl.'+i.province)}</BaiscTable.Td>
                         <BaiscTable.Td url={`/waiting-list/`+i.id}>{data.text_l(i.open_feedback) || '-'}</BaiscTable.Td>
                         <BaiscTable.Td url={`/waiting-list/`+i.id}>{i.created_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
 

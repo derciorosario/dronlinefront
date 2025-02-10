@@ -165,14 +165,11 @@ padding-top: 10px;
 
 
 @media print {
-  *::-webkit-scrollbar {
-    display: none;
+    *::-webkit-scrollbar {
+      display: none;
     }
-    
-    
  
- 
-  ._print {
+    ._print {
     display: block;
     display: flex;
     flex-direction: column;

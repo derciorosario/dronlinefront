@@ -120,16 +120,23 @@ function SendProof({info}) {
         <div class="flow-root">
           <div class="-my-3 divide-y divide-gray-200">
             <dl class="flex items-center justify-between gap-4 py-3">
+              <dt class="text-base font-normal text-gray-500">{t('common.bank_name')}</dt>
+              <dd class="text-base font-medium text-gray-900">Moza Banco</dd>
+            </dl>
+            <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('common.account-number')}</dt>
-              <dd class="text-base font-medium text-gray-900">00016363509</dd>
+              <dd class="text-base font-medium text-gray-900 flex items-center cursor-pointer" onClick={()=>data.handleCopyClick('2327942010001')}>2327942010001<span className="ml-2">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z"/></svg></span></dd>
             </dl>
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">NIB</dt>
-              <dd class="text-base font-medium text-gray-900">0430000000166350925</dd>
+              <dd class="text-base font-medium text-gray-900 flex items-center cursor-pointer" onClick={()=>data.handleCopyClick('003400002327942010169')}>003400002327942010169<span className="ml-2">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z"/></svg></span></dd>
             </dl>
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">IBAN</dt>
-              <dd class="text-base font-medium text-gray-900">MZN5900430000000166350925</dd>
+              <dd class="text-base font-medium text-gray-900 flex items-center cursor-pointer" onClick={()=>data.handleCopyClick('MZ59 003400002327942010169')}>MZ59 003400002327942010169<span className="ml-2">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z"/></svg></span></dd>
             </dl>
           </div>
         </div>

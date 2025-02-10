@@ -37,8 +37,8 @@ function Mpesa({info}) {
                 toast.error(t('messages.transaction-not-authorized'))
             }else if(e.message==400){
                 toast.error(t('common.invalid-data'))
-            }else if(e.message==500){
-                toast.error(t('common.unexpected-error'))
+            }else if(e.message==504){
+                toast.error(t('common.transfer-failed-try-again'))
             }else  if(e.message=='Failed to fetch'){
                 toast.error(t('common.check-network'))
             }else{

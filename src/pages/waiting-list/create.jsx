@@ -46,12 +46,8 @@ function Create({ShowOnlyInputs}) {
 
 
   let initial_form={
-    created_at:'',
-    content_en:'',
-    content_pt:'',
-    type:'general',
-    title_pt:'',
-    title_en:''
+    most_important_benefit:[],
+    biggest_healthcare_challenge:[]
   }
 
 
@@ -176,15 +172,16 @@ return (
                             {name:t('form.name'),value:form.name},
                             {name:'Email',value:form.email},
                             {name:t('form.contact'),value:form.contact},
-                            {name:t('wl.province-or-city'),value:form.province},
+                            {name:t('wl.province-or-city'),value:t('wl.'+form.province)},
                             {name:t('wl.used_telemedicine_before'),value:form.used_telemedicine_before ? t('common.'+form.used_telemedicine_before) : '-'},
                             {name:t('wl.medical_visits_per_year'),value:form.medical_visits_per_year ? t('wl.'+form.medical_visits_per_year?.replaceAll('_','-')) : '-'},
                             {name:t('wl.most_frequent_consultation'),value:form.most_frequent_consultation_input ? form.most_frequent_consultation_input :  form.most_frequent_consultation  ?  t('wl.'+form.most_frequent_consultation) : '-'},
                             {name:t('wl.willing_to_pay_online_consultation'),value:form.willing_to_pay_online_consultation  ?  t('wl.'+form.willing_to_pay_online_consultation) : ''},
                             {name:t('wl.preferred_payment_method'),value:form.preferred_payment_method_input ? form.preferred_payment_method_input : form.preferred_payment_method  ?  t('wl.'+form.preferred_payment_method) : '-'},
-                            {name:t('wl.biggest_healthcare_challenge'),value:form.biggest_healthcare_challenge_input ? form.biggest_healthcare_challenge_input : form.biggest_healthcare_challenge  ?  t('wl.'+form.biggest_healthcare_challenge) : '-'},
-                            {name:t('wl.most_important_benefit'),value:form.most_important_benefit_input ? form.most_important_benefit_input : form.most_important_benefit  ?  t('wl.'+form.most_important_benefit) : '-'},
-                            {name:t('wl.join_whatsapp_group'),value:form.join_whatsapp_group_input ? form.join_whatsapp_group_input : form.join_whatsapp_group  ?  t('wl.'+form.join_whatsapp_group) : '-'},
+                            {name:t('wl.biggest_healthcare_challenge'),value:form.biggest_healthcare_challenge.filter(i=>i!="other" || !form.biggest_healthcare_challenge_input).map(i=>t('wl.'+i)).join(', ') + (form.biggest_healthcare_challenge_input ? `${form.biggest_healthcare_challenge.filter(i=>i!="other" || !form.biggest_healthcare_challenge_input).length ? ', ':''} ${form.biggest_healthcare_challenge_input}`:`${!form.biggest_healthcare_challenge.filter(i=>i!="other" || !form.biggest_healthcare_challenge_input).length ? '-':''}`)},
+                            {name:t('wl.most_important_benefit'),value: form.most_important_benefit.filter(i=>i!="other" || !form.most_important_benefit_input).map(i=>t('wl.'+i)).join(', ') + (form.most_important_benefit_input ? `${form.most_important_benefit.filter(i=>i!="other" || !form.most_important_benefit_input).length ? ', ':''} ${form.most_important_benefit_input}`:`${!form.most_important_benefit.filter(i=>i!="other" || !form.most_important_benefit_input).length ? '-':''}`)},
+                            {name:t('wl.join_whatsapp_group'),value:form.join_whatsapp_group_input ? form.join_whatsapp_group_input : form.join_whatsapp_group  ?  t('common.'+form.join_whatsapp_group) : '-'},
+                            {name:t('wl.most_useful_feature'),value:form.most_useful_feature_input ? form.most_useful_feature_input : form.most_useful_feature  ?  t('wl.'+form.most_useful_feature) : '-'},
                             {name:t('wl.open_feedback'),value:form.open_feedback || '-'},
                          
                             

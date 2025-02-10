@@ -275,12 +275,39 @@
         "other_benefit": "Other",
 
         "join_whatsapp_group": "Would you like to join the exclusive WhatsApp group to receive updates firsthand?",
+       
+        "most_useful_feature": "Which feature do you find most useful on the platform?",
         "video_call_consultation": "Video call consultation",
         "chat_24_7": "Chat with doctors 24/7",
         "online_prescription": "Online prescription",
         "other_whatsapp_group": "Others",
         "open_feedback": "If you could improve something in the way healthcare services are offered, what would it be?",
-        "other":"Outro"
+        "other":"Outro",
+
+
+        "maputo": "Maputo",
+        "maputo-provincia": "Maputo (Província)",
+        "gaza": "Gaza",
+        "inhambane": "Inhambane",
+        "sofala": "Sofala",
+        "manica": "Manica",
+        "tete": "Tete",
+        "zambezia": "Zambézia",
+        "nampula": "Nampula",
+        "niassa": "Niassa",
+        "cabo-delgado": "Cabo Delgado",
+        "matola": "Matola",
+        "xai-xai": "Xai-Xai",
+        "inhambane-cidade": "Inhambane (Cidade)",
+        "beira": "Beira",
+        "chimoio": "Chimoio",
+        "tete-cidade": "Tete (Cidade)",
+        "quelimane": "Quelimane",
+        "nampula-cidade": "Nampula (Cidade)",
+        "pemba": "Pemba",
+        "lichinga": "Lichinga",
+        "maybe":"Maybe"
+        
     },
 
     "form":{
@@ -545,6 +572,10 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },
     "common":{
+           "transfer-failed-try-again": "Transfer failed. Please try again",
+           "text-copied":"Text copied",
+           "bank_name":"Bank name",
+           "maybe":"Talvez",
            "list":"List",
            "waiting-list":"Waiting list",
            "bank_receipt":"Bank receipt",

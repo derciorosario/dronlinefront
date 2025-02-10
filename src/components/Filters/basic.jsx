@@ -165,7 +165,7 @@ export default function BasicFilter({dateFilters,setDateFilter,filterOptions,set
 
                       }}>
 
-                       <input  checked={f.selected_ids.includes(i.id || i)} type="checkbox" value="" className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 focus:ring-2" />
+                       <input  checked={f.selected_ids.includes(i.id || i)} type="checkbox" value="" className="w-4 h-4 flex-shrink-0 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 focus:ring-2" />
 
                        <span  className="ml-2 flex-1 flex  text-sm font-medium text-gray-900 cursor-pointer">
                          {i.name || (i?.pt_name || i?.en_name) || i} 

@@ -14,8 +14,8 @@ import BasicFilter from '../../components/Filters/basic';
 
 function App() { 
   const data=useData()
-  const {user,APP_FRONDEND} =  useAuth()
-  const { t, i18n } = useTranslation();
+  const {user,APP_FRONDEND,APP_BASE_URL} =  useAuth()
+  const { t } = useTranslation();
 
   const navigate = useNavigate()
   const [loading,setLoading]=useState(false)
@@ -166,9 +166,8 @@ function App() {
                    t('common.patient'),
                    t('common.doctor'),
                    t('form.consultation-id'),
-                  // t('form.insurance_company_name'),
-                  // t('form.policy_number'),
                    t('common.invoice'),
+                   user?.role=="admin" || user?.role=="manager" ? t('common.bank_receipt') : null,
                    t('common.created_at'),
                    t('common.last-update'),
                    '.'
@@ -192,15 +191,20 @@ function App() {
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.patient?.name}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.appointment?.id}</BaiscTable.Td>
-                         {/**<BaiscTable.Td url={`/payment-management/`+i.id}>{i.insurance_company || '-'}</BaiscTable.Td>
-                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.policy_number || '-'}</BaiscTable.Td> */}
-                         <BaiscTable.Td>
-                                    <span onClick={()=>{
-                                        window.open(APP_FRONDEND+"/invoice/"+i.ref_id, '_blank')
-                                    }}>
-                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
-                                    </span>
+                          <BaiscTable.Td>
+                                  <span onClick={()=>{
+                                      window.open(APP_FRONDEND+"/invoice/"+i.ref_id, '_blank')
+                                  }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
+                                  </span>
                          </BaiscTable.Td>
+                          <BaiscTable.Td hide={!(user?.role=="admin" || user?.role=="manager")}>
+                                  <span className={`${!i.appointment?.bank_receipt_filename ? 'hidden':''}`} onClick={()=>{
+                                      window.open(APP_BASE_URL+"/storage/proofs/"+i.appointment?.bank_receipt_filename, '_blank')
+                                  }}>
+                                      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
+                                </span>
+                          </BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                          <BaiscTable.AdvancedActions id={i.id} items={[

@@ -284,13 +284,37 @@
         "other_benefit": "Outro",
 
         "join_whatsapp_group": "Pretende fazer parte do grupo de WhatsApp exclusivo para receber novidades em primeira mão?",
+        "most_useful_feature": "Qual das funcionalidades considera mais útil na plataforma?",
         "video_call_consultation": "Consulta por videochamada",
         "chat_24_7": "Chat com médicos 24/7",
         "online_prescription": "Prescrição de medicamentos online",
         "other_whatsapp_group": "Outros",
         "open_feedback": "Se pudesse melhorar algo na forma como os serviços de saúde são oferecidos, o que seria?",
 
-        "other":"Outro"
+        "other":"Outro",
+
+        "maputo": "Maputo",
+        "maputo-provincia": "Maputo (Província)",
+        "gaza": "Gaza",
+        "inhambane": "Inhambane",
+        "sofala": "Sofala",
+        "manica": "Manica",
+        "tete": "Tete",
+        "zambezia": "Zambézia",
+        "nampula": "Nampula",
+        "niassa": "Niassa",
+        "cabo-delgado": "Cabo Delgado",
+        "matola": "Matola",
+        "xai-xai": "Xai-Xai",
+        "inhambane-cidade": "Inhambane (Cidade)",
+        "beira": "Beira",
+        "chimoio": "Chimoio",
+        "tete-cidade": "Tete (Cidade)",
+        "quelimane": "Quelimane",
+        "nampula-cidade": "Nampula (Cidade)",
+        "pemba": "Pemba",
+        "lichinga": "Lichinga",
+        "maybe":"Talvez"
     },
     "form":{
         "medication":"Médicamento",
@@ -558,6 +582,10 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "transfer-failed-try-again":"Transferência falhou. Tente novamente",
+        "text-copied":"Texto copiado",
+        "bank_name":"Nome do banco",
+        "maybe":"Talvez",
         "list":"Lista",
         "waiting-list":"Lista de espera",
         "bank_receipt":"Comprovativo bancário",

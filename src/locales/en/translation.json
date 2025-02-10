@@ -437,6 +437,7 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+           "transfer-failed-try-again": "Transfer failed. Please try again",
            "medical-certificate": "Medical Certificate",
             "validated":"Validated",
             "mark-urgent-exams":"Mark urgent exams",

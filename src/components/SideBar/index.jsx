@@ -36,7 +36,6 @@ function SideBar({hideSidebar}) {
     const [openMobileMenu,setOpenMobileMenu]=useState(false)
 
     const menuItems = [
-
       {name:t('menu.home'),path:'/dashboard',paths:['/dashboard'],field:'dashboard',icon:'dashboard',access:['all'],manager_access:true,showInMobile:true},
       {name:t('menu.find-a-specialist'),path:'/specialists',paths:['/specialists'],field:'specialists',icon:'find_doctor',access:['admin','patient']},
      
@@ -67,12 +66,10 @@ function SideBar({hideSidebar}) {
         {name:t('menu.add-managers'),path:'/add-managers',paths:['add-managers']},
       ],access:['admin']},
 
-
       {name:t('menu.specialties-and-prices'),path:'/specialty-categories',icon:'specialty_categories',sub_menus:[
         {name:t('menu.specialties-and-prices'),path:'/specialty-categories',paths:['specialty-categories','specialty-category/:id','add-specialty-category'],manager_access:{name:'specialty_categories',per:['read']}},
         {name:t('common.cancellation-taxes'),path:'/cancellation-taxes',paths:['cancellation-taxes','cancellation-taxes/:id'],manager_access:{name:'specialty_categories',per:['read']}},    
       ],access:['admin'],manager_access:{name:'specialty_categories',per:['read']}},
-      
      
       {name:'Logs',path:'/logs',field:'app-feedback',icon:'logs',sub_menus:[
         {name:t('common.action-logs'),path:'/logs',paths:['logs'],manager_access:{name:'stats',per:['read']}},
@@ -80,7 +77,6 @@ function SideBar({hideSidebar}) {
       ],access:['admin'],manager_access:{name:'stats',per:['read']}},
      
      {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient'],showInMobile:true},
-      
      //{name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
 
      {name:user?.role=="patient" || data.isMobile ? t('common.payments') : t('menu.payment-management'),path:'/payment-management',field:'payment-management',icon:'payment_management',sub_menus:[
@@ -94,7 +90,6 @@ function SideBar({hideSidebar}) {
       {name:t('common.list'),path:'/waiting-list',paths:['/waiting-list','waiting-list/:id'],access:['admin','manager'],manager_access:{name:'waiting_list',per:['read']}},
       {name:t('common.stats'),path:'/waiting-list-stats',paths:['waiting-list-stats'],access:['admin','manager'],manager_access:{name:'waiting_list',per:['read']}},
      ],access:['admin'],manager_access:{name:'waiting_list',per:['read']}},
-
 
      {name:'Feedback',path:'/app-feedback',field:'app-feedback',icon:'feedback',sub_menus:[
         {name:t('menu.app-feedback'),path:'/app-feedback',paths:['app-feedback'],manager_access:{name:'feedback',per:['read']}},
@@ -112,7 +107,7 @@ function SideBar({hideSidebar}) {
         {name:t('menu.profile'),path:'/profile',paths:['profile'],access:['all'],manager_access:true},
      ],access:['patient','doctor','admin'],manager_access:true},
       
-      {name:t('menu.more'),path:'/more',paths:['/more'],field:'more',icon:'more',access:['all'],manager_access:true,showInMobile:true},
+     {name:t('menu.more'),path:'/more',paths:['/more'],field:'more',icon:'more',access:['all'],manager_access:true,showInMobile:true},
   ]
 
 
