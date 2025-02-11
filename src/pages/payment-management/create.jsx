@@ -248,11 +248,10 @@ return (
   ]}/>
 
 
-  <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'iva'])} label={t('common.iva-percentage')} onChange={(e)=>setForm({...form,iva:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'iva'} value={form.iva}/>
-  <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'irpc'])} label={t('common.irpc-percentage')} onChange={(e)=>setForm({...form,irpc:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'irpc'} value={form.irpc}/>
-  <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'doctor_gain_percentage'])} label={t('common.doctor_gain_percentage')} onChange={(e)=>setForm({...form,doctor_gain_percentage:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'doctor_gain_percentage'} value={form.doctor_gain_percentage}/>
+  <FormLayout.Input hide={user?.role=="doctor" || user?.role=="patient"} r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'iva'])} label={t('common.iva-percentage')} onChange={(e)=>setForm({...form,iva:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'iva'} value={form.iva}/>
+  <FormLayout.Input hide={user?.role=="doctor" || user?.role=="patient"} r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'irpc'])} label={t('common.irpc-percentage')} onChange={(e)=>setForm({...form,irpc:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'irpc'} value={form.irpc}/>
+  <FormLayout.Input hide={user?.role=="doctor" || user?.role=="patient"} r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'doctor_gain_percentage'])} label={t('common.doctor_gain_percentage')} onChange={(e)=>setForm({...form,doctor_gain_percentage:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'doctor_gain_percentage'} value={form.doctor_gain_percentage}/>
                      
-
 
   </FormLayout>
   </div>
