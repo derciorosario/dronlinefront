@@ -193,6 +193,7 @@
         "_payments": "View completed consultation payments"
     },
     "wl":{
+        "different_specialist":"Other",
         "yes": "Yes",
         "no": "No",
         "full-name": "Full name",
@@ -248,7 +249,8 @@
         "vascular_surgery": "Vascular Surgery",
         "used_telemedicine_before": "Have you used a telemedicine service before?",
         "medical_visits_per_year": "How many times per year do you visit a doctor?",
-        "most_frequent_consultation": "Who do you consult most frequently?",
+        "most_frequent_consultation": "Join exclusive webinars and gain insights into healthcare with our experts.",
+        "_most_frequent_consultation": "Who do you consult most frequently?",
         "willing_to_pay_online_consultation": "How much would you be willing to pay for an online consultation with a qualified doctor?",
         
         "less_than_1000": "Less than 1000 MZN",

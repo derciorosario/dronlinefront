@@ -112,7 +112,7 @@ const [permissions,setPermissions]=useState([
   },
   {
     "resource":"payment_management",
-    "actions":['read','approve','reject']
+    "actions":['read','approve','reject','update']
   },
   {
     "resource":"medical_certificates",

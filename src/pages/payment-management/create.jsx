@@ -102,6 +102,57 @@ useEffect(()=>{
 },[data.updateTable])
 
 
+useEffect(()=>{
+  let v=true
+  if(
+     !form.iva ||
+     !form.doctor_gain_percentage ||
+     !form.irpc){
+      v=false
+    }
+    setValid(v)
+},[form])
+
+
+
+
+
+async function SubmitForm(){
+
+  setLoading(true)
+
+  try{
+
+    let new_form={
+      iva:parseFloat(form.iva || 0),
+      irpc:parseFloat(form.irpc || 0),
+      doctor_gain_percentage:parseFloat(form.doctor_gain_percentage)
+    }
+
+    if(id){
+
+        await data.makeRequest({method:'post',url:`api/appointment-invoices/`+id,withToken:true,data:{
+          ...new_form
+        }, error: ``},0);
+      
+        toast.success(t('messages.updated-successfully'))
+        setLoading(false)
+
+    }
+
+  }catch(e){
+
+    if(e.message==500){
+      toast.error(t('common.unexpected-error'))
+    }else  if(e.message=='Failed to fetch'){
+      toast.error(t('common.check-network'))
+    }else{
+      toast.error(t('common.unexpected-error'))
+    }
+
+     setLoading(false) 
+  }
+}
 
 
 
@@ -149,8 +200,6 @@ return (
 
  <DefaultLayout hide={ShowOnlyInputs}>
 
-
-
   {!itemToEditLoaded && id && <div className="mt-10">
     <DefaultFormSkeleton/>
   </div>}
@@ -171,9 +220,16 @@ return (
   
 
   button={(
-    <div className={`mt-[40px] `}></div>
+   <div className={`mt-[40px] ${(user?.role=="doctor" || user?.role=="patient") ? 'hidden':''} ${(user?.role=="manager" && !user?.data?.permissions?.payment_management?.includes('update') && id) ? 'hidden':''}`}>
+                <FormLayout.Button onClick={()=>{
+                        SubmitForm()
+                }} valid={valid} loading={loading} label={id ? t('common.update') :t('common.send')}/>
+    </div>
   )}
   >
+
+
+    
 
 
   <FormCard hide={!id} items={[
@@ -195,6 +251,11 @@ return (
     {name:t('common.created_at'),value:form.created_at?.split('T')?.[0] + " "+form.created_at?.split('T')?.[1]?.slice(0,5)}, 
   ]}/>
 
+
+  <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'iva'])} label={t('common.iva-percentage')} onChange={(e)=>setForm({...form,iva:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'iva'} value={form.iva}/>
+  <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'irpc'])} label={t('common.irpc-percentage')} onChange={(e)=>setForm({...form,irpc:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'irpc'} value={form.irpc}/>
+  <FormLayout.Input r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'doctor_gain_percentage'])} label={t('common.doctor_gain_percentage')} onChange={(e)=>setForm({...form,doctor_gain_percentage:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'doctor_gain_percentage'} value={form.doctor_gain_percentage}/>
+                     
 
 
   </FormLayout>

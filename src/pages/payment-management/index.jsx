@@ -72,6 +72,9 @@ function App() {
 
   }
 
+  const [startDate,setStartDate]=useState('')
+  const [endDate,setEndDate]=useState('')
+
   const [filterOptions,setFilterOptions]=useState([
     {
       open:false,
@@ -89,7 +92,18 @@ function App() {
       loaded:true,
       selected_ids:[],
       default_ids:[]
-    }
+    },
+    {
+      open:false,
+      field:'all_doctors',
+      name:t('common.doctor'),
+      search:'',
+      items:[],
+      param:'doctor_user_id',
+      fetchable:true,
+      selected_ids:[],
+      default_ids:[]
+    },
   ])
 
 
@@ -98,13 +112,13 @@ function App() {
 
   useEffect(()=>{ 
     if(!user) return
-    data._get(required_data,{appointment_invoices:{type:'payment',status:selectedTab,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
-  },[user,pathname,search,currentPage,updateFilters])
+    data._get(required_data,{appointment_invoices:{type:'payment',status:selectedTab,name:search,start_date:startDate,end_date:endDate,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+  },[user,pathname,search,currentPage,updateFilters,endDate,startDate])
 
   
   useEffect(()=>{
     data.handleLoaded('remove','appointment_invoices')
-  },[updateFilters])
+  },[updateFilters,endDate,startDate])
 
   useEffect(()=>{
     if(data.updateTable){
@@ -112,10 +126,21 @@ function App() {
          data.handleLoaded('remove','appointment_invoices')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{appointment_invoices:{type:'payment',status:selectedTab,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+         data._get(required_data,{appointment_invoices:{type:'payment',status:selectedTab,start_date:startDate,end_date:endDate,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
 
     }
- },[data.updateTable])
+ },[data.updateTable,endDate,startDate])
+
+
+ /* remove later
+ function v(){
+  let _iva=0;
+  (data._appointment_invoices?.invoices?.data || []).forEach(i=>{
+      _iva+=(i.amount * (100 - parseFloat(i.iva))) / 100
+  })
+  console.log({_iva})
+ }*/
+
 
  useEffect(()=>{
   if(!user) return
@@ -124,9 +149,11 @@ function App() {
   }
 },[user])
 
+
  return (
    
   <DefaultLayout
+    
     pageContent={{page:'appointment_invoices',title:t('common.payments'),desc:user?.role=="patient" ? t('titles._payments') : t('titles.payments')}}>
     
       <div className={`flex items-center mb-4 w-full flex-wrap md:gap-2 ${!data._loaded.includes('appointment_invoices') ? 'hidden':''}`}>
@@ -149,7 +176,9 @@ function App() {
 
 
       <div className="flex">
-         <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
+         <BasicFilter
+         end={endDate} start={startDate} setEnd={setEndDate} setStart={setStartDate}
+         setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
           
          <div className="flex-1">
              <BasicSearch hideSearch={true}  loaded={data._loaded.includes('appointment_invoices') && !loading} search={search} total={data._appointment_invoices?.invoices?.total} from={'appointment_invoices'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
@@ -168,9 +197,11 @@ function App() {
                    t('form.consultation-id'),
                    t('common.invoice'),
                    user?.role=="admin" || user?.role=="manager" ? t('common.bank_receipt') : null,
+                   user?.role=="admin" || user?.role=="manager" ? 'IVA (%)' : null,
+                   user?.role=="admin" || user?.role=="manager" ? 'IRPS (%)' : null,
+                   user?.role=="admin" || user?.role=="manager" ? `${t('common.gain_percentage')} (${t('common.doctor')})`:null,
                    t('common.created_at'),
                    t('common.last-update'),
-                   '.'
                  ]
                }
 
@@ -198,16 +229,19 @@ function App() {
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
                                   </span>
                          </BaiscTable.Td>
-                          <BaiscTable.Td hide={!(user?.role=="admin" || user?.role=="manager")}>
+                          <BaiscTable.Td  hide={!(user?.role=="admin" || user?.role=="manager")}>
                                   <span className={`${!i.appointment?.bank_receipt_filename ? 'hidden':''}`} onClick={()=>{
                                       window.open(APP_BASE_URL+"/storage/proofs/"+i.appointment?.bank_receipt_filename, '_blank')
                                   }}>
                                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
                                 </span>
                           </BaiscTable.Td>
-                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                         <BaiscTable.Td url={`/payment-management/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                         <BaiscTable.AdvancedActions id={i.id} items={[
+                          <BaiscTable.Td hide={!(user?.role=="admin" || user?.role=="manager")} url={`/payment-management/`+i.id}>{i.iva}</BaiscTable.Td>
+                          <BaiscTable.Td hide={!(user?.role=="admin" || user?.role=="manager")} url={`/payment-management/`+i.id}>{i.irpc}</BaiscTable.Td>
+                          <BaiscTable.Td hide={!(user?.role=="admin" || user?.role=="manager")} url={`/payment-management/`+i.id}>{i.doctor_gain_percentage}</BaiscTable.Td>
+                          <BaiscTable.Td url={`/doctor/`+i.id}>{i.created_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
+                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
+                          <BaiscTable.AdvancedActions id={i.id} items={[
                              {hide:i.status=="approved" || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.payment_management?.includes('approve')) ),name:t('common.approve'),onClick:()=>{handleItems({status:'approved',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
                              {hide:i.status=="rejected" || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.payment_management?.includes('reject')) ),name:t('common.reject'),onClick:()=>{handleItems({status:'rejected',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>)}
                          ]}/>

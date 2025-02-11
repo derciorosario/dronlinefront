@@ -40,6 +40,7 @@
     "core-js": "^3.39.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "file-saver": "^2.0.5",
     "framer-motion": "^11.3.2",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.2",
@@ -69,7 +70,8 @@
     "regenerator-runtime": "^0.14.1",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.8.1",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",

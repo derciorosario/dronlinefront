@@ -11,14 +11,14 @@ import BasicPagination from '../../components/Pagination/basic';
 import i18next from 'i18next';
 import SelectedFilters from '../../components/Filters/selected-filters';
 import toast from 'react-hot-toast';
-
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 
 function App() {
 
- 
   const data=useData()
-  const {user} =  useAuth()
+  const {user,serverTime} =  useAuth()
   const { t } = useTranslation();
 
   const navigate = useNavigate()
@@ -28,6 +28,8 @@ function App() {
   const [currentPage,setCurrentPage]=useState(1)
   const [updateFilters,setUpdateFilters]=useState(null)
   const [search,setSearch]=useState('')
+
+  const [printing,setPrinting]=useState(false)
 
   const [dateFilters,setDateFilter]=useState([
     {field:'invoice',start:'',end:'',start_name:t('common.start_payment_date'),end_name:t('common.end_payment_date')}
@@ -82,9 +84,11 @@ function App() {
   useEffect(()=>{ 
     if(!user) return
     data._get(required_data,{doctors:{name:search,page:currentPage,
+    has_invoices:(dateFilters.filter(i=>i.field=="invoice")[0].start || dateFilters.filter(i=>i.field=="invoice")[0].end) ? true : undefined,
     invoice_start_date:dateFilters.filter(i=>i.field=="invoice")[0].start,
     invoice_end_date:dateFilters.filter(i=>i.field=="invoice")[0].end,
-    ...data.getParamsFromFilters(filterOptions)}}) 
+    ...data.getParamsFromFilters(filterOptions)}})
+  
   },[user,pathname,search,currentPage,updateFilters,dateFilters])
 
 
@@ -100,6 +104,7 @@ function App() {
          data._get(required_data,{doctors:{name:search,page:1,
            invoice_start_date:dateFilters.filter(i=>i.field=="invoice")[0].start,
            invoice_end_date:dateFilters.filter(i=>i.field=="invoice")[0].end,
+           has_invoices:(dateFilters.filter(i=>i.field=="invoice")[0].start || dateFilters.filter(i=>i.field=="invoice")[0].end) ? true : undefined,
           ...data.getParamsFromFilters(filterOptions)}}) 
 
     }
@@ -169,10 +174,119 @@ function getDoctorAmountEarned(i){
   return collected * (percentage / 100)
 }
 
- 
-  return (
+
+function exportToExcelArray(data,fileName){
+  const wb = XLSX.utils.book_new();
+  const wsData = data;
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([wbout], { type: 'application/octet-stream' });
+  saveAs(blob, `${fileName}.xlsx`);
+}
+
+
+
+
+
+
+
+
+const Print = async (_data) => {
+
+  
+       console.log({_data})
+
+       let name=t('titles.doctors')+` - ${serverTime?.date?.split('-')?.[0]} ${serverTime?.hour}`
+       let _d=[[
+        `${t('common.start_payment_date')}:${dateFilters.filter(i=>i.field=="invoice")[0].start?.split('-')?.reverse().join('-') || '-'} ${t('common.end_payment_date')}:${dateFilters.filter(i=>i.field=="invoice")[0].end?.split('-')?.reverse().join('-') || '-'}`
+       ],[]]
+
+       _d.push([
+        'ID',
+        t('form.full-name'),
+        t('form.medical-specialty'),
+        'Email',
+        t('form.main-contact'),
+        t('common.gain_percentage'),
+        t('common.total_amount_collected'),
+        'IVA',
+        `${ t('common.total_amount_collected')} (- IVA)`,
+        t('common.amount_earned'),
+        'IRPS',
+        `${ t('common.amount_earned')} (- IRPS)`,
+        t('form.gender'),
+        t('form.address'),
+        'Status',
+        t('common.created_at'),
+        t('common.last-update'),
+       ])
+
+       _d=[..._d,..._data.map(i=>[
+        i.id,
+        i.name,
+        data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[`${i18next.language}_name`],
+        i.email,
+        i.main_contact,
+        ((i.use_app_gain_percentage ? JSON.parse(user?.app_settings?.[0]?.value)?.gain_percentage : i.gain_percentage) || 0)+'%',
+        data._cn(parseFloat(i.total_payment_amount).toFixed(2)),
+        data._cn(parseFloat(i.total_payment_amount - i.total_point_1).toFixed(2)),
+        data._cn(parseFloat(i.total_point_1).toFixed(2)),
+        data._cn(parseFloat(i.total_point_2).toFixed(2)),
+        data._cn(parseFloat(i.total_point_2 - i.total_point_3).toFixed(2)),
+        data._cn(parseFloat(i.total_point_3).toFixed(2)),
+        t('common.'+i.gender),
+        t(i.address),
+        i.status=="active" ? t('common.active') : t('common.inactive'),
+        i.created_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " "+i.created_at.split('T')[1].slice(0,5),
+        i.created_at.split('T')[0].split('-')?.reverse().join('-')
+       ])]
+
+      exportToExcelArray(_d,name)
+
+
+      /*const workbook = XLSX.utils.book_new();
+      const sheetData = XLSX.utils.json_to_sheet(mappedData);
+      XLSX.utils.book_append_sheet(workbook, sheetData, 'Sheet1');
+      XLSX.writeFile(workbook, `${name}.xlsx`);*/
+
+}
+
+
+
+const Export =async (type) => {
+     
+  try{
+      setPrinting(true) 
+      let response=await data.makeRequest({method:'get', url:`api/doctors`,params:{
+          all:true,
+          has_invoices:(dateFilters.filter(i=>i.field=="invoice")[0].start || dateFilters.filter(i=>i.field=="invoice")[0].end) ? true : undefined,
+          invoice_start_date:dateFilters.filter(i=>i.field=="invoice")[0].start,
+          invoice_end_date:dateFilters.filter(i=>i.field=="invoice")[0].end,
+          ...data.getParamsFromFilters(filterOptions) 
+      }, error: ``,withToken:true},0);
+      Print(response.data)
+
+  }catch(e){
+      toast.remove()
+      let msg="Acorreu um erro, tente novamente"
+      if(e.response){
+        if(e.response.status==500){
+            msg="Erro, inesperado. Contacte seu administrador"
+        }
+      }else if(e.code=='ERR_NETWORK'){
+            msg="Verfique sua internet e tente novamente"
+      }
+      toast.error(msg)
+  }
+  setPrinting(false)
+
+}
+
+
+return (
    
-         <DefaultLayout pageContent={{title:t('common.doctors'),desc:t('titles.doctors'),btn:!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor?.includes('create'))) ? null : {onClick:(e)=>{
+         <DefaultLayout Export={Export} printing={printing} pageContent={{title:t('common.doctors'),desc:t('titles.doctors'),btn:!(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.doctor?.includes('create'))) ? null : {onClick:(e)=>{
           navigate('/add-doctors')
          },text:t('menu.add-doctors')}}}>
            
@@ -198,8 +312,10 @@ function getDoctorAmountEarned(i){
                           t('form.main-contact'),
                           t('common.gain_percentage'),
                           t('common.total_amount_collected'),
+                          'IVA',
                           `${ t('common.total_amount_collected')} (- IVA)`,
                           t('common.amount_earned'),
+                          'IRPS',
                           `${ t('common.amount_earned')} (- IRPS)`,
                           t('form.gender'),
                           t('form.address'),
@@ -229,8 +345,10 @@ function getDoctorAmountEarned(i){
                                 {/**<BaiscTable.Td url={`/doctor/`+i.id}>{parseFloat((i.total_payment_amount || 0) - (i.total_refund_amount || 0)).toFixed(2)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{parseFloat(getDoctorAmountEarned(i)).toFixed(2)}</BaiscTable.Td> */}
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{data._cn(parseFloat(i.total_payment_amount).toFixed(2))}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{data._cn(parseFloat(i.total_payment_amount - i.total_point_1).toFixed(2))}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{data._cn(parseFloat(i.total_point_1).toFixed(2))}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{data._cn(parseFloat(i.total_point_2).toFixed(2))}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/doctor/`+i.id}>{data._cn(parseFloat(i.total_point_2 - i.total_point_3).toFixed(2))}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{data._cn(parseFloat(i.total_point_3).toFixed(2))}</BaiscTable.Td>
                                 
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t('common.'+i.gender)}</BaiscTable.Td>

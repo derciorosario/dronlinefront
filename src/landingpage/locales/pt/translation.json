@@ -200,6 +200,7 @@
         "_payments":"Veja os pagamentos das consultas efetuados"
     },
     "wl":{
+        "different_specialist":"Outro",
         "yes": "Sim",
         "no": "Não",
         "full-name":"Nome completo",
@@ -255,7 +256,8 @@
         "vascular_surgery": "Cirurgia Vascular",
         "used_telemedicine_before": "Você já usou um serviço de telemedicina antes?",
         "medical_visits_per_year": "Quantas vezes por ano procura um médico?",
-        "most_frequent_consultation": "Quem você consulta mais frequentemente?",
+        "most_frequent_consultation": "Participe em webinars exclusivos e obtenha insights sobre cuidados de saúde com os nossos especialistas.",
+        "_most_frequent_consultation": "Quem você consulta mais frequentemente?",
         "willing_to_pay_online_consultation": "Quanto você estaria disposto a pagar por uma consulta online com um médico qualificado?",
         
 

@@ -26,8 +26,9 @@ import SupportBadge from '../components/Badges/support-badge.jsx'
 import ChangePasswordModal from '../components/modals/change-password.jsx'
 import UserWaitingInTheRoom from '../components/modals/user-waiting-in-meeting-room.jsx'
 import AddStampAndSignature from '../components/PopUp/add-stamp-and-signature.jsx'
+import Loader from '../components/Loaders/loader.jsx'
 
-function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate,hideSupportBadges,startDate,endDate,setStartDate,setEndDate,hideSidebar,headerLeftContent}) {
+function DefaultLayout({children,Export,printing,hide,showDates,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate,hideSupportBadges,startDate,endDate,setStartDate,setEndDate,hideSidebar,headerLeftContent}) {
     
 
   const data=useData()
@@ -207,18 +208,32 @@ function DefaultLayout({children,hide,showDates,pageContent,removeMargin,hideAll
                              {pageContent.leftContent}
                           </div>}
 
+                           <div className="flex items-center  mt-2">
+                          
                            <div onClick={() => {
-
                                           if(refreshOnUpdate){
                                              setIsLoading(true)
                                              window.location.reload()
                                           }else{
                                             data.setUpdateTable(Math.random())
                                           }
-                                      }} className="px-2 mt-2 _refresh_btn inline-flex bg-gray-200 text-gray-400 py-1 items-center text-[12px] rounded-full cursor-pointer hover:bg-honolulu_blue-500">         
+                                      }} className="px-2 _refresh_btn inline-flex bg-gray-200 text-gray-400 py-1 items-center text-[12px] rounded-full cursor-pointer hover:bg-honolulu_blue-500">         
                                       <svg className="fill-gray-400" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"/></svg>
                                       <span className="max-md:hidden">{t('common.refresh')}</span>
                             </div>
+
+                           {Export && <div className="ml-3">
+                                {!printing && <span onClick={()=>{
+                                    Export('excel')
+                                }} className="flex cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24"><path fill="green" d="M18 22a2 2 0 0 0 2-2v-5l-5 4v-3H8v-2h7v-3l5 4V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12zM13 4l5 5h-5V4z"></path></svg>
+                                </span>}
+                                {printing && <Loader/>}
+                            </div>}
+
+                           </div>
+
+                           
 
                       </div>}
                     </div>}
