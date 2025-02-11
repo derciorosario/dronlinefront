@@ -56,28 +56,26 @@ function App({hideLayout,itemToShow,setItemToShow}) {
   
   useEffect(()=>{ 
 
-    if(!user) return
+    if(!user || updateFilters || data.updateTable) return
+    data.handleLoaded('remove','medical_certificates')
     data._get(required_data,{medical_certificates:{appointment_id:itemToShow?.appointment?.id || '',status:selectedTab,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}})
 
-  },[user,pathname,search,currentPage,updateFilters])
+  },[user,pathname,search,currentPage])
 
 
+ 
   useEffect(()=>{
-    data.handleLoaded('remove','medical_certificates')
-  },[updateFilters])
-
-  useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','medical_certificates')
          setCurrentPage(1)
          data._get(required_data,{medical_certificates:{appointment_id:itemToShow?.appointment?.id || '',status:selectedTab,name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
     }
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
 
 function globalOnclick(id){
-
   if(itemToShow){
     setItemToShow({
       ...itemToShow,
@@ -88,7 +86,6 @@ function globalOnclick(id){
   }else{
       navigate('/medical-certificate/'+id)
   }
- 
 }
 
 

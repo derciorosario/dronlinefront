@@ -111,35 +111,26 @@ function App() {
 
 
   useEffect(()=>{ 
-    if(!user) return
+    if(!user || data.updateTable || updateFilters) return
+    data.handleLoaded('remove','appointment_invoices')
     data._get(required_data,{appointment_invoices:{type:'payment',status:selectedTab,name:search,start_date:startDate,end_date:endDate,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
-  },[user,pathname,search,currentPage,updateFilters,endDate,startDate])
+  },[user,pathname,search,currentPage])
 
   
-  useEffect(()=>{
-    data.handleLoaded('remove','appointment_invoices')
-  },[updateFilters,endDate,startDate])
 
   useEffect(()=>{
-    if(data.updateTable){
+
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','appointment_invoices')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{appointment_invoices:{type:'payment',status:selectedTab,start_date:startDate,end_date:endDate,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
-
+         data._get(required_data,{appointment_invoices:{type:'payment',status:selectedTab,start_date:startDate,end_date:endDate,name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
     }
- },[data.updateTable,endDate,startDate])
+ },[data.updateTable,updateFilters])
 
 
- /* remove later
- function v(){
-  let _iva=0;
-  (data._appointment_invoices?.invoices?.data || []).forEach(i=>{
-      _iva+=(i.amount * (100 - parseFloat(i.iva))) / 100
-  })
-  console.log({_iva})
- }*/
 
 
  useEffect(()=>{
@@ -154,7 +145,7 @@ function App() {
    
   <DefaultLayout
     
-    pageContent={{page:'appointment_invoices',title:t('common.payments'),desc:user?.role=="patient" ? t('titles._payments') : t('titles.payments')}}>
+       pageContent={{page:'appointment_invoices',title:t('common.payments'),desc:user?.role=="patient" ? t('titles._payments') : t('titles.payments')}}>
     
       <div className={`flex items-center mb-4 w-full flex-wrap md:gap-2 ${!data._loaded.includes('appointment_invoices') ? 'hidden':''}`}>
           {['pending','approved','rejected'].map((i,_i)=>(

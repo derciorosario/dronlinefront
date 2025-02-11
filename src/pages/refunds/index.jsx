@@ -98,25 +98,24 @@ function App() {
 
 
   useEffect(()=>{ 
-    if(!user) return
-    data._get(required_data,{appointment_invoices:{type:'refund',status:selectedTab,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
-  },[user,pathname,search,currentPage,updateFilters])
-
-
-  useEffect(()=>{
+    if(!user || updateFilters || data.updateTable) return
     data.handleLoaded('remove','appointment_invoices')
-  },[updateFilters])
+    data._get(required_data,{appointment_invoices:{type:'refund',status:selectedTab,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+  },[user,pathname,search,currentPage])
+
+
 
   useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','appointment_invoices')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{appointment_invoices:{type:'refund',status:selectedTab,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+         data._get(required_data,{appointment_invoices:{type:'refund',status:selectedTab,name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
 
     }
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
 
  useEffect(()=>{
@@ -187,7 +186,7 @@ function App() {
 
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{data.formatNumber(data._cn_op(i.amount))}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{data._cn(i.price)}</BaiscTable.Td>
-                         <BaiscTable.Td url={`/payment-management/`+i.id}>{data.formatNumber(data._cn_op(i.taxes))}</BaiscTable.Td>
+                         <BaiscTable.Td url={`/payment-management/`+i.id}>{data.formatNumber(data._cn_op(parseFloat(i.taxes || 0).toFixed(2)))}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.payment_method=="mpesa" ? 'M-pesa' : t('common.bank-transfer')}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.patient?.name}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.doctor?.name || t('common.dronline-team')}</BaiscTable.Td>

@@ -40,25 +40,24 @@ function App() {
   const [selectedTab,setSelectedTab]=useState('pending')
 
   useEffect(()=>{ 
-    if(!user) return
-    data._get(required_data,{appointment_feedback:{name:search,page:currentPage,status:selectedTab}}) 
-  },[user,pathname,search,currentPage,updateFilters])
-
-
-  useEffect(()=>{
+    if(!user || updateFilters || data.updateTable) return
     data.handleLoaded('remove','appointment_feedback')
-  },[updateFilters])
+    data._get(required_data,{appointment_feedback:{name:search,page:currentPage,status:selectedTab}}) 
+  },[user,pathname,search,currentPage])
+
+
 
   useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','appointment_feedback')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{appointment_feedback:{name:search,page:currentPage,status:selectedTab}}) 
+         data._get(required_data,{appointment_feedback:{name:search,page:1,status:selectedTab}}) 
 
     }
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
 
  async function handleItems({status,id}){

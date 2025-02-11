@@ -308,7 +308,7 @@ export default function CancelAppointmentModel({}) {
 
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('common.cancelation-tax')}</dt>
-              <dd class="text-base font-medium text-gray-900">{data.formatNumber(data._cn_op(getAmount().taxes))} MT</dd>
+              <dd class="text-base font-medium text-gray-900">{data.formatNumber(data._cn_op(parseFloat(getAmount().taxes || 0).toFixed(2)))} MT</dd>
             </dl>
 
 

@@ -58,24 +58,21 @@ function App() {
  
   
   useEffect(()=>{ 
-    if(!user || user?.role=="doctor") return
-    data._get(required_data,{dependents:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
-  },[user,pathname,search,currentPage,updateFilters])
-
-
-  useEffect(()=>{
+    if(!user || user?.role=="doctor" || updateFilters || data.updateTable) return
     data.handleLoaded('remove','dependents')
-  },[updateFilters])
+    data._get(required_data,{dependents:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+  },[user,pathname,search,currentPage])
+
 
   useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','dependents')
          setCurrentPage(1)
-       data._get(required_data,{dependents:{name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
-
+         data._get(required_data,{dependents:{name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
     }
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
 
   return (

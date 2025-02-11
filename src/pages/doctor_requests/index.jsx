@@ -28,24 +28,24 @@ function App() {
 
 
   useEffect(()=>{ 
-    if(!user) return
-    data._get(required_data,{doctor_requests:{name:search,page:currentPage}}) 
-  },[user,pathname,search,currentPage,updateFilters])
-
-  useEffect(()=>{
+    if(!user || updateFilters || data.updateTable) return
     data.handleLoaded('remove','doctor_requests')
-  },[updateFilters])
+    data._get(required_data,{doctor_requests:{name:search,page:currentPage}}) 
+  },[user,pathname,search,currentPage])
+
+ 
 
   useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','doctor_requests')
          setCurrentPage(1)
          setLoading(false)
          data._get(required_data,{doctor_requests:{name:search,page:1}}) 
 
     }
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
 
  

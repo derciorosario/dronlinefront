@@ -31,29 +31,24 @@ function App() {
 
 
   useEffect(()=>{ 
-    if(!user) return
-    data._get(required_data,{waiting_list:{name:search,page:currentPage,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
-  },[user,pathname,search,currentPage,updateFilters])
-
-
-  useEffect(()=>{
+    if(!user || updateFilters || data.updateTable) return
     data.handleLoaded('remove','waiting_list')
-  },[updateFilters])
+    data._get(required_data,{waiting_list:{name:search,page:currentPage,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
+  },[user,pathname,search,currentPage])
+
 
   useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','waiting_list')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{waiting_list:{name:search,page:currentPage,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
+         data._get(required_data,{waiting_list:{name:search,page:1,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
 
     }
- },[data.updateTable])
+ },[data.updateTable, updateFilters])
 
- useEffect(()=>{ 
-        data.setUpdateTable(Math.random())
- },[endDate,startDate])
 
 
 useEffect(()=>{

@@ -3,13 +3,8 @@ import { useData } from '../../contexts/DataContext';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DefaultLayout from '../../layout/DefaultLayout';
-import BaiscTable from '../../components/Tables/basic';
 import { useAuth } from '../../contexts/AuthContext';
-import toast from 'react-hot-toast';
-import BasicPagination from '../../components/Pagination/basic';
-import BasicSearch from '../../components/Search/basic';
 import DefaultFormSkeleton from '../../components/Skeleton/defaultForm';
-import BasicFilter from '../../components/Filters/basic';
 
 function App() { 
   const data=useData()
@@ -20,44 +15,39 @@ function App() {
   const [loading,setLoading]=useState(false)
 
   let required_data=['waiting_list']
+
   const {pathname} = useLocation()
   const [currentPage,setCurrentPage]=useState(1)
   const [updateFilters,setUpdateFilters]=useState(null)
   const [search,setSearch]=useState('')
-
   const [endDate,setEndDate]=useState('')
   const [startDate,setStartDate]=useState('')
     
-  
-
-
- 
 
   useEffect(()=>{ 
-    if(!user) return
-    data._get(required_data,{waiting_list:{name:search,page:currentPage,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
-  },[user,pathname,search,currentPage,updateFilters])
-
-
-  useEffect(()=>{
+    if(!user || data.updateFilters || data.updateTable) return
     data.handleLoaded('remove','waiting_list')
-  },[updateFilters])
+    data._get(required_data,{waiting_list:{name:search,page:currentPage,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
+  },[user,pathname,search,currentPage])
+
 
   useEffect(()=>{
-    if(data.updateTable){
+
+    if(data.updateTable || updateFilters){
+         setUpdateFilters(null)
          data.setUpdateTable(null)
          data.handleLoaded('remove','waiting_list')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{waiting_list:{name:search,page:currentPage,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
-
+         data._get(required_data,{waiting_list:{name:search,page:1,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
     }
- },[data.updateTable])
+
+ },[data.updateTable, updateFilters])
+
 
  useEffect(()=>{ 
         data.setUpdateTable(Math.random())
  },[endDate,startDate])
-
 
 
  const [filterOptions,setFilterOptions]=useState(

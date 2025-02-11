@@ -33,25 +33,23 @@ function App({hideLayout,itemToShow,setItemToShow}) {
 
  
   useEffect(()=>{ 
-
-    if(!user) return
+    if(!user || updateFilters || data.updateTable) return
+    data.handleLoaded('remove','medical_prescriptions')
     data._get(required_data,{medical_prescriptions:{appointment_id:itemToShow.appointment.id,name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}})
 
-  },[user,pathname,search,currentPage,updateFilters])
+  },[user,pathname,search,currentPage])
 
 
-  useEffect(()=>{
-    data.handleLoaded('remove','medical_prescriptions')
-  },[updateFilters])
 
   useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','medical_prescriptions')
          setCurrentPage(1)
          data._get(required_data,{medical_prescriptions:{appointment_id:itemToShow.appointment.id,name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
     }
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
 
 function globalOnclick(id){

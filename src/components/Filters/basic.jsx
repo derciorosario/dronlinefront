@@ -82,12 +82,18 @@ export default function BasicFilter({dateFilters,setDateFilter,filterOptions,set
                     {t('common.start')}
                </h6>
 
-               <input onChange={(e)=>setStart(e.target.value)} value={start} type="date" className="block w-full mb-2 py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+               <input onChange={(e)=>{
+                setStart(e.target.value)
+                setUpdateFilters(Math.random())
+               }} value={start} type="date" className="block w-full mb-2 py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
               
                <h6 className="mb-2 text-sm font-medium text-gray-900">
                     {t('common.end')}
                </h6>
-               <input onChange={(e)=>setEnd(e.target.value)} value={end} type="date" className="block w-full py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+               <input onChange={(e)=>{
+                  setEnd(e.target.value)
+                  setUpdateFilters(Math.random())
+               }} value={end} type="date" className="block w-full py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
               
            </div>}
 
@@ -138,6 +144,7 @@ export default function BasicFilter({dateFilters,setDateFilter,filterOptions,set
                        } 
                        return newOptions;
                        });
+                       setUpdateFilters(Math.random())
                    }}   id="default-search" className="block w-full px-2 py-1 ps-10 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50" placeholder={t('common.search')}/>
                
                </div>}

@@ -82,23 +82,21 @@ function App() {
  
   
   useEffect(()=>{ 
-    if(!user) return
+    if(!user || updateFilters || data.updateTable) return
+    data.handleLoaded('remove','doctors')
     data._get(required_data,{doctors:{name:search,page:currentPage,
     has_invoices:(dateFilters.filter(i=>i.field=="invoice")[0].start || dateFilters.filter(i=>i.field=="invoice")[0].end) ? true : undefined,
     invoice_start_date:dateFilters.filter(i=>i.field=="invoice")[0].start,
     invoice_end_date:dateFilters.filter(i=>i.field=="invoice")[0].end,
     ...data.getParamsFromFilters(filterOptions)}})
   
-  },[user,pathname,search,currentPage,updateFilters,dateFilters])
+  },[user,pathname,search,currentPage])
 
 
   useEffect(()=>{
-    data.handleLoaded('remove','doctors')
-  },[updateFilters])
-
-  useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','doctors')
          setCurrentPage(1)
          data._get(required_data,{doctors:{name:search,page:1,
@@ -108,7 +106,7 @@ function App() {
           ...data.getParamsFromFilters(filterOptions)}}) 
 
     }
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
 
 
@@ -167,12 +165,6 @@ async function handleItems({action,id,status}){
 },[user])
 
 
-function getDoctorAmountEarned(i){
-  let percentage=i.use_app_gain_percentage ? JSON.parse(user?.app_settings?.[0]?.value)?.gain_percentage : i.gain_percentage
-  percentage=parseInt(percentage || 0)
-  let collected=parseFloat((i.total_payment_amount || 0) - (i.total_refund_amount || 0))
-  return collected * (percentage / 100)
-}
 
 
 function exportToExcelArray(data,fileName){

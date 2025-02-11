@@ -131,27 +131,27 @@ function App() {
 
 
   useEffect(()=>{ 
-    if(!user) return
+    if(!user || updateFilters || data.updateTable) return
+    data.handleLoaded('remove','appointments')
     data._get(required_data,{appointments:{name:search,page:currentPage,status:selectedTab,...data.getParamsFromFilters(filterOptions)}}) 
     setShowWithMessages(false)
-  },[user,pathname,search,currentPage,updateFilters])
+  },[user,pathname,search,currentPage])
 
 
-  useEffect(()=>{
-    data.handleLoaded('remove','appointments')
-  },[updateFilters])
 
   useEffect(()=>{
-    if(data.updateTable){
+    
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','appointments')
          setCurrentPage(1)
          setLoading(false)
          setShowWithMessages(false)
          data._get(required_data,{appointments:{name:search,page:1,status:selectedTab,...data.getParamsFromFilters(filterOptions)}}) 
-
     }
- },[data.updateTable])
+
+ },[data.updateTable,updateFilters])
 
 
  useEffect(()=>{

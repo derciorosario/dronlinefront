@@ -228,10 +228,6 @@ return (
   )}
   >
 
-
-    
-
-
   <FormCard hide={!id} items={[
     {name:'ID',value:form.id},
     {name:t('common.title'),value:form.type=="payment" ? t('common.consultation-payment'): t('common.consultation-refund')},
@@ -240,7 +236,7 @@ return (
     {name:t('form.patient-name'),value:form?.patient?.name},
     {name:t('common.doctor'),value:form.doctor?.name || t('common.dronline-team')},
     {name:t('common.consultation-price'),value:data.formatNumber(data._cn_op(form.price)),color:'#0b76ad'},
-    {name:t('common.cancelation-tax'),value:data.formatNumber(data._cn_op(form.taxes)),color:'#0b76ad',hide:form.type=="payment"},
+    {name:t('common.cancelation-tax'),value:data.formatNumber(data._cn_op(parseFloat(form.taxes || 0).toFixed(2))),color:'#0b76ad',hide:form.type=="payment"},
     {name:form.type=="refund" ? t('common.amount-to-refund') : t('common.amount'),value:data.formatNumber(data._cn_op(form.amount)),color:'#0b76ad'}, 
     {hide:form.type=="refund" || form.amount==0,name:t('common.view-invoice'),value:'',
       link:!form.type=="refund" ? false : '/invoice/'+form.ref_id

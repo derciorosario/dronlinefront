@@ -168,14 +168,20 @@ function DefaultLayout({children,Export,printing,hide,showDates,pageContent,remo
                               <h6 className="text-[0.8rem]  flex min-w-[80px]  font-medium text-gray-900 mr-2">
                                   {t('common.start')}
                               </h6>
-                              <input onChange={(e)=>setStartDate(e.target.value)} value={startDate} type="date" className="w-full min-w-[80px] py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+                              <input onChange={(e)=>{
+                                setStartDate(e.target.value)
+                                data.setUpdateTable(Math.random())
+                              }} value={startDate} type="date" className="w-full min-w-[80px] py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
                             </div>
 
                             <div className="items-center">
                               <h6 className="text-[0.8rem] flex min-w-[80px] font-medium text-gray-900 mr-2">
                                   {t('common.end')}
                               </h6>
-                              <input onChange={(e)=>setEndDate(e.target.value)} value={endDate} type="date" className="block w-full min-w-[80px] py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
+                              <input onChange={(e)=>{
+                                setEndDate(e.target.value)
+                                data.setUpdateTable(Math.random())
+                              }} value={endDate} type="date" className="block w-full min-w-[80px] py-1 text-sm text-gray-900 border border-gray-300 rounded-[0.3rem] bg-gray-50"/>
                             </div>
                           </div>}
 
@@ -185,10 +191,13 @@ function DefaultLayout({children,Export,printing,hide,showDates,pageContent,remo
 
                            <button onClick={()=>{
                               setShowDateFilters(!showDateFilters)
-                              if(showDateFilters){
+                              if(showDateFilters && (startDate || endDate)){
                                   setStartDate('')
                                   setEndDate('')
+                                  data.setUpdateTable(Math.random())
                               }
+
+                             
 
                            }} type="button" className="text-white w-full justify-center bg-honolulu_blue-500 font-medium rounded-full text-sm px-3 py-1.5 flex items-center  focus:outline-none">
                             {showDateFilters && <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff">

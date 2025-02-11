@@ -52,25 +52,24 @@ function App() {
  
   
   useEffect(()=>{ 
-    if(!user) return
-    data._get(required_data,{patients:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
-  },[user,pathname,search,currentPage,updateFilters])
-
-
-  useEffect(()=>{
+    if(!user || updateFilters || data.updateTable) return
     data.handleLoaded('remove','patients')
-  },[updateFilters])
+    data._get(required_data,{patients:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+  },[user,pathname,search,currentPage])
+
+
 
 useEffect(()=>{
 
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','patients')
          setCurrentPage(1)
          data._get(required_data,{patients:{name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
     }
 
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
  useEffect(()=>{
   if(!user) return

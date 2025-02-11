@@ -45,25 +45,25 @@ function App() {
 
 
   useEffect(()=>{ 
-    if(!user) return
+    if(!user || updateFilters || data.updateTable) return
+    data.handleLoaded('remove','app_feedback')
     data._get(required_data,{app_feedback:{name:search,page:currentPage,status:selectedTab}}) 
   },[user,pathname,search,currentPage,updateFilters])
 
 
-  useEffect(()=>{
-    data.handleLoaded('remove','app_feedback')
-  },[updateFilters])
+ 
 
   useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','app_feedback')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{app_feedback:{name:search,page:currentPage,status:selectedTab}}) 
+         data._get(required_data,{app_feedback:{name:search,page:1,status:selectedTab}}) 
 
     }
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
 
  async function handleItems({status,id}){

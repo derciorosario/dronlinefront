@@ -73,27 +73,26 @@ function App({showOnlyList}) {
   const [updateFilters,setUpdateFilters]=useState(null)
   
   useEffect(()=>{ 
-
-        if(!user) return
+        if(!user || data.updateTable || updateFilters) return
+        data.handleLoaded('remove','doctors')
         data._get(required_data,{doctors:{status:(user?.role=="admin" || user?.role=="manager") ? '' : 'active',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+  },[user,pathname,search,currentPage])
 
-  },[user,pathname,search,currentPage,updateFilters,data.updateTable])
 
-useEffect(()=>{
-  data.handleLoaded('remove','doctors')
-},[updateFilters])
-    
 useEffect(()=>{
     data.setSelectedDoctors({})
 },[pathname])
 
 
  useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
+         setCurrentPage(1)
          data.handleLoaded('remove','doctors')
+         data._get(required_data,{doctors:{status:(user?.role=="admin" || user?.role=="manager") ? '' : 'active',name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
     }
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
 
  function pageContet(){

@@ -59,25 +59,24 @@ function App() {
     }
   ])
 
+
   useEffect(()=>{ 
-    if(!user) return
-    data._get(required_data,{faqs:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
-  },[user,pathname,search,currentPage,updateFilters])
-
-
-  useEffect(()=>{
+    if(!user || updateFilters || data.updateTable) return
     data.handleLoaded('remove','faqs')
-  },[updateFilters])
+    data._get(required_data,{faqs:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+  },[user,pathname,search,currentPage])
+
 
   useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','faqs')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{faqs:{name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+         data._get(required_data,{faqs:{name:search,page:1,...data.getParamsFromFilters(filterOptions)}}) 
     }
- },[data.updateTable])
+ },[data.updateTable,updateFilters])
 
 
  useEffect(()=>{

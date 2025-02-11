@@ -72,25 +72,26 @@ function App() {
   const [selectedManager,setSelectedManager]=useState(null)
 
   useEffect(()=>{ 
-    if(!user) return
+    if(!user || updateFilters || data.updateTable) return
+    data.handleLoaded('remove','user_activities')
+    data.handleLoaded('remove','users_activity_info')
     data._get(required_data,{user_activities:{user_id:selectedManager?.id || '',name:search,page:currentPage,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
   },[user,pathname,search,currentPage,updateFilters,endDate,startDate,selectedManager])
 
 
-  useEffect(()=>{
-    data.handleLoaded('remove','user_activities')
-  },[updateFilters,endDate,startDate])
+ 
 
   useEffect(()=>{
-    if(data.updateTable){
+    if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
+         setUpdateFilters(null)
          data.handleLoaded('remove','user_activities')
          data.handleLoaded('remove','users_activity_info')
          setCurrentPage(1)
          setLoading(false)
-         data._get(required_data,{user_activities:{user_id:selectedManager?.id || '',name:search,page:currentPage,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
+         data._get(required_data,{user_activities:{user_id:selectedManager?.id || '',name:search,page:1,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
     }
- },[data.updateTable,endDate,startDate])
+ },[data.updateTable,updateFilters])
 
 
  useEffect(()=>{
@@ -175,8 +176,8 @@ function ManagersList(){
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.user?.name}</BaiscTable.Td>
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{t('common.'+i.role)}</BaiscTable.Td>
                         <BaiscTable.Td onClick={()=>selectManager(i.user)}>{convertSeconds(i.totalDuration)}</BaiscTable.Td>
-                        <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.lastLoginTime?.split('T')?.[0]}</BaiscTable.Td>
-                        <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.lastLogoutTime?.split('T')?.[0]}</BaiscTable.Td>
+                        <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.lastLoginTime?.split(' ')?.[0]?.split('-')?.reverse()?.join('/')} {i.lastLoginTime?.split(' ')?.[1]?.slice(0,5)}</BaiscTable.Td>
+                        <BaiscTable.Td onClick={()=>selectManager(i.user)}>{i.lastLogoutTime?.split(' ')?.[0]?.split('-')?.reverse()?.join('/')} {i.lastLogoutTime?.split(' ')?.[1]?.slice(0,5)}</BaiscTable.Td>
                     </BaiscTable.Tr>
                 ))}
           />
@@ -234,8 +235,8 @@ return (
                  <BaiscTable.Td >{t('common.'+i.role)}</BaiscTable.Td>
                  <BaiscTable.Td >{convertSeconds(i.duration)}</BaiscTable.Td>
                  <BaiscTable.Td >{i.duration ? (i.duration / 60 ).toFixed(2) : 0} min</BaiscTable.Td>
-                 <BaiscTable.Td >{i.loginTime?.split('T')?.[0]}</BaiscTable.Td>
-                 <BaiscTable.Td >{i.logoutTime?.split('T')?.[0]}</BaiscTable.Td>
+                 <BaiscTable.Td >{i.loginTime?.split(' ')?.[0]?.split('-')?.reverse()?.join('/')} {i.loginTime?.split(' ')?.[1]?.slice(0,5)}</BaiscTable.Td>
+                 <BaiscTable.Td >{i.logoutTime?.split(' ')?.[0]?.split('-')?.reverse()?.join('/')} {i.logoutTime?.split(' ')?.[1]?.slice(0,5)}</BaiscTable.Td>
              
             </BaiscTable.Tr>
         ))}
