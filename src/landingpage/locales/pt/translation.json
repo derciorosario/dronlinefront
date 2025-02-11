@@ -254,11 +254,11 @@
         "urology": "Urologia",
 
         "vascular_surgery": "Cirurgia Vascular",
-        "used_telemedicine_before": "Você já usou um serviço de telemedicina antes?",
+        "used_telemedicine_before": "Já usou um serviço de telemedicina antes?",
         "medical_visits_per_year": "Quantas vezes por ano procura um médico?",
         "most_frequent_consultation": "Participe em webinars exclusivos e obtenha insights sobre cuidados de saúde com os nossos especialistas.",
-        "_most_frequent_consultation": "Quem você consulta mais frequentemente?",
-        "willing_to_pay_online_consultation": "Quanto você estaria disposto a pagar por uma consulta online com um médico qualificado?",
+        "_most_frequent_consultation": "Quem consulta mais frequentemente?",
+        "willing_to_pay_online_consultation": "Quanto estaria disposto a pagar por uma consulta online com um médico qualificado?",
         
 
         
@@ -268,7 +268,7 @@
         "above_2000": "Acima de 2000 MZN",
         "same_as_clinics": "Preço Igual a das Clínicas",
 
-        "preferred_payment_method": "Qual forma de pagamento você prefere?",
+        "preferred_payment_method": "Qual forma de pagamento prefere?",
         "mpesa": "M-Pesa",
         "bank_card": "Cartão bancário",
         "other_payment": "Outro",
@@ -279,7 +279,7 @@
         "high_costs": "Custos elevados",
         "other_challenge": "Outro",
 
-        "most_important_benefit": "Qual seria o benefício mais importante para você ao usar a Dr.online?",
+        "most_important_benefit": "Qual seria o benefício mais importante para si ao usar a Dr.online?",
         "fast_service": "Rapidez no atendimento",
         "affordable_consultations": "Consultas acessíveis",
         "specialist_access": "Conexão com especialistas",
@@ -471,7 +471,7 @@
     },
 
     "notification-messages":{
-       "upcoming-consultation":"Você tem uma consulta marcada em breve. Horário da consulta:",
+       "upcoming-consultation":"Tem uma consulta marcada em breve. Horário da consulta:",
        "consultation-status":"Estado:",
        "invoice-status":"Estado:",
        "new-mpesa-payment":"ID do paciente",
@@ -495,7 +495,7 @@
     },
 
     "messages":{
-        "redefine-initial-password":"Bem-vindo(a) {{name}}, antes de começar você precisará redefinir sua senha",
+        "redefine-initial-password":"Bem-vindo(a) {{name}}, antes de começar precisará redefinir sua senha",
         "set-initial-password":"Insira a senha enviada por email e defina sua nova senha",
         "add-manager":"Adicionar gestor",
         "password-recovered":"Sua senha foi actualizada com sucesso. A nova senha foi envida para seu email",
@@ -504,7 +504,7 @@
         "consultation-is-already-canceled":"Consulta já foi cancelada",
         "services-title":"Explore Nossos Serviços",
         "services-sub":"Tudo o Que Oferecemos para Seu Conforto e Saúde",
-        "about-us":"Oferecemos uma plataforma completa de serviços médicos online, garantindo que você tenha acesso rápido e eficiente a especialistas de diversas áreas da saúde. Através de consultas virtuais seguras e práticas, você pode receber atendimento de qualidade, sem a necessidade de deslocamentos ou longas esperas, diretamente no conforto da sua casa.",
+        "about-us":"Oferecemos uma plataforma completa de serviços médicos online, garantindo que tenha acesso rápido e eficiente a especialistas de diversas áreas da saúde. Através de consultas virtuais seguras e práticas, pode receber atendimento de qualidade, sem a necessidade de deslocamentos ou longas esperas, diretamente no conforto da sua casa.",
         "urgent-consultation-limit-with-hours-and-minutes":"As consultas agendadas {{hours}} hora(s) e {{minutes}} minuto(s) antes do horário da consulta são consideradas como urgentes",
         "urgent-consultation-limit-with-hours":"As consultas agendadas {{hours}} hora(s) antes do horário da consulta são consideradas como urgentes",
         "urgent-consultation-limit-with-minutes":"As consultas agendadas {{minutes}} minuto(s) antes do horário da consulta são consideradas como urgentes",
@@ -512,7 +512,7 @@
         "get-refund":"Obter o seu valor de volta, o pagamento será processado pela nossa equipa",
         "choose-aother-appointment":"Cancele e crie uma nova. O valor da consulta cancelada será usanda na nova consulta",
         "appointment-no-longer-available":"A hora e data selecionada para a consulta não está mais disponível",
-        "you-have-saved-appointment":"Você tem um rascunho guardado da sua consulta. Deseja terminar o preenchimento?",
+        "you-have-saved-appointment":"Tem um rascunho guardado da sua consulta. Deseja terminar o preenchimento?",
         "login-to-proceed-with-consultation":"Seu agendamento foi salvo, mas antes de proceder com o envio, precisa registar ou fazer o login na plataforma. ",
         "contact-us-if-delay":"Caso não tenha resposta nos próximos 5 minutos, aconselhamos que ligue de imediato para o contacto +258 861024024.",
         "password-mismatch":"As senhas inseridas devem ser iguais",
@@ -905,7 +905,7 @@
             "step-3-title": "Efetue o pagamento",
             "step-3-text": "Realize o pagamento de forma rápida via M-Pesa, Paypal ou através de transferência bancária. Em caso de transferência, envie o comprovante e aguarde a confirmação.",
             "step-4-title": "Acesse sua consulta",
-            "step-4-text": "Você receberá, no seu e-mail, o link para acessar a consulta médica por meio de smartphone, tablet ou computador, sem necessidade de instalação de aplicativos adicionais."
+            "step-4-text": "Receberá, no seu e-mail, o link para acessar a consulta médica por meio de smartphone, tablet ou computador, sem necessidade de instalação de aplicativos adicionais."
         },
         "permissions":"Pemissões",
         "types_of_care":{
