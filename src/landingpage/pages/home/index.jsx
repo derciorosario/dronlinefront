@@ -23,8 +23,6 @@ import { useAuth } from '../../../contexts/AuthContext';
 
 function App() {
 
-
-  
   const {setPathName} = useAuth()
 
   const {pathname} = useLocation()
@@ -137,7 +135,7 @@ function App() {
    <DefaultLayout>
                    <div className="">
 
-                   <div className="w-full h-[100vh] max-md:h-[70vh] bg-blue-300 relative">
+                   <div className="w-full h-[100vh] md:min-h-[500px] max-md:h-[70vh] bg-blue-300 relative">
                        <div className="absolute w-full top-0 left-0 z-20"> 
                            <Header.BottomBar/>
                        </div>
@@ -149,7 +147,6 @@ function App() {
                               <span className="w-3 mx-2 h-3 rounded-full border-2 shadow-sm"></span>
                            ))}
                        </div>
-
                        
                    </div>
 
@@ -187,8 +184,6 @@ function App() {
                                               </div>
                                           ))}
                                       </div>
-
-
                                   </div>
 
                                       <button data-aos="fade-top" onClick={()=>{
@@ -203,43 +198,13 @@ function App() {
                         </div>
                   </div>
 
-
-                  {/*** <div className="w-full flex min-h-[400px] mt-[50px] relative mb-[70px]">
-
-                  <div className="bg-[rgba(255,255,255,0.5)] hidden max-lg:flex z-10 absolute left-0 top-0 w-full h-full"></div>
-
-                  <img src={ServicesImage} className="h-full max-lg:absolute  object-cover max-lg:blur"/>
-
-                  <div className="absolute max-lg:relative z-20 right-0 top-0 min-h-full py-[100px] px-5 max-md:w-full  w-[700px] max-md:pr-0 pr-[100px]">
-                            <p className="mb-3 text-[20px] text-honolulu_blue-300">{t('messages.services-sub')}</p>      
-                            <h2 className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('messages.services-title')}</h2>
-                            <div  className="flex flex-wrap gap-x-2 justify-between">
-                                {benefitItems.map(i=>(
-                                  <div data-aos="fade-left" className="flex items-center w-[45%] max-md:w-full mb-3">
-                                      <span className="w-[10px] h-[10px] bg-honolulu_blue-400 flex mr-3"></span>
-                                      <span className="flex-1 text-honolulu_blue-500">{i}</span>
-                                    </div>
-                                ))}
-                                <button onClick={()=>{
-
-                                    navigate('/?contact')
-                                    let c=document.getElementById('contact');
-                                    c.scrollIntoView();
-
-                                }} className="px-5 py-4 mt-8 whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('common.contact-us')}</button>
-                            
-                            </div>
-                  </div>
-                  </div> */}
-
-                
                   
-               <div className={`max-xl:px-[20px] ${(data._doctors?.data || []).length==0 ? 'hidden':''} px-[40px] max-lg:px-[20px] max-w-[1150px] mx-auto`}>
-                  <h2 data-aos="fade-up" className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>          
-                  <DoctorList animate={true} items={data._doctors?.data || []} max={3}/>
-
+               <div className={`max-xl:px-[20px] ${(data._get_all_doctors?.data || []).length==0 ? 'hidden':''} px-[40px] max-lg:px-[20px] max-w-[1150px] mx-auto`}>
+                  <h2 data-aos="fade-up" className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>               
+                 
+                  <DoctorList animate={true} items={data._get_all_doctors?.data || []} max={6}/> 
+        
                   <div className="flex justify-center mb-[140px]">
-
                     <button onClick={()=>{
                       navigate('/doctors-list')
                     }} className="px-5 py-4 whitespace-nowrap flex items-center bg-honolulu_blue-400 hover:bg-honolulu_blue-300 text-white  uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">

@@ -48,7 +48,7 @@ const HeroSlider = ({setActiveSlide}) => {
       {items.map((i,_i)=>{
           let parts=i.title.split(i.marked_text)
           return (
-            <div  className="h-[100vh] max-md:h-[70vh] home-slider bg-gray-600">
+            <div  className="h-[100vh] max-md:h-[70vh] md:min-h-[500px] home-slider bg-gray-600">
                 <div  className="w-full h-full bg-center bg-no-repeat bg-cover relative">
                     <img src={i.img}  className="h-full w-full object-cover"/>
                     <div className="absolute w-full bg-[rgba(0,0,0,0.3)] left-0 top-0 h-full">

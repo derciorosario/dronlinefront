@@ -55,7 +55,6 @@ export const HomeDataProvider = ({ children }) => {
     const  _showPopUp = (option,value) => {
         setTimeout(()=>document.addEventListener('click', handleOutsideClick),200)
         _setOpenPopUps({...initial_popups,[option]:value || true})
-      
     }
 
     function _search(search,array){
@@ -121,9 +120,11 @@ export const HomeDataProvider = ({ children }) => {
     const [_specialty_categories,setSpecialtyCategories]=useState([])
     const [_all_faqs,setAllFaqs]=useState([])
     const [_settings,setSettings]=useState([])
+    const [_get_all_doctors,setGetAllDoctors]=useState([])
     
 
     let dbs=[
+      {name:'get_all_doctors',update:setGetAllDoctors,get:_get_all_doctors},
       {name:'appointments',update:setAppointments,get:_appointments},
       {name:'doctors',update:setDoctors,get:_doctors},
       {name:'patients',update:setPatients,get:_patients},
@@ -474,6 +475,7 @@ function text_l(text,max=50){
 
     const value = {
       text_l,
+      _get_all_doctors,
       getDocumentLetterCodeFrom,
       showFilters,
       encodeBase64Multiple,

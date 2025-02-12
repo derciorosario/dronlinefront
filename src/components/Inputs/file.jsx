@@ -135,7 +135,7 @@ function FileInput({_upload,label,res,r,onlyImages,cannotRemove,cannotUpload}) {
 
              {!(file.name || _upload.filename) && <span className="ml-3 text-[0.8rem] truncate">{t('common.no-file-selected')}</span>}
             
-             {(upload.filename) && <div className="flex-1 justify-end w-full flex px-2">
+         {/***remove  _upload.filename if something goes wrong */}     {(upload.filename && _upload.filename) && <div className="flex-1 justify-end w-full flex px-2">
                     <svg className="opacity-30" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
                     <span onClick={()=>data.handleDownload(file.name)} className="ml-2 cursor-pointer hover:opacity-70"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg></span>
                     {!cannotRemove && <span onClick={()=>{

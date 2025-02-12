@@ -60,10 +60,19 @@ function addPatients({ShowOnlyInputs}) {
     residential_address: "",
     pt_short_biography:'',
     en_short_biography:'',
+    pt_long_biography:'',
+    en_long_biography:'',
     long_biography:'',
     years_of_experience:'',
+    gain_percentage:'',
+    mobile_payment_method_name:'',
+    mobile_payment_method_number:'',
+    bank_payment_method_name:'',
     use_app_gain_percentage:false,
-    uploaded_files:[]
+    bank_payment_method_nib:'',
+    uploaded_files:[],
+    signature_filename:'',
+    stamp_filename:'',
     
   }
 

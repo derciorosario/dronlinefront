@@ -24,11 +24,11 @@ function FindSpecialist() {
 
 
   useEffect(()=>{
-    setSearchedData2(data._search(searchInput2,data._doctors?.data || []))
+    setSearchedData2(data._search(searchInput2,data._get_all_doctors?.data || []))
   },[searchInput2,data._loaded])
 
   useEffect(()=>{ 
-    data._get('doctors',{doctors:{all:true,status:'active'}}) 
+    data._get('get_all_doctors',{get_all_doctors:{all:true,status:'active'}}) 
   },[pathname])
 
   return (
@@ -87,7 +87,7 @@ function FindSpecialist() {
                                 </div>
                              ))}
 
-                              {!data._loaded.includes('doctors') && <div className="w-full flex  items-center p-2 rounded-[0.3rem]">
+                              {!data._loaded.includes('get_all_doctors') && <div className="w-full flex  items-center p-2 rounded-[0.3rem]">
                                     <div className="flex flex-col">
                                         <span className="text-gray-400">{t('common.loading')}...</span>
                                     </div>
