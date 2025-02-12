@@ -202,7 +202,7 @@ function App() {
                <div className={`max-xl:px-[20px] ${(data._get_all_doctors?.data || []).length==0 ? 'hidden':''} px-[40px] max-lg:px-[20px] max-w-[1150px] mx-auto`}>
                   <h2 data-aos="fade-up" className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>               
                  
-                  <DoctorList animate={true} items={data._get_all_doctors?.data || []} max={6}/> 
+                  <DoctorList animate={true} items={data._get_all_doctors?.data || []} max={3}/> 
         
                   <div className="flex justify-center mb-[140px]">
                     <button onClick={()=>{

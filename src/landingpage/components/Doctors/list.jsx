@@ -44,7 +44,7 @@ function DoctorList({max,items}) {
     
               <div>
 
-              <div className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden h-[410px] shadow mb-4" style={{backgroundRepeat:'no-repeat',backgroundSize:"contain",backgroundPosition:"center",backgroundImage:`url("${item.profile_picture_filename}")`}}>
+              <div className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden h-[380px] shadow mb-4" style={{backgroundRepeat:'no-repeat',backgroundSize:"contain",backgroundPosition:"center",backgroundImage:`url("${item.profile_picture_filename}")`}}>
                   {/***<img  src={item.profile_picture_filename} className={`h-[410px] w-full object-cover object-top ${!item.profile_picture_filename ? 'opacity-0':''}`}/>  */}
               </div>
 
