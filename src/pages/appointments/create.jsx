@@ -232,7 +232,8 @@ useEffect(()=>{
           let scheduled_weekday=res.scheduled_weekday=='undefined' ? weeks[new Date(res.scheduled_date).getDay()] : res.scheduled_weekday
 
           let new_form={...form,
-            reason_for_consultation:res.reason_for_consultation || '',
+            reason_for_consultation:form.reason_for_consultation || res.reason_for_consultation || '',
+            additional_observations:form.additional_observations || res.additional_observations || '',
             name:response.name,
             is_urgent,
             medical_specialty:response.medical_specialty,
@@ -475,7 +476,7 @@ async function SubmitForm(){
     if(!user?.data?.gender){
        data._showPopUp('basic_popup','conclude_patient_info')
        if(window.location.search?.includes('scheduled_doctor') && window.location.search?.includes('scheduled_date')){
-        localStorage.setItem('saved_appointment_url',window.location.search+"&reason_for_consultation="+form.reason_for_consultation)
+        localStorage.setItem('saved_appointment_url',window.location.search+"&reason_for_consultation="+form.reason_for_consultation+"&additional_observations="+form.additional_observations)
        }
     }else if(localStorage.getItem('saved_appointment_url') && !id){
        data._showPopUp('basic_popup','you-have-saved-appointment')

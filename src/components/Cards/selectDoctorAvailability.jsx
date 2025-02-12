@@ -61,6 +61,7 @@ function SelectDoctorAvailability({ item }) {
 
 
   useEffect(() => {
+
     const observer = new MutationObserver(() => {
       const buttons = document.querySelectorAll('.MuiPickersArrowSwitcher-button');
       buttons.forEach((button) => {
@@ -71,7 +72,7 @@ function SelectDoctorAvailability({ item }) {
     observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
-      observer.disconnect(); // Clean up observer
+      observer.disconnect(); 
     };
   }, []);
 
@@ -81,12 +82,17 @@ function SelectDoctorAvailability({ item }) {
      localStorage.setItem('changing_doctor_calendar',true)
 
      setTimeout(()=>{
+        let firstActiveBtn=null
         document.querySelectorAll('.MuiPickersDay-root').forEach(btn=>{
           let day=parseInt(btn.textContent || null)
-          if(day==1) {
-             btn.click()
+          if(!firstActiveBtn){
+              if(!isNaN(day) && btn.style.pointerEvents=="visible" || btn.className.includes('Mui-selected')) {
+                  firstActiveBtn=btn
+              }
           }
         })
+
+        firstActiveBtn.click()
 
         localStorage.removeItem('changing_doctor_calendar')
 
@@ -207,8 +213,7 @@ function SelectDoctorAvailability({ item }) {
     const interval = setInterval(() => {
 
             let available_days=[]
-            //let days=Array.from({ length:31 }, () => 0).map((i,_i)=>_i+1)
-           
+         
             let m=document.querySelector('.MuiPickersCalendarHeader-label').textContent.split(' ')[0].toLowerCase()
             let _year=document.querySelector('.MuiPickersCalendarHeader-label').textContent.split(' ')[1]
             let _month=months.findIndex(i=>i==m)
@@ -234,8 +239,7 @@ function SelectDoctorAvailability({ item }) {
               }
             })
 
-            //console.log({unavailable_days,d})
-
+           
             weekdaysAvailability.forEach((a,_a)=>{
               Object.keys(a).forEach((i,_i)=>{
                 let index=weeks.findIndex(f=>f==i)
@@ -253,7 +257,7 @@ function SelectDoctorAvailability({ item }) {
           try{
 
               setTimeout(()=>{
-
+ 
                   document.querySelectorAll('.MuiPickersDay-root').forEach(btn=>{
                     let day=parseInt(btn.textContent || null)
                     if(day){
@@ -267,10 +271,12 @@ function SelectDoctorAvailability({ item }) {
                     }
                  })
 
+
+
               },200)
 
           }catch(e){
-            console.log(w)
+            console.log(e)
           }
  
      }, 200);

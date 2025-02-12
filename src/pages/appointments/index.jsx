@@ -224,6 +224,7 @@ function App() {
                           t('form.consultation-hour'),
                           t('form.medical-specialty'),
                           t('form.type-of-care'),
+                          selectedTab=="approved" ? t('common.meeting-link') : null,
                           t('common.unread-messages'),
                           t('form.payment-confirmed'),
                           t('common.doctor'),
@@ -232,7 +233,6 @@ function App() {
                           user?.role=="admin" || user?.role=="manager" ? t('common.bank_receipt') : null,
                           t('common.created_at'),
                           t('common.last-update'),
-                          selectedTab=="approved" ? t('common.meeting-link') : null,
                           selectedTab=="canceled" ? t('common.reason-for-cancelation') : null,
                           '.'
                         ]
@@ -264,7 +264,17 @@ function App() {
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.consultation_date?.split('-')?.reverse()?.join('/')}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.scheduled_hours}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[i18next.language+"_name"]}</BaiscTable.Td>
+                                
+                              
+
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{t('common.types_of_care.'+i.type_of_care)}</BaiscTable.Td>
+                                <BaiscTable.Td hide={selectedTab!="approved"}>
+                                   <div className={`${i.type_of_care=="requested" ? 'hidden':''}`} onClick={()=>{
+                                         window.open(`${data.APP_FRONDEND}/meeting/zoom/appointment/`+i.id, '_blank')
+                                    }}>
+                                     <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
+                                   </div>
+                                </BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>
                                     <div className={`ml-2 ${i.unread_comments_count!=0 ? 'bg-honolulu_blue-400' : 'bg-gray-300'}  text-white rounded-full px-1 flex items-center justify-center`}>
                                       <span>{i.unread_comments_count}</span>
@@ -292,21 +302,7 @@ function App() {
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.created_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.updated_at?.split('-')?.reverse()?.join('/') ? i.updated_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                                
-                               {/** <BaiscTable.Td hide={selectedTab!="approved"}>
-                                    {i.zoom_link && <div className="cursor-pointer hover:opacity-80" onClick={()=>{
-                                         window.open(i.zoom_meeting.meeting_data[`${user?.role=="patient" ? 'join':'start'}_url`], '_blank')
-                                    }}>               
-                                         <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
-                                    </div>}
-                                </BaiscTable.Td> */}
-
-                                <BaiscTable.Td hide={selectedTab!="approved"}>
-                                   <div className={`${i.type_of_care=="requested" ? 'hidden':''}`} onClick={()=>{
-                                         window.open(`${data.APP_FRONDEND}/meeting/zoom/appointment/`+i.id, '_blank')
-                                    }}>
-                                     <svg className="fill-honolulu_blue-500" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M320-400h240q17 0 28.5-11.5T600-440v-80l80 80v-240l-80 80v-80q0-17-11.5-28.5T560-720H320q-17 0-28.5 11.5T280-680v240q0 17 11.5 28.5T320-400ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
-                                   </div>
-                                </BaiscTable.Td>
+                              
 
                                
                                 <BaiscTable.Td hide={selectedTab!="canceled"} url={`/appointment/`+i.id}>{i.cancelation_reason ? (t('common.'+i.cancelation_reason)?.length > 40 ? t('common.'+i.cancelation_reason).slice(0,40)+"..." : t('common.'+i.cancelation_reason)):''}</BaiscTable.Td>

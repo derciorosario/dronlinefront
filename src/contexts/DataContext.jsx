@@ -343,7 +343,8 @@ export const DataProvider = ({ children }) => {
       add_info:'',
       adding_appointment:'',
       add_from_doctor_request_id:'',
-      reason_for_consultation:''
+      reason_for_consultation:'',
+      additional_observations:''
     }
     
     const [_filters, setFilters] = useState(initial_filters);
