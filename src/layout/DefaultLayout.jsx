@@ -25,8 +25,8 @@ import DownloadProgress from '../components/Loaders/download-progress.jsx'
 import SupportBadge from '../components/Badges/support-badge.jsx'
 import ChangePasswordModal from '../components/modals/change-password.jsx'
 import UserWaitingInTheRoom from '../components/modals/user-waiting-in-meeting-room.jsx'
-import AddStampAndSignature from '../components/PopUp/add-stamp-and-signature.jsx'
 import Loader from '../components/Loaders/loader.jsx'
+import LogoImageCropper from '../components/Inputs/imageCropper.jsx'
 
 function DefaultLayout({children,Export,printing,hide,showDates,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate,hideSupportBadges,startDate,endDate,setStartDate,setEndDate,hideSidebar,headerLeftContent}) {
     
@@ -57,7 +57,7 @@ function DefaultLayout({children,Export,printing,hide,showDates,pageContent,remo
 
     <div id={'top'} className={`flex ${!hide ? 'bg-[#F9F9F9]':''} w-full  `}>
             
-            
+               <LogoImageCropper/>
                <UserWaitingInTheRoom/>
                <ChangePasswordModal/>
                <Reviews show={data._openPopUps.reviews}/>

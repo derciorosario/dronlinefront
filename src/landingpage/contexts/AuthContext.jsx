@@ -1,9 +1,7 @@
 import { createContext, useContext, useState} from 'react';
-import toast from 'react-hot-toast';
 
 const HomeAuthContext = createContext();
 export const HomeAuthProvider = ({ children }) => {
-  
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);

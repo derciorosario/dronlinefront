@@ -199,10 +199,10 @@ function App() {
                   </div>
 
                   
-               <div className={`max-xl:px-[20px] ${(data._get_all_doctors?.data || []).length==0 ? 'hidden':''} px-[40px] max-lg:px-[20px] max-w-[1150px] mx-auto`}>
-                  <h2 data-aos="fade-up" className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>               
+               <div className={`max-xl:px-[20px] ${(data._get_all_doctors?.data || []).length==0 ? 'hidden':''} px-[40px] max-lg:px-[20px] max-w-[1593px] mx-auto`}>
+                  <h2 data-aos="fade-up" className="mt-bold text-center uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>               
                  
-                  <DoctorList animate={true} items={data._get_all_doctors?.data || []} max={3}/> 
+                  <DoctorList center={true} animate={true} items={data._get_all_doctors?.data || []} max={5}/> 
         
                   <div className="flex justify-center mb-[140px]">
                     <button onClick={()=>{
@@ -225,7 +225,7 @@ function App() {
                    <div id="about" className="w-full flex justify-center pt-10">
 
                      
-                         <div className="w-[1150px] mx-auto flex gap-4 max-xl:w-full max-xl:px-[20px] max-md:flex-col">
+                         <div className="max-w-[1423px] mx-auto flex gap-4 max-xl:w-full px-[100px] max-lg:px-[20px] max-md:flex-col">
                                 <div className="flex-1">
                                     <h2 className="mt-bold uppercase text-honolulu_blue-400 text-[33px] mb-3">{t('common.who-we-are')}</h2>
                                     <p className="mb-3 text-[20px] text-honolulu_blue-300">{t('titles.about-us')}</p>
@@ -282,7 +282,7 @@ function App() {
                    <div id="departments" className={`my-[100px] ${data._specialty_categories.length==0 ? ' absolute opacity-0 pointer-events-none':''} max-lg:px-[20px] px-[100px]`}>
                              
                              <div className="max-w-[1423px] mx-auto">
-                                  <h2 className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('menu.departments')}</h2>
+                                  <h2 className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10 text-center">{t('menu.departments')}</h2>
                                    <DepartamentSilder/>
                              </div>
 

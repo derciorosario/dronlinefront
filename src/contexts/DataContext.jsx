@@ -955,7 +955,17 @@ function isSetAsUrgentHour(hour,AppSettings){
 
    }
 
+    const [imageSrc,setImageSrc]=useState(null)
+    const [croppedImage, setCroppedImage] = useState(null);
+    const [uploadFromCrop, setUploadFromCrop] = useState(false);
+
     const value = {
+      uploadFromCrop,
+      setUploadFromCrop,
+      imageSrc,
+      setImageSrc,
+      croppedImage, 
+      setCroppedImage,
       handleCopyClick,
       waitingListOptions,
       _waiting_list,

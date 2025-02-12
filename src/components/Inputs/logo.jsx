@@ -6,7 +6,8 @@ import toast from 'react-hot-toast';
 import Loader from '../Loaders/loader';
 
 
-function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
+function LogoFile({disabled,label,res,_upload,isUserProfile,_loading,crop}) {
+
 
   const data=useData()
 
@@ -26,35 +27,81 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
 
   
  
-  useEffect(()=>{
-       res(upload)
-  },[upload])
+      useEffect(()=>{
+        res(upload)
+      },[upload])
 
   
-  const [file,setFile]=useState({})
+     const [file,setFile]=useState({})
 
-  const acceptedImageFileTypes = ['.jpg', '.jpeg', '.png'];
+     const acceptedImageFileTypes = ['.jpg', '.jpeg', '.png'];
+     const uploadFile = async (event) => {
+
+     if(!crop){
+        handleSubmit(event)
+     }else{
+        const file = event.target.files[0];
+        if((file.size/1024/1024) > 10){
+          toast.error(t('common.only-files-less-than'))
+          return
+        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          data.setImageSrc(reader.result);
+          console.log(reader.result)
+        }
+
+       
+     }
+  }
+
+  useEffect(()=>{
+   
+
+    if(data.uploadFromCrop && !localStorage.getItem('upload-cron-image')){
+        data.setImageSrc(null)
+        data.setUploadFromCrop(null)
+        handleSubmit()
+    }
+
+    localStorage.removeItem('upload-cron-image')
+       
+    
+  },[data.uploadFromCrop])
+
+
 
   const handleSubmit = async (event) => {
-   
-    let f = event.target.files[0];
 
-    if((f.size/1024/1024) > 10){
-      toast.error(t('common.only-files-less-than'))
-      return
-    }
-
-    
-    if(!acceptedImageFileTypes.includes(`.${(f.name.split('.')[f.name.split('.').length - 1]).toLowerCase()}`)){
-      toast.error(t('common.file-not-allowed'))
-      return
-    }
+    let f = event?.target?.files?.[0];
     const formData = new FormData();
+    
+    if(crop){
+      f = new File([data.croppedImage], `${uuidv4()}.png`, { type: "image/png" });
+    }else{
+
+      if((f.size/1024/1024) > 10){
+        toast.error(t('common.only-files-less-than'))
+        return
+      }
+      
+      if(!acceptedImageFileTypes.includes(`.${(f.name.split('.')[f.name.split('.').length - 1]).toLowerCase()}`)){
+        toast.error(t('common.file-not-allowed'))
+        return
+      }
+
+      setFile(f);
+  
+    }
+   
+    
     formData.append('file', f);
     let fileName = uuidv4();
     formData.append('filename', fileName);
-  
-    setFile(f);
+
+    data.setCroppedImage(null)
+   
   
     const xhr = new XMLHttpRequest();
 
@@ -77,7 +124,7 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
       
       if (xhr.status >= 200 && xhr.status < 300) {
         const result = JSON.parse(xhr.responseText);
-        //console.log({ url: result.url });
+        console.log({ url: result.url });
         setUpload(prev=>({...prev,filename:result.url,uploading:false}))
         clearFileInputs()
       } else {
@@ -104,7 +151,8 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
     setUpload({
       uploading:false,
       filename:'',
-      progress:0
+      progress:0,
+      ..._upload
     })
     setFile({})
   }
@@ -112,7 +160,6 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
 
 
   return (
-
 
     <>
 
@@ -128,7 +175,7 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
                            
                            <label htmlFor="_file_logo_input_2" className="absolute cursor-pointer active:opacity-50 right-0 bottom-6 rounded-full w-[30px] h-[30px] bg-honolulu_blue-400 flex items-center justify-center">
                               <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"  fill="#fff"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
-                              <input accept={acceptedImageFileTypes} id="_file_logo_input_2" ref={fileInputRef_2} type="file" onChange={handleSubmit} className="w-full h-full absolute opacity-0 left-0 top-0"/> 
+                              <input accept={acceptedImageFileTypes} id="_file_logo_input_2" ref={fileInputRef_2} type="file" onChange={uploadFile} className="w-full h-full absolute opacity-0 left-0 top-0"/> 
                             
                            </label>
                     </div> : (
@@ -144,7 +191,7 @@ function LogoFile({disabled,label,res,_upload,isUserProfile,_loading}) {
                    
                            <label htmlFor="_file_logo_input" className="flex relative items-center">
                    
-                             <input accept={acceptedImageFileTypes} id="_file_logo_input" ref={fileInputRef_1} type="file" onChange={handleSubmit} className="w-full h-full absolute opacity-0 left-0 top-0"/> 
+                             <input accept={acceptedImageFileTypes} id="_file_logo_input" ref={fileInputRef_1} type="file" onChange={uploadFile} className="w-full h-full absolute opacity-0 left-0 top-0"/> 
                              {!upload.uploading && <button type="button" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">{upload.filename ? t('common.change') : t('common.select-image')} </button>}
                             
                              {upload.uploading && <div className="w-[150px] h-[4px] bg-gray-400 rounded-[0.4rem] relative">

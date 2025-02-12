@@ -101,14 +101,14 @@ export default function Doctors() {
            <div className="mt-[40px] max-w-[1539px]">
 
            <div className="mx-[50px] max-lg:mx-[20px]" id="our-specialists">
-                       <h2 className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>          
+                <h2 className="mt-bold uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>          
            </div>
-
 
            <div className="flex px-[50px] max-lg:px-[20px]">
            <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>
          
             <div className="flex-1">
+              
                 <BasicSearch loaded={data._loaded.includes('doctors')} search={search} total={data._doctors?.total} from={'doctors'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
                 <SelectedFilters setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>     
                 
@@ -117,7 +117,7 @@ export default function Doctors() {
                         <span className="mt-2">{t('common.loading')}...</span>
                 </div>}
                  {data._loaded.includes('doctors') && <div className="relative w-full">
-                    <DoctorList  max={10} items={data._doctors?.data || []}/>
+                    <DoctorList center={false}  max={10} items={data._doctors?.data || []}/>
                  </div>}
              </div>
            </div>

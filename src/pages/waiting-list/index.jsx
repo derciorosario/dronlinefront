@@ -26,9 +26,6 @@ function App() {
   const [endDate,setEndDate]=useState('')
   const [startDate,setStartDate]=useState('')
     
-  
- 
-
 
   useEffect(()=>{ 
     if(!user || updateFilters || data.updateTable) return
@@ -45,7 +42,6 @@ function App() {
          setCurrentPage(1)
          setLoading(false)
          data._get(required_data,{waiting_list:{name:search,page:1,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
-
     }
  },[data.updateTable, updateFilters])
 

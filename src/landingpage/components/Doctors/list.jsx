@@ -6,7 +6,7 @@ import { useHomeAuth } from '../../contexts/AuthContext'
 
 
 
-function DoctorList({max,items}) {
+function DoctorList({max,items,center}) {
 
 
   const [selectedWeekDays,setSelectedWeekDays] = useState({})
@@ -35,17 +35,17 @@ function DoctorList({max,items}) {
 
   return (
     <div className="w-full pb-[90px]">
-    <div className="flex  mx-auto gap-y-20 gap-x-16 flex-wrap">
-    
+    <div className={`flex  mx-auto gap-y-20 gap-x-5 flex-wrap ${center ? 'justify-center':''}`}>
+           
             
            {items.filter((i,_i)=>_i <= max || !max).map((item,_item)=>(
             
-              <div className={`flex w-[46%] max-md:w-full gap-2 flex-col max-lg:w-full`}>
+              <div className={`flex w-[340px] max-md:w-[46%]  max-sm:w-full gap-2 flex-col`}>
     
               <div>
 
-              <div className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden h-[380px] shadow mb-4" style={{backgroundRepeat:'no-repeat',backgroundSize:"contain",backgroundPosition:"center",backgroundImage:`url("${item.profile_picture_filename}")`}}>
-                  {/***<img  src={item.profile_picture_filename} className={`h-[410px] w-full object-cover object-top ${!item.profile_picture_filename ? 'opacity-0':''}`}/>  */}
+              <div className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden  shadow mb-4" > {/**style={{backgroundRepeat:'no-repeat',backgroundSize:"contain",backgroundPosition:"center",backgroundImage:`url("${item.profile_picture_filename}")`}} */}
+                  <img  src={item.profile_picture_filename} className={`h-[380px] max-sm:h-[430px] w-full object-cover object-top ${!item.profile_picture_filename ? 'opacity-0':''}`}/>  
               </div>
 
                <div className="flex gap-3 bg-white py-4 px-1">

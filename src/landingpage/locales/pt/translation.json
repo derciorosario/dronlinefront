@@ -584,6 +584,7 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "crop-image":"Recorte a imagem",
         "transfer-failed-try-again":"Transferência falhou. Tente novamente",
         "text-copied":"Texto copiado",
         "bank_name":"Nome do banco",

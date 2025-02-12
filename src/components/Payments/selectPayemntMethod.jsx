@@ -147,7 +147,7 @@ function SelectPayemntMethod({info}) {
             <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4 cursor-pointer" onClick={()=>{
                      data.setPaymentInfo(({...info,payment_method:'mpesa'}))
                      document.querySelector('#payment_popup').scrollTop=document.querySelector('#payment_popup')?.clientHeight || 0
-                  }}>
+               }}>
 
               <div class="flex items-start">
                 <div class="flex h-5 items-center">
