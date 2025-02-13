@@ -6,7 +6,7 @@ import { useHomeAuth } from '../../contexts/AuthContext'
 
 
 
-function DoctorList({max,items,center}) {
+function DoctorList({max,items,center,loaded}) {
 
 
   const [selectedWeekDays,setSelectedWeekDays] = useState({})
@@ -15,6 +15,12 @@ function DoctorList({max,items,center}) {
   const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
   const {APP_FRONDEND}=useHomeAuth()
 
+  const [loadedImages, setLoadedImages] = useState({});
+  const handleImageLoad = (index) => {
+    setLoadedImages((prev) => ({ ...prev, [index]: true }));
+  };
+
+  
 
   const data=useHomeData()
 
@@ -38,56 +44,73 @@ function DoctorList({max,items,center}) {
     <div className={`flex  mx-auto gap-y-20 gap-x-5 flex-wrap ${center ? 'justify-center':''}`}>
            
             
-           {items.filter((i,_i)=>_i <= max || !max).map((item,_item)=>(
+           {(loaded ? items.filter((i,_i)=>_i <= max || !max) : [{},{},{}]).map((item,_item)=>(
             
               <div className={`flex w-[340px] max-md:w-[46%]  max-sm:w-full gap-2 flex-col`}>
     
               <div>
+                    <div className={`flex-1 ${!loadedImages[_item] ? 'animate-pulse':''}  bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden  shadow mb-4`}> {/**style={{backgroundRepeat:'no-repeat',backgroundSize:"contain",backgroundPosition:"center",backgroundImage:`url("${item.profile_picture_filename}")`}} */}
+                        <img onLoad={() => {
+                            handleImageLoad(_item)
+                        }} src={item.profile_picture_filename}
 
-              <div className="flex-1 bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden  shadow mb-4" > {/**style={{backgroundRepeat:'no-repeat',backgroundSize:"contain",backgroundPosition:"center",backgroundImage:`url("${item.profile_picture_filename}")`}} */}
-                  <img  src={item.profile_picture_filename} className={`h-[380px] max-sm:h-[430px] w-full object-cover object-top ${!item.profile_picture_filename ? 'opacity-0':''}`}/>  
-              </div>
+                        className={`h-[380px] max-sm:h-[430px] w-full object-cover object-top transition-opacity duration-500 ${
+                            loadedImages[_item] ? "opacity-100" : "opacity-0"
+                        }`}
 
-               <div className="flex gap-3 bg-white py-4 px-1">
+                        />  
+                    </div>
 
-                           <div className="flex flex-col items-center w-full">
-                               <div className="flex items-center justify-center w-[40px] h-[40px] bg-gray-200 rounded-full">                                                                                        
-                                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/></svg>
-                               </div>
-                               <span className="text-[13px]">{t('common.patients')}</span>
-                               <span className="mt-bold">{item.unique_patients_count + item.unique_dependents_count}</span>
-                           </div>
-     
-                           <div className="flex flex-col items-center">
-                               <div className="flex items-center justify-center w-[40px] h-[40px] bg-gray-200 rounded-full">                                
-                                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/></svg>
-                               </div>
-                               <span className="text-[13px]">{t('common.rating')}</span>
-                               <span className="mt-bold">{item.average_rating.toString().slice(0,3)}</span>
-                           </div>
-     
-                           <div className="flex flex-col items-center w-full">
-                               <div className="flex items-center justify-center w-[40px] h-[40px] bg-gray-200 rounded-full">                                                
-                                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/></svg>
-                               </div>
-                               <span className="text-[13px]">{t('common.years')}</span>
-                               <span className="mt-bold">{item.years_of_experience}</span>
-                           </div>
-     
-                           <div onClick={()=>{
-                                 if(item.reviews.length)  data._showPopUp('reviews',item)
-                            }} className="flex flex-col items-center w-full _reviews">
-                               <div className={`flex items-center justify-center w-[40px] ${item.reviews.length==0 ? 'bg-gray-200':'bg-honolulu_blue-400 cursor-pointer hover:bg-honolulu_blue-500'} h-[40px] rounded-full`}>                                            
-                                       <svg className={`${item.reviews.length==0 ? ' fill-[#5f6368]':'fill-white'}`} xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m363-390 117-71 117 71-31-133 104-90-137-11-53-126-53 126-137 11 104 90-31 133ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
-                               </div>
-                               <span className="text-[13px]">{t('common.reviews')}</span>
-                               <span className="mt-bold">{item.reviews.length}</span>
-                           </div>
-               </div>
+
+                   {loaded &&  <div className="flex gap-3 bg-white py-4 px-1">
+
+                    <div className="flex flex-col items-center w-full">
+                        <div className="flex items-center justify-center w-[40px] h-[40px] bg-gray-200 rounded-full">                                                                                        
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/></svg>
+                        </div>
+                        <span className="text-[13px]">{t('common.patients')}</span>
+                        <span className="mt-bold">{item.unique_patients_count + item.unique_dependents_count}</span>
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                        <div className="flex items-center justify-center w-[40px] h-[40px] bg-gray-200 rounded-full">                                
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/></svg>
+                        </div>
+                        <span className="text-[13px]">{t('common.rating')}</span>
+                        <span className="mt-bold">{item.average_rating.toString().slice(0,3)}</span>
+                    </div>
+
+                    <div className="flex flex-col items-center w-full">
+                        <div className="flex items-center justify-center w-[40px] h-[40px] bg-gray-200 rounded-full">                                                
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/></svg>
+                        </div>
+                        <span className="text-[13px]">{t('common.years')}</span>
+                        <span className="mt-bold">{item.years_of_experience}</span>
+                    </div>
+
+                    <div onClick={()=>{
+                            if(item.reviews.length)  data._showPopUp('reviews',item)
+                        }} className="flex flex-col items-center w-full _reviews">
+                        <div className={`flex items-center justify-center w-[40px] ${item.reviews.length==0 ? 'bg-gray-200':'bg-honolulu_blue-400 cursor-pointer hover:bg-honolulu_blue-500'} h-[40px] rounded-full`}>                                            
+                                <svg className={`${item.reviews.length==0 ? ' fill-[#5f6368]':'fill-white'}`} xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m363-390 117-71 117 71-31-133 104-90-137-11-53-126-53 126-137 11 104 90-31 133ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>
+                        </div>
+                        <span className="text-[13px]">{t('common.reviews')}</span>
+                        <span className="mt-bold">{item.reviews.length}</span>
+                    </div>
+                    </div>}
      
              </div>
+
+
+             {!loaded && <div class=' w-full flex mt-2 justify-between items-start animate-pulse'>
+            <div class="block">
+                <h3 class='h-4 bg-gray-300 rounded-full  w-48 mb-4'></h3>
+                <p class='h-3 bg-gray-300 rounded-full w-32 mb-2.5'></p>
+            </div>
+            <span class="h-3 bg-gray-300 rounded-full w-16 "></span>
+            </div>}
      
-             <div className="flex flex-col w-full max-xl:w-full">
+            {loaded &&  <div className="flex flex-col w-full max-xl:w-full">
                      <span className="text-honolulu_blue-300 text-[17px] uppercase mt-bold">{item.name}</span>
                      <span className="text-honolulu_blue-500 mt-bold text-[20px] uppercase">{data._specialty_categories.filter(i=>i.id==item.medical_specialty)[0]?.[i18next.language+"_name"]}</span>
                      <p className="text-justify mt-5 text-gray-500 mb-4">
@@ -184,30 +207,13 @@ function DoctorList({max,items,center}) {
 
                 <div className="mt-6 flex items-center">
                 <button onClick={()=>{
-                    
-                    /**if(!selectedDoctors[item.id]?.length){
-                        toast(t('common.select-timetable'))
-                        return
-                    }
-                    window.location.href=APP_FRONDEND+`/add-appointments?scheduled_doctor=${item.id}&scheduled_hours=${selectedDoctors[item.id]}&scheduled_date=${selectedDates[item.id] || new Date().toISOString().split('T')[0]}&scheduled_weekday=${weeks[new Date(selectedDates[item.id] || new Date().toISOString().split('T')).getDay()]}`*/
-
+                 
                     data.setSelectedDoctorToSchedule(item)
                     
                 }} className="px-5 max-md:w-full py-3 whitespace-nowrap bg-honolulu_blue-300 hover:bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-full">{t('common.book')}</button>
                 </div>
+             </div>}
 
-
-
-
-
-
-
-
-
-
-
-                   
-             </div>
              </div>
            ))}
     

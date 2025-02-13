@@ -68,7 +68,6 @@ export const HomeDataProvider = ({ children }) => {
                       add=true
                 }
              })
-    
              return add
        }
 
@@ -167,7 +166,19 @@ export const HomeDataProvider = ({ children }) => {
       }else{
          setLoaded((prev)=>prev.filter(i=>i!=item))
       }
-    }   
+    }  
+    
+    
+    
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+      }
+      return array;
+    }
+    
+  
 
 
     async function _get(from,params){
@@ -184,7 +195,11 @@ export const HomeDataProvider = ({ children }) => {
            
             let response=await makeRequest({params:params?.[items[f]],method:'get',url:`api/${items[f].replaceAll('_','-')}`,withToken:true, error: ``},100);
             handleLoaded('add',items[f])
-           
+
+            
+            if(items[f]=="get_all_doctors"){ 
+              response={...response,data:shuffleArray([...response.data])} //make it random
+            }
             selected.update(response)
            
             _data[items[f]]=response
@@ -471,7 +486,6 @@ function text_l(text,max=50){
   }
   return text
 }
-
 
     const value = {
       text_l,

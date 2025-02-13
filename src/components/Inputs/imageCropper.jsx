@@ -25,7 +25,7 @@ const LogoImageCropper = ({ onUpload }) => {
 
           <div class="flex items-center justify-between mb-4">
 
-          <h5 class="text-xl font-bold leading-none text-gray-900 flex items-center">{t('common.crop-image')}</h5>
+          <h5 class="text-xl max-md:text-[1rem] font-bold leading-none text-gray-900 flex items-center">{t('common.crop-image')}</h5>
 
           <div onClick={()=>{
              data.setImageSrc(null)

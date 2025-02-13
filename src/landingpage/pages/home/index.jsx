@@ -199,10 +199,10 @@ function App() {
                   </div>
 
                   
-               <div className={`max-xl:px-[20px] ${(data._get_all_doctors?.data || []).length==0 ? 'hidden':''} px-[40px] max-lg:px-[20px] max-w-[1593px] mx-auto`}>
+               <div className={`max-xl:px-[20px] px-[40px] max-lg:px-[20px] max-w-[1593px] mx-auto`}>
                   <h2 data-aos="fade-up" className="mt-bold text-center uppercase text-honolulu_blue-400 text-[25px] mb-10">{t('common.our-specialists')}</h2>               
                  
-                  <DoctorList center={true} animate={true} items={data._get_all_doctors?.data || []} max={5}/> 
+                  <DoctorList loaded={data._loaded.includes('get_all_doctors')} center={true} animate={true} items={data._get_all_doctors?.data || []} max={5}/> 
         
                   <div className="flex justify-center mb-[140px]">
                     <button onClick={()=>{

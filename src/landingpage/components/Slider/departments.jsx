@@ -105,9 +105,17 @@ const DepartamentSilder = ({setActiveSlide}) => {
         <Slider {...settings}>
         {data._specialty_categories.map((i,_i)=>{
             return (
-                <div onClick={()=>{
-                  window.location.href='/doctors-list/?medical_specialty='+i.id
-                }}  className="w-[300px] h-[300px] p-3 relative cursor-pointer hover:scale-105 hover:rounded-lg delay-75  ease-in transition-all overflow-hidden">
+                <div className="w-[300px] h-[300px] _department_box p-3 relative  delay-75  ease-in transition-all overflow-hidden">
+                    <div  onClick={()=>{
+                        window.location.href='/doctors-list/?medical_specialty='+i.id
+                    }} className="cursor-pointer max-md:hidden hover:scale-105 absolute opacity-0 transition-all ease-in _department_item z-20 bottom-3 right-3 bg-honolulu_blue-200 w-[40px] h-[40px] flex items-center justify-center">
+                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg>
+                    </div>
+                    <div onClick={()=>{
+                        window.location.href='/doctors-list/?medical_specialty='+i.id
+                    }} className="absolute md:hidden top-0 left-0 w-full h-full z-10">
+                        
+                    </div>
                     <div className="w-full h-full relative">
                         <div className="absolute w-full h-full left-0 top-0 bg-honolulu_blue-400 opacity-15"></div>
                         <img src={i.image_filename} className="w-full h-full object-cover"/>
