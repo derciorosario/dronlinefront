@@ -102,7 +102,7 @@ function DoctorList({max,items,center,loaded}) {
              </div>
 
 
-             {!loaded && <div class=' w-full flex mt-2 justify-between items-start animate-pulse'>
+           {!loaded && <div class=' w-full flex mt-2 justify-between items-start animate-pulse'>
             <div class="block">
                 <h3 class='h-4 bg-gray-300 rounded-full  w-48 mb-4'></h3>
                 <p class='h-3 bg-gray-300 rounded-full w-32 mb-2.5'></p>
@@ -115,95 +115,7 @@ function DoctorList({max,items,center,loaded}) {
                      <span className="text-honolulu_blue-500 mt-bold text-[20px] uppercase">{data._specialty_categories.filter(i=>i.id==item.medical_specialty)[0]?.[i18next.language+"_name"]}</span>
                      <p className="text-justify mt-5 text-gray-500 mb-4">
                        {item[`${i18next.language}_short_biography`]}
-                     </p>
-
-
-
-                     <div className="flex items-center mb-2 w-full hidden">
-                   
-                        <span className="text-[0.9rem] font-medium flex w-full mr-3">{t('common.availability')}</span>
-                        <select  onChange={(e)=>{
-                             setSelectedWeekDays({...selectedWeekDays,[item.id]:e.target.value})
-                        }} value={selectedWeekDays[item.id] || weeks[new Date().getDay()]}  class={`bg-gray hidden border border-gray-300  text-gray-900 text-sm rounded-full text-center  block w-[110px] p-2`}>
-                            {weeks.map((i,_i)=>(
-                                  <option value={i}>{t('common._weeks.'+i.toLowerCase())}</option>
-                            ))}
-                       </select>  
-
-                       <input onChange={(e)=>{
-                               setSelectedDates({...selectedDates,[item.id]:e.target.value})
-                               setSelectedWeekDays({...selectedWeekDays,[item.id]:weeks[new Date(e.target.value).getDay()]})
-                               setSelectedDoctors({...selectedDoctors,[item.id]:[]})
-                       }} value={selectedDates[item.id] || new Date().toISOString().split('T')[0]} type="date" class={`bg-gray border border-gray-300  text-gray-900 text-sm rounded-full text-center w-[130px]  block  p-2`}/>
-
-                      </div>
-
-
-                      <div className={`flex items-center flex-wrap mb-2 hidden`}>
-
-                        {(!selectedWeekDays[item.id] ? (item.availability.weekday[weeks[new Date().getDay()]] || []) : (item.availability.weekday[selectedWeekDays[item.id]] || [])).map((i,_i)=>(
-                            <span onClick={()=>{
-                                handleSelectDoctorAvailability(item,i)
-                            }} className={`flex px-3 cursor-pointer ${selectedDoctors[item.id]?.includes(i) ? 'border-honolulu_blue-300 bg-honolulu_blue-50 text-honolulu_blue-400':'border-transparent bg-honolulu_blue-50'} border  py-1 mr-2 mb-2 rounded-full`}>{i}</span>
-                        ))}
-
-
-                        {(!selectedWeekDays[item.id] ? (item.urgent_availability.weekday[weeks[new Date().getDay()]] || []) : (item.urgent_availability.weekday[selectedWeekDays[item.id]] || [])).map((i,_i)=>(
-                            <span onClick={()=>{
-                                handleSelectDoctorAvailability(item,i)
-                            }} className={`flex px-3 cursor-pointer ${selectedDoctors[item.id]?.includes(i) ? 'border-orange-400 bg-orange-50 text-orange-400':'border-transparent bg-orange-100'} border  py-1 mr-2 mb-2 rounded-full `}>{i}</span>
-                        ))}
-
-
-                        {(!selectedWeekDays[item.id] ? (item.availability.weekday[weeks[new Date().getDay()]]  || item.urgent_availability.weekday[weeks[new Date().getDay()]] || []) : (item.availability.weekday[selectedWeekDays[item.id]] || item.urgent_availability.weekday[weeks[new Date().getDay()]] || [])).length==0 && <span className="text-[14px] text-gray-500">({t('common.select-another-week-day')})</span>}
-                    </div>
-
-
-
-                    <div className={`flex items-center flex-wrap mb-2 hidden`}>
-
-
-
-
-                    <div className="mt-4 flex items-center justify-between">
-                      {(getAvailableHours(item,'normal').length!=0) && <div className="flex justify-center flex-col items-center">
-                          <select  onChange={(e)=>{
-                              handleSelectDoctorAvailability(item,e.target.value)
-                          }} value={getAvailableHours(item,'normal').includes(selectedDoctors[item.id]?.[0]) ? selectedDoctors[item.id]?.[0] : ''}  class={`bg-gray text-[14px] w-[155px] border ${getAvailableHours(item,'normal').includes(selectedDoctors[item.id]?.[0]) ? 'border-honolulu_blue-400':'border-gray-300'}  text-gray-900 text-sm rounded-full outline-none text-center  block  p-2`}>
-                                <option selected disabled value={""}>{t('common.set-timetable')}</option>
-                              {getAvailableHours(item,'normal').map((i,_i)=>(
-                                  <option value={i}>{i} - {data.timeAfter30Minutes(i)}</option>
-                              ))}
-                          </select>
-                          <span className="text-[12px] text-gray-500">{t('common.normal')}</span>
-                      </div>}
-
-                      <div className="mx-2 h-full translate-y-[-10px]">
-                        {(getAvailableHours(item,'normal').length!=0 && getAvailableHours(item,'urgent').length!=0) && <span className="text-[11px]">{t('common.or')}</span>}
-                      </div>
-
-
-                      {getAvailableHours(item,'urgent').length!=0 && <div className="flex justify-center flex-col items-center">
-                          <select  onChange={(e)=>{
-                              handleSelectDoctorAvailability(item,e.target.value)
-                          }} value={getAvailableHours(item,'urgent').includes(selectedDoctors[item.id]?.[0]) ? selectedDoctors[item.id]?.[0] : ''}  class={`bg-gray border  ${getAvailableHours(item,'urgent').includes(selectedDoctors[item.id]?.[0]) ? 'border-honolulu_blue-400':'border-gray-300'}  text-gray-900 text-sm rounded-full text-center outline-none  block text-[14px] w-[155px] p-2`}>
-                              <option selected disabled value={""}>{t('common.set-timetable')}</option>
-                              {getAvailableHours(item,'urgent').map((i,_i)=>(
-                                  <option value={i}>{i} - {data.timeAfter30Minutes(i)}</option>
-                              ))}
-                          </select>
-                          <span className="text-[12px] text-gray-500">{t('common.urgent')}</span>
-                      </div> }
-              </div> 
-
-
-
-              {((getAvailableHours(item,'normal').length==0 && getAvailableHours(item,'urgent').length==0)) && <span className="text-[14px] text-gray-500">({t('common.select-another-day')})</span>}
-
-              </div>
-
-
-
+            </p>
 
                 <div className="mt-6 flex items-center">
                 <button onClick={()=>{

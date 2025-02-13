@@ -28,11 +28,13 @@ function FindSpecialist() {
   },[searchInput2,data._loaded])
 
   useEffect(()=>{ 
+    data.handleLoaded('remove','get_all_doctors')
     data._get('get_all_doctors',{get_all_doctors:{all:true,status:'active'}}) 
   },[pathname])
 
   return (
     <div style={{zIndex:9}} className="w-full max-md:px-[15px] px-[50px] z-40 relative">
+   
           <div className="w-[1160px] max-xl:w-full  mx-auto px-7 py-10 bg-honolulu_blue-500 max-md:translate-y-[0%]  max-md:my-[50px]  translate-y-[-50%] rounded-[0.5rem]">
               <div className="mt-bold uppercase text-[18px] text-white mb-3">{t('common.i-need-to-find')}</div>
               <div className="w-full flex max-md:flex-col  max-md:gap-y-4 items-center gap-x-2">

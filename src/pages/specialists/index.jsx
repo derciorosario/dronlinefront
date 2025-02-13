@@ -24,6 +24,8 @@ function App({showOnlyList}) {
   const {pathname} = useLocation()
   const [search,setSearch]=useState('')
 
+ 
+
   const [filterOptions,setFilterOptions]=useState([
     {
       open:false,
@@ -84,6 +86,8 @@ useEffect(()=>{
 },[pathname])
 
 
+
+
  useEffect(()=>{
     if(data.updateTable || updateFilters){
          data.setUpdateTable(null)
@@ -104,8 +108,8 @@ useEffect(()=>{
                 <div className="flex-1">
                   <BasicSearch loaded={data._loaded.includes('doctors')} total={data._doctors?.total} search={search} from={'doctors'} setCurrentPage={setCurrentPage} setSearch={setSearch} />
                   <div className={`flex flex-wrap gap-2 ease-in transition ${!data._loaded.includes('doctors') ? 'hidden':''}`}>
-                        {data._doctors?.data?.map(i=>(
-                          <DoctorCard item={i}/>
+                        {data._doctors?.data?.map((i,_i)=>(
+                          <DoctorCard item={i} _item={_i}/>
                         ))}
                   </div>
                   {!data._loaded.includes('doctors') && <CardSkeleton replicate={3}/>}
