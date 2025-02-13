@@ -129,9 +129,9 @@ function App() {
                                 <BaiscTable.Td url={`/dependent/`+i.id}>{i.main_contact}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/dependent/`+i.id}>{i.gender ? t('common.'+i.gender) : '-'}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/dependent/`+i.id}>{t(i.address)}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/dependent/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/dependent/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                               
+                                <BaiscTable.Td url={`/dependent/`+i.id}>{data._c_date(i.created_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(i.created_at).split('T')[1].slice(0,5)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/dependent/`+i.id}>{i.updated_at ? data._c_date(i.updated_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " " +data._c_date(i.updated_at).split('T')[1].slice(0,5) : data._c_date(i.created_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(i.created_at).split('T')[1].slice(0,5)}</BaiscTable.Td>
+                                                        
                             </BaiscTable.Tr>
                         ))}
 

@@ -299,12 +299,9 @@ function App() {
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
                                   </span>
                                 </BaiscTable.Td>
-                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.created_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.updated_at?.split('-')?.reverse()?.join('/') ? i.updated_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0]?.split('-')?.reverse()?.join('/') + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                               
-                              
-
-                               
+                                <BaiscTable.Td url={`/appointment/`+i.id}>{data._c_date(i.created_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(i.created_at).split('T')[1].slice(0,5)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.updated_at ? data._c_date(i.updated_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " " +data._c_date(i.updated_at).split('T')[1].slice(0,5) : data._c_date(i.created_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(i.created_at).split('T')[1].slice(0,5)}</BaiscTable.Td>
+               
                                 <BaiscTable.Td hide={selectedTab!="canceled"} url={`/appointment/`+i.id}>{i.cancelation_reason ? (t('common.'+i.cancelation_reason)?.length > 40 ? t('common.'+i.cancelation_reason).slice(0,40)+"..." : t('common.'+i.cancelation_reason)):''}</BaiscTable.Td>
                                 <BaiscTable.AdvancedActions  id={i.id} items={[
                                     {hide:user?.role!="doctor" || i.status!="completed",name:t('common.set-as-approved'),onClick:()=>{handleItems({status:'approved',id:i.id})},icon:(<svg  xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M438-226 296-368l58-58 84 84 168-168 58 58-226 226ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>)},
@@ -312,8 +309,6 @@ function App() {
                                     {hide:i.status=="completed" || i.status=="canceled" || !i.payment_confirmed || (user?.role!="doctor" && i.doctor_id) || ((user?.role!="manager" && user?.role!="admin") && !i.doctor_id),name:t('common.complete'),onClick:()=>{handleItems({status:'completed',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
                                     {hide:i.status=="approved" || i.type_of_care!="requested"  || (user?.role!="manager" && user?.role!="admin"),name:t('common.approve'),onClick:()=>{handleItems({status:'approved',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},
                                     
-                                   
-
                                 ]}/>
 
            

@@ -60,17 +60,22 @@ export default function Doctors() {
     const [search,setSearch]=useState('')
     
     
-    
     useEffect(()=>{
-            if(!canFetch) return
-            data._get(required_data,{doctors:{status:'active',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+            if(!canFetch || updateFilters || data.updateTable) return
             data.handleLoaded('remove','doctors')
+            data._get(required_data,{doctors:{status:'active',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
     },[pathname,search,currentPage,updateFilters])
 
 
-
-  
-
+     useEffect(()=>{
+        if(data.updateTable || updateFilters){
+             data.setUpdateTable(null)
+             setUpdateFilters(null)
+             data.handleLoaded('remove','doctors')
+             setCurrentPage(1)
+             data._get(required_data,{doctors:{status:'active',name:search,page:currentPage,...data.getParamsFromFilters(filterOptions)}}) 
+        }
+     },[data.updateTable,updateFilters])
 
     useEffect(()=>{
       const doctor = new URLSearchParams(window.location.search).get('doctor');
@@ -89,10 +94,7 @@ export default function Doctors() {
   
     
   
-  useEffect(()=>{
-    data.handleLoaded('remove','doctors')
-  
-  },[updateFilters])
+ 
 
   
 

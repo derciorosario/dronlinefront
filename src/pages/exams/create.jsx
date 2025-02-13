@@ -258,12 +258,13 @@ const [form,setForm]=useState(initial_form)
        <>
 
         {!itemToShow && <div className=" absolute left-0 top-0 w-full">
-                      <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
+                 <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
        </div>}
               
       <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
 
-            <AddStampAndSignature
+          <AddStampAndSignature
+
             itemToShow={itemToShow}
             SubmitForm={SubmitForm}
             show={showSignatureDialog} setShow={setShowSignatureDialog}
@@ -365,64 +366,64 @@ const [form,setForm]=useState(initial_form)
                </div>
            )}
 
-           button={(
+              button={(
 
-              <div className={`mt-[40px] ${(user?.role!="doctor" && user?.role!="patient" && itemToShow?.appointment?.doctor_id)  ? 'hidden':''}`}>
-                 {((!user?.data?.signature_filename || !user?.data?.stamp_filename) && (itemToShow?.action=="update" || (id && !itemToShow)) && user?.role!="patient") && <div className="w-full mb-6">
-                   <button onClick={()=>{
-                      setShowSignatureDialog(true)
-                   }} className="flex items-center">
-                      <svg className="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill={'#5f6368'}><path d="M563-491q73-54 114-118.5T718-738q0-32-10.5-47T679-800q-47 0-83 79.5T560-541q0 14 .5 26.5T563-491ZM120-120v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80ZM136-280l-56-56 64-64-64-64 56-56 64 64 64-64 56 56-64 64 64 64-56 56-64-64-64 64Zm482-40q-30 0-55-11.5T520-369q-25 14-51.5 25T414-322l-28-75q28-10 53.5-21.5T489-443q-5-22-7.5-48t-2.5-56q0-144 57-238.5T679-880q52 0 85 38.5T797-734q0 86-54.5 170T591-413q7 7 14.5 10.5T621-399q26 0 60.5-33t62.5-87l73 34q-7 17-11 41t1 42q10-5 23.5-17t27.5-30l63 49q-26 36-60 58t-63 22q-21 0-37.5-12.5T733-371q-28 25-57 38t-58 13Z"/></svg>
-                      <span className="text-honolulu_blue-300 underline cursor-pointer">{t('common.update-signature-and-stamp')}</span> 
-                   </button>
-                </div>}
-                <FormLayout.Button onClick={()=>{
+                  <div className={`mt-[40px] ${(user?.role!="doctor" && user?.role!="patient" && itemToShow?.appointment?.doctor_id)  ? 'hidden':''}`}>
+                    {((!user?.data?.signature_filename || !user?.data?.stamp_filename) && (itemToShow?.action=="update" || (id && !itemToShow)) && user?.role!="patient") && <div className="w-full mb-6">
+                      <button onClick={()=>{
+                          setShowSignatureDialog(true)
+                      }} className="flex items-center">
+                          <svg className="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill={'#5f6368'}><path d="M563-491q73-54 114-118.5T718-738q0-32-10.5-47T679-800q-47 0-83 79.5T560-541q0 14 .5 26.5T563-491ZM120-120v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80ZM136-280l-56-56 64-64-64-64 56-56 64 64 64-64 56 56-64 64 64 64-56 56-64-64-64 64Zm482-40q-30 0-55-11.5T520-369q-25 14-51.5 25T414-322l-28-75q28-10 53.5-21.5T489-443q-5-22-7.5-48t-2.5-56q0-144 57-238.5T679-880q52 0 85 38.5T797-734q0 86-54.5 170T591-413q7 7 14.5 10.5T621-399q26 0 60.5-33t62.5-87l73 34q-7 17-11 41t1 42q10-5 23.5-17t27.5-30l63 49q-26 36-60 58t-63 22q-21 0-37.5-12.5T733-371q-28 25-57 38t-58 13Z"/></svg>
+                          <span className="text-honolulu_blue-300 underline cursor-pointer">{t('common.update-signature-and-stamp')}</span> 
+                      </button>
+                    </div>}
 
-                    if(user?.role!="patient" && (!user?.data?.signature_filename || !user?.data?.stamp_filename) && (!form.signature_filename || !form.stamp_filename)){
-                      setShowSignatureDialog(true)
-                    }else{
-                      SubmitForm()
-                    }
-                   
-                }} valid={valid} loading={loading} label={(itemToShow?.action=="update" || (id && !itemToShow)) ? t('common.update') :t('common.send')}/>
-              </div>
+                    <FormLayout.Button onClick={()=>{
 
-           )}
-           >
+                        if(user?.role!="patient" && (!user?.data?.signature_filename || !user?.data?.stamp_filename) && (!form.signature_filename || !form.stamp_filename)){
+                          setShowSignatureDialog(true)
+                        }else{
+                          SubmitForm()
+                        }
+                      
+                    }} valid={valid} loading={loading} label={(itemToShow?.action=="update" || (id && !itemToShow)) ? t('common.update') :t('common.send')}/>
+                  </div>
+              )}
+              >
 
-           <FormCard  hide={(itemToShow?.action!="update" && !id) || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
-               {name:'ID',value:form.id},
-               {name:t('form.requested-on'),value:form.requested_at},
-               {name:t('form.requested-exams'),value:form.exam_items.map(i=>`${i.name} ${i.is_urgent ? `(${t('common.urgent')})` : ''}`).join(', ')},
-               {name:t('form.clinical-information'),value:form.clinical_information},
-               {name:t('form.results-report'),value:form.results_report},
-            ]}/>
+              <FormCard  hide={(itemToShow?.action!="update" && !id) || !((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient")} items={[
+                  {name:'ID',value:form.id},
+                  {name:t('form.requested-on'),value:form.requested_at},
+                  {name:t('form.requested-exams'),value:form.exam_items.map(i=>`${i.name} ${i.is_urgent ? `(${t('common.urgent')})` : ''}`).join(', ')},
+                  {name:t('form.clinical-information'),value:form.clinical_information},
+                  {name:t('form.results-report'),value:form.results_report},
+                ]}/>
 
-                 <FormLayout.Input 
-                   verified_inputs={verified_inputs} 
-                   form={form} 
-                   r={true} 
-                   hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                   type={'date'}
-                   onBlur={() => setVerifiedInputs([...verified_inputs, 'requested-on'])} 
-                   label={t('form.requested-on')} 
-                   onChange={(e) => setForm({...form, requested_at: e.target.value})} 
-                   field={'requested_at'} 
-                   value={form.requested_at}
-                 />
+                <FormLayout.Input 
+                  verified_inputs={verified_inputs} 
+                  form={form} 
+                  r={true} 
+                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                  type={'date'}
+                  onBlur={() => setVerifiedInputs([...verified_inputs, 'requested-on'])} 
+                  label={t('form.requested-on')} 
+                  onChange={(e) => setForm({...form, requested_at: e.target.value})} 
+                  field={'requested_at'} 
+                  value={form.requested_at}
+                />
 
-                 <FormLayout.Input 
-                 verified_inputs={verified_inputs} 
-                 form={form} 
-                 r={true} 
-                 hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
-                 textarea={true}
-                 onBlur={() => setVerifiedInputs([...verified_inputs, 'clinical_information'])} 
-                 label={t('form.clinical-information')} 
-                 onChange={(e) => setForm({...form, clinical_information: e.target.value})} 
-                 field={'clinical_information'} 
-                 value={form.clinical_information}
-               />
+                <FormLayout.Input 
+                verified_inputs={verified_inputs} 
+                form={form} 
+                r={true} 
+                hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
+                textarea={true}
+                onBlur={() => setVerifiedInputs([...verified_inputs, 'clinical_information'])} 
+                label={t('form.clinical-information')} 
+                onChange={(e) => setForm({...form, clinical_information: e.target.value})} 
+                field={'clinical_information'} 
+                value={form.clinical_information}
+              />
 
 
                <div className={`w-full mt-4 ${((user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient") ? 'hidden':''}`}>
@@ -506,7 +507,7 @@ const [form,setForm]=useState(initial_form)
 
               </div>
 
-              <FormLayout.Input 
+               <FormLayout.Input 
                  verified_inputs={verified_inputs} 
                  form={form} 
                  hide={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}
@@ -518,8 +519,6 @@ const [form,setForm]=useState(initial_form)
                  value={form.results_report}
                />
 
-
-               
            </FormLayout>
 
     </DefaultLayout>

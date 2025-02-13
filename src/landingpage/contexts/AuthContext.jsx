@@ -7,10 +7,10 @@ export const HomeAuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [auth, setAuth] = useState(false);
 
-  let env="pro"
-  const APP_BASE_URL  = env == "pro" ? "https://api.dronlinemz.com": 'http://127.0.0.1:8000'
+  let env="test"
+  const APP_BASE_URL  = env == "pro" ? "https://api.dronlinemz.com": env == "test" ? "https://testapi.dronlinemz.com"  : 'http://127.0.0.1:8000'
   const SERVER_FILE_STORAGE_PATH=`storage/uploads`
-  const APP_FRONDEND=env == "dev" ? "http://localhost:5173" : "https://dronlinemz.com" 
+  const APP_FRONDEND=env == "dev" ?  "http://localhost:5173" : env == "test" ?  "https://teste.dronlinemz.com" : "https://dronlinemz.com" 
  
   const login = (userData, authToken) => {
     setUser(userData);

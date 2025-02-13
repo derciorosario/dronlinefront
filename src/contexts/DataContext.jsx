@@ -3,10 +3,10 @@ import { useAuth } from './AuthContext';
 import html2pdf from 'html2pdf.js';
 import toast from 'react-hot-toast';
 
-let env="pro"
+let env="test"
 import io from 'socket.io-client';
 import { t } from 'i18next';
-const socket_server=env!="dev" ? 'https://socket.dronlinemz.com' : 'http://localhost:3001'
+const socket_server=env=="pro" ? 'https://socket.dronlinemz.com' : env == "test" ? "https://testsocket.dronlinemz.com" : 'http://localhost:3001'
 const socket = io(socket_server)
 
 let log_id=Math.random().toString()
@@ -959,7 +959,19 @@ function isSetAsUrgentHour(hour,AppSettings){
     const [croppedImage, setCroppedImage] = useState(null);
     const [uploadFromCrop, setUploadFromCrop] = useState(false);
 
+    function _c_date(date){
+
+          if(!date) return 
+          if(typeof date == "string"){
+             return new Date(new Date(date).getTime() + 2 * 60 * 60 * 1000).toISOString()
+          }else{
+             return  new Date(date.getTime() + 2 * 60 * 60 * 1000).toISOString()
+          }
+
+    }
+   
     const value = {
+      _c_date,
       uploadFromCrop,
       setUploadFromCrop,
       imageSrc,

@@ -50,7 +50,7 @@ const PayPal = ({info}) => {
     }
 
     const paypalSdkUrl = "https://www.paypal.com/sdk/js";
-    const clientId = "ARtWWVTi-LteAUsbNSl7s4zeP7u4IjSPXUQjyGh-c-6kjodj2wDst1amjLY9iyQRClSxbS0qRApJ6VIA"// "AXJKJcDXlH8mKhbcdQQHTAsotX-s7w5oMtsOJVsGAARUUhUDfBfSKCHxd6rP36m-qsyY8-cc0fk_K0OR";
+    const clientId = "AXJKJcDXlH8mKhbcdQQHTAsotX-s7w5oMtsOJVsGAARUUhUDfBfSKCHxd6rP36m-qsyY8-cc0fk_K0OR";
     const currency = "USD";
     const intent = "capture";
 

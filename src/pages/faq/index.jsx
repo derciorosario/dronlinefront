@@ -131,8 +131,9 @@ function App() {
                           <BaiscTable.Td url={`/faq/`+i.id}>{t('common.'+i.type)}</BaiscTable.Td>
                           <BaiscTable.Td url={`/faq/`+i.id}>{i[`title_${i18next.language}`]}</BaiscTable.Td>
                           <BaiscTable.Td url={`/faq/`+i.id}>{data.text_l(i[`content_${i18next.language}`],100)}</BaiscTable.Td>
-                          <BaiscTable.Td url={`/faq/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                          <BaiscTable.Td url={`/faq/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
+                          <BaiscTable.Td url={`/faq/`+i.id}>{data._c_date(i.created_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(i.created_at).split('T')[1].slice(0,5)}</BaiscTable.Td>
+                          <BaiscTable.Td url={`/faq/`+i.id}>{i.updated_at ? data._c_date(i.updated_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " " +data._c_date(i.updated_at).split('T')[1].slice(0,5) : data._c_date(i.created_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(i.created_at).split('T')[1].slice(0,5)}</BaiscTable.Td>
+                     
                      </BaiscTable.Tr>
                  ))}
              />

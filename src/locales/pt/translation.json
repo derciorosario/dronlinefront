@@ -166,8 +166,8 @@
     },
     "titles":{
 
-        "slide-1-sub-title":"Acesso Instantâneo à Saúde, Onde Quer Que Você Esteja",
-        "slide-1-title":"Acesso Instantâneo à Saúde, Onde Quer Que Você Esteja",
+        "slide-1-sub-title":"Acesso Instantâneo à Saúde, Onde Quer Que Esteja",
+        "slide-1-title":"Acesso Instantâneo à Saúde, Onde Quer Que Esteja",
         "slide-1-marked-text":"Acesso Instantâneo",
 
         "slide-2-sub-title":"Levando Saúde a Toda a Sua Família.",
@@ -341,7 +341,7 @@
     },
 
     "notification-messages":{
-       "upcoming-consultation":"Você tem uma consulta marcada em breve. Horário da consulta:",
+       "upcoming-consultation":"Tem uma consulta marcada em breve. Horário da consulta:",
        "consultation-status":"Estado:",
        "invoice-status":"Estado:",
        "new-mpesa-payment":"ID do paciente",
@@ -363,7 +363,7 @@
         "consultation-is-already-canceled":"Consulta já foi cancelada",
         "services-title":"Explore Nossos Serviços",
         "services-sub":"Tudo o Que Oferecemos para Seu Conforto e Saúde",
-        "about-us":"Oferecemos uma plataforma completa de serviços médicos online, garantindo que você tenha acesso rápido e eficiente a especialistas de diversas áreas da saúde. Através de consultas virtuais seguras e práticas, você pode receber atendimento de qualidade, sem a necessidade de deslocamentos ou longas esperas, diretamente no conforto da sua casa.",
+        "about-us":"Oferecemos uma plataforma completa de serviços médicos online, garantindo que tenha acesso rápido e eficiente a especialistas de diversas áreas da saúde. Através de consultas virtuais seguras e práticas, pode receber atendimento de qualidade, sem a necessidade de deslocamentos ou longas esperas, diretamente no conforto da sua casa.",
         "urgent-consultation-limit-with-hours-and-minutes":"As consultas agendadas {{hours}} hora(s) e {{minutes}} minuto(s) antes do horário da consulta são consideradas como urgentes",
         "urgent-consultation-limit-with-hours":"As consultas agendadas {{hours}} hora(s) antes do horário da consulta são consideradas como urgentes",
         "urgent-consultation-limit-with-minutes":"As consultas agendadas {{minutes}} minuto(s) antes do horário da consulta são consideradas como urgentes",
@@ -371,7 +371,7 @@
         "get-refund":"Obter o seu valor de volta, o pagamento será processado pela nossa equipa",
         "choose-aother-appointment":"Cancele e crie uma nova. O valor da consulta cancelada será usanda na nova consulta",
         "appointment-no-longer-available":"A hora e data selecionada para a consulta não está mais disponível",
-        "you-have-saved-appointment":"Você tem um rascunho guardado da sua consulta. Deseja terminar o preenchimento?",
+        "you-have-saved-appointment":"Tem um rascunho guardado da sua consulta. Deseja terminar o preenchimento?",
         "login-to-proceed-with-consultation":"Seu agendamento foi salvo, mas antes de proceder com o envio, precisa registar ou fazer o login na plataforma. ",
         "contact-us-if-delay":"Caso não tenha resposta nos próximos 5 minutos, aconselhamos que ligue de imediato para o contacto +258 861024024.",
         "password-mismatch":"As senhas inseridas devem ser iguais",
@@ -687,7 +687,7 @@
             "step-3-title": "Efetue o pagamento",
             "step-3-text": "Realize o pagamento de forma rápida via M-Pesa, Paypal ou através de transferência bancária. Em caso de transferência, envie o comprovante e aguarde a confirmação.",
             "step-4-title": "Acesse sua consulta",
-            "step-4-text": "Você receberá, no seu e-mail, o link para acessar a consulta médica por meio de smartphone, tablet ou computador, sem necessidade de instalação de aplicativos adicionais."
+            "step-4-text": "Receberá, no seu e-mail, o link para acessar a consulta médica por meio de smartphone, tablet ou computador, sem necessidade de instalação de aplicativos adicionais."
         },
         "permissions":"Pemissões",
         "types_of_care":{

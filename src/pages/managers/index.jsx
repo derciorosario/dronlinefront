@@ -95,10 +95,10 @@ function App() {
                                 </BaiscTable.Td>
                                 <BaiscTable.Td url={`/manager/`+i.id}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/manager/`+i.id}>{i.name}</BaiscTable.Td>
-                                 <BaiscTable.Td url={`/manager/`+i.id}>{i.email}</BaiscTable.Td>
-                                 <BaiscTable.Td url={`/manager/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                                <BaiscTable.Td url={`/manager/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-                               
+                                <BaiscTable.Td url={`/manager/`+i.id}>{i.email}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/manager/`+i.id}>{data._c_date(i.created_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(i.created_at).split('T')[1].slice(0,5)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/manager/`+i.id}>{i.updated_at ? data._c_date(i.updated_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " " +data._c_date(i.updated_at).split('T')[1].slice(0,5) : data._c_date(i.created_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(i.created_at).split('T')[1].slice(0,5)}</BaiscTable.Td>
+                                                                   
                             </BaiscTable.Tr>
                         ))}
 

@@ -166,7 +166,6 @@ function App() {
 
                                   <div  className="flex flex-wrap gap-x-2 justify-between w-full">
                                     
-
                                       <div>
                                           {benefitItems.filter((_,_i)=>_i<=3).map(i=>(
                                             <div data-aos="fade-left" className="flex items-center mb-3">
@@ -186,14 +185,12 @@ function App() {
                                       </div>
                                   </div>
 
-                                      <button data-aos="fade-top" onClick={()=>{
-
-                                          navigate('/?contact')
-                                          let c=document.getElementById('contact');
-                                          c.scrollIntoView();
-
-                                      }} className="px-5 py-4 mt-8 whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('common.contact-us')}</button>
-                                  
+                                    <button data-aos="fade-top" onClick={()=>{
+                                        navigate('/?contact')
+                                        let c=document.getElementById('contact');
+                                        c.scrollIntoView();
+                                    }} className="px-5 py-4 mt-8 whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('common.contact-us')}</button>
+                                
                                 
                         </div>
                   </div>

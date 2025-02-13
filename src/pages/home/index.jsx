@@ -8,7 +8,6 @@ import AdminDashboard from './admin-dashboad';
 import DoctorDashboard from './doctor-dashboard';
 import PatientDashboard from './patient-dashboard';
 import SinglePrint from '../../components/Print/single';
-import ImageCropper from '../../components/ImageCropper';
 
 
 

@@ -715,7 +715,8 @@ return (
     {name:t('form.estimated-consultation-duration'),value:form.estimated_consultation_duration,hide:true},
     {name:t('form.type-of-care'),value:t(`form.${form.type_of_care}-c`)},
     {name:t('form.reason-for-consultation'),value:form.reason_for_consultation,hide:user?.role=="patient"},
-    {name:t('form.additional-observations'),value:form.additional_observations,hide:user?.role=="patient"}  
+    {name:t('form.additional-observations'),value:form.additional_observations,hide:user?.role=="patient"}  ,
+    {name:t('common.created_at'),value:data._c_date(form.created_at)?.split('T')?.[0] + " "+data._c_date(form.created_at)?.split('T')?.[1]?.slice(0,5)}, 
 
   ]}/>
 

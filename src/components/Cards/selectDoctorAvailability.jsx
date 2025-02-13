@@ -117,6 +117,8 @@ function SelectDoctorAvailability({ item }) {
         let selected_hour=hour
         let selected_date=selectedDates?.[item?.id] || data.serverTime?.date
 
+       console.log({selected_hour})
+
         if(selected_date){
           if(new Date(selected_date).getDay()==0 || new Date(selected_date).getDay()==6){
             return true

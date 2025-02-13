@@ -106,6 +106,8 @@ function globalOnclick(id){
                             'ID',
                              t('form.medication-names'),
                              t('common.expiration-date'),
+                             t('common.created_at'),
+                             t('common.last-update'),
                            ]
                          }
    
@@ -144,7 +146,9 @@ function globalOnclick(id){
                                    <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
                                    <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.medical_prescription_items.map(i=>`${i.name ? `${_medications.filter(f=>f.ITEM==i.name)?.[0]?.name}` : i.custom_name} (${i.prescribed_quantity})`).join(', ')}</BaiscTable.Td>
                                    <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.expiration_period} {i.expiration_period ? t('common.days') : ''}</BaiscTable.Td>
-                                                                   
+                                   <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data._c_date(i.created_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(i.created_at).split('T')[1].slice(0,5)}</BaiscTable.Td>
+                                   <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.updated_at ? data._c_date(i.updated_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " " +data._c_date(i.updated_at).split('T')[1].slice(0,5) : data._c_date(i.created_at).split('T')[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(i.created_at).split('T')[1].slice(0,5)}</BaiscTable.Td>
+                                                                                                     
                                </BaiscTable.Tr>
                            ))}
    
