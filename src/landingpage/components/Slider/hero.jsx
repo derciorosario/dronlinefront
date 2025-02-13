@@ -56,7 +56,7 @@ const HeroSlider = ({setActiveSlide}) => {
                     </div>
                     <div className="absolute w-full top-0 left-0 flex items-center max-md:px-[20px] px-[100px] h-full">
                                  <div>
-                                        <h2 data-aos="fade-up" className="text-[50px] max-md:text-[22px]  text-white mt-light max-w-[500px]">
+                                        <h2 data-aos="fade-up" className="text-[50px] max-md:text-[27px]  text-white mt-light max-w-[500px]">
                                              {parts[0]}
                                                <span className="mt-bold">{i.marked_text}</span>
                                              {parts[1]}
