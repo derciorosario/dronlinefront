@@ -443,9 +443,6 @@ useEffect(()=>{
                   </div>
 
 
-                  
-
-
                 </div>
             )}
 

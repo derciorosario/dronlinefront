@@ -8,19 +8,36 @@ import i18next from 'i18next'
 function SelectPayemntMethod({info}) {
   const data=useData()
   const [invoice,setInvoice]=useState(null)
+  const [doctor,setDoctor]=useState(null)
+
   let required_data=['cancellation_taxes','specialty_categories']
 
   useEffect(() => {
     if(!info?.payment_method) return
+    setDoctor(null)
+    getDoctor()
     data.handleLoaded('remove',required_data)
     data._get(required_data)
-
   }, [info]);
 
+  async function getDoctor() {
+    try{
+      let response=await data.makeRequest({method:'get',url:`api/doctor/`+info?.doctor_id,withToken:true, error: ``},100);
+      setDoctor(response)
+     }catch(e){
+       if(e.message==404){
+          toast.error(t('common.item-not-found'))
+       }else  if(e.message=='Failed to fetch'){
+          toast.error(t('common.check-network'))
+       }else{
+          toast.error(t('common.unexpected-error'))
+       } 
+    }
+  }
   
   async function getAppointment(){
+   
     try{
-
         let response=await data.makeRequest({method:'get',url:`api/get-invoice-by-appointment-id/`+info?.canceled_appointment_id,withToken:true, error: ``},0);
         setInvoice(response)
      }catch(e){
@@ -32,9 +49,10 @@ function SelectPayemntMethod({info}) {
          }else{
             toast.error(t('common.unexpected-error'))
          } 
-
      }
+
   }
+
  
   useEffect(()=>{
     
@@ -230,11 +248,15 @@ function SelectPayemntMethod({info}) {
               <dt class="text-base font-normal text-gray-500">{t('form.type-of-care')}</dt>
               <dd class="text-base font-medium text-gray-900 text-right">{t('form.'+info?.type_of_care+"-c")} {info?.type_of_care=="scheduled"  ? `(Normal)` :''}</dd>
             </dl>
-
+            
             {info?.type_of_care!="requested" && <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('common.doctor')}</dt>
-              <dd class="text-base font-medium text-gray-900 text-right">{(data._doctors?.data || []).filter(i=>i.id==info?.doctor_id)[0]?.name}</dd>
+              <dd class="text-base font-medium text-gray-900 text-right">
+                {doctor && doctor?.name}
+                {!doctor && <Loader/>}
+              </dd>
             </dl>}
+            
 
             {getAmount().refund!=0 && <>
               <dl class="flex items-center justify-between gap-4 py-3">

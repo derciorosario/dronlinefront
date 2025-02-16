@@ -10,11 +10,8 @@ import InsurancePayment from './insurance';
 import PayPal from './paypal';
 
 function PaymentProcess({ info }) {
-
   const data=useData();
 
- 
- 
   return (
     <div className={`w-full px-4 h-[100vh] bg-[rgba(0,0,0,0.2)]  ease-in _doctor_list ${(!info?.type_of_care || info?.done) ? 'opacity-0 pointer-events-none translate-y-[100px]' : ''} ease-in transition-all delay-75 fixed flex items-center justify-center z-50`}>
       <div id="payment_popup" className="w-full max-h-[90vh] max-md:max-h-[80vh] overflow-y-auto p-4 relative bg-white border border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px]">

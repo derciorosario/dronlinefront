@@ -244,7 +244,7 @@ return (
     {name:t('form.consultation-id'),value:form.appointment_id}, 
     {name:t('form.insurance_company'),value:form.insurance_company,hide:!form.insurance_company},
     {name:t('form.policy_number'),value:form.policy_number,hide:!form.policy_number},
-    {name:t('common.created_at'),value:data._c_date(form.created_at)?.split('T')?.[0] + " "+data._c_date(form.created_at)?.split('T')?.[1]?.slice(0,5)}, 
+    {name:t('common.created_at'),value:data._c_date(form.created_at)?.split('T')?.[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(form.created_at)?.split('T')?.[1]?.slice(0,5)}, 
   ]}/>
 
 

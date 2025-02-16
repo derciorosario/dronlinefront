@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next';
 import LeftImage from '../../assets/images/consultation-stepper.jpg'
+import { useNavigate } from 'react-router-dom';
 
 
 function DoctorJoinAppointment() {
 
   const { t, i18n } = useTranslation();
+  const navigate=useNavigate()
  
   return (
     <section class="text-gray-600 body-font">
@@ -14,11 +16,16 @@ function DoctorJoinAppointment() {
       <div className="absolute left-0 top-0 bg-[rgba(0,0,0,0.5)] flex-col h-full w-full flex items-center justify-center">
                 <h2 className="text-white text-[45px] font-bold max-md:text-[30px] max-sm:text-[20px] mb-2">{t('common.how-does-it-work')}</h2>
                 <p className="text-white text-[25px] max-sm:text-[17px] opacity-70">{t('common.consultation-steps')}</p>
+                <button onClick={()=>{
+                   navigate('/doctors-list')
+                }} class="px-5 py-[0.6rem] max-md:hidden  absolute bottom-10 z-10 max-md:w-full whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] max-sm:text-[12px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('menu.add-appointment')}</button>
       </div>
       <img src={LeftImage} alt="feature" class="object-cover object-center h-full w-full"/>
-    </div>
-    <div class="flex flex-col flex-wrap lg:py-6 -mb-10 lg:w-1/2 lg:pl-12 lg:text-left text-center">
 
+    
+    </div>
+
+    <div class="flex flex-col flex-wrap lg:py-6 -mb-10 lg:w-1/2 lg:pl-12 lg:text-left text-center">
 
       <div class="flex flex-col mb-10 lg:items-start items-center">
       <div className="flex items-center mb-5">
@@ -97,8 +104,19 @@ function DoctorJoinAppointment() {
         </div>
       </div>
 
+     <div className="w-full flex justify-center">
+     <button  onClick={()=>{
+                   navigate('/doctors-list')
+       }} class="px-5 mt-5 py-[0.6rem] md:hidden  z-10  whitespace-nowrap bg-honolulu_blue-300 text-white table uppercase text-[14px] max-sm:text-[12px] border-honolulu_blue-300 border rounded-[0.3rem]">{t('menu.add-appointment')}</button>
+     
+     </div>
+
+    
     </div>
+
   </div>
+
+ 
 </section>
   )
 }

@@ -170,8 +170,6 @@ Header.BottomBar=()=>{
   const navigate = useNavigate()
   const {user} = useAuth()
   const data=useHomeData()
-
-  console.log({data,v:data.appSettings})
   return (
     <div className="w-full bg-[rgba(255,255,255,0.8)]  max-md:px-[20px] px-[60px] py-4 flex items-center justify-between relative">
           <div className="absolute -bottom-5 right-0 bg-honolulu_blue-500  rounded-l-[1rem] px-2 py-1 ">

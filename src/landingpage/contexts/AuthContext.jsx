@@ -2,6 +2,7 @@ import { createContext, useContext, useState} from 'react';
 
 const HomeAuthContext = createContext();
 export const HomeAuthProvider = ({ children }) => {
+
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
@@ -30,8 +31,8 @@ export const HomeAuthProvider = ({ children }) => {
     return !!token;
   };
 
-
   function encodeFormData(data) {
+
       const formData = new URLSearchParams();
       function buildFormData(formData, data, parentKey) {
         if (Array.isArray(data)) {
@@ -49,13 +50,10 @@ export const HomeAuthProvider = ({ children }) => {
       buildFormData(formData, data);
       return formData.toString();
 
-  }
+   }
 
 
-
- 
-
-    async function makeRequest(options = { data: {}, method: 'get', url: '' ,withToken:false}, maxRetries = 200, retryDelay = 3000) {
+   async function makeRequest(options = { data: {}, method: 'get', url: '' ,withToken:false}, maxRetries = 200, retryDelay = 3000) {
     
       let { data = {}, method = 'get', url = '' } = options;
      
@@ -67,7 +65,6 @@ export const HomeAuthProvider = ({ children }) => {
        if(options.withToken) {
          headers['Authorization'] = `Bearer ${token}`;
        }
- 
  
        
        if (method.toLowerCase() === 'get' && Object.keys(options.params || {}).length > 0) {
@@ -82,7 +79,6 @@ export const HomeAuthProvider = ({ children }) => {
          body = encodeFormData(data); 
        }
  
-       console.log({url,params:options.params})
      
        try {
          const response = await fetch(url, {

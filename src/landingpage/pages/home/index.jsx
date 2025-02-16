@@ -85,8 +85,6 @@ function App() {
   ]
 
 
-  console.log(data.app_settings)
-
   const [selectedAboutImgIndex,setSelectedAboutImgIndex]=useState(0)
   const [benefitItems,setBenefitItems]=useState([])
   const [serviceItems,setServiceItems]=useState([])
@@ -126,6 +124,10 @@ function App() {
   },[i18n.language])
 
 
+
+  if(!data.isPreloaderLoaded){
+     return <></>
+  }
  
   return (
    
@@ -161,7 +163,7 @@ function App() {
 
                         <div className="absolute max-lg:relative right-0 top-0 min-h-full w-full py-[100px] md:px-[80px]   max-md:pr-0">
                                   <p data-aos="fade-left" className="mb-3 text-[20px] text-white max-w-[300px]">{t('messages.services-sub')}</p>      
-                                  <h2 data-aos="fade-left" className="mt-bold uppercase text-white mb-10 text-[25px] mb-10">{t('messages.services-title')}</h2>
+                                  <h2 data-aos="fade-left" className="mt-bold uppercase text-white mb-10 text-[25px]">{t('messages.services-title')}</h2>
 
 
                                   <div  className="flex flex-wrap gap-x-2 justify-between w-full">

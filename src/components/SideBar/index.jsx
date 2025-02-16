@@ -37,7 +37,7 @@ function SideBar({hideSidebar}) {
 
     const menuItems = [
       {name:t('menu.home'),path:'/dashboard',paths:['/dashboard'],field:'dashboard',icon:'dashboard',access:['all'],manager_access:true,showInMobile:true},
-      {name:t('menu.find-a-specialist'),path:'/specialists',paths:['/specialists'],field:'specialists',icon:'find_doctor',access:['admin','patient']},
+      {name:t('menu.find-a-specialist'),path:'/specialists',paths:['/specialists'],field:'specialists',icon:'find_doctor',access:['patient']},
      
       {name:t('menu.appointments'),path:'/appointments',field:'appointments',icon:'appointments',sub_menus:[
           {name:t('menu.all-appointments'),path:'/appointments',paths:['appointments','appointment/:id'],manager_access:true},
@@ -271,7 +271,6 @@ function SideBar({hideSidebar}) {
     const [openPopUps,setOpenPopUps]=useState([])
 
    
-
     useEffect(()=>{
 
        let _open=[]
@@ -284,6 +283,7 @@ function SideBar({hideSidebar}) {
 
        setOpenPopUps(_open)
     },[data._openPopUps])
+
 
     return (
       <>
@@ -302,13 +302,13 @@ function SideBar({hideSidebar}) {
                                       }}
                                           className={`text-[1rem]  py-2 flex ${!checkAccess(i,'isSub') ? 'hidden':''}  ${checkActive(i,true) ? 'text-honolulu_blue-500 font-medium':' opacity-80'} hover:text-honolulu_blue-500`}
                                       >
-                                          {i.name} 
+                                        {i.name} 
                                       </span>
                                     ))}
                                 </div>
                        </div>}
 
-                    <div  onClick={()=>{
+                    <div onClick={()=>{
 
                             data._closeAllPopUps()
                             data.setShowFilters(false)
@@ -329,22 +329,25 @@ function SideBar({hideSidebar}) {
 
                         <img width={25} src={images[item.icon]} className=""/>
                         <span className={`${((checkActive(item) && !openMobileMenu) || (openMobileMenu && item.field=="more")) ? 'text-honolulu_blue-500 font-medium':''} text-[0.8rem]`}> {item.name}</span>
+                   
                     </div>
                     </div>
                 ))}
              </div>
       </div>
 
-      <div className={`min-w-[230px] ${hideSidebar ? 'hidden':''}  md:max-w-[240px] max-md:${openMobileMenu ? 'w-full':'hidden'} max-md:flex flex-col bg-white h-[100vh] max-md:fixed max-md:z-50  left-0 top-0`}>
+      <div className={`min-w-[230px] ${hideSidebar ? 'hidden':''}  md:max-w-[240px] max-md:${openMobileMenu ? 'w-full':'hidden'} max-md:flex flex-col bg-white h-[100vh] overflow-y-auto md:pb-10 max-md:fixed max-md:z-50  left-0 top-0`}>
 
       <div className="flex justify-center max-md:justify-around py-[20px] mb-6 cursor-pointer items-center">
+         
           <h1 className="text-[25px] font-medium" onClick={()=>navigate('/')}>
               <img src={LogoIcon} width={120} />
           </h1>
+
           <div onClick={()=>{
             setOpenMobileMenu(false)
             setMenuOpen([])
-          }}  className="w-[30px] md:hidden cursor-pointer h-[30px] right-1 top-1 rounded-full bg-gray-300 flex items-center justify-center">
+          }} className="w-[30px] md:hidden cursor-pointer h-[30px] right-1 top-1 rounded-full bg-gray-300 flex items-center justify-center">
 
               <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368">
                 <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
@@ -353,7 +356,7 @@ function SideBar({hideSidebar}) {
           </div>
       </div>
 
-      <div className="overflow-auto max-md:mb-28">
+      <div className="overflow-auto max-md:mb-20">
               {menuItems.filter(i=>i.field!="more").map((item, index) => (
                   <div key={index} className={`mb-4 ${!checkAccess(item) ? 'hidden':''}`}>
                         <div className={`px-[20px] flex relative hover:*:cursor-pointer hover:*:text-honolulu_blue-500`} onClick={()=>{

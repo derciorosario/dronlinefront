@@ -2,6 +2,10 @@ import { createContext, useContext,useState,useEffect, useRef} from 'react';
 import { useHomeAuth } from './AuthContext';
 import { t } from 'i18next';
 import i18next from 'i18next';
+import _Img1 from '../assets/images/services.jpg'
+import _Img2 from '../assets/images/slider/1.jpg'
+import _Img3 from '../assets/images/slider/2.jpg'
+import _Img4 from '../assets/images/consultation-stepper.jpg'
 
 const HomeDataContext = createContext();
 
@@ -9,7 +13,9 @@ export const HomeDataProvider = ({ children }) => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [dialogs,setDialogs]=useState({})
-
+    const imageUrls = [_Img1,_Img2,_Img3,_Img4];
+    const [isPreloaderLoaded, setIsPreloaderLoaded] = useState(false);
+    const [imagesLoadedItems, setImagesLoadedItems] = useState([])
     const [isDeleting,setIsDeleting]=useState(false)
 
     let initial_popups={
@@ -26,8 +32,54 @@ export const HomeDataProvider = ({ children }) => {
     }
 
     useEffect(()=>{
-            setIsLoading(false)
+          setIsLoading(false)
     },[])
+
+
+    const preloadImage = (url, retries = 0) => {
+
+      const retryDelay = 3000
+      const maxRetries = 3; 
+
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = url;
+        img.onload = ()=>{
+          if(imagesLoadedItems.length < imageUrls.length) setImagesLoadedItems(prev=>([...prev.filter(i=>i!=url),url]))
+          resolve()
+        };
+        img.onerror = () => {
+          if (retries < maxRetries) {
+            setTimeout(() => {
+              preloadImage(url, retries + 1).then(resolve).catch(reject);
+            }, retryDelay);
+          } else {
+            reject();
+          }
+        };
+      });
+
+    };
+
+    useEffect(() => {
+      const loadImages = async () => {
+        try {
+          await Promise.all(imageUrls.map((url) => preloadImage(url)));
+        } catch (error) {
+          console.log('Failed to load images:', error);
+        }
+      };
+      loadImages()
+    }, []);
+
+
+    useEffect(()=>{
+        if(imagesLoadedItems.length >= imageUrls.length){
+          setIsPreloaderLoaded(true)
+        }
+    },[imagesLoadedItems])
+
+   
     
     const [_openPopUps, _setOpenPopUps] = useState(initial_popups);
   
@@ -489,6 +541,7 @@ function text_l(text,max=50){
 
     const value = {
       text_l,
+      isPreloaderLoaded,
       _get_all_doctors,
       getDocumentLetterCodeFrom,
       showFilters,

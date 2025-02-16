@@ -31,7 +31,7 @@ const PayPal = ({info}) => {
 
  
   useEffect(() => {
-       console.log({info})
+
        _dataRef.current={
          server_url:d.APP_BASE_URL,
           ...info,
@@ -39,6 +39,7 @@ const PayPal = ({info}) => {
           patient_id:user?.data?.id,
           token:localStorage.getItem('token')
        }
+
   }, [info])
 
 
@@ -50,7 +51,7 @@ const PayPal = ({info}) => {
     }
 
     const paypalSdkUrl = "https://www.paypal.com/sdk/js";
-    const clientId = "AXJKJcDXlH8mKhbcdQQHTAsotX-s7w5oMtsOJVsGAARUUhUDfBfSKCHxd6rP36m-qsyY8-cc0fk_K0OR";
+    const clientId = d.env=="pro" ? "ARtWWVTi-LteAUsbNSl7s4zeP7u4IjSPXUQjyGh-c-6kjodj2wDst1amjLY9iyQRClSxbS0qRApJ6VIA": "AXwNTnRIgu1_S7jUZVJiMS-u3G9balFhoRagnVhOEjcaEIxl6W3oQvd-JX3Gvt_N29YT0fak86toS-0b";
     const currency = "USD";
     const intent = "capture";
 
