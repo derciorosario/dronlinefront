@@ -418,7 +418,7 @@ function addAppointments({ShowOnlyInputs,hideLayout,itemToShow,setItemToShow}) {
                     </div>}
 
                     <div className="w-full">
-                    <div className={`w-[360px] ${cannotEdit ? 'opacity-40 pointer-events-none':''}`}>
+                    <div className={`w-[360px] max-sm:w-full ${cannotEdit ? 'opacity-40 pointer-events-none':''}`}>
                           <SearchInput canAdd={false} r={true} placeholder={t('form.medication-name')} id={i.name}  label={t('form.medication-name')} loaded={true}
                             res={(id) => {
                                 setTimeout(()=>{

@@ -1,5 +1,5 @@
 import { t } from 'i18next'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,inputRes,defaultInput}) {
 
@@ -15,7 +15,6 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
 
   useEffect(()=>{
 
-    //setSearched(items.filter(i=>(i.name)?.toLowerCase()?.includes(input.toLowerCase())))
     const filteredItems = items.filter((i) =>
         i.name?.toLowerCase()?.includes(input.toLowerCase())
     );
@@ -30,7 +29,6 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
     }
  }
 
-  // Calculate the items to display on the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = searched.slice(startIndex, endIndex);
@@ -58,7 +56,7 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
  
 
   return (
-    <div class="flex relative w-[300px] flex-col _search_list">
+    <div class="flex relative w-[300px] max-sm:w-full flex-col _search_list">
         <div className="flex items-center mb-2 ">
               {label && <label  class="block text-sm  text-gray-900">{label} {r && <span className="text-red-500">*</span>}</label>}
               {showOptions && totalPages!=1 && totalPages!=0 && <div className="flex items-center ml-4">
@@ -86,17 +84,21 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
                 </li>}
 
                 {currentItems.map((i,_i)=>(
-                    <li key={i.id}>
-                        <button onClick={()=>{
-                            setSelectedId(i.id)
-                            res(i.id)
-                            setInput('')
-                            setShowOptions(false)
-                            inputRes('')
-                           
-
-                        }} type="button" class="inline-flex w-full text-[13px] truncate px-4 py-2 hover:bg-gray-100">{i.name}</button>
-                    </li>
+                    <div key={i.id}>
+                        <button
+                            onClick={() => {
+                                setSelectedId(i.id);
+                                res(i.id);
+                                setInput("");
+                                setShowOptions(false);
+                                inputRes("");
+                            }}
+                            type="button"
+                            className="inline-flex w-full text-[13px] break-words px-4 py-2 hover:bg-gray-100"
+                            >
+                            <span className="w-full text-left">{i.name}</span>
+                            </button>
+                    </div>
                 ))}
 
                 {searched.length==0 && <span className="px-4 py-2 text-gray-500 flex items-center justify-between">
@@ -124,8 +126,8 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
                         setInput(e.target.value)
                         inputRes(e.target.value)
                         setCurrentPage(1);
-               }}   class={`${selectId ? 'hidden':''} p-2.5 w-full pr-10 z-20 text-sm text-gray-900 bg-gray-50 rounded-[0.3rem] border-s-gray-50 border-s-2 border border-gray-300`} placeholder={placeholder}  />  
-               {selectId && <div className={`p-2 w-full text-[13px] z-20 rounded-[0.3rem] border-s-gray-50 border-s-2 border border-gray-300`}>
+               }}   class={`${selectId ? 'hidden':''} p-2.5 w-full pr-10 z-20 text-sm text-gray-900 bg-gray-50 rounded-[0.3rem]  border border-gray-300`} placeholder={placeholder}  />  
+                {selectId && <div className={`p-2 w-full text-[13px] z-20 rounded-[0.3rem]  border border-gray-300`}>
                    <span className="flex mr-[40px]">{items.filter(i=>i.id==selectId)[0]?.name}</span>
                 </div>}
             </div>
@@ -148,7 +150,6 @@ function SearchInput({items,res,id,loaded,label,r,placeholder,btnAddRes,canAdd,i
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                     </svg>
                 </div>}
-                <span class="sr-only">Search</span>
             </div>
         </div>
     </div>

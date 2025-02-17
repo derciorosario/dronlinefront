@@ -455,7 +455,7 @@ useEffect(()=>{
                   >
 
                    <div className="mb-10 w-full">
-                     <LogoFIle crop={true} res={handleUploadedFiles} _upload={{key:'profile_picture_filename',filename:form.profile_picture_filename}} label={t('common.profile-piture')}/>
+                     <LogoFIle crop={false} res={handleUploadedFiles} _upload={{key:'profile_picture_filename',filename:form.profile_picture_filename}} label={t('common.profile-piture')}/>
                   </div>
 
           

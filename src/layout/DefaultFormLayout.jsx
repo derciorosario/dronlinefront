@@ -4,14 +4,12 @@ import ButtonLoader from '../components/Loaders/button';
 import PopOver from '../components/PopOver';
 import _var from '../assets/vaiables.json'
 import { useData } from '../contexts/DataContext';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 function FormLayout({advancedActions,hideInputs,children,title,form, verified_inputs,bottomContent,button,hideTitle,hide,topBarContent}) {
 
 const childrenWithProps = React.Children.map(children, child => {
     return React.cloneElement(child, { form, verified_inputs,hideInputs});
 });
-
 
 
 function getAdvancedActions(items=[],id=null,w=undefined){
@@ -28,14 +26,14 @@ function getAdvancedActions(items=[],id=null,w=undefined){
                }
           }}><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#111"><path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/></svg></span>
           {data._openPopUps.table_options==id && <div id="dropdown" class={`z-10 _table_options bg-white  absolute right-[20px] divide-y divide-gray-100 rounded-lg shadow w-[${w ? w :'130'}px]`}>
-                        <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
-                           {(items || []).filter(i=>!i.hide).map((i,_i)=>(
-                              <li onClick={i.onClick} className="flex items-center px-4 hover:bg-gray-100">
-                                <span className="mr-2">{i.icon}</span>
-                                <a href="#" class="block py-2 text-[14px]">{i.name}</a>
-                              </li>
-                            ))}
-                        </ul>
+                <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
+                    {(items || []).filter(i=>!i.hide).map((i,_i)=>(
+                        <li onClick={i.onClick} className="flex items-center px-4 hover:bg-gray-100">
+                        <span className="mr-2">{i.icon}</span>
+                        <a href="#" class="block py-2 text-[14px]">{i.name}</a>
+                        </li>
+                    ))}
+                </ul>
           </div>}
        </div>
        )
@@ -83,16 +81,13 @@ return (
                    
                     { textarea ? (
                         <>
-                         <textarea style={inputStyle ? inputStyle : {}} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id} rows="4" className={`${Boolean(disabled) ? 'opacity-55':''} p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300`} placeholder={placeholder}></textarea>
+                          <textarea style={inputStyle ? inputStyle : {}} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id} rows="4" className={`${Boolean(disabled) ? 'opacity-55':''} p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300`} placeholder={placeholder}></textarea>
                         </>
                     ) : type=="item-list" ? (
 
                         <div className="">
 
-
                              {confirmContent}
-
-                           
                              {has_items_to_add==true &&  <> <div className="w-full flex">
 
                                 <input min={min} placeholder={placeholder} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id}  class={`bg-gray ${!noBorder ? 'border':''} border-gray-300 ${disabled ? 'opacity-50':''} text-gray-900 text-sm rounded-tr-none rounded-[0.3rem] focus:ring-blue-500 rounded-b-none focus:border-blue-500 block w-full p-1.5`}/>
@@ -109,14 +104,10 @@ return (
                         </div>
 
                     ) : !selectOptions ? (
-
                        <div className="flex items-center">
                             {inputLeftContent}
                             <input min={min} placeholder={placeholder} disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id}  class={`bg-gray ${!noBorder ? 'border':''} border-gray-300 ${disabled ? 'opacity-50':''} text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}/>
-                      
                        </div>
-                        
-                       
                     ): (
 
                     <select disabled={Boolean(disabled)} onBlur={onBlur} value={value} onChange={onChange} type={type ? type : 'text'} id={_id}  class={`bg-gray ${!noBorder ? 'border':''} border-gray-300 ${disabled ? 'opacity-50':''} text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}>

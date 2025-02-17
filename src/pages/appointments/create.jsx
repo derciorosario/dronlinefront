@@ -259,7 +259,7 @@ useEffect(()=>{
           }
 
           if(!available_hours.includes(res.scheduled_hours)){
-            if(user){
+            if(user?.role=="patient"){
               data._showPopUp('basic_popup','appointment-no-longer-available')
               setSelectedDoctor({status:'not_selected'})
               return
