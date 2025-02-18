@@ -10,7 +10,7 @@ export default function SelectExams({show,setShow,form,setForm}) {
   return (
             
         <div style={{zIndex:999}} id="crud-modal" tabindex="-1" aria-hidden="true" class={`overflow-y-auto  bg-[rgba(0,0,0,0.3)] flex ease-in delay-100 transition-all ${!show ? 'opacity-0 pointer-events-none translate-y-[50px]':''} overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
-            <div class="relative px-4 py-6 w-full max-w-[950px] max-h-full">
+            <div class="relative px-4 py-6 w-full max-w-[950px] max-h-[90vh]">
                 
                 <div class="relative bg-white rounded-lg shadow pb-[50px] w-full" style={{width:'100%'}}>
                     
