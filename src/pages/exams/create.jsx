@@ -431,9 +431,9 @@ const [form,setForm]=useState(initial_form)
                      <label  class="flex items-center mb-2 text-sm  text-gray-900">{t('form.requested-exams')} <span className="text-red-500">*</span></label>
                      <span onClick={()=>{
                         setShowExamsDialog(true)
-                     }} className="bg-honolulu_blue-400 cursor-pointer ml-10 text-white px-2 py-[2px] rounded-full text-[0.9rem]">{t('common.select-from-list')}</span>
+                     }} className="bg-honolulu_blue-400 text-center cursor-pointer ml-10 text-white px-2 py-[2px] rounded-full text-[0.9rem]">{t('common.select-from-list')}</span>
                   </div>
-                  <div className="flex flex-col w-[400px] mb-1">
+                  <div className="flex flex-col w-[400px] mb-1 max-sm:w-full">
 
                      <input placeholder={t('common.write-exam-name')} value={form.new_editing_exam_item} onChange={(e)=>{
                          setForm({...form,new_editing_exam_item:e.target.value})

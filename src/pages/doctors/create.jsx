@@ -278,11 +278,9 @@ useEffect(()=>{
       }else{
           setMessage(t('common.unexpected-error'))
       }
-
       setLoading(false)
-      
-      
     }
+
   }
 
   
@@ -297,24 +295,21 @@ useEffect(()=>{
 
   
   function handleUploadedFiles(upload){
-
     setForm({...form,[upload.key]:upload.filename})
-    
   }
 
 
-  function handleUploadeduploaded_files(upload){
+  function handleUploadeduploaded_files(upload){ 
+   
     setForm({...form,uploaded_files:form.uploaded_files.map(i=>{
         if(i.id==upload.key){
           return {...i,filename:upload.filename}
         }else{
          return i
         }
-    })})
+     })})
+
   }
-
-
-  console.log({form})
 
 
   return (
