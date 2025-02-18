@@ -9,12 +9,12 @@ export default function SelectExams({show,setShow,form,setForm}) {
 
   return (
             
-        <div style={{zIndex:999}} id="crud-modal" tabindex="-1" aria-hidden="true" class={`overflow-y-auto p-4  bg-[rgba(0,0,0,0.3)] flex ease-in delay-100 transition-all ${!show ? 'opacity-0 pointer-events-none translate-y-[50px]':''} overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
-            <div class="relative  w-full  max-h-full">
+        <div style={{zIndex:999}} id="crud-modal" tabindex="-1" aria-hidden="true" class={`overflow-y-auto  bg-[rgba(0,0,0,0.3)] flex ease-in delay-100 transition-all ${!show ? 'opacity-0 pointer-events-none translate-y-[50px]':''} overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
+            <div class="relative px-4 py-6 w-full max-w-[950px] max-h-full">
                 
                 <div class="relative bg-white rounded-lg shadow pb-[50px] w-full" style={{width:'100%'}}>
                     
-                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t w-full">
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
                         <h3 class="text-lg font-semibold text-gray-900">
                           {t('menu.exams')}
                         </h3>
@@ -22,7 +22,7 @@ export default function SelectExams({show,setShow,form,setForm}) {
 
                     </div>
 
-                    <div class="p-4 md:p-5 flex flex-wrap w-full">
+                    <div class="p-4 md:p-5 flex flex-wrap">
                      {exams.map((i,_i)=>(
                         <div className="p-2 w-[33.3%] max-lg:w-[50%] max-md:w-full">
                              <div id="dropdown" class="z-10  p-3 bg-white rounded-lg shadow h-full w-full">
@@ -63,7 +63,7 @@ export default function SelectExams({show,setShow,form,setForm}) {
 
                   setShow(false)
 
-                 }} className="w-[30px] cursor-pointer h-[30px] absolute right-5 top-5 rounded-full bg-gray-300 flex items-center justify-center">
+                 }} className="w-[30px] cursor-pointer h-[30px] absolute right-8 top-10 rounded-full bg-gray-300 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                 </div>
 
