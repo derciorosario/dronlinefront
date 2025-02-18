@@ -9,18 +9,20 @@ export default function SelectExams({show,setShow,form,setForm}) {
 
   return (
             
-        <div style={{zIndex:999}} id="crud-modal" tabindex="-1" aria-hidden="true" class={`overflow-y-auto  bg-[rgba(0,0,0,0.3)] flex ease-in delay-100 transition-all ${!show ? 'opacity-0 pointer-events-none translate-y-[50px]':''} overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
-            <div class="relative p-4 w-full max-w-[1100px] max-h-full">
+        <div style={{zIndex:999}} id="crud-modal" tabindex="-1" aria-hidden="true" class={`overflow-y-auto p-4  bg-[rgba(0,0,0,0.3)] flex ease-in delay-100 transition-all ${!show ? 'opacity-0 pointer-events-none translate-y-[50px]':''} overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[100vh] max-h-full`}>
+            <div class="relative  w-full  max-h-full">
                 
-                <div class="relative bg-white rounded-lg shadow pb-[50px] w-full">
+                <div class="relative bg-white rounded-lg shadow pb-[50px] w-full" style={{width:'100%'}}>
                     
-                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t w-full">
                         <h3 class="text-lg font-semibold text-gray-900">
                           {t('menu.exams')}
                         </h3>
+
+
                     </div>
 
-                    <div class="p-4 md:p-5 flex flex-wrap">
+                    <div class="p-4 md:p-5 flex flex-wrap w-full">
                      {exams.map((i,_i)=>(
                         <div className="p-2 w-[33.3%] max-lg:w-[50%] max-md:w-full">
                              <div id="dropdown" class="z-10  p-3 bg-white rounded-lg shadow h-full w-full">

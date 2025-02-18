@@ -123,7 +123,6 @@ export default function WorkWithUsForm({}) {
                         <h3 class="text-lg font-semibold text-gray-900">
                           {t('common.insert-medical-and-personal-info')}
                         </h3>
-                        
                     </div>
                   
                    <div className="p-4 mt-2">
