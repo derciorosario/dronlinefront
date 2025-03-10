@@ -17,7 +17,6 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
     return <></>
   }
 
-
   function handleList({action,form,setForm,list,input}){
       if(action=="add"){
           setForm({...form,[list]:[...form[list].filter(i=>i!=form[input]),{id:Math.random(),name:form[input]}]})
@@ -26,8 +25,6 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
         
       }
   }
-
-
 
   function confirmContent({form,setForm,field}){
     //console.log({aaaa:form[field],field})
@@ -161,6 +158,7 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
 
               <FormLayout.Input hide={(formStep && formStep==2) || form_name=="dependent" || hideInputs} verified_inputs={verified_inputs} form={form} selectOptions={
                 [
+
                   {name:t('common.single'),value:'single'},
                   {name:t('common.married'),value:'married'},
                   {name:t('common.widowed'),value:'widowed'},
@@ -370,15 +368,14 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
                 ]
                } r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'country_of_residence'])} label={t('form.country_of_residence')} onChange={(e)=>setForm({...form,country_of_residence:e.target.value})} field={'country-of-residence'} value={form.country_of_residence}/>
        
-
               <FormLayout.Input hide={formStep && formStep==2 || hideInputs || form_name=="dependent"} verified_inputs={verified_inputs} form={form} r={true}  onBlur={()=>setVerifiedInputs([...verified_inputs,'province_of_residence'])} label={t('form.province_of_residence')} onChange={(e)=>setForm({...form,province_of_residence:e.target.value})} field={'province-of-residence'} value={form.province_of_residence}/>
               <FormLayout.Input hide={(formStep && formStep==2) || hideInputs} verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'address'])} label={t('form.residential_address')} onChange={(e)=>setForm({...form,address:e.target.value})} field={'address'} value={form.address}/>
               <FormLayout.Input hide={itemsToHide?.includes('order-number') || hideInputs || (formStep && formStep==2)} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'order_number'])} label={t('form.order-number')} onChange={(e)=>setForm({...form,order_number:e.target.value})} field={'order-number'} value={form.order_number}/>
-
                 
              {/** <FormLayout.Input placeholder={t('form.insurance_company_name')} hide={itemsToHide?.includes('insurance_company') || hideInputs || (formStep && formStep==1)} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'insurance_company'])} label={t('form.insurance_company')} onChange={(e)=>setForm({...form,insurance_company:e.target.value})} field={'insurance_company'} value={form.insurance_company}/>
               <FormLayout.Input hide={itemsToHide?.includes('policy_number') || hideInputs || (formStep && formStep==1)} verified_inputs={verified_inputs} form={form} onBlur={()=>setVerifiedInputs([...verified_inputs,'policy_number'])} label={t('form.policy_number')} onChange={(e)=>setForm({...form,policy_number:e.target.value})} field={'policy_number'} value={form.policy_number}/>
               */}
+
              {( (((form_name=="patient" && !formStep) || form_name=="dependent") || (formStep && formStep==2 && form_name=="patient")) && !hideInputs) && <>
               <FormLayout.Input setForm={setForm} verified_inputs={verified_inputs} type={'item-list'} form={form}   label={t('form.chronic_diseases')} field={'chronic_diseases_input'}  onClick={()=>{
                 handleList({action:'add',setForm,form,list:'chronic_diseases',input:'chronic_diseases_input'})
@@ -386,7 +383,7 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
 
               <FormLayout.Input setForm={setForm} verified_inputs={verified_inputs} type={'item-list'} form={form}   label={t('form.drug_allergies')} field={'drug_allergies_input'}  onClick={()=>{
                 handleList({action:'add',setForm,form,list:'drug_allergies',input:'drug_allergies_input'})
-              }}   has_items_to_add={form.has_drug_allergies} confirmContent={confirmContent({list:'drug_allergies',form,setForm,field:'has_drug_allergies'})} listContent={listItems({form,list:'drug_allergies'})}  onChange={(e)=>setForm({...form,drug_allergies_input:e.target.value})} list={'drug_allergies'}  value={form.drug_allergies_input}/>
+              }}  has_items_to_add={form.has_drug_allergies} confirmContent={confirmContent({list:'drug_allergies',form,setForm,field:'has_drug_allergies'})} listContent={listItems({form,list:'drug_allergies'})}  onChange={(e)=>setForm({...form,drug_allergies_input:e.target.value})} list={'drug_allergies'}  value={form.drug_allergies_input}/>
 
               <FormLayout.Input setForm={setForm} verified_inputs={verified_inputs} type={'item-list'} form={form}   label={t('form.surgery_or_relevant_procedures')} field={'surgery_or_relevant_procedures_input'}  onClick={()=>{
                 handleList({action:'add',setForm,form,list:'surgery_or_relevant_procedures',input:'surgery_or_relevant_procedures_input'})
@@ -396,6 +393,7 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
                 handleList({action:'add',setForm,form,list:'continuous_use_of_medications',input:'continuous_use_of_medications_input'})
               }}   has_items_to_add={form.has_continuous_use_of_medications} confirmContent={confirmContent({list:'continuous_use_of_medications',form,setForm,field:'has_continuous_use_of_medications'})} listContent={listItems({form,list:'continuous_use_of_medications'})}  onChange={(e)=>setForm({...form,continuous_use_of_medications_input:e.target.value})} list={'continuous_use_of_medications'}  value={form.continuous_use_of_medications_input}/>
              </>
+
               }
               
               <FormLayout.Input hide={hideInputs || itemsToHide?.includes('hospitalization_history') || form_name=="doctor" || (formStep && formStep==1)} verified_inputs={verified_inputs} textarea={true} form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'hospitalization_history'])} label={t('form.hospitalization_history')} onChange={(e)=>setForm({...form,hospitalization_history:e.target.value})} field={'hospitalization_history'} value={form.hospitalization_history}/>
@@ -421,8 +419,6 @@ function PatientForm({hideInputs,formStep,setFormStep,form_name,form,setForm,ver
 
               <FormLayout.Input hide={hideInputs || itemsToHide?.includes('bank_payment_method_nib') || form_name=="patient" || (formStep && formStep==1)} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'bank_payment_method_nib'])} label={t('common.bank_payment_method_nib')} onChange={(e)=>setForm({...form,bank_payment_method_nib:e.target.value.replace(/[^0-9]/g, '')})} field={'bank_payment_method_nib'} value={form.bank_payment_method_nib}/>
 
-               
-             
               <FormLayout.Input hide={hideInputs || formStep && formStep==2} verified_inputs={verified_inputs} form={form} selectOptions={
                [
                  {name:t('form.identification-doc'),value:'identification_number'},

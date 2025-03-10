@@ -146,10 +146,10 @@ function globalOnclick(id){
                                 </BaiscTable.Td>
 
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.requested_at}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.clinical_information,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.exam_items.map(g=>g.name).join(', ')}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.results_report,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{i.requested_at}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.clinical_information,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={300}>{data.text_l(i.exam_items.map(g=>g.name).join(', '),60) }</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.results_report,40)}</BaiscTable.Td>
                                                                 
                             
                             </BaiscTable.Tr>

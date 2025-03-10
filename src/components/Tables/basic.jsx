@@ -57,12 +57,12 @@ BaiscTable.Tr = ({children,onClick,hide}) => {
   )
 }
 
-BaiscTable.Td = ({children,url,hide,onClick}) => {
+BaiscTable.Td = ({children,url,hide,onClick,minWidth}) => {
   const navigate=useNavigate()
   
   return (    
     <> 
-      {onClick && <td onClick={onClick} class={`px-6 ${hide ? 'hidden':''} py-4`}>{children}</td>}
+      {onClick && <td onClick={onClick} class={`px-6 ${minWidth ? `min-w-[${minWidth}px]`:''} ${hide ? 'hidden':''} py-4`}>{children}</td>}
       {!onClick && <td onClick={()=>{
         navigate(url)
       }} class={`px-6 ${hide ? 'hidden':''} py-4`}>{children}</td>}

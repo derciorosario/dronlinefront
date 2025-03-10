@@ -6,7 +6,6 @@ import PrintTable from '../Tables/print'
 import { useAuth } from '../../contexts/AuthContext'
 import toast from 'react-hot-toast'
 import BaiscTable from '../Tables/basic'
-import QRCodeGenerator from '../Scan/QR-code'
 import _medications from '../../assets/medications.json'
 import QRCode from "react-qr-code";
 
@@ -23,9 +22,6 @@ export default function SinglePrint({item,setItem}) {
     function estimateA4Pages() {
       const a4HeightPixels = 1123; 
       const pages = Math.ceil(document.querySelector('#last-print-element').offsetTop / a4HeightPixels);
-      console.log({pages,a:document.querySelector('#last-print-element').offsetTop})
-      console.log({a:document.querySelector('#_print').clientHeight})
-
       document.querySelectorAll('#_print *').forEach(e=>{
         console.log(e.offsetTop)
       })

@@ -258,17 +258,18 @@ const [form,setForm]=useState(initial_form)
        <>
 
         {!itemToShow && <div className=" absolute left-0 top-0 w-full">
-                 <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
+              <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>
        </div>}
               
-      <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
+       <DefaultLayout hide={ShowOnlyInputs || hideLayout}>
 
           <AddStampAndSignature
 
             itemToShow={itemToShow}
             SubmitForm={SubmitForm}
             show={showSignatureDialog} setShow={setShowSignatureDialog}
-            loading={loading} setLoading={true}
+            loading={loading}
+            setLoading={true}
             form={form} setForm={setForm}/>
       
            <SelectExams show={showExamsDialog} setShow={setShowExamsDialog} form={form} setForm={setForm}/>
@@ -282,16 +283,13 @@ const [form,setForm]=useState(initial_form)
            {!itemToEditLoaded && (itemToShow?.action=="update" || (id && !itemToShow)) && <div className="mt-10">
              <DefaultFormSkeleton/>
            </div>}
-           
-          
 
           <FormLayout  hideInputs={(user?.role!="doctor" && itemToShow?.appointment?.doctor_id) || user?.role=="patient"}  hide={!itemToEditLoaded && (itemToShow?.action=="update" || (id && !itemToShow))} hideTitle={ShowOnlyInputs} title={user?.role=="patient" && !itemToShow ? t('common.exam') : (itemToShow?.action=="update" || (id && !itemToShow)) ? t('common.update-exams') : t('common.add-exam')} verified_inputs={verified_inputs} form={form}
          
            topBarContent={
+
                (<div className="flex items-center">
                
-            
-
                   {(id && !itemToShow) && <div onClick={()=>{
                          navigate('/appointment/'+form.appointment_id)            
                  }} className="text-white border border-honolulu_blue-200 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-5 py-1 text-center inline-flex items-center me-2 cursor-pointer hover:opacity-85 active:opacity-65 mr-4">

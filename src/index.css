@@ -153,14 +153,12 @@ display: table-row-group;
 display: table-footer-group; /* Optional: Keep footer specific to the table */
 }
 
-
 .signatures {
 margin-top: auto; 
 page-break-inside: avoid; 
 text-align: center;
 padding-top: 10px;
 }
-
 
 
 @media print {

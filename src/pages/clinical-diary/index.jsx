@@ -174,18 +174,18 @@ function globalOnclick(id){
                                
                                 </BaiscTable.Td>
                                 <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{i.id}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.main_complaint,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.current_illness_history,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.past_medical_history,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.psychosocial_history,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.family_history,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.gynecological_history,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.physical_exam,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.complementary_exams,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.diagnoses,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.prescribed_medications,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.therapeutic_recommendations,40)}</BaiscTable.Td>
-                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)}>{data.text_l(i.other_instructions,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.main_complaint,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.current_illness_history,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.past_medical_history,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.psychosocial_history,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.family_history,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.gynecological_history,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.physical_exam,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.complementary_exams,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.diagnoses,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.prescribed_medications,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.therapeutic_recommendations,40)}</BaiscTable.Td>
+                                <BaiscTable.Td onClick={()=>globalOnclick(i.id)} minWidth={200}>{data.text_l(i.other_instructions,40)}</BaiscTable.Td>
                                 
                             </BaiscTable.Tr>
                         ))}
