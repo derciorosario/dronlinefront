@@ -584,6 +584,15 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "set-password":"Definir senha",
+        "cancel-password-set":"Cancelar definição de senha",
+        "email-configurations":"Configurações de email",
+        "email-transport": "Transporte de email",
+        "email-host": "Servidor SMTP",
+        "email-port": "Porta SMTP",
+        "email-encryption": "Criptografia",
+        "email-username": "Nome de usuário",
+        "email-password": "Senha",
         "crop-image":"Recorte a imagem",
         "transfer-failed-try-again":"Transferência falhou. Tente novamente",
         "text-copied":"Texto copiado",

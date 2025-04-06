@@ -438,7 +438,10 @@
         "msisdn-invalid": "MSISDN inválido.",
         "language-code-invalid": "Código de idioma inválido."
     },
+    
     "common":{
+        "set-password":"Definir senha",
+        "cancel-password-set":"Cancelar definição de senha",
         "transfer-failed-try-again":"Transferência falhou. Tente novamente",
         "bank_receipt":"Comprovativo bancário",
         "validated":"Validado",

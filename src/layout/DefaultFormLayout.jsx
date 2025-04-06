@@ -69,13 +69,13 @@ return (
  } 
 
 
-    FormLayout.Input = ({max,min,inputLeftContent,contact_code_field,hideErrorMsg,placeholder,ignoreVilidation,inputStyle,width,hideInputs,confirmContent,popOver,listContent,has_items_to_add,style,label,type,onChange,value,field,verified_inputs,onBlur,onClick,form,r,selectOptions,disabled,errorMsg,noBorder,hide,textarea,custom_invalid_validation,height}) => {
+    FormLayout.Input = ({max,min,inputLeftContent,rightContent,contact_code_field,hideErrorMsg,placeholder,ignoreVilidation,inputStyle,width,hideInputs,confirmContent,popOver,listContent,has_items_to_add,style,label,type,onChange,value,field,verified_inputs,onBlur,onClick,form,r,selectOptions,disabled,errorMsg,noBorder,hide,textarea,custom_invalid_validation,height}) => {
       
         let _id=Math.random()
 
         return (   
             <div style={style ? {...style} : {}} className={`mt-7 ${width ? `w-[${width}]` : textarea ? 'w-full':'w-[300px] max-md:w-full'} ${hide || hideInputs ? 'hidden':''}`}>
-                    <label for={_id} class="flex items-center mb-2 text-sm  text-gray-900">{label} {r && <span className="text-red-500">*</span>} {!r && <span className="text-gray-500 ml-1">{`(${t('common.optional')})`.toLowerCase()}</span>} {popOver && <div>
+                    <label for={_id} class="flex items-center mb-2 text-sm  text-gray-900">{label} {r && <span className="text-red-500">*</span>} {!r && <span className="text-gray-500 ml-1">{`(${t('common.optional')})`.toLowerCase()}</span>} <div className="flex flex-1 justify-end">{rightContent}</div> {popOver && <div>
                          <PopOver items={popOver}/>
                     </div>}</label>
                    

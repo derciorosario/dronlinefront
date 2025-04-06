@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import FormLayout from '../../layout/DefaultFormLayout'
 import DefaultLayout from '../../layout/DefaultLayout'
-import Messages from '../messages/index'
 import { t } from 'i18next'
 import FileInput from '../../components/Inputs/file'
-import PatientForm from '../../components/Patient/form'
 import { useData } from '../../contexts/DataContext'
 import AdditionalMessage from '../messages/additional'
 import toast from 'react-hot-toast'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
-import PreLoader from '../../components/Loaders/preloader'
 import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
-import FormCard from '../../components/Cards/form'
 import _var from '../../assets/vaiables.json'
 
 function index({ShowOnlyInputs}) {
-
   const [message,setMessage]=useState('')
   const [verified_inputs,setVerifiedInputs]=useState([])
   const [valid,setValid]=useState(false)
@@ -27,47 +22,37 @@ function index({ShowOnlyInputs}) {
   let from="appointments"
 
   const { id } = useParams()
-  const {pathname,search } = useLocation()
+  const {pathname} = useLocation()
   const navigate = useNavigate()
   const {user}=useAuth()
   const [loading,setLoading]=useState(id ? true : false);
   const [itemToEditLoaded,setItemToEditLoaded]=useState(false)
   const [MessageBtnSee,setMessageBtnSee]=useState(null)
   let required_data=['specialty_categories']
-
+  let [changePassword,setChangePassword]=useState(false)
   const [loadedData,setLoadedData]=useState({})
 
   useEffect(()=>{
-        
     if(!user) return
     data._get(required_data) 
-    
+  },[user,pathname])
 
-},[user,pathname])
-
-let initial_form={
-  do_not_define_urgent_hours:false,
-  main_contact_code:'258',
-  alternative_contact_code:'258'
-}
+  let initial_form={
+    do_not_define_urgent_hours:false,
+    main_contact_code:'258',
+    alternative_contact_code:'258'
+  }
 
   const [form,setForm]=useState(initial_form)
-
   const [urgentHourMessages,setUrgentHourMessage]=useState()
 
   useEffect(()=>{
-
     setUrgentHourMessage(form.urgent_consultation_end_hour && (form.urgent_consultation_end_hour==form.urgent_consultation_start_hour) ?
      t('common.hours-cannot-be-the-same') : '')
-
   },[form])
 
-
-
   useEffect(()=>{
-    
     let v=true
-
     if(
        ((!form.urgent_consultation_limit_duration_hours && !form.urgent_consultation_limit_duration_minutes)) ||
        ((!form.urgent_consultation_end_hour || !form.urgent_consultation_start_hour) && !form.do_not_define_urgent_hours) ||
@@ -77,6 +62,12 @@ let initial_form={
        !form.iva ||
        !form.gain_percentage ||
        !form.irpc ||
+       !form.email_encryption ||
+       !form.email_host ||
+       !form.email_transport ||
+       !form.email_username ||
+       !form.email_port ||
+       (changePassword && !form.email_password) ||
         urgentHourMessages
     ){
       v=false
@@ -84,15 +75,16 @@ let initial_form={
 
     console.log({form})
     setValid(v)
+
  },[form,urgentHourMessages])
 
 
-
-
 useEffect(()=>{
+
   if(!user){
       return
   }
+
   (async()=>{
 
     try{
@@ -101,13 +93,13 @@ useEffect(()=>{
      setLoadedData(response.app_settings[0])
      setLoading(false)
      setItemToEditLoaded(true)
-    
     }catch(e){
         console.log({e})
         toast.error(t('common.unexpected-error'))
         navigate('/')  
     }
-})()
+
+  })()
 
 },[user])
 
@@ -121,12 +113,17 @@ async function updateSystemSettings() {
     let new_form={...form,
       iva:parseFloat(form.iva || 0),
       irpc:parseFloat(form.irpc),
-      gain_percentage:parseFloat(form.gain_percentage)
+      gain_percentage:parseFloat(form.gain_percentage),
     }
 
-    await data.makeRequest({method:'post',url:`api/settings/`+loadedData.id,withToken:true,data:{...loadedData,value:JSON.stringify(new_form)}, error: ``},0);
+    await data.makeRequest({method:'post',url:`api/settings/`+loadedData.id,withToken:true,data:{...loadedData,
+      value:JSON.stringify(new_form),
+      changePassword:changePassword ? 'yes' : 'no'
+    }, error: ``},0);
     setLoading(false)
     toast.success(t('messages.updated-successfully'))
+    setChangePassword(false)
+    setForm({...form,email_password:''})
 
   }catch(e){
 
@@ -142,7 +139,6 @@ async function updateSystemSettings() {
     }
 
   }
-
 }
 
 
@@ -156,7 +152,9 @@ async function updateSystemSettings() {
 
 
 
+
   let hours = [
+
     '0:00', '0:30',
     '1:00', '1:30',
     '2:00', '2:30',
@@ -186,6 +184,7 @@ async function updateSystemSettings() {
 
 
 
+
   return (
      <DefaultLayout>
          
@@ -201,19 +200,15 @@ async function updateSystemSettings() {
            <FormLayout  hide={!itemToEditLoaded} title={t('common.update-settings')} verified_inputs={verified_inputs} form={form}
           
                     button={(
-
                       <div className={`mt-[40px] ${(user?.role=="manager" && !user?.data?.permissions?.specialty_categories?.includes('update') && id) ? 'hidden':''}`}>
                           <FormLayout.Button onClick={()=>{
                               updateSystemSettings()
                           }} valid={valid} loading={loading} label={id ? t('common.update') :t('common.send')}/>
                       </div>
-
                     )}
                     >
-
-
                    <div className="flex flex-wrap w-full gap-2">
-                  
+                   
                        <FormLayout.Input  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'name'])} label={t('form.name')} onChange={(e)=>setForm({...form,name:e.target.value})} field={'name'} value={form.name}/>
                        <FormLayout.Input  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'email'])} label={'Email'} onChange={(e)=>setForm({...form,email:e.target.value})} field={'email'} value={form.email}/>
                        <FormLayout.Input  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'nuit'])} label={'nuit'} onChange={(e)=>setForm({...form,nuit:e.target.value})} field={'nuit'} value={form.nuit}/>
@@ -372,12 +367,105 @@ async function updateSystemSettings() {
                     </div>
                      </div>
 
+                     
+                     <div className="w-full mt-14 mb-5">
+                     <span className="flex w-full">{t('common.email-configurations')}</span>
+                          <div className="flex flex-wrap gap-x-3">
+                              <FormLayout.Input 
+                                verified_inputs={verified_inputs} 
+                                form={form} 
+                                r={true} 
+                                onBlur={() => setVerifiedInputs([...verified_inputs, 'transport'])} 
+                                label={t('common.email-transport')} 
+                                onChange={(e) => setForm({ ...form, email_transport: e.target.value })} 
+                                field={'email_transport'} 
+                                value={form.email_transport} 
+                              />
+                              
+                              <FormLayout.Input 
+                                verified_inputs={verified_inputs} 
+                                form={form} 
+                                r={true} 
+                                onBlur={() => setVerifiedInputs([...verified_inputs, 'host'])} 
+                                label={t('common.email-host')} 
+                                onChange={(e) => setForm({ ...form, email_host: e.target.value })} 
+                                field={'email_host'} 
+                                value={form.email_host} 
+                              />
+
+                              <FormLayout.Input 
+                                verified_inputs={verified_inputs} 
+                                form={form} 
+                                r={true} 
+                                onBlur={() => setVerifiedInputs([...verified_inputs, 'port'])} 
+                                label={t('common.email-port')} 
+                                onChange={(e) => setForm({ ...form, email_port: e.target.value })} 
+                                field={'email_port'} 
+                                value={form.email_port} 
+                              />
+
+                              <FormLayout.Input 
+                                verified_inputs={verified_inputs} 
+                                form={form} 
+                                r={true} 
+                                onBlur={() => setVerifiedInputs([...verified_inputs, 'encryption'])} 
+                                label={t('common.email-encryption')} 
+                                onChange={(e) => setForm({ ...form, email_encryption: e.target.value })} 
+                                field={'email_encryption'} 
+                                value={form.email_encryption} 
+                              />
+
+                              <FormLayout.Input 
+                                verified_inputs={verified_inputs} 
+                                form={form} 
+                                r={true} 
+                                onBlur={() => setVerifiedInputs([...verified_inputs, 'username'])} 
+                                label={t('common.email-username')} 
+                                onChange={(e) => setForm({ ...form, email_username: e.target.value })} 
+                                field={'email_username'} 
+                                value={form.email_username} 
+                              />
+
+                             <div className="w-full flex-wrap mt-5 gap-x-3 items-end">
+                                 <FormLayout.Input
+                                   rightContent={(
+                                    <button onClick={()=>{
+                                      setChangePassword(!changePassword)
+                                      setForm({...form,email_password:''})
+                                    }} _ type="button" class="text-white mt-2 bg-honolulu_blue-400 hover:bg-honolulu_blue-500 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center">
+                                    {!changePassword ? t('common.set-password') : t('common.cancel-password-set')}
+                                </button>
+                                   )} 
+                                    verified_inputs={verified_inputs} 
+                                    form={form} 
+                                    placeholder={''}
+                                    type={'password'}
+                                    disabled={!changePassword}
+                                    r={true} 
+                                    onBlur={() => setVerifiedInputs([...verified_inputs, 'password'])} 
+                                    label={t('common.email-password')} 
+                                    onChange={(e) => setForm({ ...form, email_password: e.target.value })} 
+                                    field={'email_password'} 
+                                    value={form.email_password} 
+                                  />
+                                <div>
+                                
+                                </div>
+                             </div>
+
+                             
+                      </div>
+
+                     </div>
+                     
                      <div className="w-full mt-14">
+                         
                           <span className="flex w-full">{t('common.administrative-assistant')}</span>
                           <div>
                               <FormLayout.Input  verified_inputs={verified_inputs} form={form} r={true} onBlur={()=>setVerifiedInputs([...verified_inputs,'administrative_assistant_name'])} label={t('common.administrative-assistant-name')} onChange={(e)=>setForm({...form,administrative_assistant_name:e.target.value})} field={'administrative_assistant_name'} value={form.administrative_assistant_name}/>
                           </div>
                      </div>
+
 
                      <div className="flex gap-x-4 flex-wrap mt-4 w-full">
                               <FileInput onlyImages={true} _upload={{key:'signature_filename',filename:form?.signature_filename}} res={({filename})=>{
@@ -389,7 +477,6 @@ async function updateSystemSettings() {
                                             <path d="M20.5499 15.15L19.8781 14.7863C17.4132 13.4517 16.1808 12.7844 14.9244 13.0211C13.6681 13.2578 12.763 14.3279 10.9528 16.4679L7.49988 20.55M3.89988 17.85L5.53708 16.2384C6.57495 15.2167 7.09388 14.7059 7.73433 14.5134C7.98012 14.4396 8.2352 14.4011 8.49185 14.3993C9.16057 14.3944 9.80701 14.7296 11.0999 15.4M11.9999 21C12.3154 21 12.6509 21 12.9999 21C16.7711 21 18.6567 21 19.8283 19.8284C20.9999 18.6569 20.9999 16.7728 20.9999 13.0046C20.9999 12.6828 20.9999 12.3482 20.9999 12C20.9999 11.6845 20.9999 11.3491 20.9999 11.0002C20.9999 7.22883 20.9999 5.34316 19.8283 4.17158C18.6568 3 16.7711 3 12.9998 3H10.9999C7.22865 3 5.34303 3 4.17145 4.17157C2.99988 5.34315 2.99988 7.22877 2.99988 11C2.99988 11.349 2.99988 11.6845 2.99988 12C2.99988 12.3155 2.99988 12.651 2.99988 13C2.99988 16.7712 2.99988 18.6569 4.17145 19.8284C5.34303 21 7.22921 21 11.0016 21C11.3654 21 11.7021 21 11.9999 21ZM7.01353 8.85C7.01353 9.84411 7.81942 10.65 8.81354 10.65C9.80765 10.65 10.6135 9.84411 10.6135 8.85C10.6135 7.85589 9.80765 7.05 8.81354 7.05C7.81942 7.05 7.01353 7.85589 7.01353 8.85Z" stroke="stroke-current" stroke-width="1.6" stroke-linecap="round"></path>
                                         </svg>}
                                         {form?.signature_filename && <img className="object-cover border w-auto h-full" src={form?.signature_filename}/>}
-                                  
                                   </div>
                              </div>
                       </div>

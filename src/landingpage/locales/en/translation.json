@@ -574,6 +574,15 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },
     "common":{
+           "set-password":"Set password",
+           "cancel-password-set":"Cancel password reset",
+           "email-configurations": "Email Configurations",
+           "email-transport": "Email Transport",
+           "email-host": "SMTP Host",
+           "email-port": "SMTP Port",
+           "email-encryption": "Encryption",
+           "email-username": "Username",
+           "email-password": "Password",
            "crop-image":"Crop image",
            "transfer-failed-try-again": "Transfer failed. Please try again",
            "text-copied":"Text copied",
