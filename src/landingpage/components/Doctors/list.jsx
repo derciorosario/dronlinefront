@@ -64,7 +64,7 @@ function DoctorList({max,items,center,loaded}) {
                 </svg>
               </div>
               <span className="text-[13px]">{t('common.patients')}</span>
-              <span className="mt-bold">{item.unique_patients_count + item.unique_dependents_count}</span>
+              <span className="mt-bold">{data.getFakeConsultationCount(2,11)[item.id] + item.unique_patients_count + item.unique_dependents_count}</span>
             </div>
 
             <div className="flex flex-col items-center">
@@ -74,7 +74,7 @@ function DoctorList({max,items,center,loaded}) {
                 </svg>
               </div>
               <span className="text-[13px]">{t('common.rating')}</span>
-              <span className="mt-bold">{item.average_rating.toString().slice(0,3)}</span>
+              <span className="mt-bold">{data.getFakeConsultationCount(0,5)[item.id]}{/*item.average_rating.toString().slice(0,3)*/}</span>
             </div>
 
             <div className="flex flex-col items-center w-full">
@@ -94,7 +94,7 @@ function DoctorList({max,items,center,loaded}) {
                 </svg>
               </div>
               <span className="text-[13px]">{t('common.reviews')}</span>
-              <span className="mt-bold">{item.reviews.length}</span>
+              <span className="mt-bold">{data.getFakeConsultationCount(0,4)[item.id] + item.reviews.length}</span>
             </div>
           </div>
         )}
@@ -117,8 +117,6 @@ function DoctorList({max,items,center,loaded}) {
           <p className="text-justify mt-5 text-gray-500 mb-4">
             {item[`${i18next.language}_short_biography`]}
           </p>
-
-         
         </div>
       )}
 

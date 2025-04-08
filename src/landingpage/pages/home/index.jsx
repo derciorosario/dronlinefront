@@ -125,9 +125,9 @@ function App() {
 
 
 
-  if(!data.isPreloaderLoaded){
+  /*if(!data.isPreloaderLoaded){
      return <></>
-  }
+  }*/
  
   return (
    
@@ -156,7 +156,7 @@ function App() {
 
                   <div className="w-full flex min-h-[400px] mt-[50px] relative mb-[70px] px-10 overflow-hidden">
           
-                        <div className="relative max-lg:absolute  max-lg:h-full left-0 top-0 rounded-[1rem] overflow-hidden">
+                        <div className="relative max-lg:absolute  max-lg:h-full left-0 top-0 bg-gray-500 rounded-[1rem] overflow-hidden">
                           <div className="bg-[rgba(0,0,0,0.05)]  max-lg:flex absolute left-0 top-0 w-full h-full"></div>
                           <img src={ServicesImage} className="h-full   left-0 top-0  object-cover max-lg:blur"/>
                         </div>

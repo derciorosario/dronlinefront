@@ -517,6 +517,7 @@ export const HomeDataProvider = ({ children }) => {
 
 
   function getDocumentLetterCodeFrom(from){
+
     if(from=="medical-prescription"){
        return 'PM'
     }
@@ -530,6 +531,7 @@ export const HomeDataProvider = ({ children }) => {
      return 'DC'
     }
     return ''
+
 }
 
 function text_l(text,max=50){
@@ -539,7 +541,38 @@ function text_l(text,max=50){
   return text
 }
 
+
+
+
+
+
+
+function getFakeConsultationCount(min=5,max=30){
+
+  function seededRandom(seed) {
+    return function () {
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  
+  const arrayLength = 100;
+  const seed = 12345; 
+  
+  const rand = seededRandom(seed);
+  const arr = Array.from({ length: arrayLength }, () => {
+    return Math.floor(rand() * (max - min + 1)) + min;
+  });
+
+  return arr
+}
+
+
+
     const value = {
+      getFakeConsultationCount,
       text_l,
       isPreloaderLoaded,
       _get_all_doctors,
