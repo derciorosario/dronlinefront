@@ -240,6 +240,13 @@ function AddDependents({ShowOnlyInputs,hideLayout}) {
     
   }
 
+    useEffect(()=>{
+     if(!user) return
+     if(user?.role!="patient"){
+            navigate('/') 
+     }
+   },[user])
+
 
   function pageContent(){
     return (

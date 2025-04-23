@@ -574,6 +574,8 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },
     "common":{
+           "show-more":"Show more",
+           "show-less":"Show less",
            "set-password":"Set password",
            "cancel-password-set":"Cancel password reset",
            "email-configurations": "Email Configurations",

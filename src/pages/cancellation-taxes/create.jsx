@@ -181,7 +181,7 @@ let initial_form={}
 
   useEffect(()=>{
     if(!user) return
-    if(user?.role=="manager" && !user?.data?.permissions?.specialty_categories?.includes('create') && !id){
+    if((user?.role=="patient" || user?.role=="doctor") || (user?.role=="manager" && !user?.data?.permissions?.specialty_categories?.includes('create') && !id)){
            navigate('/') 
     }
   },[user])

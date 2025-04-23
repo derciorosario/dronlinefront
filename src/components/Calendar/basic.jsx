@@ -119,12 +119,8 @@ const Calendar = ({items}) => {
             })
       })   
     })
-
-    
     //setEvents([...(items || []),..._events])
     setEvents([...(items || [])])
-    
-
   }else{
     setEvents((items || []))
   }
@@ -161,34 +157,30 @@ const Calendar = ({items}) => {
         console.log({e})
       }
   })()
-  
 },[user,pathname])
 
 
+return (
+    <>  
+      <div className={`w-full h-[50vh] ${((!doctorData && user?.role=="doctor") || !data._loaded.includes('upcoming_appointments')) ? 'flex':'hidden'} items-center justify-center`}>
+          <div className="flex flex-col items-center justify-center">
+              <Loader/>
+              <span className="flex mt-2">{t('common.loading')}...</span>
+          </div>
+      </div>
 
-  return (
-
-    <>
-             
-              <div className={`w-full h-[50vh] ${((!doctorData && user?.role=="doctor") || !data._loaded.includes('upcoming_appointments')) ? 'flex':'hidden'} items-center justify-center`}>
-                  <div className="flex flex-col items-center justify-center">
-                      <Loader/>
-                      <span className="flex mt-2">{t('common.loading')}...</span>
-                  </div>
-              </div>
-
-              <div style={{ width: "100%", height: "100vh", opacity:((!doctorData && user?.role=="doctor") || !data._loaded.includes('upcoming_appointments')) ? 0 : 1}}>
-                  <Scheduler
-                    translations={customTranslations}
-                    locale={pt}
-                    hourFormat="24"
-                    view="month"
-                    onSelectedDateChange={handleDateChange}
-                    editable={true}
-                    onEventDelete={handleEventDelete}
-                    events={events.map(i=>({...i, editable: false,deletable: false,}))}
-                />
-            </div>
+      <div style={{ width: "100%", height: "100vh", opacity:((!doctorData && user?.role=="doctor") || !data._loaded.includes('upcoming_appointments')) ? 0 : 1}}>
+          <Scheduler
+            translations={customTranslations}
+            locale={pt}
+            hourFormat="24"
+            view="month"
+            onSelectedDateChange={handleDateChange}
+            editable={true}
+            onEventDelete={handleEventDelete}
+            events={events.map(i=>({...i, editable: false,deletable: false,}))}
+        />
+      </div>
     </>
     
   );

@@ -16,6 +16,9 @@ import { HomeAuthProvider } from './landingpage/contexts/AuthContext.jsx';
 
 
 import { Toaster } from 'react-hot-toast';
+import { registerSW } from 'virtual:pwa-register'
+registerSW()
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthProvider>

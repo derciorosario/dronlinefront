@@ -14,8 +14,6 @@ import BasicPagination from '../../components/Pagination/basic';
 
 
 function App() {
-
- 
   const data=useData()
   const {user} =  useAuth()
   const { t, i18n } = useTranslation();
@@ -71,13 +69,13 @@ useEffect(()=>{
 
  },[data.updateTable,updateFilters])
 
+
  useEffect(()=>{
   if(!user) return
-  if(user?.role=="manager" && !user?.data?.permissions?.patient?.includes('read')){
+  if(user?.role=="patient"  || user?.role=="manager" && !user?.data?.permissions?.patient?.includes('read')){
          navigate('/') 
   }
-},[user])
-
+ },[user])
 
 
 async function handleItems({action,id,status}){

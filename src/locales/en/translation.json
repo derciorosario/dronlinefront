@@ -437,6 +437,8 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+            "show-more":"Show more",
+            "show-less":"Show less",
            "set-password":"Set password",
            "cancel-password-set":"Cancel password reset",
            "transfer-failed-try-again": "Transfer failed. Please try again",

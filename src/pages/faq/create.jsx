@@ -82,6 +82,7 @@ useEffect(()=>{
 
 
  useEffect(()=>{
+
   if(!user || !id){
       setForm(initial_form)
       return
@@ -91,15 +92,13 @@ useEffect(()=>{
     try{
 
      let response=await data.makeRequest({method:'get',url:`api/faq/`+id,withToken:true, error: ``},0);
-
      setForm({...form,...response})
      setLoading(false)
      setItemToEditLoaded(true)
 
     }catch(e){
-      console.log(e)
 
-   
+      console.log(e)
       if(e.message==404){
          toast.error(t('common.item-not-found'))
          navigate('/faq')
@@ -132,17 +131,13 @@ async function SubmitForm(){
   try{
 
     if(id){
-
         await data.makeRequest({method:'post',url:`api/faq/`+id,withToken:true,data:{
           ...form
         }, error: ``},0);
       
         toast.success(t('messages.updated-successfully'))
         setLoading(false)
-
     }else{
-
-      
       await data.makeRequest({method:'post',url:`api/faq`,withToken:true,data:{
         ...form
       }, error: ``},0)
@@ -167,30 +162,29 @@ async function SubmitForm(){
     }else{
       toast.error(t('common.unexpected-error'))
     }
+    setLoading(false) 
 
-     setLoading(false) 
   }
 }
 
-
-
-
 useEffect(()=>{
-  if(!user) return
-  if(user?.role=="manager" && !user?.data?.permissions?.app_settings?.includes('create') && !id){
-         navigate('/') 
-  }
+
+    if(!user) return
+    if((user?.role=="patient" || user?.role=="doctor") || (user?.role=="manager" && !user?.data?.permissions?.app_settings?.includes('create') && !id)){
+          navigate('/') 
+    }
+
 },[user])
 
 useEffect(()=>{
-  if(!user) return
-  if(user?.role=="manager" && !user?.data?.permissions?.app_settings?.includes('update') && id){
-         navigate('/') 
-  }
+    if(!user) return
+    if((user?.role=="patient" || user?.role=="doctor") || (user?.role=="manager" && !user?.data?.permissions?.app_settings?.includes('update') && id)){
+          navigate('/') 
+    }
 },[user])
+
 
 return (
-
 <div>   
 
  <DefaultLayout disableUpdateButton={true} hide={ShowOnlyInputs} pageContent={{btn:!((user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.app_settings?.includes('create'))) && id) ? null : {onClick:(e)=>{

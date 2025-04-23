@@ -282,19 +282,18 @@ function SelectDoctorAvailability({ item }) {
           }
  
      }, 200);
-
      return () => clearInterval(interval);
   },[item])
 
+
   return (
+    
     <div className={`w-full h-[100vh] bg-[rgba(0,0,0,0.4)] ease-in pb-5  _doctor_list ${!item?.id ? 'opacity-0 pointer-events-none translate-y-[100px]' : 'z-[60] ease-in transition-all delay-75'}  fixed flex items-center justify-center`}>
       <div className="w-full  p-4  relative bg-white  max-h-[90vh] translate-y-3 max-md:max-h-[80vh] border overflow-y-auto border-gray-200 rounded-lg shadow sm:p-8 z-40 max-w-[600px] max-md:max-w-[95%]">
         <div className="flex absolute mb-3 top-1 left-2">
           <span onClick={() => {
-
             data.setSelectedDoctorToSchedule({});
             homeData.setSelectedDoctorToSchedule({});
-
           }} className="table px-2 bg-gray-200 py-1 text-[14px] rounded-full cursor-pointer hover:bg-gray-300">
              {t('common.go-back')}
           </span>

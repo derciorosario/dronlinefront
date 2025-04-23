@@ -74,13 +74,18 @@ function App() {
     }
  },[data.updateTable,updateFilters])
 
+  useEffect(()=>{
+   if(!user) return
+   if(user?.role!="patient"){
+          navigate('/') 
+   }
+ },[user])
+ 
+
 
   return (
-   
-         <DefaultLayout pageContent={{title:user?.role=="doctor" ? t('common.my-dependents') : t('common.dependents'),desc:user?.role=="doctor" ? t('common.my-dependents') : t('titles.dependents'),btn:user?.role=="patient" ? { onClick:(e)=>{
-                 
+         <DefaultLayout pageContent={{title:user?.role=="doctor" ? t('common.my-dependents') : t('common.dependents'),desc:user?.role=="doctor" ? t('common.my-dependents') : t('titles.dependents'),btn:user?.role=="patient" ? { onClick:(e)=>{   
              navigate('/add-dependent')
-
           },text:t('menu.add-dependents')}:{}}}>
              <div className="flex">
                 <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>    

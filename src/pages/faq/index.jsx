@@ -78,10 +78,9 @@ function App() {
     }
  },[data.updateTable,updateFilters])
 
-
  useEffect(()=>{
     if(!user) return
-    if(user?.role=="manager" && !user?.data?.permissions?.app_settings?.includes('read')){
+    if(user?.role=="patient" || (user?.role=="manager" && !user?.data?.permissions?.app_settings?.includes('read'))){
           navigate('/') 
     }
 },[user])

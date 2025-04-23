@@ -128,14 +128,14 @@ useEffect(()=>{
 
 useEffect(()=>{
   if(!user) return
-  if(user?.role=="manager" && !user?.data?.permissions?.app_settings?.includes('create') && !id){
+  if(user?.role=="patient" || (user?.role=="manager" && !user?.data?.permissions?.app_settings?.includes('create') && !id)){
          navigate('/') 
   }
 },[user])
 
 useEffect(()=>{
   if(!user) return
-  if(user?.role=="manager" && !user?.data?.permissions?.app_settings?.includes('update') && id){
+  if(user?.role=="patient" || (user?.role=="manager" && !user?.data?.permissions?.app_settings?.includes('update') && id)){
          navigate('/') 
   }
 },[user])

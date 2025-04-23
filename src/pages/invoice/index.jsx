@@ -233,20 +233,18 @@ if(loading || !appSettings){
                     <span className="mr-10 font-semibold">Total</span><span className="text-honolulu_blue-400">{data._cn(parseFloat(invoice?.amount))} MT</span>
                 </div>
            </div>
-     </div>
+        </div>          
 
-                        
-
-                        <div className="flex justify-center mt-40"><span className="mr-3">{t('invoice.generated-in')}:</span><label>{serverTime?.date} {serverTime?.hour} </label></div>
-                        <div className="w-full text-[0.8rem] flex-wrap max-md:text-[0.7rem] flex justify-between mt-10 border-t border-t-gray-200 py-3">
-                                <span>{appSettings?.name}</span>
-                                <div className="flex max-sm:flex-col">
-                                    <span>{appSettings?.email}</span>
-                                    <label className="mx-2 max-sm:hidden">|</label>
-                                    <span>{appSettings?.main_contact}</span>
-                                </div>
-                        </div>
-                 </div>
+        <div className="flex justify-center mt-32"><span className="mr-3">{t('invoice.generated-in')}:</span><label>{serverTime?.date} {serverTime?.hour} </label></div>
+            <div className="w-full text-[0.8rem] flex-wrap max-md:text-[0.7rem] flex justify-between mt-10 border-t border-t-gray-200 py-3">
+                    <span>{appSettings?.name}</span>
+                    <div className="flex max-sm:flex-col">
+                        <span>{appSettings?.email}</span>
+                        <label className="mx-2 max-sm:hidden">|</label>
+                        <span>{appSettings?.main_contact}</span>
+                    </div>
+            </div>
+       </div>
            </div>
    </DefaultLayout>
   )

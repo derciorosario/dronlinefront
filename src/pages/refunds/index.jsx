@@ -177,13 +177,11 @@ function App() {
                        <BaiscTable.Tr>
                           <BaiscTable.Td url={`/payment-management/`+i.id}>{i.id}</BaiscTable.Td>
                           <BaiscTable.Td url={`/payment-management/`+i.id}>{i.ref_id}</BaiscTable.Td>
-
                           <BaiscTable.Td url={`/payment-management/`+i.id}>
                            <button type="button" class={`text-white  ml-4 ${!i.status || i.status=="pending" ?"bg-orange-300": i.status=="rejected" ? ' bg-red-500' : "bg-green-500"}  focus:outline-none  font-medium rounded-[0.3rem] text-sm px-2 py-1 text-center inline-flex items-center`}>
                               {!i.status ? t('common.pending') : i.status=="approved" ? t('common.waiting-for-consultation') : t('common.'+i.status)}
                            </button>
                           </BaiscTable.Td>
-
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{data.formatNumber(data._cn_op(i.amount))}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{data._cn(i.price)}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{data.formatNumber(data._cn_op(parseFloat(i.taxes || 0).toFixed(2)))}</BaiscTable.Td>
@@ -194,7 +192,6 @@ function App() {
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.insurance_company || '-'}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.policy_number || '-'}</BaiscTable.Td>
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
-
                          <BaiscTable.Td url={`/payment-management/`+i.id}>{i.updated_at ? i.updated_at.split('T')[0] + " " +i.updated_at.split('T')[1].slice(0,5) : i.created_at.split('T')[0] + " "+i.created_at.split('T')[1].slice(0,5)}</BaiscTable.Td>
                          <BaiscTable.AdvancedActions id={i.id} items={[
                              {hide:i.status=="approved" || !(user?.role=="admin" || (user?.role=="manager" && user?.data?.permissions?.payment_management?.includes('approve')) ),name:t('common.approve'),onClick:()=>{handleItems({status:'approved',id:i.id})},icon:(<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M268-240 42-466l57-56 170 170 56 56-57 56Zm226 0L268-466l56-57 170 170 368-368 56 57-424 424Zm0-226-57-56 198-198 57 56-198 198Z"/></svg>)},

@@ -10,11 +10,9 @@ import AdditionalMessage from '../messages/additional'
 import toast from 'react-hot-toast'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
-import PreLoader from '../../components/Loaders/preloader'
 import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
 import FormCard from '../../components/Cards/form'
 import Comment from '../../components/modals/comments'
-import SearchInput from '../../components/Inputs/search'
 import AddStampAndSignature from '../../components/PopUp/add-stamp-and-signature'
 import SinglePrint from '../../components/Print/single'
 
@@ -292,12 +290,15 @@ const [form,setForm]=useState(initial_form)
   }
 
 
+
+
+  
+
+
+
   const [showSignatureDialog,setShowSignatureDialog]=useState(false)
 
   return (
-
-    
-
        <>
         {!itemToShow && <div className=" absolute left-0 top-0 w-full">
                                   <SinglePrint item={data.singlePrintContent} setItem={data.setSinglePrintContent}/>

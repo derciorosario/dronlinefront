@@ -95,7 +95,7 @@ useEffect(()=>{
 
 useEffect(()=>{
   if(!user) return
-  if(user?.role=="manager" && !user?.data?.permissions?.doctor_requests?.includes('read')){
+  if((user?.role=="patient" || user?.role=="doctor") || (user?.role=="manager" && !user?.data?.permissions?.doctor_requests?.includes('create'))){
          navigate('/') 
   }
 },[user])

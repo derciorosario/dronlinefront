@@ -156,12 +156,10 @@ async function handleItems({action,id,status}){
  }
 
  useEffect(()=>{
-  
   if(!user) return
-  if(user?.role=="manager" && !user?.data?.permissions?.doctor?.includes('read')){
+  if((user?.role=="patient" || user?.role=="doctor") || (user?.role=="manager" && !user?.data?.permissions?.doctor?.includes('read'))){
          navigate('/') 
   }
-
 },[user])
 
 

@@ -7,6 +7,8 @@ function DoctorCard({item={}}) {
   const data=useData()
   const {user} = useAuth()
   let required_data=['specialty_categories']
+ const [itemsToShowInfull,setItemsToShowInfull]=useState([])
+  
 
   useEffect(()=>{
     if(!user) return
@@ -17,12 +19,12 @@ function DoctorCard({item={}}) {
 
   return (
 
-        <div  class="md:max-w-sm max-md:w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div  class="md:max-w-sm max-md:w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
             <div  className="h-[360px] bg-gray-100">
                 <img  class={`rounded-t-lg object-cover w-full h-full object-top ${!item.profile_picture_filename ? 'opacity-0':''}`} src={item.profile_picture_filename} alt="" />
             </div>
 
-            <div class="p-5">
+            <div class="p-5 flex flex-col">
                 <div className="flex items-center mb-4 justify-between">
                     <a href="#">
                         <h5 class=" text-2xl font-bold tracking-tight text-gray-900">{item.name}</h5>
@@ -37,7 +39,16 @@ function DoctorCard({item={}}) {
                     </div>
                 </div>
 
-                <p class="mb-3 font-normal text-gray-700">{item[`${i18next.language}_short_biography`]}</p>
+                <p class="mb-3 font-normal text-gray-700">{data.text_l(item[`${i18next.language}_short_biography`],itemsToShowInfull.includes(item.id) ? 1000 : 350)}
+                {item[`${i18next.language}_short_biography`]?.length > 350 && <span onClick={()=>{
+                    if(itemsToShowInfull.includes(item.id)){
+                        setItemsToShowInfull(itemsToShowInfull.filter(f=>f!=item.id))
+                    }else{
+                        setItemsToShowInfull([...itemsToShowInfull,item.id])
+                    }
+                }} className="text-black ml-2 cursor-pointer opacity-65 text-[13px]">{itemsToShowInfull.includes(item.id) ? t('common.show-less') : t('common.show-more')}</span>}
+        
+                </p>
                 
                 <div className="flex gap-3 bg-white py-2 px-1 border-t mb-6">
 
@@ -73,15 +84,16 @@ function DoctorCard({item={}}) {
                     </div>
             
 
-                 {user?.role=="patient" && <a onClick={()=>{
-                     data.setSelectedDoctorToSchedule(item)
-                }} class={`inline-flex items-center cursor-pointer px-3 py-2 text-sm font-medium text-center text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 rounded-lg  focus:ring-4 focus:outline-none focus:ring-blue-300`}>
-                    {t('common.book')}
-                    <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                    </svg>
-                </a>}
-
+                    <div className="mt-auto flex items-center">
+                            {user?.role=="patient" && <a onClick={()=>{
+                                    data.setSelectedDoctorToSchedule(item)
+                                }} class={`inline-flex items-center cursor-pointer px-3 py-2 text-sm font-medium text-center text-white bg-honolulu_blue-400 hover:bg-honolulu_blue-500 rounded-lg  focus:ring-4 focus:outline-none focus:ring-blue-300`}>
+                                    {t('common.book')}
+                                    <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                            </a>}
+                    </div>
 
             </div>
         </div>

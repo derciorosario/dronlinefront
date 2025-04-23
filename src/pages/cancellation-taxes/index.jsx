@@ -41,7 +41,7 @@ function App() {
 
  useEffect(()=>{
   if(!user) return
-  if(user?.role=="manager" && !user?.data?.permissions?.cancellation_taxes?.includes('read')){
+  if((user?.role=="patient" || user?.role=="doctor")  || (user?.role=="manager" && !user?.data?.permissions?.cancellation_taxes?.includes('read'))){
          navigate('/') 
   }
 },[user])

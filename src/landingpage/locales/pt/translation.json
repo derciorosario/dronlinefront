@@ -584,6 +584,8 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "show-more":"Mostrar mais",
+        "show-less":"Mostrar menos",
         "set-password":"Definir senha",
         "cancel-password-set":"Cancelar definição de senha",
         "email-configurations":"Configurações de email",

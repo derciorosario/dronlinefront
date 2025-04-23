@@ -48,7 +48,14 @@ function App() {
  },[data.updateTable,updateFilters])
 
 
+ useEffect(()=>{
+   if(!user) return
+   if((user?.role=="patient" || user?.role=="doctor") || (user?.role=="manager" && !user?.data?.permissions?.doctor_requests?.includes('read'))){
+          navigate('/') 
+   }
+ },[user])
  
+
  
  return (
    

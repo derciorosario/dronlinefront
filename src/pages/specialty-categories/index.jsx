@@ -40,7 +40,7 @@ function App() {
 
  useEffect(()=>{
   if(!user) return
-  if(user?.role=="manager" && !user?.data?.permissions?.specialty_categories?.includes('read')){
+  if(user?.role=="patient" ||  (user?.role=="manager" && !user?.data?.permissions?.specialty_categories?.includes('read'))){
          navigate('/') 
   }
 },[user])

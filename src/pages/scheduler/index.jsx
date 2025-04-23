@@ -35,7 +35,7 @@ function index() {
   
       return (
             <DefaultLayout  refreshOnUpdate={true} pageContent={{title:t('menu.scheduler'),desc:t('titles.scheduler')}}>
-                  <div className="max-w-[900px] items-start gap-x-7 mt-5 w-full">
+                  <div className="items-start gap-x-7 mt-5 w-full">
                         <Calendar items={items}/>
                   </div>
             </DefaultLayout>

@@ -51,6 +51,12 @@ function App() {
  },[data.updateTable,updateFilters])
 
 
+useEffect(()=>{
+  if(!user) return
+  if(user?.role!="admin"){
+         navigate('/') 
+  }
+},[user])
 
  
   return (

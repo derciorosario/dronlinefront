@@ -79,8 +79,6 @@ export const HomeDataProvider = ({ children }) => {
         }
     },[imagesLoadedItems])
 
-   
-    
     const [_openPopUps, _setOpenPopUps] = useState(initial_popups);
   
     function _closeAllPopUps(){
@@ -90,6 +88,7 @@ export const HomeDataProvider = ({ children }) => {
  
     const handleOutsideClick = (event) => {
      // if(isDeleting) return
+
       let close=true
       Object.keys(initial_popups).forEach(f=>{
           if(event?.target?.closest(`._${f}`))  {
@@ -98,10 +97,10 @@ export const HomeDataProvider = ({ children }) => {
       })
   
       if(close){
-        document.removeEventListener('click', handleOutsideClick); 
-        _closeAllPopUps()
+          document.removeEventListener('click', handleOutsideClick); 
+          _closeAllPopUps()
       }
-      
+
     };
   
     const  _showPopUp = (option,value) => {
@@ -530,6 +529,7 @@ export const HomeDataProvider = ({ children }) => {
     if(from=="clinical-diary"){
      return 'DC'
     }
+    
     return ''
 
 }

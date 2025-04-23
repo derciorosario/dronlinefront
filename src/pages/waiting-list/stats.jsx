@@ -41,7 +41,7 @@ function App() {
          setLoading(false)
          data._get(required_data,{waiting_list:{name:search,page:1,start_date:startDate,end_date:endDate,...data.getParamsFromFilters(filterOptions)}}) 
     }
-
+    
  },[data.updateTable, updateFilters])
 
 
@@ -72,11 +72,7 @@ function App() {
  return (
    
   <DefaultLayout
-    
      pageContent={{page:'waiting_list',title:t('common.waiting-list') + ` - ${t('common.stats')}`,desc:''}}>
-      
-     
-
       <div className="flex">
               {/*** <BasicFilter setUpdateFilters={setUpdateFilters} filterOptions={filterOptions}  setFilterOptions={setFilterOptions}/>
                 */}

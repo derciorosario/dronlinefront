@@ -440,6 +440,8 @@
     },
     
     "common":{
+        "show-more":"Mostrar mais",
+        "show-less":"Mostrar menos",
         "set-password":"Definir senha",
         "cancel-password-set":"Cancelar definição de senha",
         "transfer-failed-try-again":"Transferência falhou. Tente novamente",

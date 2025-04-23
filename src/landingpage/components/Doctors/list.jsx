@@ -15,10 +15,13 @@ function DoctorList({max,items,center,loaded}) {
   const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
   const {APP_FRONDEND}=useHomeAuth()
 
+  const [itemsToShowInfull,setItemsToShowInfull]=useState([])
+
   const [loadedImages, setLoadedImages] = useState({});
   const handleImageLoad = (index) => {
     setLoadedImages((prev) => ({ ...prev, [index]: true }));
   };
+
 
   
 
@@ -115,7 +118,14 @@ function DoctorList({max,items,center,loaded}) {
           <span className="text-honolulu_blue-300 text-[17px] uppercase mt-bold">{item.name}</span>
           <span className="text-honolulu_blue-500 mt-bold text-[20px] uppercase">{data._specialty_categories.filter(i => i.id == item.medical_specialty)[0]?.[i18next.language + "_name"]}</span>
           <p className="text-justify mt-5 text-gray-500 mb-4">
-            {item[`${i18next.language}_short_biography`]}
+            {data.text_l(item[`${i18next.language}_short_biography`],itemsToShowInfull.includes(item.id) ? 1000 : 350)}
+            {item[`${i18next.language}_short_biography`]?.length > 350 && <span onClick={()=>{
+                 if(itemsToShowInfull.includes(item.id)){
+                     setItemsToShowInfull(itemsToShowInfull.filter(f=>f!=item.id))
+                 }else{
+                     setItemsToShowInfull([...itemsToShowInfull,item.id])
+                 }
+            }} className="text-black ml-2 cursor-pointer opacity-65 text-[13px]">{itemsToShowInfull.includes(item.id) ? t('common.show-less') : t('common.show-more')}</span>}
           </p>
         </div>
       )}

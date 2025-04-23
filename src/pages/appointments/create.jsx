@@ -784,7 +784,6 @@ return (
         verified_inputs={verified_inputs} 
         form={form} 
         hide={true}
-
         selectOptions={
           [
             {name:'30 '+t('common.minutes'),value:'30-min'},
@@ -792,7 +791,6 @@ return (
             {name:t('common.more-than-1h'),value:'1-h+'},
           ]
         }
-
         r={true} 
         onBlur={() => setVerifiedInputs([...verified_inputs, 'estimated-consultation-duration'])} 
         label={t('form.estimated-consultation-duration')} 
@@ -814,7 +812,6 @@ return (
         }} class={`bg-gray max-md:w-full w-[400px] ${(selectedDoctor.status=="loading" || id) ? ' pointer-events-none':''} hover:bg-gray-100 cursor-pointer max-md:h-auto  h-[43px] border-gray-300  active:opacity-75  text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 border items-center flex justify-between p-2.5`}>    
         
             {selectedDoctor.status=="not_selected" && <>
-
                 <div className="flex items-center">
                 
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q14-36 44-58t68-22q38 0 68 22t44 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm280-670q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-246q54-53 125.5-83.5T480-360q83 0 154.5 30.5T760-246v-514H200v514Zm280-194q58 0 99-41t41-99q0-58-41-99t-99-41q-58 0-99 41t-41 99q0 58 41 99t99 41ZM280-200h400v-10q-42-35-93-52.5T480-280q-56 0-107 17.5T280-210v10Zm200-320q-25 0-42.5-17.5T420-580q0-25 17.5-42.5T480-640q25 0 42.5 17.5T540-580q0 25-17.5 42.5T480-520Zm0 17Z"/></svg>
@@ -831,7 +828,7 @@ return (
 
             {selectedDoctor.status=="selected" && <>
               <div className="">
-                <span>{form.name} <label className={`${!data._loaded.includes('specialty_categories') ? 'hidden': ''} text-[13px] text-gray-500`}>({data._specialty_categories.filter(f=>f.id==form.medical_specialty)[0]?.[i18next.language+"_name"]})</label></span>
+                <span>{form.name?.split(" ").slice(0, 2).join(" ")} <label className={`${!data._loaded.includes('specialty_categories') ? 'hidden': ''} text-[13px] text-gray-500`}>({data._specialty_categories.filter(f=>f.id==form.medical_specialty)[0]?.[i18next.language+"_name"]})</label></span>
                 <div className="flex items-center max-md:flex-col max-md:items-start">
                     <span className="text-[13px]">{form.consultation_date} ({t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})</span>
                     <span className="mx-2 max-md:hidden">-</span>
@@ -842,6 +839,7 @@ return (
                     <span  className="text-[13px]">{form.type_of_care=="urgent" ? t('common.urgent') : 'Normal'}</span>
                 </div>
             </div>
+
             {!id && <span onClick={()=>{
                 data._showPopUp('doctor_list')
                 data.setSelectedDoctors({})

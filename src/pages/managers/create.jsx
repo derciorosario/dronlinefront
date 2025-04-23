@@ -22,7 +22,6 @@ function addPatients({ShowOnlyInputs}) {
   const data = useData()
   const [searchParams, setSearchParams] = useSearchParams();
           
-
   const { id } = useParams()
   const {pathname} = useLocation()
   const navigate = useNavigate()
@@ -43,16 +42,13 @@ function addPatients({ShowOnlyInputs}) {
   useEffect(()=>{
 
     let v=true
-
     if(!form.name ||
        !form.email
     ){
        v=false
     }
+    setValid(v) 
 
-    setValid(v)
-
-   
  },[form])
 
 
@@ -68,12 +64,7 @@ function addPatients({ShowOnlyInputs}) {
 
 
 
- 
- 
-
-
-
-const default_selected_permissions= {
+const default_selected_permissions = {
   patient:[],
   doctor:[],
   specialty_categories:[],
@@ -90,8 +81,6 @@ const default_selected_permissions= {
  }
 
 const [selectedPermissions,setSelectedPermissions]=useState(default_selected_permissions)
-
-
 
 const [permissions,setPermissions]=useState([
   {
@@ -149,22 +138,14 @@ const [permissions,setPermissions]=useState([
   
 ])
 
-  
-
-
-
-
-
-
 useEffect(()=>{
+
   if(!user || !id){
       setForm(initial_form)
       setSelectedPermissions(default_selected_permissions)
       return
   }
 
-
-  
   (async()=>{
     try{
 
@@ -194,19 +175,14 @@ useEffect(()=>{
       }
   }
  })()
+
 },[user,pathname])
 
 
 
-
-
   async function SubmitForm(){
+    
     setLoading(true)
-
-
-
-
-
 
     try{
 
@@ -221,9 +197,6 @@ useEffect(()=>{
             )
           }
        })
-
-       
-
 
        if(id){
         
@@ -287,7 +260,12 @@ useEffect(()=>{
   }
  
 
-
+useEffect(()=>{
+  if(!user) return
+  if(user?.role!="admin"){
+         navigate('/') 
+  }
+},[user])
 
   
   return (
