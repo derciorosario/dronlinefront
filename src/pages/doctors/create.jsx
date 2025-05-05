@@ -73,6 +73,7 @@ function addPatients({ShowOnlyInputs}) {
     uploaded_files:[],
     signature_filename:'',
     stamp_filename:'',
+    registration_type:'individual'
     
   }
 
@@ -122,7 +123,6 @@ function addPatients({ShowOnlyInputs}) {
        setTimeout(()=>(
          data._get(required_data) 
        ),500)
-
  },[user,pathname])
 
  
@@ -342,7 +342,7 @@ useEffect(()=>{
                   <div>
                      <FormLayout.Input disabled={form.use_app_gain_percentage} ignoreVilidation={form.use_app_gain_percentage} r={true} verified_inputs={verified_inputs}  form={form}  onBlur={()=>setVerifiedInputs([...verified_inputs,'gain_percentage'])} label={t('common.gain_percentage')} onChange={(e)=>setForm({...form,gain_percentage:e.target.value > 100 ? 100 : e.target.value.replace(/[^0-9]/g, '')})} field={'gain_percentage'} value={form.gain_percentage}/>
                 
-                     <div className="flex items-center mt-2 mb-10">
+                        <div className="flex items-center mt-2 mb-10">
                            <label>
                             <input onClick={()=>{
                               setForm({...form,
@@ -451,6 +451,24 @@ useEffect(()=>{
                    <div className="mb-10 w-full">
                      <LogoFIle crop={false} res={handleUploadedFiles} _upload={{key:'profile_picture_filename',filename:form.profile_picture_filename}} label={t('common.profile-piture')}/>
                   </div>
+
+                  <div className="w-full">
+                    
+                          <FormLayout.Input 
+                            verified_inputs={verified_inputs} 
+                            form={form} 
+                            r={true}
+                            selectOptions={[
+                               {name:t('common.individual'),value:'individual'},
+                               {name:t('common.company'),value:'company'}
+                            ]}
+                            onBlur={() => setVerifiedInputs([...verified_inputs, 'registration_type'])}  
+                            label={t('common.registration-type')}  
+                            onChange={(e) => setForm({...form, registration_type: e.target.value})} 
+                            field={'registration_type'} 
+                            value={form.registration_type} 
+                          />
+                   </div>
 
           
               <PatientForm form_name={'doctors'} itemsToHide={['password','hospitalization_history','family_history_of_diseases','insurance_company','policy_number']} form={form} setForm={setForm} verified_inputs={verified_inputs} setVerifiedInputs={setVerifiedInputs}/>

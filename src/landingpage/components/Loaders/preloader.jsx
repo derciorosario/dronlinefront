@@ -1,10 +1,22 @@
 import React from 'react'
 import { useState } from 'react'
 import { useHomeData } from '../../contexts/DataContext'
+import LoadingImg from '../../../assets/images/dark-logo-1-short.png'
 
 function PreLoader({trans}) {
   
   const data=useHomeData()
+
+  return (
+    <div style={{zIndex:1000,display:data.isLoading || !data.isPreloaderLoaded ? 'flex':'none'}} className={`flex items-center justify-center h-[100vh] fixed top-0 right-0 w-full ${trans ? (`bg-[rgba(255,255,255,0.${trans})]`)  : 'bg-white'} `}>
+           <img width={40} src={LoadingImg}/>
+           <div class="loading-dots absolute bottom-[100px]">
+              <div class="loading-dots-dot"></div>
+              <div class="loading-dots-dot mx-1"></div>
+              <div class="loading-dots-dot"></div>
+           </div>
+    </div>
+  )
 
   return (
     <div style={{zIndex:1000,display:data.isLoading ? 'flex':'none'}} className={`flex items-center justify-center h-[100vh] fixed top-0 right-0 w-full ${trans ? (`bg-[rgba(255,255,255,0.${trans})]`)  : 'bg-white'} `}>

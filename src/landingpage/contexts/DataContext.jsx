@@ -5,7 +5,10 @@ import i18next from 'i18next';
 import _Img1 from '../assets/images/services.jpg'
 import _Img2 from '../assets/images/slider/1.jpg'
 import _Img3 from '../assets/images/slider/2.jpg'
-import _Img4 from '../assets/images/consultation-stepper.jpg'
+import _Img4 from '../assets/images/slider/3.jpg'
+import _Img5 from '../assets/images/slider/4.jpg'
+import _Img6 from '../assets/images/slider/5.jpg'
+import _Img7 from '../assets/images/consultation-stepper.jpg'
 
 const HomeDataContext = createContext();
 
@@ -13,7 +16,7 @@ export const HomeDataProvider = ({ children }) => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [dialogs,setDialogs]=useState({})
-    const imageUrls = [_Img1,_Img2,_Img3,_Img4];
+    const imageUrls = [_Img1,_Img2,_Img3,_Img4,_Img5,_Img6,_Img7];
     const [isPreloaderLoaded, setIsPreloaderLoaded] = useState(false);
     const [imagesLoadedItems, setImagesLoadedItems] = useState([])
     const [isDeleting,setIsDeleting]=useState(false)

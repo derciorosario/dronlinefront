@@ -15,7 +15,6 @@ const DataContext = createContext();
 export const DataProvider = ({ children }) => {
     const [dialogs,setDialogs]=useState({})
     const [isDeleting,setIsDeleting]=useState(false)
-
     let initial_popups={
       basic_popup:false,
       doctor_list:false,
@@ -35,13 +34,10 @@ export const DataProvider = ({ children }) => {
       appointment_messages:false,
       select_exams:false,
     }
-
     let not_closing_popups=[
       'support_messages'
     ]
-  
     const [_openPopUps, _setOpenPopUps] = useState(initial_popups);
-  
     function _closeAllPopUps(){
           _setOpenPopUps(initial_popups)
           document.removeEventListener('click', handleOutsideClick)
@@ -59,7 +55,6 @@ export const DataProvider = ({ children }) => {
           }
       })
 
-
       Object.keys(initial_popups).forEach(k=>{
           if(not_closing_popups.includes(k) && _openPopUps[k]){
              close=false
@@ -70,6 +65,7 @@ export const DataProvider = ({ children }) => {
         document.removeEventListener('click', handleOutsideClick); 
         _closeAllPopUps()
       }
+
     };
 
  
@@ -79,6 +75,7 @@ export const DataProvider = ({ children }) => {
     }
 
     function _search(search,array){
+      
         function search_from_object(object,text){
              text=search
              let add=false
@@ -106,6 +103,7 @@ export const DataProvider = ({ children }) => {
         })
     
         return res
+
     }
    
     const {makeRequest,APP_BASE_URL,SERVER_FILE_STORAGE_PATH,isLoading,setIsLoading,user,serverTime,setServerTime,APP_FRONDEND} = useAuth()

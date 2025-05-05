@@ -32,7 +32,6 @@ export const HomeAuthProvider = ({ children }) => {
   };
 
   function encodeFormData(data) {
-
       const formData = new URLSearchParams();
       function buildFormData(formData, data, parentKey) {
         if (Array.isArray(data)) {
@@ -49,7 +48,6 @@ export const HomeAuthProvider = ({ children }) => {
       }
       buildFormData(formData, data);
       return formData.toString();
-
    }
 
 
@@ -81,6 +79,7 @@ export const HomeAuthProvider = ({ children }) => {
  
      
        try {
+
          const response = await fetch(url, {
            method: method.toUpperCase(),
            headers: headers,
@@ -106,10 +105,9 @@ export const HomeAuthProvider = ({ children }) => {
            if(result[f]===1){
              result[f]=true
            }*/
- 
+          
          })
- 
- 
+
          return  result;
      
        } catch (error) {

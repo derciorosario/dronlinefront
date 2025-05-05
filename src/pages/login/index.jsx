@@ -343,7 +343,7 @@ async function SubmitForm(options){
  <ConfirmUserByEmailCode status={confirmCodeByEmailStatus} setStatus={setConfirmCodeByEmailStatus} success={success} resendCode={SendCode}  message={message} setMessage={setMessage} setForm={setForm} loading={loading} SubmitForm={VerifyCodeForLogin} form={form} setShow={setShowConfirmCodeByEmailDialog} show={showConfirmCodeByEmailDialog}/>
  <RecoverPasswordModal status={recoverPasswordStatus} setStatus={setRecoverPasswordStatus} success={success} resendCode={SendCode}  message={message} setMessage={setMessage} setForm={setForm} loading={loading} SubmitForm={recoverPasswordSubmit} form={form} setShow={setShowRecoverPasswordDialog} show={showRecoverPasswordDialog}/>
 
-<div className="login-left-bg flex-1 min-h-[100vh]"></div>
+<div className="login-left-bg flex-1 min-h-[100vh] bg-gray-200"></div>
 
 <div className="px-[90px] py-[40px] max-sm:px-[20px] flex max-lg:w-full  justify-center items-center">
  

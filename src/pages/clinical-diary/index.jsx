@@ -25,11 +25,9 @@ function App({hideLayout,itemToShow,setItemToShow}) {
   const [updateFilters,setUpdateFilters]=useState(null)
   const [search,setSearch]=useState('')
 
-  
   let required_data=['clinical_diary']
 
   const [filterOptions,setFilterOptions]=useState([])
- 
   
   useEffect(()=>{ 
 

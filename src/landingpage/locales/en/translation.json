@@ -572,8 +572,11 @@
         "medications-creation-details":"(Below is the complete list of prescribed medications on {{date}} at {{hour}})",
         "confirm-code-authenticity":"Confirm document authenticity by using the QR code",
         "this-document-is-a-propriety-of":"This document is a propriety of:"
-    },
+    },    
     "common":{
+           "registration-type":"Registration Type",
+           "individual":"Individual",
+           "company":"Company",
            "show-more":"Show more",
            "show-less":"Show less",
            "set-password":"Set password",

@@ -58,6 +58,10 @@ function DoctorCard({item={}}) {
                                </div>
                                <span className="text-[12px] flex justify-center flex-wrap">{t('common.patients')}<label className="ml-1">({data.getFakeConsultationCount(2,11)[item.id] + item.unique_patients_count + item.unique_dependents_count})</label></span>
                            </div>
+
+
+
+
      
                            <div className="flex flex-col items-center">
                                <div className="flex items-center justify-center w-[40px] h-[40px] bg-gray-200 rounded-full">                                

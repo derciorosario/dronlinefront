@@ -166,18 +166,16 @@ export default function WorkWithUsForm({}) {
                         </div>
 
 
-                        <div className="mt-5">
+                  <div className="mt-5">
                    
                 
                 
                   <span className="flex mb-5 items-center hidden">{t('common.documents')}  <label className="text-[0.9rem] ml-2">({t('messages.add-atleast-one-document')})</label> <span className="text-red-500">*</span></span>
                   <div className="flex gap-x-4 flex-wrap gap-y-8">
                      <FileInput openPopUp={'_doctor_reuqest_form'} _upload={{key:'identification_number_filename',filename:form.identification_number_filename}} res={handleUploadedFiles} label={t('common.identification-document')} r={true}/>
-                   
                   </div>
 
                   <span className="flex mb-5 items-center mt-8 w-full">
-
                       {t('common.certificate-e-diplomas')} <span className="text-red-500">*</span>
                     
                       <button onClick={()=>{
@@ -192,12 +190,10 @@ export default function WorkWithUsForm({}) {
                         <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#fff"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                         {t('common.add-document')}
                       </button>
-                  
                   </span>
 
 
                   <div className="flex gap-x-4 flex-wrap gap-y-4 w-[300px]">
-
                       {form.uploaded_files.map(i=>(
                             <div key={i.id} className="flex items-center w-full">
                             <div>
@@ -212,16 +208,13 @@ export default function WorkWithUsForm({}) {
                             }}   class={`bg-gray border  border-gray-300  text-gray-900 text-sm rounded-t-[0.3rem] focus:ring-blue-500 focus:border-blue-500 block w-[300px] px-2.5 py-1`}/>
                               <FileInput  _upload={{key:i.id,filename:i.filename}} res={handleUploadeduploaded_files} r={true}/>
                             </div>
-                              
                             <span onClick={()=>{
                                 setTimeout(()=>setForm({...form,uploaded_files:form.uploaded_files.filter(f=>f.id!=i.id)}),100)
                               }} className="ml-2 cursor-pointer hover:opacity-65">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                                 </span>
                             </div>
-                            
                       ))}
-                      
                   </div>
                 </div>
                         <button onClick={SubmitForm}  class={`text-white mt-5 ${(loading || !valid) ? 'pointer-events-none':''} inline-flex items-center  ${valid ? 'bg-honolulu_blue-400':'bg-gray-400'}   focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center`}>

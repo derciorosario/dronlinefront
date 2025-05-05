@@ -11,7 +11,6 @@ const childrenWithProps = React.Children.map(children, child => {
     return React.cloneElement(child, { form, verified_inputs,hideInputs});
 });
 
-
 function getAdvancedActions(items=[],id=null,w=undefined){
 
       const data=useData()

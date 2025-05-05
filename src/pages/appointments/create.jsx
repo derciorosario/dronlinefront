@@ -51,7 +51,6 @@ function addAppointments({ShowOnlyInputs}) {
 },[user,pathname])
 
 
-
   let initial_form={
     "consultation_id": "",
     "patient_id": "",

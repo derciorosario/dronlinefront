@@ -584,6 +584,9 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "registration-type":"Tipo de registo",
+        "individual":"Individual",
+        "company":"Empresa",
         "show-more":"Mostrar mais",
         "show-less":"Mostrar menos",
         "set-password":"Definir senha",
