@@ -425,13 +425,13 @@ export default function ZoomMeeting() {
                                     </dl>}
 
                                     <dl class="flex items-center justify-between gap-4 py-4">
-                                    <dt class="text-base font-normal text-gray-500">{t('form.consultation-date')}</dt>
-                                    <dd class="text-base font-medium text-gray-900  text-right">{`${form.consultation_date?.split('-')?.reverse()?.join('/')} (${t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})`}</dd>
+                                    <dt class="text-base font-normal text-gray-500">{t('common.date-and-hour')}</dt>
+                                    <dd class="text-base font-medium text-gray-900  text-right">{`${form.consultation_date?.split('-')?.reverse()?.join('/')} ${form.scheduled_hours} (${t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})`}</dd>
                                     </dl>
 
                                     <dl class="flex items-center justify-between gap-4 py-4">
-                                    <dt class="text-base font-normal text-gray-500">{t('form.consultation-date')}</dt>
-                                    <dd class="text-base font-medium text-gray-900  text-right">{`${form.scheduled_hours}`}</dd>
+                                    <dt class="text-base font-normal text-gray-500">{t('common.consultation-format')}</dt>
+                                    <dd class="text-base font-medium text-gray-900  text-right">{`${form.consultation_type=="group" ? t('common.in-group') : t('common.individual')}`}</dd>
                                     </dl>
 
                                    <dl class="flex items-center justify-between gap-4 py-4">
