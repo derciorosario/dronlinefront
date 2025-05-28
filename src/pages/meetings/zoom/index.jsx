@@ -41,29 +41,25 @@ export default function ZoomMeeting() {
             data.setViewedMeetingNots([...data.viewedMeetingNots,data.waitingParticipantInfo?.id])
           }
       },[data.waitingParticipantInfo,data.lastJoinMeetingID])
-
    */
 
   useEffect(() => {
-    
       const interval = setInterval(() => {
         if(user?.role=="patient" && sessionName) {
             data.handleZoomMeetings('check',sessionName)
         }
       }, 5000);
-
       return () => clearInterval(interval);
   }, [user,sessionName,notifyPartipant]);
 
 
   async function sendNotification(){
-
     try{
-       
-      const r=await data.makeRequest({method:'post',url:`api/notify-participant`,withToken:true,data:{
+        const r=await data.makeRequest({method:'post',url:`api/notify-participant`,withToken:true,data:{
           appointment_id:form.id,
           receiver_id:user?.role=="patient" ? form.doctor.user_id : form.patient.user_id
         }, error: ``},0);
+        
         console.log({r})
 
     }catch(e){
@@ -79,7 +75,6 @@ export default function ZoomMeeting() {
       if(minutes >= 0 && minutes <=30){
         //data.socket.emit('notify-non-present-participants',{appointment:form,user_id:user?.role=="patient" ? form.doctor.user_id : form.patient.user_id})
       }
-
       sendNotification()
    }
 
@@ -116,7 +111,7 @@ export default function ZoomMeeting() {
     }
   },[canParticipantJoin])
 
-
+ 
 
   useEffect(()=>{
 
@@ -130,12 +125,19 @@ export default function ZoomMeeting() {
       try{
 
        let response=await data.makeRequest({method:'get',url:`api/appointments/`+id,withToken:true, error: ``},0);
+       if(response?.patient?.user_id!=user?.id && response?.doctor?.user_id!=user?.id && (user?.role=="patient" || user?.role=="doctor")){
+          toast.remove()
+          toast.error(t('common.no-permission'))
+          navigate('/')
+          return
+       }
        setForm(response)
        setItemToEditLoaded(true)
-       setSessionName(`${`appointment-${response.id}-${response.consultation_date}`}`)
-       
+       setSessionName(`${`appointment-${response.doctor_id || 0}-${response.consultation_date}-${response.scheduled_hours}`}`)
 
       }catch(e){
+
+      
         if(e.message==404){
            toast.error(t('common.item-not-found'))
            navigate('/appointments')
@@ -218,10 +220,7 @@ export default function ZoomMeeting() {
 
     //Click the button below to enable audio  
 
-    // 
-
-   
-
+  
   },[i18next.language])
   
   function getVideoSDKJWT() {
@@ -331,7 +330,6 @@ export default function ZoomMeeting() {
     window.fetch = async (...args) => {
         const response = await originalFetch(...args);
 
-        console.log(args[0])
 
         // Check if the request URL contains session information
         if (args[0].includes('session')) { // Adjust condition as needed
@@ -346,10 +344,12 @@ export default function ZoomMeeting() {
                 if (data.session_id) {
                     console.log('Session ID:', data.session_id);
                 }
+
             });
         }
 
         return response;
+
     };
 }, []);
 

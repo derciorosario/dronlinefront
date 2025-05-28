@@ -240,10 +240,17 @@ function SelectPayemntMethod({info}) {
         <div class="flow-root">
           <div class="-my-3 divide-y divide-gray-200">
 
+
+            {info?.consultation_type=="group" && <dl class="flex items-center justify-between gap-4 py-3">
+              <dt class="text-base font-normal text-gray-500">{t('common.consultation-format')}</dt>
+              <dd class="text-base font-medium text-gray-900 text-right">{t('common.in-group')}</dd>
+            </dl>}
+
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('common.consult')}</dt>
               <dd class="text-base font-medium text-gray-900 text-right">{data._specialty_categories.filter(i=>i.id==info?.medical_specialty)[0]?.[i18next.language+"_name"]}</dd>
             </dl>
+            
             <dl class="flex items-center justify-between gap-4 py-3">
               <dt class="text-base font-normal text-gray-500">{t('form.type-of-care')}</dt>
               <dd class="text-base font-medium text-gray-900 text-right">{t('form.'+info?.type_of_care+"-c")} {info?.type_of_care=="scheduled"  ? `(Normal)` :''}</dd>
@@ -256,6 +263,8 @@ function SelectPayemntMethod({info}) {
                 {!doctor && <Loader/>}
               </dd>
             </dl>}
+
+           
             
 
             {getAmount().refund!=0 && <>

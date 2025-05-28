@@ -298,6 +298,7 @@ return (
                          'ID',
                           t('form.full-name'),
                           t('common.registration-type'),
+                          t('common.consultation-format'),
                           t('form.medical-specialty'),
                           'Email',
                           t('form.main-contact'),
@@ -307,7 +308,7 @@ return (
                           `${ t('common.total_amount_collected')} (- IVA)`,
                           t('common.amount_earned'),
                           'IRPS',
-                          `${ t('common.amount_earned')} (- IRPS)`,
+                          `${ t('common.amount_earned')} (-IRPS)`,
                           t('form.gender'),
                           t('form.address'),
                           (user?.role=="admin" || user?.role=="manager") ? 'Status' : undefined,
@@ -330,6 +331,7 @@ return (
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.id}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.name}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{t('common.'+i.registration_type)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.consultation_type=="individual-and-group"? t('common.individual-and-group') : i.consultation_type=="group" ? t('common.in-group') : t('common.individual')}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[`${i18next.language}_name`]}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.email}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/doctor/`+i.id}>{i.main_contact}</BaiscTable.Td>

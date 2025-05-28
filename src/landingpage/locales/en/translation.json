@@ -574,6 +574,11 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },    
     "common":{
+        "no-permission":"No Permission",
+        "individual-and-group":"Individual and In group",
+        "in-group": "In Group",
+        "group-consultation": "Group Consultation",
+        "consultation-format": "Consultation Format",
            "registration-type":"Registration Type",
            "individual":"Individual",
            "company":"Company",

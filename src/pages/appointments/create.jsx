@@ -1,57 +1,54 @@
-import React, { useEffect, useState } from 'react'
-import FormLayout from '../../layout/DefaultFormLayout'
-import DefaultLayout from '../../layout/DefaultLayout'
-import i18next, { t } from 'i18next'
-import { useData } from '../../contexts/DataContext'
-import AdditionalMessage from '../messages/additional'
-import toast from 'react-hot-toast'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { useAuth } from '../../contexts/AuthContext'
-import DefaultFormSkeleton from '../../components/Skeleton/defaultForm'
-import FormCard from '../../components/Cards/form'
-import Comment from '../../components/modals/comments'
-import Loader from '../../components/Loaders/loader'
-import AppointmentItems from '../../components/Cards/appointmentItems'
-import SearchInput from '../../components/Inputs/search'
-import SinglePrint from '../../components/Print/single'
+import React, { useEffect, useState } from 'react';
+import FormLayout from '../../layout/DefaultFormLayout';
+import DefaultLayout from '../../layout/DefaultLayout';
+import i18next, { t } from 'i18next';
+import { useData } from '../../contexts/DataContext';
+import AdditionalMessage from '../messages/additional';
+import toast from 'react-hot-toast';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import DefaultFormSkeleton from '../../components/Skeleton/defaultForm';
+import FormCard from '../../components/Cards/form';
+import Comment from '../../components/modals/comments';
+import Loader from '../../components/Loaders/loader';
+import AppointmentItems from '../../components/Cards/appointmentItems';
+import SearchInput from '../../components/Inputs/search';
+import SinglePrint from '../../components/Print/single';
 
-function addAppointments({ShowOnlyInputs}) {
-  const [message,setMessage]=useState('')
-  const [verified_inputs,setVerifiedInputs]=useState([])
-  const [valid,setValid]=useState(false)
-  const [messageType,setMessageType]=useState('red')
-  const data = useData()
-  let from="appointments"
+function addAppointments({ ShowOnlyInputs }) {
+  const [message, setMessage] = useState('');
+  const [verified_inputs, setVerifiedInputs] = useState([]);
+  const [valid, setValid] = useState(false);
+  const [messageType, setMessageType] = useState('red');
+  const data = useData();
+  let from = "appointments";
 
-  const { id } = useParams()
-  const {pathname,search } = useLocation()
-  const navigate = useNavigate()
-  const {user}=useAuth()
-  const [loading,setLoading]=useState(id ? true : false);
-  const [showComment,setShowComment]=useState(false)
-  const [itemToEditLoaded,setItemToEditLoaded]=useState(false)
-  const [MessageBtnSee,setMessageBtnSee]=useState(null)
+  const { id } = useParams();
+  const { pathname, search } = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(id ? true : false);
+  const [showComment, setShowComment] = useState(false);
+  const [itemToEditLoaded, setItemToEditLoaded] = useState(false);
+  const [MessageBtnSee, setMessageBtnSee] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedDoctor,setSelectedDoctor]=useState({status:'not_selected',hours:[],weekday:null})
-          
-  
-  let required_data=['doctors','specialty_categories','dependents']
-  useEffect(()=>{   
-        if(!user) return
-        data.handleLoaded('remove',required_data)
-        data._get(required_data) 
-  },[user,pathname])
+  const [selectedDoctor, setSelectedDoctor] = useState({ status: 'not_selected', hours: [], weekday: null });
 
+  let required_data = ['doctors', 'specialty_categories', 'dependents'];
+  useEffect(() => {
+    if (!user) return;
+    data.handleLoaded('remove', required_data);
+    data._get(required_data);
+  }, [user, pathname]);
 
-  useEffect(()=>{
-    if(!user) return
-    setTimeout(()=>(
-      data._get(required_data) 
-    ),500)
-},[user,pathname])
+  useEffect(() => {
+    if (!user) return;
+    setTimeout(() => (
+      data._get(required_data)
+    ), 500);
+  }, [user, pathname]);
 
-
-  let initial_form={
+  let initial_form = {
     "consultation_id": "",
     "patient_id": "",
     "doctor_id": "",
@@ -69,473 +66,460 @@ function addAppointments({ShowOnlyInputs}) {
     "uploaded_documents": "",
     "estimated_consultation_duration": "",
     "type_of_care": "",
-    "scheduled_doctor":"",
-    "scheduled_hours":"",
-    "scheduled_weekday":"",
-    "scheduled_date":"",
-    is_for_dependent:null,
-    dependent:{},
-    dependent_id:null,
-    medical_prescriptions:[],
-    documents:[],
-    comments:[],
-    medical_certificates:[],
-    clinical_diaries:[],
-    exams:[]
-}
+    "scheduled_doctor": "",
+    "scheduled_hours": "",
+    "scheduled_weekday": "",
+    "scheduled_date": "",
+    "consultation_type": "individual", // New field
+    is_for_dependent: null,
+    dependent: {},
+    dependent_id: null,
+    medical_prescriptions: [],
+    documents: [],
+    comments: [],
+    medical_certificates: [],
+    clinical_diaries: [],
+    exams: []
+  };
 
+  const [form, setForm] = useState(initial_form);
 
-  const [form,setForm]=useState(initial_form)
-  
-  useEffect(()=>{
-    let v=true
-    if(
-       (selectedDoctor.status!="selected" && form.type_of_care!="requested") ||
-       !form.reason_for_consultation ||
-       !form.type_of_care ||
-       (!form.medical_specialty && form.type_of_care!="requested") ||
-       (!form.scheduled_hours && form.type_of_care=="requested") ||
-       form.is_for_dependent==null ||
-       (form.is_for_dependent && !form.dependent_id) ||
-       ((!form.scheduled_hours || !form.consultation_date) && form.type_of_care=="requested")
-    ){
-      v=false
+  useEffect(() => {
+    let v = true;
+    if (
+      (selectedDoctor.status != "selected" && form.type_of_care != "requested") ||
+      !form.reason_for_consultation ||
+      !form.type_of_care ||
+      (!form.medical_specialty && form.type_of_care != "requested") ||
+      (!form.scheduled_hours && form.type_of_care == "requested") ||
+      form.is_for_dependent == null ||
+      (form.is_for_dependent && !form.dependent_id) ||
+      ((!form.scheduled_hours || !form.consultation_date) && form.type_of_care == "requested") ||
+      !form.consultation_type // Ensure consultation_type is set
+    ) {
+      v = false;
     }
-    setValid(v)
+    setValid(v);
+  }, [form]);
 
- },[form])
+  useEffect(() => {
+    if (!id && form.id) {
+      setForm(initial_form);
+      setSelectedDoctor({ ...selectedDoctor, status: 'not_selected' });
+    }
+  }, [pathname]);
 
+  const [dependents, setDependents] = useState([]);
+  const [dependensLoaded, setDependentsLoaded] = useState(false);
+  const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':');
 
- useEffect(()=>{
-  if(!id && form.id){
-    setForm(initial_form)
-    setSelectedDoctor({...selectedDoctor,status:'not_selected'})
+  useEffect(() => {
+    if (!id) return;
+
+    getAppointmentUnreadMessages();
+
+    const interval = setInterval(() => {
+      getAppointmentUnreadMessages();
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [id]);
+
+  async function getAppointmentUnreadMessages() {
+    (async () => {
+      try {
+        let response = await data.makeRequest({ method: 'get', url: `api/appointment/${id}/unread-comments`, withToken: true, error: `` }, 0);
+        setForm(prev => ({ ...prev, unread_comments_count: response.unread_comments_count }));
+      } catch (e) {
+        console.log(e);
+      }
+    })();
   }
-},[pathname])
- 
-const [dependents,setDependents]=useState([])
-const [dependensLoaded,setDependentsLoaded]=useState(false)
-const formatTime = time => time.split(':').map(t => t.padStart(2, '0')).join(':')
 
+  useEffect(() => {
+    if (!user || !id) {
+      return;
+    }
 
-
-useEffect(() => {
-
-  if(!id) return
-
-  getAppointmentUnreadMessages()
-
-  const interval = setInterval(() => {
-    getAppointmentUnreadMessages()
-  }, 10000);
-
-  return () => clearInterval(interval);
-}, [id]);
-
-
-
-async function getAppointmentUnreadMessages(){
-        (async()=>{
-          try{
-
-            let response=await data.makeRequest({method:'get',url:`api/appointment/${id}/unread-comments`,withToken:true, error: ``},0);
-            setForm(prev=>({...prev,unread_comments_count:response.unread_comments_count}))
-          }catch(e){
-            console.log(e)
-           
+    (async () => {
+      try {
+        let response = await data.makeRequest({ method: 'get', url: `api/appointments/` + id, withToken: true, error: `` }, 0);
+        setForm({ ...form, ...response, consultation_type: response.consultation_type || 'individual' });
+        setLoading(false);
+        setSelectedDoctor({ ...selectedDoctor, status: 'selected' });
+        setItemToEditLoaded(true);
+        if (response.is_for_dependent) {
+          setDependents([...dependents.filter(i => i.id != response?.dependent_id), response.dependent]);
         }
-      })()
-}
+      } catch (e) {
+        console.log(e);
+        if (e.status == 404) {
+          toast.error(t('common.item-not-found'));
+          navigate('/appointments');
+        } else if (e.message == 'Failed to fetch') {
+          toast.error(t('common.check-network'));
+          navigate('/appointments');
+        } else {
+          toast.error(t('common.unexpected-error'));
+          navigate('/appointments');
+        }
+      }
+    })();
+  }, [user, pathname, itemToEditLoaded]);
 
+  useEffect(() => {
+    if (data.updateTable) {
+      setItemToEditLoaded(false);
+    }
+  }, [data.updateTable]);
 
-
-
- useEffect(()=>{
-  
-  if(!user || !id){
-      return
-  }
-
-  (async()=>{
+  function getAvailableHours(item, type, date, selectedWeekDays, canceled_appointment_id = null) {
+   
+    const weeks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     
-    try{
-
-     let response=await data.makeRequest({method:'get',url:`api/appointments/`+id,withToken:true, error: ``},0);
-     setForm({...form,...response})
-     setLoading(false)
-     setSelectedDoctor({...selectedDoctor,status:'selected'})
-     setItemToEditLoaded(true)
-     if(response.is_for_dependent){
-        setDependents([...dependents.filter(i=>i.id!=response?.dependent_id),response.dependent])
-     }
-
-    }catch(e){
-      console.log(e)
-      if(e.message==404){
-         toast.error(t('common.item-not-found'))
-         navigate('/appointments')
-      }else  if(e.message=='Failed to fetch'){
-        toast.error(t('common.check-network'))
-        navigate('/appointments')
-      }else{
-        toast.error(t('common.unexpected-error'))
-        navigate('/appointments')  
-      }
-  }
-  
-})()
-
-},[user,pathname,itemToEditLoaded])
-
-
-useEffect(()=>{
-  if(data.updateTable){
-    setItemToEditLoaded(false)
-  }
-},[data.updateTable])
-
-
-useEffect(()=>{
-  (async()=>{
-    try{
-      let res=data._sendFilter(searchParams)
-      if(res.scheduled_type_of_care=="requested"){
-        setForm({...form,type_of_care:'requested'})
-        return
-      }
-
-      if(res.scheduled_doctor && res.scheduled_hours && res.scheduled_weekday && res.scheduled_date && res.type_of_care){
-          setSelectedDoctor({status:'loading',hours:[]})
-          let response
-
-            try{ 
-              response=await data.makeRequest({method:'get',url:`api/doctor/`+res.scheduled_doctor,withToken:true, error: ``},0);
-              if(res.canceled_appointment_id){
-                let canceled_appointment=await data.makeRequest({method:'get',url:`api/appointments/`+res.canceled_appointment_id,withToken:true, error: ``},0);
-                if(canceled_appointment?.status=="canceled"){
-                   if(user?.role=="patient") {
-                    data._showPopUp('basic_popup','consultation-is-already-canceled')
-                   }
-                  setSelectedDoctor({status:'not_selected'})
-                }
-               
-              }
-            }catch(e){ 
-              data._showPopUp('basic_popup','unable-to-load-consultation-items')
-              setSelectedDoctor({status:'not_selected'})
-              return
-            }
-
-          let is_urgent=res.type_of_care=="urgent"
-
-          let scheduled_weekday=res.scheduled_weekday=='undefined' ? weeks[new Date(res.scheduled_date).getDay()] : res.scheduled_weekday
-
-          let new_form={...form,
-            reason_for_consultation:form.reason_for_consultation || res.reason_for_consultation || '',
-            additional_observations:form.additional_observations || res.additional_observations || '',
-            name:response.name,
-            is_urgent,
-            medical_specialty:response.medical_specialty,
-            consultation_date:res.scheduled_date,
-            doctor_id:response.id,
-            patient_id:user?.data?.id || null,
-            scheduled_date:res.scheduled_date,
-            scheduled_doctor:res.scheduled_doctor,
-            scheduled_hours:res.scheduled_hours,
-            scheduled_weekday,
-            type_of_care:is_urgent ? 'urgent': 'scheduled'
-          }
-
-          if(res.canceled_appointment_id){
-            new_form.canceled_appointment_id=res.canceled_appointment_id
-          }
-
-          let available_hours=getAvailableHours(response,new_form.type_of_care,res.scheduled_date,{[response.id]:scheduled_weekday},res.canceled_appointment_id)
-
-        
-          if(isUrgentByLimit(res.scheduled_hours,res.scheduled_date) || data.isSetAsUrgentHour(res.scheduled_hours,JSON.parse(user?.app_settings?.[0]?.value))){
-            new_form.type_of_care='urgent'
-          }
-
-          if(!available_hours.includes(res.scheduled_hours)){
-            if(user?.role=="patient"){
-              data._showPopUp('basic_popup','appointment-no-longer-available')
-              setSelectedDoctor({status:'not_selected'})
-              return
-            }
-          }else{
-            setSelectedDoctor({status:'selected'})
-            console.log('3')
-            setForm({...new_form,is_for_dependent:form.is_for_dependent,dependent_id:form.dependent_id})
-          }
-    }
-     
-    }catch(e){
-
-      if(e.message==404){
-        toast.error(t('common.doctor-not-found'))
-        setForm(initial_form)
-        setSelectedDoctor({...selectedDoctor,status:'not_selected'})
-      }else  if(e.message=='Failed to fetch'){
-        toast.error(t('common.doctor-not-found-try'))
-      }else{
-        toast.error(t('common.doctor-not-found-try'))
-      }
-      console.log({e})
-
-  }
-})()
-},[pathname,search])
-
-
-
-function getAvailableHours(item,type,date,selectedWeekDays,canceled_appointment_id=null){
-  const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
-  
-  if(data.serverTime){
-     if(new Date(data?.serverTime?.date) > new Date(date)){
-      return []
-     }
-  }
-
-  if(type=="scheduled"){
-      return (item?.availability?.unavailable_specific_date?.[date] ? [] : item?.availability?.specific_date?.[date] ? item?.availability?.specific_date?.[date] : item?.urgent_availability?.specific_date?.[date] ? [] : !selectedWeekDays?.[item?.id] ? (item?.availability?.weekday?.[weeks?.[new Date().getDay()]] || []) : (item?.availability.weekday[selectedWeekDays?.[item?.id]] || [])).filter(i=>(date > data?.serverTime?.date) ||  formatTime(i) > formatTime(data.serverTime?.hour)).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!item?.on_appointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=canceled_appointment_id))
-  }else{
-      return (item?.urgent_availability?.unavailable_specific_date?.[date] ? [] : item?.urgent_availability?.specific_date?.[date] ? item?.urgent_availability?.specific_date?.[date] : item?.availability?.specific_date?.[date] ? [] : !selectedWeekDays?.[item?.id] ? (item?.urgent_availability?.weekday?.[weeks?.[new Date().getDay()]] || []) : (item?.urgent_availability.weekday?.[selectedWeekDays?.[item?.id]] || [])).filter(i=>(date > data?.serverTime?.date) ||  formatTime(i) > formatTime(data.serverTime?.hour)).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m)).filter(i=>!item?.on_appointments.some(a=>a.scheduled_date==date && a.scheduled_hours==i && a.id!=canceled_appointment_id))
-  }
-
-}
-
-
-function isUrgentByLimit(hour,date){
-    if(!user) return
-
-    if(date){
-      if(new Date(date).getDay()==0 || new Date(date).getDay()==6){
-         return true
+    if (data.serverTime) {
+      if (new Date(data?.serverTime?.date) > new Date(date)) {
+        return [];
       }
     }
 
+    const getSlots = slots => slots
+      ?.map(slot => ({ time: slot.time_slot, type: slot.type }))
+      .sort((a, b) => a.time.split(':').reduce((h, m) => +h * 60 + +m, 0) - b.time.split(':').reduce((h, m) => +h * 60 + +m, 0))
+      .filter(i => (date > data?.serverTime?.date) || formatTime(i.time) > formatTime(data?.serverTime?.hour))
+      .filter(i =>i.type=="group" || !item?.on_appointments.some(a => a.scheduled_date == date && a.scheduled_hours == i.time && a.id != canceled_appointment_id));
 
-    let {urgent_consultation_limit_duration_hours,urgent_consultation_limit_duration_minutes} = JSON.parse(user?.app_settings?.[0]?.value)
-    let selected_hour=hour
-    let selected_date=date
+    if (type == "scheduled") {
+      return (item?.availability?.unavailable_specific_date?.[date] ? [] :
+        item?.availability?.specific_date?.[date] ? getSlots(item.availability.specific_date[date]) :
+        item?.urgent_availability?.specific_date?.[date] ? [] :
+        !selectedWeekDays?.[item?.id] ? getSlots(item?.availability?.weekday?.[weeks?.[new Date().getDay()]] || []) :
+        getSlots(item?.availability.weekday[selectedWeekDays?.[item?.id]] || []));
+    } else {
+      return (item?.urgent_availability?.unavailable_specific_date?.[date] ? [] :
+        item?.urgent_availability?.specific_date?.[date] ? getSlots(item.urgent_availability.specific_date[date]) :
+        item?.availability?.specific_date?.[date] ? [] :
+        !selectedWeekDays?.[item?.id] ? getSlots(item?.urgent_availability?.weekday?.[weeks?.[new Date().getDay()]] || []) :
+        getSlots(item?.urgent_availability.weekday?.[selectedWeekDays?.[item?.id]] || []));
+    }
+  }
 
-    if(selected_date && selected_hour && data.serverTime?.date){
+  function isUrgentByLimit(hour, date) {
+    if (!user) return;
+
+    if (date) {
+      if (new Date(date).getDay() == 0 || new Date(date).getDay() == 6) {
+        return true;
+      }
+    }
+
+    let { urgent_consultation_limit_duration_hours, urgent_consultation_limit_duration_minutes } = JSON.parse(user?.app_settings?.[0]?.value);
+    let selected_hour = hour;
+    let selected_date = date;
+
+    if (selected_date && selected_hour && data.serverTime?.date) {
       const currentTime = new Date(`${data.serverTime?.date}T${formatTime(data.serverTime?.hour)}:00`);
       const consultationTime = new Date(`${selected_date}T${formatTime(selected_hour)}:00`);
-      let {minutes} = data.getTimeDifference(currentTime,consultationTime)
-      let minutes_limit=(urgent_consultation_limit_duration_hours * 60) + urgent_consultation_limit_duration_minutes;
-      return minutes < minutes_limit
+      let { minutes } = data.getTimeDifference(currentTime, consultationTime);
+      let minutes_limit = (urgent_consultation_limit_duration_hours * 60) + urgent_consultation_limit_duration_minutes;
+      return minutes < minutes_limit;
     }
-}
+  }
 
-async function SubmitForm(){
-    setLoading(true)
-    try{
-      if(id){
-        let r=await data.makeRequest({method:'post',url:`api/appointments/`+id,withToken:true,data:{
-          ...form,
-          dependent_id:form.is_for_dependent ? form.dependent_id : null
-        }, error: ``},0);
-  
-        setForm({...form,r})
-        toast.success(t('messages.updated-successfully'))
-        setLoading(false)
-        data._scrollToSection('center-content')
-
-      }else{
-
-        await data.makeRequest({method:'post',url:`api/appointments`,withToken:true,data:{
-
-          ...form,
-          scheduled_date:form.type_of_care=="requested" ? form.consultation_date : form.scheduled_date,
-          dependent_id:form.is_for_dependent ? form.dependent_id : null,
-          patient_id:user?.data?.id
-
-        }, error: ``},0);
-
-        data._showPopUp('basic_popup','request-will-be-sent-to-assistant-sent')
-
-        localStorage.removeItem('saved_appointment_url')
-  
-        setForm({...initial_form})
-        setMessageType('green')
-        setMessage(t('messages.added-successfully'))
-        setLoading(false)
-        data._scrollToSection('center-content')
-        setVerifiedInputs([])
-       
-        if(form.type_of_care=="urgent"){
-          data._showPopUp('basic_popup','contact-us-if-delay')
+  useEffect(() => {
+    (async () => {
+      try {
+        let res = data._sendFilter(searchParams);
+        if (res.scheduled_type_of_care == "requested") {
+          setForm({ ...form, type_of_care: 'requested', consultation_type: 'individual' });
+          return;
         }
-        setSelectedDoctor({...selectedDoctor,status:'not_selected'})
-        data.handleLoaded('remove','appointments')
-        let new_params={scheduled_date:'',scheduled_doctor:'',scheduled_hours:'',scheduled_weekday:'',canceled_appointment_id:'',reason_for_consultation:''}
-        data._updateFilters(new_params,setSearchParams)
+
+        if (res.scheduled_doctor && res.scheduled_hours && res.scheduled_weekday && res.scheduled_date && res.type_of_care) {
+          setSelectedDoctor({ status: 'loading', hours: [] });
+          let response;
+
+          try {
+            response = await data.makeRequest({ method: 'get', url: `api/doctor/` + res.scheduled_doctor, withToken: true, error: `` }, 0);
+            if (res.canceled_appointment_id) {
+              let canceled_appointment = await data.makeRequest({ method: 'get', url: `api/appointments/` + res.canceled_appointment_id, withToken: true, error: `` }, 0);
+              if (canceled_appointment?.status == "canceled") {
+                if (user?.role == "patient") {
+                  data._showPopUp('basic_popup', 'consultation-is-already-canceled');
+                }
+                setSelectedDoctor({ status: 'not_selected' });
+              }
+            }
+          } catch (e) {
+            data._showPopUp('basic_popup', 'unable-to-load-consultation-items');
+            setSelectedDoctor({ status: 'not_selected' });
+            return;
+          }
+
+          let is_urgent = res.type_of_care == "urgent";
+          let scheduled_weekday = res.scheduled_weekday == 'undefined' ? weeks[new Date(res.scheduled_date).getDay()] : res.scheduled_weekday;
+
+          let new_form = {
+            ...form,
+            reason_for_consultation: form.reason_for_consultation || res.reason_for_consultation || '',
+            additional_observations: form.additional_observations || res.additional_observations || '',
+            name: response.name,
+            is_urgent,
+            medical_specialty: response.medical_specialty,
+            consultation_date: res.scheduled_date,
+            doctor_id: response.id,
+            patient_id: user?.data?.id || null,
+            scheduled_date: res.scheduled_date,
+            scheduled_doctor: res.scheduled_doctor,
+            scheduled_hours: res.scheduled_hours,
+            scheduled_weekday,
+            type_of_care: is_urgent ? 'urgent' : 'scheduled',
+            consultation_type: res.consultation_type || 'individual' 
+          };
+
+          if (res.canceled_appointment_id) {
+            new_form.canceled_appointment_id = res.canceled_appointment_id;
+          }
+
+          let available_hours = getAvailableHours(response, new_form.type_of_care, res.scheduled_date, { [response.id]: scheduled_weekday }, res.canceled_appointment_id);
+
+          if (isUrgentByLimit(res.scheduled_hours, res.scheduled_date) || data.isSetAsUrgentHour(res.scheduled_hours, JSON.parse(user?.app_settings?.[0]?.value))) {
+            new_form.type_of_care = 'urgent';
+          }
+
+          if (!available_hours.some(slot => slot.time == res.scheduled_hours)) {
+            if (user?.role == "patient") {
+              data._showPopUp('basic_popup', 'appointment-no-longer-available');
+              setSelectedDoctor({ status: 'not_selected' });
+              return;
+            }
+          } else {
+            setSelectedDoctor({ status: 'selected' });
+            setForm({ ...new_form, is_for_dependent: form.is_for_dependent, dependent_id: form.dependent_id });
+          }
+        }
+      } catch (e) {
+        if (e.status == 404) {
+          toast.error(t('common.doctor-not-found'));
+          setForm(initial_form);
+          setSelectedDoctor({ ...selectedDoctor, status: 'not_selected' });
+        } else if (e.message == 'Failed to fetch') {
+          toast.error(t('common.doctor-not-found-try'));
+        } else {
+          toast.error(t('common.doctor-not-found-try'));
+        }
+        console.log({ e });
+      }
+    })();
+  }, [pathname, search]);
+
+  async function SubmitForm() {
+    setLoading(true);
+    try {
+      if (id) {
+        let r = await data.makeRequest({
+          method: 'post',
+          url: `api/appointments/` + id,
+          withToken: true,
+          data: {
+            ...form,
+            dependent_id: form.is_for_dependent ? form.dependent_id : null
+          },
+          error: ``
+        }, 0);
+
+        setForm({ ...form, ...r });
+        toast.success(t('messages.updated-successfully'));
+        setLoading(false);
+        data._scrollToSection('center-content');
+      } else {
+        await data.makeRequest({
+          method: 'post',
+          url: `api/appointments`,
+          withToken: true,
+          data: {
+            ...form,
+            scheduled_date: form.type_of_care == "requested" ? form.consultation_date : form.scheduled_date,
+            dependent_id: form.is_for_dependent ? form.dependent_id : null,
+            patient_id: user?.data?.id,
+            consultation_type: form.consultation_type // Include consultation_type
+          },
+          error: ``
+        }, 0);
+
+        data._showPopUp('basic_popup', 'request-will-be-sent-to-assistant-sent');
+
+        localStorage.removeItem('saved_appointment_url');
+
+        setForm({ ...initial_form });
+        setMessageType('green');
+        setMessage(t('messages.added-successfully'));
+        setLoading(false);
+        data._scrollToSection('center-content');
+        setVerifiedInputs([]);
+
+        if (form.type_of_care == "urgent") {
+          data._showPopUp('basic_popup', 'contact-us-if-delay');
+        }
+        setSelectedDoctor({ ...selectedDoctor, status: 'not_selected' });
+        data.handleLoaded('remove', 'appointments');
+        let new_params = { scheduled_date: '', scheduled_doctor: '', scheduled_hours: '', scheduled_weekday: '', canceled_appointment_id: '', reason_for_consultation: '', consultation_type: '' };
+        data._updateFilters(new_params, setSearchParams);
+      }
+    } catch (e) {
+      setMessageType('red');
+      data._scrollToSection('_register_msg');
+      if (e.status == 401) {
+        setMessage(t('common.email-exists'));
+      } else if (e.status == 400) {
+        setMessage(t('common.invalid-data'));
+      } else if (e.status == 500) {
+        setMessage(t('common.unexpected-error'));
+      } else if (e.message == 'Failed to fetch') {
+        setMessage(t('common.check-network'));
+      } else {
+        setMessage(t('common.unexpected-error'));
+      }
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (data.paymentInfo?.done) {
+      setForm({ ...initial_form });
+      setMessageType('green');
+      setMessage(t('messages.added-successfully'));
+      setLoading(false);
+      data._scrollToSection('center-content');
+      setVerifiedInputs([]);
+
+      if (!data.paymentInfo?.is_proof && data.paymentInfo?.appointment?.id) {
+        setMessageBtnSee({
+          onClick: () => {
+            navigate('/appointment/' + data.paymentInfo.appointment.id);
+            setItemToEditLoaded(false);
+            setMessage('');
+            if (document.querySelector('#center-content')) {
+              document.querySelector('#center-content').scrollTop = 0;
+            }
+          }
+        });
+
+        if (form.type_of_care == "urgent") {
+          data._showPopUp('basic_popup', 'contact-us-if-delay');
+        }
       }
 
-     
+      setSelectedDoctor({ ...selectedDoctor, status: 'not_selected' });
+      data.handleLoaded('remove', 'appointments');
+      let new_params = { scheduled_date: '', scheduled_doctor: '', scheduled_hours: '', scheduled_weekday: '', consultation_type: '' };
+      data._updateFilters(new_params, setSearchParams);
+      data.setPaymentInfo({ ...data.paymentInfo, done: false, type_of_care: null });
+    }
+  }, [data?.paymentInfo]);
 
-    }catch(e){
+  const [itemToShow, setItemToShow] = useState(null);
 
-      setMessageType('red')
-      data._scrollToSection('_register_msg')
-      if(e.message==401){
-        setMessage(t('common.email-exists'))
-      }else if(e.message==400){
-        setMessage(t('common.invalid-data'))
-      }else if(e.message==500){
-        setMessage(t('common.unexpected-error'))
-      }else  if(e.message=='Failed to fetch'){
-          setMessage(t('common.check-network'))
-      }else{
-          setMessage(t('common.unexpected-error'))
+  function setDependentId(id) {
+    setForm({ ...form, dependent_id: id });
+  }
+
+  useEffect(() => {
+    if (data.justCreatedDependent) {
+      setDependents([...dependents, data.justCreatedDependent]);
+      setForm({ ...form, dependent_id: JSON.parse(JSON.stringify(data.justCreatedDependent.id)) });
+      data.setJustCreatedDependent(null);
+      toast.success(t('messages.added-successfully'));
+    }
+  }, [data.justCreatedDependent]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        let _dependents = await data.makeRequest({ method: 'get', url: `api/all-patient-dependens`, withToken: true, error: `` }, 0);
+        setDependents(_dependents);
+        setDependentsLoaded(true);
+      } catch (e) {
+        console.log({ e });
       }
-      setLoading(false)
+    })();
+  }, []);
 
+  useEffect(() => {
+    if (user?.role != "patient" && !id) {
+      navigate('/dashboard');
     }
 
-  }
-
-
-  useEffect(()=>{
-             if(data.paymentInfo?.done){
-                  setForm({...initial_form})
-                  setMessageType('green')
-                  setMessage(t('messages.added-successfully'))
-                  setLoading(false)
-                  data._scrollToSection('center-content')
-                  setVerifiedInputs([])
-
-                  if(!data.paymentInfo?.is_proof && data.paymentInfo?.appointment?.id){
-                    
-                    setMessageBtnSee({onClick:()=>{
-                      navigate('/appointment/'+data.paymentInfo.appointment.id)
-                      setItemToEditLoaded(false)
-                      setMessage('')
-                      if(document.querySelector('#center-content')) {
-                        document.querySelector('#center-content').scrollTop=0
-                      }
-                      }})
-                      
-                      if(form.type_of_care=="urgent"){
-                        data._showPopUp('basic_popup','contact-us-if-delay')
-                      }
-                  }
-                 
-                  setSelectedDoctor({...selectedDoctor,status:'not_selected'})
-                  data.handleLoaded('remove','appointments')
-                  let new_params={scheduled_date:'',scheduled_doctor:'',scheduled_hours:'',scheduled_weekday:''}
-                  data._updateFilters(new_params,setSearchParams)
-                  data.setPaymentInfo({...data.paymentInfo,done:false,type_of_care:null})
-             }
- },[data?.paymentInfo])
-
- const [itemToShow,setItemToShow]=useState(null)
-
- function setDependentId(id){
-      setForm({...form,dependent_id:id})
- }
-
- useEffect(()=>{
-    if(data.justCreatedDependent){
-        setDependents([...dependents,data.justCreatedDependent])
-        setForm({...form,dependent_id:JSON.parse(JSON.stringify(data.justCreatedDependent.id))})
-        data.setJustCreatedDependent(null)
-        toast.success(t('messages.added-successfully'))
+    if (!user || user?.role != "patient") {
+      return;
     }
- },[data.justCreatedDependent])
 
-
- useEffect(()=>{
-
-    (async()=>{
-      try{
-        let _dependents=await data.makeRequest({method:'get',url:`api/all-patient-dependens`,withToken:true, error: ``},0);
-        setDependents(_dependents)
-        setDependentsLoaded(true)
-      }catch(e){
-        console.log({e})
+    if (!user?.data?.gender) {
+      data._showPopUp('basic_popup', 'conclude_patient_info');
+      if (window.location.search?.includes('scheduled_doctor') && window.location.search?.includes('scheduled_date')) {
+        localStorage.setItem('saved_appointment_url', window.location.search + "&reason_for_consultation=" + form.reason_for_consultation + "&additional_observations=" + form.additional_observations + "&consultation_type=" + form.consultation_type);
       }
-    })()
- },[])
+    } else if (localStorage.getItem('saved_appointment_url') && !id) {
+      data._showPopUp('basic_popup', 'you-have-saved-appointment');
+    }
+  }, [user, pathname]);
 
+  useEffect(() => {
+    if (form.type_of_care == "requested") {
+      setSelectedDoctor({ status: 'not_selected' });
+    }
+  }, [form.type_of_care]);
 
- useEffect(()=>{
+  async function handleItems({ status, id, payment_confirmed, invoice_id, appointment }) {
+    data._closeAllPopUps();
+    toast.remove();
 
-    if(user?.role!="patient" && !id){
-           navigate('/dashboard')
+    if (status == "canceled") {
+      data.setAppointmentcancelationData({ consultation: appointment });
+      data.setUpdateTable(Math.random());
+      return;
     }
 
-    if(!user || user?.role!="patient"){
-          return
+    toast.loading(t('common.updating'));
+    setLoading(true);
+
+    try {
+      if (payment_confirmed) {
+        await data.makeRequest({
+          method: 'post',
+          url: `api/appointment-invoices/${invoice_id}/status`,
+          withToken: true,
+          data: { status: 'approved' },
+          error: ``
+        }, 0);
+      } else {
+        await data.makeRequest({
+          method: 'post',
+          url: `api/appointments/${id}/status`,
+          withToken: true,
+          data: { status },
+          error: ``
+        }, 0);
+      }
+
+      toast.remove();
+      toast.success(t('messages.updated-successfully'));
+      data.setUpdateTable(Math.random());
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      toast.remove();
+      if (e.status == 500) {
+        toast.error(t('common.unexpected-error'));
+      } else if (e.message == 'Failed to fetch') {
+        toast.error(t('common.check-network'));
+      } else {
+        toast.error(t('common.unexpected-error'));
+      }
     }
-
-    if(!user?.data?.gender){
-       data._showPopUp('basic_popup','conclude_patient_info')
-       if(window.location.search?.includes('scheduled_doctor') && window.location.search?.includes('scheduled_date')){
-        localStorage.setItem('saved_appointment_url',window.location.search+"&reason_for_consultation="+form.reason_for_consultation+"&additional_observations="+form.additional_observations)
-       }
-    }else if(localStorage.getItem('saved_appointment_url') && !id){
-       data._showPopUp('basic_popup','you-have-saved-appointment')
-    }
- },[user,pathname])
-
-
-
- useEffect(()=>{
-  if(form.type_of_care=="requested"){
-    setSelectedDoctor({status:'not_selected'})
-  }
- },[form.type_of_care])
-
-
- async function handleItems({status,id,payment_confirmed,invoice_id,appointment}){
-  data._closeAllPopUps()
-  toast.remove()
-
-  if(status=="canceled"){
-     data.setAppointmentcancelationData({consultation:appointment})
-     data.setUpdateTable(Math.random())
-     return
   }
 
-  toast.loading(t('common.updating')) 
-  setLoading(true)
- 
-  try{
-
-   if(payment_confirmed){
-     await data.makeRequest({method:'post',url:`api/appointment-invoices/${invoice_id}/status`,withToken:true,data:{
-       status:'approved'
-     }, error: ``},0);
-
-   }else{
-     await data.makeRequest({method:'post',url:`api/appointments/${id}/status`,withToken:true,data:{
-       status
-     }, error: ``},0);
-   }
-
-   toast.remove()
-   toast.success(t('messages.updated-successfully'))
-   data.setUpdateTable(Math.random())
-   setLoading(false)
-
-  }catch(e){
-     setLoading(false)
-     toast.remove()
-     if(e.message==500){
-       toast.error(t('common.unexpected-error'))
-     }else  if(e.message=='Failed to fetch'){
-       toast.error(t('common.check-network'))
-     }else{
-       toast.error(t('common.unexpected-error'))
-     }
-  }
-}
-
-const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const weeks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 return (
 <div>  
@@ -656,7 +640,6 @@ return (
   >
 
  <div className={`flex justify-between w-full`}>
-
     <div className="flex flex-wrap"></div>
     <div className="mt-4 items-center flex">
 
@@ -666,7 +649,6 @@ return (
             }} className={`table px-2 ${valid ? 'bg-honolulu_blue-500':' bg-gray-300 pointer-events-none'} text-white  right-1 top-1 py-1 text-[14px] rounded-full cursor-pointer hover:bg-honolulu_blue-500`}>
                  {t('common.close-and-save')}
             </span>}
-
         
             {(form.status=="approved") && <div onClick={()=>{
                 //window.open(`${data.APP_FRONDEND}/meeting/zoom/appointment/`+form.id, '_blank')
@@ -677,7 +659,6 @@ return (
             </div>}
 
             {(form.status!="pending" && form.status!="canceled" && id) && <div className={`flex _feedback items-center gap-x-2    ${!id || !itemToEditLoaded ? 'hidden':''}`}>  
-                
                 {form.status!="completed" && <button onClick={()=>{
                   setShowComment(true)
                   data._showPopUp('appointment_messages')
@@ -706,17 +687,16 @@ return (
     {name:t('form.patient-name'),value:form.is_for_dependent ? form.dependent?.name : form?.user?.name,hide:user?.role=="patient",
       link:(form.is_for_dependent ? '/dependent/'+form.dependent?.id : '/patient/'+form.patient?.id)
     },
-    
     {name:t('common.doctor'),value:form.doctor?.name || t('common.dronline-team')},
     {name:t('form.medical-specialty'),hide:form.type_of_care=="requested",value:data._specialty_categories.filter(i=>i.id==form.medical_specialty)?.[0]?.[i18next.language+"_name"]},
     {name:t('form.consultation-date'),value:`${form.consultation_date?.split('-')?.reverse()?.join('/')} (${t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})`,color:'#0b76ad'},
     {name:t('form.consultation-hour'),value:form.scheduled_hours,color:'#0b76ad'},
     {name:t('form.estimated-consultation-duration'),value:form.estimated_consultation_duration,hide:true},
     {name:t('form.type-of-care'),value:t(`form.${form.type_of_care}-c`)},
+    {name:t('common.consultation-format'),value:form.consultation_type=="group" ? t('common.in-group') : t('common.individual')},
     {name:t('form.reason-for-consultation'),value:form.reason_for_consultation,hide:user?.role=="patient"},
     {name:t('form.additional-observations'),value:form.additional_observations,hide:user?.role=="patient"}  ,
-    {name:t('common.created_at'),value:data._c_date(form.created_at)?.split('T')?.[0] + " "+data._c_date(form.created_at)?.split('T')?.[1]?.slice(0,5)}, 
-
+    {name:t('common.created_at'),value:data._c_date(form.created_at)?.split('T')?.[0]?.split('-')?.reverse()?.join('/') + " "+data._c_date(form.created_at)?.split('T')?.[1]?.slice(0,5)}, 
   ]}/>
 
 
@@ -799,55 +779,100 @@ return (
 
       />
 
-      <div className={`flex ${id ? 'opacity-60 pointer-events-none':''} mt-7 ${user?.role!="patient" || form.type_of_care=="requested" || id || (!form.type_of_care && selectedDoctor.status!="loading") ? 'hidden':''} justify-end flex-col  _doctor_list`}>
-        
-        <label class="mb-2 text-sm  text-gray-900">{t('common.doctor')}</label>
+     <div
+  className={`flex flex-col mt-7 _doctor_list ${
+    id ? 'opacity-60 pointer-events-none' : ''
+  } ${
+    user?.role !== "patient" || 
+    form.type_of_care === "requested" || 
+    id || 
+    (!form.type_of_care && selectedDoctor.status !== "loading") 
+      ? 'hidden' 
+      : ''
+  }`}
+>
+  <label className="mb-2 text-sm font-medium text-gray-900 truncate">
+    {t('common.doctor')}
+  </label>
 
-        <div onClick={()=>{
-          if(selectedDoctor.status!="loading") {
-              data.setUpdateTable(Math.random())
-              data._showPopUp('doctor_list')
-          }
-        }} class={`bg-gray max-md:w-full w-[400px] ${(selectedDoctor.status=="loading" || id) ? ' pointer-events-none':''} hover:bg-gray-100 cursor-pointer max-md:h-auto  h-[43px] border-gray-300  active:opacity-75  text-gray-900 text-sm rounded-[0.3rem] focus:ring-blue-500 focus:border-blue-500 border items-center flex justify-between p-2.5`}>    
-        
-            {selectedDoctor.status=="not_selected" && <>
-                <div className="flex items-center">
-                
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q14-36 44-58t68-22q38 0 68 22t44 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm280-670q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-246q54-53 125.5-83.5T480-360q83 0 154.5 30.5T760-246v-514H200v514Zm280-194q58 0 99-41t41-99q0-58-41-99t-99-41q-58 0-99 41t-41 99q0 58 41 99t99 41ZM280-200h400v-10q-42-35-93-52.5T480-280q-56 0-107 17.5T280-210v10Zm200-320q-25 0-42.5-17.5T420-580q0-25 17.5-42.5T480-640q25 0 42.5 17.5T540-580q0 25-17.5 42.5T480-520Zm0 17Z"/></svg>
-                <span className="ml-2">{t('common.select-doctor')}</span>
-
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg>
-      
-            </>}
-
-            {selectedDoctor.status=="loading" && <div className="flex items-center">
-                <Loader/><span>{t('common.loading')}...</span>
-            </div>}
-
-            {selectedDoctor.status=="selected" && <>
-              <div className="">
-                <span>{form.name?.split(" ").slice(0, 2).join(" ")} <label className={`${!data._loaded.includes('specialty_categories') ? 'hidden': ''} text-[13px] text-gray-500`}>({data._specialty_categories.filter(f=>f.id==form.medical_specialty)[0]?.[i18next.language+"_name"]})</label></span>
-                <div className="flex items-center max-md:flex-col max-md:items-start">
-                    <span className="text-[13px]">{form.consultation_date} ({t('common._weeks.'+form.scheduled_weekday?.toLowerCase())})</span>
-                    <span className="mx-2 max-md:hidden">-</span>
-                    {form.scheduled_hours?.split(',')?.map((i,_i)=>(
-                      <span className="mr-1">{i}{_i!=form.scheduled_hours.split(',').length - 1 ? ',':''}</span>
-                    ))}
-                    <span className="mx-2 max-md:hidden">-</span>
-                    <span  className="text-[13px]">{form.type_of_care=="urgent" ? t('common.urgent') : 'Normal'}</span>
-                </div>
+  <div
+    onClick={() => {
+      if (selectedDoctor.status !== "loading") {
+        data.setUpdateTable(Math.random());
+        data._showPopUp('doctor_list');
+      }
+    }}
+    className={`w-full max-w-[400px] bg-gray-50 hover:bg-gray-100 cursor-pointer 
+      min-h-[43px] border border-gray-300 rounded-md active:opacity-75 
+      text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 
+      flex items-center justify-between p-2.5 transition-colors
+      ${(selectedDoctor.status === "loading" || id) ? 'pointer-events-none' : ''}`}
+  >    
+    {selectedDoctor.status === "not_selected" ? (
+      <div className="flex items-center w-full">
+        <svg className="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" 
+          width="24px" fill="#5f6368">
+          <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q14-36 44-58t68-22q38 0 68 22t44 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm280-670q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-246q54-53 125.5-83.5T480-360q83 0 154.5 30.5T760-246v-514H200v514Zm280-194q58 0 99-41t41-99q0-58-41-99t-99-41q-58 0-99 41t-41 99q0 58 41 99t99 41ZM280-200h400v-10q-42-35-93-52.5T480-280q-56 0-107 17.5T280-210v10Zm200-320q-25 0-42.5-17.5T420-580q0-25 17.5-42.5T480-640q25 0 42.5 17.5T540-580q0 25-17.5 42.5T480-520Zm0 17Z"/>
+        </svg>
+        <span className="ml-2 truncate flex-grow">{t('common.select-doctor')}</span>
+        <svg className="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" 
+          width="24px" fill="#5f6368">
+          <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+        </svg>
+      </div>
+    ) : selectedDoctor.status === "loading" ? (
+      <div className="flex items-center w-full">
+        <Loader/>
+        <span className="ml-2 truncate">{t('common.loading')}...</span>
+      </div>
+    ) : (
+      <div className="w-full">
+        <div className="flex justify-between items-start w-full">
+          <div className="min-w-0">
+            <p className="truncate">
+              {form.name?.split(" ").slice(0, 2).join(" ")} 
+              {data._loaded.includes('specialty_categories') && (
+                <span className="text-xs text-gray-500 ml-1 whitespace-nowrap"> 
+                  ({data._specialty_categories.find(f => f.id == form.medical_specialty)?.[i18next.language + "_name"]}zxczcx zxczxc sfsd)
+                </span>
+              )}
+            </p>
+            <div className="flex flex-wrap items-center text-xs text-gray-600 mt-1">
+              <span className="truncate max-w-[120px]">
+                {form.consultation_date} ({t('common._weeks.' + form.scheduled_weekday?.toLowerCase())})
+              </span>
+              <span className="mx-1 hidden md:inline">-</span>
+              <div className="flex flex-wrap">
+                {form.scheduled_hours?.split(',')?.map((i, _i) => (
+                  <span key={i} className="mr-1 whitespace-nowrap">
+                    {i}{_i !== form.scheduled_hours.split(',').length - 1 ? ',' : ''}
+                  </span>
+                ))}
+              </div>
+              <span className="mx-1 hidden md:inline">-</span>
+              <span className="whitespace-nowrap">
+                {form.type_of_care === "urgent" ? t('common.urgent') : 'Normal'} {form.consultation_type=="group" ? `(${t('common.group-consultation')})`:''}
+              </span>
             </div>
+          </div>
 
-            {!id && <span onClick={()=>{
-                data._showPopUp('doctor_list')
-                data.setSelectedDoctors({})
-              }} className="text-honolulu_blue-400 ml-2 hover:opacity-60 underline cursor-pointer">{t('common.change')}</span>
-            }
-            </>}
-
+          {!id && (
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                data._showPopUp('doctor_list');
+                data.setSelectedDoctors({});
+              }} 
+              className="text-blue-600 hover:text-blue-800 hover:opacity-80 underline cursor-pointer ml-2 whitespace-nowrap text-sm"
+            >
+              {t('common.change')}
+            </button>
+          )}
         </div>
       </div>
+    )}
+  </div>
+</div>
       <FormLayout.Input 
                   verified_inputs={verified_inputs} 
                   form={form} 

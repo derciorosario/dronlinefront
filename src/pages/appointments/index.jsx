@@ -224,6 +224,7 @@ function App() {
                           t('form.consultation-hour'),
                           t('form.medical-specialty'),
                           t('form.type-of-care'),
+                          t('common.consultation-format'),
                           selectedTab=="approved" ? t('common.meeting-link') : null,
                           t('common.unread-messages'),
                           t('form.payment-confirmed'),
@@ -264,10 +265,9 @@ function App() {
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.consultation_date?.split('-')?.reverse()?.join('/')}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{i.scheduled_hours}</BaiscTable.Td>
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{data._specialty_categories.filter(f=>f.id==i.medical_specialty)[0]?.[i18next.language+"_name"]}</BaiscTable.Td>
-                                
-                              
-
                                 <BaiscTable.Td url={`/appointment/`+i.id}>{t('common.types_of_care.'+i.type_of_care)}</BaiscTable.Td>
+                                <BaiscTable.Td url={`/appointment/`+i.id}>{i.consultation_type=="group" ? t('common.in-group') : t('common.individual')}</BaiscTable.Td>
+                              
                                 <BaiscTable.Td hide={selectedTab!="approved"}>
                                    <div className={`${i.type_of_care=="requested" ? 'hidden':''}`} onClick={()=>{
                                          window.open(`${data.APP_FRONDEND}/meeting/zoom/appointment/`+i.id, '_blank')

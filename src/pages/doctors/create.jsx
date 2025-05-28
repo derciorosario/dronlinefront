@@ -73,7 +73,8 @@ function addPatients({ShowOnlyInputs}) {
     uploaded_files:[],
     signature_filename:'',
     stamp_filename:'',
-    registration_type:'individual'
+    registration_type:'individual',
+    consultation_type:'individual-and-group'
     
   }
 
@@ -452,7 +453,7 @@ useEffect(()=>{
                      <LogoFIle crop={false} res={handleUploadedFiles} _upload={{key:'profile_picture_filename',filename:form.profile_picture_filename}} label={t('common.profile-piture')}/>
                   </div>
 
-                  <div className="w-full">
+                  <div className="w-full flex gap-x-4 flex-wrap">
                     
                           <FormLayout.Input 
                             verified_inputs={verified_inputs} 
@@ -468,6 +469,23 @@ useEffect(()=>{
                             field={'registration_type'} 
                             value={form.registration_type} 
                           />
+
+                          <FormLayout.Input 
+                            verified_inputs={verified_inputs} 
+                            form={form} 
+                            r={true}
+                            selectOptions={[
+                               {name:t('common.individual-and-group'),value:'individual-and-group'},
+                               {name:t('common.individual'),value:'individual'},
+                               {name:t('common.in-group'),value:'group'}
+                            ]}
+                            onBlur={() => setVerifiedInputs([...verified_inputs, 'consultation_type'])}  
+                            label={t('common.consultation-format')}  
+                            onChange={(e) => setForm({...form, consultation_type: e.target.value})} 
+                            field={'consultation_type'} 
+                            value={form.consultation_type} 
+                          />
+
                    </div>
 
           

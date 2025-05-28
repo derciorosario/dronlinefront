@@ -437,6 +437,9 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+       "in-group": "In Group",
+  "group-consultation": "Group Consultation",
+  "consultation-format": "Consultation Format",
             "show-more":"Show more",
             "show-less":"Show less",
            "set-password":"Set password",

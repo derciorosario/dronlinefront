@@ -440,6 +440,9 @@
     },
     
     "common":{
+        "in-group":"Em grupo",
+        "group-consultation":"Consulta em grupo",
+        "consultation-format":"Formato da consulta",
         "show-more":"Mostrar mais",
         "show-less":"Mostrar menos",
         "set-password":"Definir senha",
