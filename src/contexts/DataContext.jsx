@@ -3,7 +3,7 @@ import { useAuth } from './AuthContext';
 import html2pdf from 'html2pdf.js';
 import toast from 'react-hot-toast';
 
-let env="pro"
+let env="test"
 import io from 'socket.io-client';
 import { t } from 'i18next';
 const socket_server=env=="pro" ? 'https://socket.dronlinemz.com' : env == "test" ? "https://testsocket.dronlinemz.com" : 'http://localhost:3001'
