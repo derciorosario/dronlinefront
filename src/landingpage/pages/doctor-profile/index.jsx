@@ -381,7 +381,7 @@ function DoctorProfile() {
                 </svg>
               </div>
               <span className="text-[13px]">{t('common.patients')}</span>
-              <span className="mt-bold">{doctor.unique_patients_count + doctor.unique_dependents_count}</span>
+              <span className="mt-bold">{data.getFakeConsultationCount(2,11)[doctor.id] + doctor.unique_patients_count + doctor.unique_dependents_count}</span>
             </div>
 
             <div className="flex flex-col items-center">
@@ -391,7 +391,7 @@ function DoctorProfile() {
                 </svg>
               </div>
               <span className="text-[13px]">{t('common.rating')}</span>
-              <span className="mt-bold">{doctor.average_rating}</span>
+              <span className="mt-bold">{data.getFakeConsultationCount(0,5)[doctor.id]}</span>
             </div>
 
             <div className="flex flex-col items-center w-full">
@@ -411,7 +411,7 @@ function DoctorProfile() {
                 </svg>
               </div>
               <span className="text-[13px]">{t('common.reviews')}</span>
-              <span className="mt-bold">{doctor.reviews.length}</span>
+              <span className="mt-bold">{data.getFakeConsultationCount(0,4)[doctor.id] + doctor.reviews.length}</span>
             </div>
           </div>
         </div>
