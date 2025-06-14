@@ -24,6 +24,7 @@ function DoctorProfile() {
  },[])
   
   const [doctor, setDoctor] = useState(null);
+  const [requestedDoctor,setRequestedDoctor]=useState(null)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedWeekDays, setSelectedWeekDays] = useState({});
@@ -82,6 +83,8 @@ function DoctorProfile() {
           withToken: true,
           error: t('common.failed-to-load-doctor')
         }, 0);
+
+        setRequestedDoctor(response?.data?.[0])
         
         if (response && response?.data?.[0]) {
           const translatedDoctor = {
@@ -90,6 +93,8 @@ function DoctorProfile() {
             urgent_availability: translateWeekdayAvailability(response && response?.data?.[0].urgent_availability)
           };
           setDoctor(translatedDoctor);
+        }else{
+          navigate('/')
         }
       } catch (err) {
 
@@ -226,7 +231,7 @@ function DoctorProfile() {
           </h3>
           <button
             onClick={() => {
-                 homeData.setSelectedDoctorToSchedule(doctor);
+                 homeData.setSelectedDoctorToSchedule(requestedDoctor);
             }}
             className="flex items-center gap-2 px-4 py-2 bg-honolulu_blue-300 hover:bg-honolulu_blue-400 text-white rounded-full text-sm"
           >
@@ -416,11 +421,11 @@ function DoctorProfile() {
           <div className="flex flex-col w-full">
             <span className="text-honolulu_blue-300 text-[17px] uppercase mt-bold">{doctor.name}</span>
             <span className="text-honolulu_blue-500 mt-bold text-[20px] uppercase">
-              {data._specialty_categories.find(i => i.id == doctor.medical_specialty)?.[i18next.language + "_name"]}
-            </span>
+              {homeData._specialty_categories.find(i => i.id == doctor.medical_specialty)?.[i18next.language + "_name"]}
+             </span>
             <p className="text-justify mt-5 text-gray-500 mb-4">
-              {data.text_l(doctor[`${i18next.language}_short_biography`], itemsToShowInfull.includes(doctor.id) ? 1000 : 350)}
-              {doctor[`${i18next.language}_short_biography`]?.length > 350 && (
+              {data.text_l(doctor[`${i18next.language}_short_biography`], itemsToShowInfull.includes(doctor.id) ? 1000 : 400)}
+              {doctor[`${i18next.language}_short_biography`]?.length > 400 && (
                 <span 
                   onClick={() => {
                     if (itemsToShowInfull.includes(doctor.id)) {

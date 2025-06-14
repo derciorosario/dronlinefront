@@ -8,8 +8,6 @@ import { useNavigate } from 'react-router-dom'
 
 
 function DoctorList({max,items,center,loaded}) {
-
-
   const [selectedWeekDays,setSelectedWeekDays] = useState({})
   const [selectedDates,setSelectedDates] = useState({})
   const navigate=useNavigate()
@@ -42,15 +40,23 @@ function DoctorList({max,items,center,loaded}) {
     }
 }
 
+
+
 const handleClick = (item) => { 
     if (!loaded) return;
-    const slug = item.name?.toLowerCase()
-        .normalize("NFD")                  // Decompõe caracteres com acento
-        .replace(/[\u0300-\u036f]/g, '')  // Remove os sinais diacríticos
+
+    const nameParts = item.name?.toLowerCase()
+        .normalize("NFD")                  
+        .replace(/[\u0300-\u036f]/g, '')  
         .split(' ')
-        .filter(name => name)
-        .filter((_, _i) => _i <= 1)
-        .join('-');
+        .filter(Boolean);
+
+    let slug = '';
+    if (nameParts.length === 1) {
+        slug = nameParts[0];
+    } else if (nameParts.length > 1) {
+        slug = `${nameParts[0]}-${nameParts[nameParts.length - 1]}`;
+    }
 
     navigate(`/doctors/${item.id}/${slug}`);
 };
@@ -154,13 +160,17 @@ const handleClick = (item) => {
 
 
        {loaded && <div className="mt-auto flex items-center">
+
+
             <button
               onClick={() => {
-                data.setSelectedDoctorToSchedule(item);
+                   data.setSelectedDoctorToSchedule(item);
               }}
               className="px-5 max-md:w-full py-3 whitespace-nowrap bg-honolulu_blue-300 hover:bg-honolulu_blue-300 text-white table uppercase text-[14px] border-honolulu_blue-300 border rounded-full"
             >
               {t('common.book')}
+
+
             </button>
        </div>}
 
