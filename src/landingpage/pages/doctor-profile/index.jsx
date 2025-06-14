@@ -102,7 +102,15 @@ function DoctorProfile() {
 
     data._scrollToSection('top','instant')
     fetchDoctor();
+
+
   }, [id, i18next.language]);
+
+   let required_data=['specialty_categories']
+   useEffect(()=>{
+         if(!user) return
+          data._get(required_data) 
+   },[user,pathname])
 
   const handleImageLoad = (index) => {
     setLoadedImages((prev) => ({ ...prev, [index]: true }));
@@ -186,9 +194,9 @@ function DoctorProfile() {
     const date = selectedDates[doctor.id] || dayjs().format('YYYY-MM-DD');
     const weekday = weekdayNames[i18next.language][Object.keys(weekdayNames.en)[new Date(date).getDay()]];
 
-    if ((pathname.includes('/doctors-list') || pathname == "/") && user?.role != "patient") {
+    if (user?.role == "patient") {
       homeData.setIsLoading(true);
-      window.location.href = (`/login?nextpage=add-appointments&scheduled_doctor=${doctor.id}&type_of_care=${type}&consultation_type=${consultationType}&scheduled_hours=${time}&scheduled_date=${date}&scheduled_weekday=${weekday}`);
+      window.location.href = (`/add-appointments&scheduled_doctor=${doctor.id}&type_of_care=${type}&consultation_type=${consultationType}&scheduled_hours=${time}&scheduled_date=${date}&scheduled_weekday=${weekday}`);
       return;
     }
 
