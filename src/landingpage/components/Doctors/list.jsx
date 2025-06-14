@@ -42,14 +42,19 @@ function DoctorList({max,items,center,loaded}) {
     }
 }
 
-const handleClick = (item) => {
-     console.log({item})
-     const slug = item.name?.toLowerCase() || ''
-    .split(' ')               
-    .filter(name => name).filter((_,_i)=>_i<=0)   
-    .join('-');
-     navigate(`/doctors/${item.id}/${slug}`);
- };
+const handleClick = (item) => { 
+    if (!loaded) return;
+    const slug = item.name?.toLowerCase()
+        .normalize("NFD")                  // Decompõe caracteres com acento
+        .replace(/[\u0300-\u036f]/g, '')  // Remove os sinais diacríticos
+        .split(' ')
+        .filter(name => name)
+        .filter((_, _i) => _i <= 1)
+        .join('-');
+
+    navigate(`/doctors/${item.id}/${slug}`);
+};
+
 
 
   return (
@@ -61,7 +66,7 @@ const handleClick = (item) => {
         
         <div
       onClick={()=>handleClick(item)}
-      className={`cursor-pointer transform transition duration-300 hover:scale-[1.02] active:scale-[0.98] flex-1 ${
+      className={` transform transition duration-300 ${loaded ? 'hover:scale-[1.02] cursor-pointer active:scale-[0.98]':''} flex-1 ${
         !loadedImages[_item] ? 'animate-pulse' : ''
       } bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden shadow mb-4`}
     >

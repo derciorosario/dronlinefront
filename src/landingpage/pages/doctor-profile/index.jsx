@@ -197,7 +197,8 @@ function DoctorProfile() {
     data.setPaymentInfo({ doctor });
     data.setSelectedDoctorToSchedule({});
     homeData.setSelectedDoctorToSchedule({});
-    navigate(`/add-appointments?scheduled_doctor=${doctor.id}&type_of_care=${type}&consultation_type=${consultationType}&scheduled_hours=${time}&scheduled_date=${date}&scheduled_weekday=${weekday}&canceled_appointment_id=${data.appointmentcancelationData?.consultation?.id || ''}`);
+    homeData.setIsLoading(true);
+    window.location.href = (`/login?nextpage=add-appointments?scheduled_doctor=${doctor.id}&type_of_care=${type}&consultation_type=${consultationType}&scheduled_hours=${time}&scheduled_date=${date}&scheduled_weekday=${weekday}&canceled_appointment_id=${data.appointmentcancelationData?.consultation?.id || ''}`);
     data.setAppointmentcancelationData({});
   };
 
@@ -335,7 +336,7 @@ function DoctorProfile() {
 
   return (
      <DefaultLayout>
-          <div className="w-full pb-[90px] max-w-4xl mx-auto p-4">
+          <div className="w-full pb-[90px] max-w-4xl mx-auto p-4 mt-5">
       <div className="flex flex-col md:flex-row gap-8">
         {/* Doctor Image */}
         <div className="flex-1">
