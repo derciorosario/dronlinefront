@@ -40,16 +40,16 @@ function DoctorList({max,items,center,loaded}) {
     }else{
         return (item.urgent_availability.unavailable_specific_date[date] ? [] : item.urgent_availability.specific_date[date] ? item.urgent_availability.specific_date[date] : item.availability.specific_date[date] ? [] : !selectedWeekDays[item.id] ? (item.urgent_availability.weekday[weeks[new Date().getDay()]] || []) : (item.urgent_availability.weekday[selectedWeekDays[item.id]] || [])).sort((a, b) => a.split(':').reduce((h, m) => +h * 60 + +m) - b.split(':').reduce((h, m) => +h * 60 + +m))
     }
-
 }
- const handleClick = (item) => {
-  const slug = item.name.toLowerCase()
+
+const handleClick = (item) => {
+     console.log({item})
+     const slug = item.name?.toLowerCase() || ''
     .split(' ')               
     .filter(name => name).filter((_,_i)=>_i<=0)   
-    .join('-');  
-
+    .join('-');
      navigate(`/doctors/${item.id}/${slug}`);
-};
+ };
 
 
   return (

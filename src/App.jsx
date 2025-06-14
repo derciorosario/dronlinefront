@@ -84,7 +84,7 @@ function App() {
          <Route path="/add-appointments" element={<ProtectedRoute redirectTo="/login"><CreateAppointments/></ProtectedRoute>}/>
          <Route path="/appointment/:id" element={<ProtectedRoute redirectTo="/login"><CreateAppointments/></ProtectedRoute>}/>
          <Route path="/doctors" element={<ProtectedRoute redirectTo="/login"><Doctors/></ProtectedRoute>}/>
-         <Route path="/doctors/:id/:slug" element={<ProtectedRoute redirectTo="/login"><DoctorProfile/></ProtectedRoute>}/>
+         <Route path="/doctors/:id/:slug" element={<DoctorProfile/>}/>
          <Route path="/specialty-categories" element={<ProtectedRoute redirectTo="/login"><SpecialtyCategories/></ProtectedRoute>}/>
          <Route path="/add-specialty-category" element={<ProtectedRoute redirectTo="/login"><CreateSpecialtyCategories/></ProtectedRoute>}/>
          <Route path="/specialty-category/:id" element={<ProtectedRoute redirectTo="/login"><CreateSpecialtyCategories/></ProtectedRoute>}/>
