@@ -584,6 +584,8 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "available-times":"Horários disponíveis",
+        "calendar":"Calendário",
         "date-and-hour":"Data e hora",
         "no-permission":"Sem permissão",
         "individual-and-group":"Individual e em group",

@@ -3,6 +3,7 @@ import i18next, { t } from 'i18next'
 import { useHomeData } from '../../contexts/DataContext'
 import { useState } from 'react'
 import { useHomeAuth } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 
 
@@ -11,6 +12,7 @@ function DoctorList({max,items,center,loaded}) {
 
   const [selectedWeekDays,setSelectedWeekDays] = useState({})
   const [selectedDates,setSelectedDates] = useState({})
+  const navigate=useNavigate()
   const {handleSelectDoctorAvailability,selectedDoctors,setSelectedDoctors} = useHomeData()
   const weeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
   const {APP_FRONDEND}=useHomeAuth()
@@ -40,6 +42,14 @@ function DoctorList({max,items,center,loaded}) {
     }
 
 }
+ const handleClick = (item) => {
+  const slug = item.name.toLowerCase()
+    .split(' ')               
+    .filter(name => name).filter((_,_i)=>_i<=0)   
+    .join('-');  
+
+     navigate(`/doctors/${item.id}/${slug}`);
+};
 
 
   return (
@@ -48,15 +58,22 @@ function DoctorList({max,items,center,loaded}) {
   {(loaded ? items.filter((i, _i) => _i <= max || !max) : [{}, {}, {}]).map((item, _item) => (
     <div className={`flex w-[340px] max-md:w-[46%] max-sm:w-full gap-2 flex-col`} key={_item}>
       <div>
-        <div className={`flex-1 ${!loadedImages[_item] ? 'animate-pulse' : ''} bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden shadow mb-4`}>
-          <img
-            onLoad={() => handleImageLoad(_item)}
-            src={item.profile_picture_filename}
-            className={`h-[380px] max-sm:h-[430px] w-full object-cover object-top transition-opacity duration-500 ${
-              loadedImages[_item] ? "opacity-100" : "opacity-0"
-            }`}
-          />
-        </div>
+        
+        <div
+      onClick={()=>handleClick(item)}
+      className={`cursor-pointer transform transition duration-300 hover:scale-[1.02] active:scale-[0.98] flex-1 ${
+        !loadedImages[_item] ? 'animate-pulse' : ''
+      } bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden shadow mb-4`}
+    >
+      <img
+        onLoad={() => handleImageLoad(_item)}
+        src={item.profile_picture_filename}
+        alt="Profile"
+        className={`h-[380px] max-sm:h-[430px] w-full object-cover object-top transition-opacity duration-500 ${
+          loadedImages[_item] ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+    </div>
 
         {loaded && (
           <div className="flex gap-3 bg-white py-4 px-1">

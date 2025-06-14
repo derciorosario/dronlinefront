@@ -440,6 +440,8 @@
     },
     
     "common":{
+        "calendar":"Calendário",
+        "available-times":"Horários disponíveis",
         "in-group":"Em grupo",
         "group-consultation":"Consulta em grupo",
         "consultation-format":"Formato da consulta",

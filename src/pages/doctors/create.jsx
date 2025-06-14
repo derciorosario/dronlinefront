@@ -77,13 +77,10 @@ function addPatients({ShowOnlyInputs}) {
     consultation_type:'individual-and-group'
     
   }
-
   const [form,setForm]=useState(initial_form)
   
   useEffect(()=>{
-
     let v=true
-
     if(!form.name ||
        !form.email ||
        !form.address ||
@@ -95,13 +92,10 @@ function addPatients({ShowOnlyInputs}) {
        !form.date_of_birth ||
        !form.identification_document ||
        !form.province_of_residence ||
-
        ((!form.passport_number || !form.passport_number_filename) && form.identification_document=="passport_number") ||
        ((!form.identification_number || !form.identification_number_filename) && form.identification_document=="identification_number") ||
        ((!form.birth_certificate || !form.birth_certificate_filename) && form.identification_document=="birth_certificate") ||
-
        (form.identification_document=="identification_number" && (!form.date_of_issuance_of_the_identity_card || !form.place_of_issuance_of_the_identity_card)) ||
-      
        !form.country_of_residence || 
        !form.occupation ||
        !form.nationality ||
@@ -165,8 +159,6 @@ function addPatients({ShowOnlyInputs}) {
 },[user,pathname])
 
 
-
-
 useEffect(()=>{
 
   let res=data._sendFilter(searchParams)
@@ -196,7 +188,6 @@ useEffect(()=>{
       }else{
         toast.error(t('common.unexpected-error'))
       }
-
       setDoctorRequestToBeLoaded(true)
   }
 })()

@@ -57,6 +57,7 @@ import Terms from './landingpage/pages/terms-and-conditions';
 import AppointmentCancelationTerms from './landingpage/pages/appointment-cancelation-terms';
 import VerifyCode from './landingpage/pages/verify-doc-qrcode/index.jsx'
 import TestReactPdf from './components/Print/renderpdf-test.jsx'
+import DoctorProfile from './landingpage/pages/doctor-profile/index.jsx';
 
 function App() {
 
@@ -82,26 +83,19 @@ function App() {
          <Route path="/appointments" element={<ProtectedRoute redirectTo="/login"><Appointments/></ProtectedRoute>}/>
          <Route path="/add-appointments" element={<ProtectedRoute redirectTo="/login"><CreateAppointments/></ProtectedRoute>}/>
          <Route path="/appointment/:id" element={<ProtectedRoute redirectTo="/login"><CreateAppointments/></ProtectedRoute>}/>
-
          <Route path="/doctors" element={<ProtectedRoute redirectTo="/login"><Doctors/></ProtectedRoute>}/>
-        
+         <Route path="/doctors/:id/:slug" element={<ProtectedRoute redirectTo="/login"><DoctorProfile/></ProtectedRoute>}/>
          <Route path="/specialty-categories" element={<ProtectedRoute redirectTo="/login"><SpecialtyCategories/></ProtectedRoute>}/>
          <Route path="/add-specialty-category" element={<ProtectedRoute redirectTo="/login"><CreateSpecialtyCategories/></ProtectedRoute>}/>
          <Route path="/specialty-category/:id" element={<ProtectedRoute redirectTo="/login"><CreateSpecialtyCategories/></ProtectedRoute>}/>
-
          <Route path="/app-settings" element={<ProtectedRoute redirectTo="/login"><AppSettings/></ProtectedRoute>}/>
-        
          <Route path="/cancellation-taxes" element={<ProtectedRoute redirectTo="/login"><CancellationTaxes/></ProtectedRoute>}/>
          <Route path="/cancellation-taxes/:id" element={<ProtectedRoute redirectTo="/login"><CreateCancellationTaxes/></ProtectedRoute>}/>
-         
          <Route path="/waiting-list" element={<ProtectedRoute redirectTo="/login"><WaitingList/></ProtectedRoute>}/>
          <Route path="/waiting-list/:id" element={<ProtectedRoute redirectTo="/login"><CreateWaitingList/></ProtectedRoute>}/>
          <Route path="/waiting-list-stats" element={<ProtectedRoute redirectTo="/login"><WaitingListStats/></ProtectedRoute>}/>
-         
-
          <Route path="/add-doctors" element={<ProtectedRoute redirectTo="/login"><CreateDoctors/></ProtectedRoute>}/>
          <Route path="/doctor/:id" element={<ProtectedRoute redirectTo="/login"><CreateDoctors/></ProtectedRoute>}/>
-
          <Route path="/managers" element={<ProtectedRoute redirectTo="/login"><Managers/></ProtectedRoute>}/>
          <Route path="/add-managers" element={<ProtectedRoute redirectTo="/login"><CreateManagers/></ProtectedRoute>}/>
          <Route path="/manager/:id" element={<ProtectedRoute redirectTo="/login"><CreateManagers/></ProtectedRoute>}/>

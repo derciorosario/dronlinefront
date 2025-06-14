@@ -437,6 +437,8 @@
         "language-code-invalid": "Invalid language code"
     },
     "common":{
+        "available-times":"Available times",
+        "calendar":"Calendar",
        "in-group": "In Group",
   "group-consultation": "Group Consultation",
   "consultation-format": "Consultation Format",
