@@ -115,7 +115,6 @@ function App() {
 
     setServiceItems([
       {name:t('common.service-1'),desc:t('common.service-1-desc')},
-     // {name:t('common.service-2'),desc:t('common.service-2-desc')},
       {name:t('common.service-3'),desc:t('common.service-3-desc')},
       {name:t('common.service-4'),desc:t('common.service-4-desc')}
     ])

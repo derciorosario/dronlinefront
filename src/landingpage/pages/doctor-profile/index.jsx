@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 import DefaultLayout from '../../layout/DefaultLayout';
+import Footer from '../../components/Footer';
 
 function DoctorProfile() {
   const { id } = useParams();
@@ -351,6 +352,7 @@ function DoctorProfile() {
      <DefaultLayout>
           <div className="w-full pb-[90px] max-w-4xl mx-auto p-4 mt-5">
       <div className="flex flex-col md:flex-row gap-8">
+
         {/* Doctor Image */}
         <div className="flex-1">
           <div className={`flex-1 ${!loadedImages[doctor.id] ? 'animate-pulse' : ''} bg-honolulu_blue-50 rounded-[0.3rem] overflow-hidden shadow mb-4`}>
@@ -449,6 +451,8 @@ function DoctorProfile() {
 
     
     </div>
+
+      <Footer/>
      </DefaultLayout>
   );
 }
