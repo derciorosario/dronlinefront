@@ -84,15 +84,17 @@ const Calendar = ({items}) => {
 
     let specific_dates=[]
 
-    specificDates.forEach((a,_a)=>{
+    try{
+
+      specificDates.forEach((a,_a)=>{
        Object.keys(a).forEach(date=>{
 
          a[date].forEach(hour=>{
             _events.push({
               event_id:Math.random(),
-              title:_a==0  ? `${t('common._availability')} ${hour}` :   `${t('common._availability')} (${t('common.urgent')}) ${hour}`  ,
-              start: new Date(`${date.replaceAll('-','/')} ${hour}`),
-              end: new Date(`${date.replaceAll('-','/')} ${data.timeAfter30Minutes(hour)}`),
+              title:_a==0  ? `${t('common._availability')} ${hour.time_slot}` :   `${t('common._availability')} (${t('common.urgent')}) ${hour.time_slot}`  ,
+              start: new Date(`${date.replaceAll('-','/')} ${hour.time_slot}`),
+              end: new Date(`${date.replaceAll('-','/')} ${data.timeAfter30Minutes(hour.time_slot)}`),
               color: _a==0 ? '#1565c0' : 'red',
             })
          })
@@ -102,6 +104,10 @@ const Calendar = ({items}) => {
        })
     })
 
+
+    }catch(e){
+      console.log(e)
+    }
     weekdaysAvailability.forEach((a,_a)=>{
 
       Object.keys(a).forEach((i,_i)=>{
@@ -110,9 +116,9 @@ const Calendar = ({items}) => {
                 d.filter(i=>new Date(i).getDay()==index && !specific_dates.includes(i) && !unavailable_dates.includes(i)).forEach(date=>{
                     _events.push({
                       event_id:Math.random(),
-                      title:_a==0  ? `${t('common._availability')} ${hour}` :   `${t('common._availability')} (${t('common.urgent')}) ${hour}`  ,
-                      start: new Date(`${date.replaceAll('-','/')} ${hour}`),
-                      end: new Date(`${date.replaceAll('-','/')} ${data.timeAfter30Minutes(hour)}`),
+                      title:_a==0  ? `${t('common._availability')} ${hour.time_slot}` :   `${t('common._availability')} (${t('common.urgent')}) ${hour.time_slot}`  ,
+                      start: new Date(`${date.replaceAll('-','/')} ${hour.time_slot}`),
+                      end: new Date(`${date.replaceAll('-','/')} ${data.timeAfter30Minutes(hour.time_slot)}`),
                       color: _a==0 ? '#1565c0' : 'red',
                   })
                 })
