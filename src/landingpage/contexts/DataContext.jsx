@@ -222,7 +222,21 @@ export const HomeDataProvider = ({ children }) => {
       }
     }  
     
-    
+
+
+    function shuffleDoctorsPriority(doctors,makeRandom) {
+      // Separate doctors into priority and non-priority groups
+      const priorityDoctors = doctors.filter(doctor => doctor.schedules && doctor.schedules.length >= 1);
+      const nonPriorityDoctors = doctors.filter(doctor => !doctor.schedules || doctor.schedules.length < 1);
+      
+      // Shuffle each group
+      const shuffledPriority = makeRandom ?  shuffleArray(priorityDoctors) : priorityDoctors;
+      const shuffledNonPriority = makeRandom ? shuffleArray(nonPriorityDoctors) : nonPriorityDoctors;
+      
+      // Combine with priority doctors first
+      return [...shuffledPriority, ...shuffledNonPriority];
+    }
+        
     
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -251,8 +265,8 @@ export const HomeDataProvider = ({ children }) => {
             handleLoaded('add',items[f])
 
             
-            if(items[f]=="get_all_doctors"){ 
-              response={...response,data:shuffleArray([...response.data])} //make it random
+            if(items[f]=="get_all_doctors" || items[f]=="doctors"){ 
+                response={...response,data:shuffleDoctorsPriority([...response.data],true)} //make it random
             }
             selected.update(response)
            

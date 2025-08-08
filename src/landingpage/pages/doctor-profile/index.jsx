@@ -329,7 +329,9 @@ function DoctorProfile() {
   };
 
   if (loading) {
-    return <SkeletonLoader />;
+  return  (<DefaultLayout>
+     <SkeletonLoader />;
+   </DefaultLayout>)
   }
 
   if (error) {
