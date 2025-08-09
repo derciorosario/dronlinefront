@@ -26,7 +26,7 @@ function DoctorCard({item={}}) {
 
             <div class="p-5 flex flex-col">
                 <div className="flex items-center mb-4 justify-between">
-                    <a href="#">
+                    <a>
                         <h5 class=" text-2xl font-bold tracking-tight text-gray-900">{item.name}</h5>
                         <span className="text-[0.9rem] flex">{data._specialty_categories.filter(i=>i.id==item.medical_specialty)[0]?.[`${i18next.language}_name`]}</span>
                     </a>

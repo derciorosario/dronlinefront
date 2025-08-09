@@ -213,6 +213,28 @@ export const DataProvider = ({ children }) => {
      }
 
 
+      function shuffleDoctorsPriority(doctors,makeRandom) {
+      // Separate doctors into priority and non-priority groups
+      const priorityDoctors = doctors.filter(doctor => doctor.schedules && doctor.schedules.length >= 1);
+      const nonPriorityDoctors = doctors.filter(doctor => !doctor.schedules || doctor.schedules.length < 1);
+      
+      // Shuffle each group
+      const shuffledPriority = makeRandom ?  shuffleArray(priorityDoctors) : priorityDoctors;
+      const shuffledNonPriority = makeRandom ? shuffleArray(nonPriorityDoctors) : nonPriorityDoctors;
+      
+      // Combine with priority doctors first
+      return [...shuffledPriority, ...shuffledNonPriority];
+    }
+
+     function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+      }
+      return array;
+    }
+
+
     async function _get(from,params){
       let items=typeof from == "string" ? [from] : from
   
@@ -222,6 +244,11 @@ export const DataProvider = ({ children }) => {
         let selected=dbs.filter(i=>i.name==items[f])[0]
           try{
             let response=await makeRequest({params:params?.[items[f]],method:'get',url:`api/${items[f].replaceAll('_','-')}`,withToken:true, error: ``},100);
+           
+            if(items[f]=="get_all_doctors" || items[f]=="doctors"){ 
+                response={...response,data:shuffleDoctorsPriority([...response.data])} //make it random
+            }
+           
             handleLoaded('add',items[f])
             selected.update(response) 
             _data[items[f]]=response
