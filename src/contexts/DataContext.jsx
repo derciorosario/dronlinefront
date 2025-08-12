@@ -213,7 +213,103 @@ export const DataProvider = ({ children }) => {
      }
 
 
-      function shuffleDoctorsPriority(doctors,makeRandom) {
+
+    /* function shuffleDoctorsPriority(doctors, makeRandom) {
+    // Get current day and time from serverTime
+
+    const currentDate = serverTime?.date ? new Date(serverTime?.date) : new Date();
+    const currentDay = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+    const currentHour = serverTime?.hour || '00:00';
+    
+    // Separate doctors into three groups:
+    // 1. Doctors with schedules available today that haven't passed
+    // 2. Doctors with any schedules (but not meeting today's criteria)
+    // 3. Doctors with no schedules
+    const priorityDoctorsToday = doctors.filter(doctor => {
+        if (!doctor.schedules || doctor.schedules.length === 0) return false;
+        
+        return doctor.schedules.some(schedule => {
+            // Check if the schedule is for today
+            if (schedule.day_value !== currentDay) return false;
+            
+            // Check if the time slot hasn't passed yet
+            return schedule.time_slot >= currentHour;
+        });
+    });
+    
+    const priorityDoctorsOther = doctors.filter(doctor => {
+        // Has schedules but not in priorityDoctorsToday group
+        return (doctor.schedules && doctor.schedules.length >= 1) && 
+               !priorityDoctorsToday.includes(doctor);
+    });
+    
+    const nonPriorityDoctors = doctors.filter(doctor => 
+        !doctor.schedules || doctor.schedules.length < 1
+    );
+    
+    // Shuffle each group if makeRandom is true
+    const shuffledPriorityToday = makeRandom ? shuffleArray(priorityDoctorsToday) : priorityDoctorsToday;
+    const shuffledPriorityOther = makeRandom ? shuffleArray(priorityDoctorsOther) : priorityDoctorsOther;
+    const shuffledNonPriority = makeRandom ? shuffleArray(nonPriorityDoctors) : nonPriorityDoctors;
+    
+    // Combine with priority doctors first (today's available first, then others with schedules)
+    return [...shuffledPriorityToday, ...shuffledPriorityOther, ...shuffledNonPriority];
+}*/
+
+    function shuffleDoctorsPriority(doctors, makeRandom) {
+    // Get current day and time from browser
+    const now = new Date();
+    const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentTimeInMinutes = currentHour * 60 + currentMinute;
+    
+    // Function to convert time string "HH:MM" to minutes
+    const timeToMinutes = (timeStr) => {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return hours * 60 + minutes;
+    };
+    
+    // Separate doctors into three groups:
+    // 1. Doctors with schedules available today that haven't passed
+    // 2. Doctors with any schedules (but not meeting today's criteria)
+    // 3. Doctors with no schedules
+    const priorityDoctorsToday = doctors.filter(doctor => {
+        if (!doctor.schedules || doctor.schedules.length === 0) return false;
+        
+        return doctor.schedules.some(schedule => {
+            // Check if the schedule is for today
+            if (schedule.day_value !== currentDay) return false;
+            
+            // Check if the time slot hasn't passed yet by comparing minutes
+            const scheduleTimeInMinutes = timeToMinutes(schedule.time_slot);
+            return scheduleTimeInMinutes >= currentTimeInMinutes;
+        });
+    });
+    
+    const priorityDoctorsOther = doctors.filter(doctor => {
+        // Has schedules but not in priorityDoctorsToday group
+        return (doctor.schedules && doctor.schedules.length >= 1) && 
+               !priorityDoctorsToday.includes(doctor);
+    });
+    
+    const nonPriorityDoctors = doctors.filter(doctor => 
+        !doctor.schedules || doctor.schedules.length < 1
+    );
+    
+    // Shuffle each group if makeRandom is true
+    const shuffledPriorityToday = makeRandom ? shuffleArray(priorityDoctorsToday) : priorityDoctorsToday;
+    const shuffledPriorityOther = makeRandom ? shuffleArray(priorityDoctorsOther) : priorityDoctorsOther;
+    const shuffledNonPriority = makeRandom ? shuffleArray(nonPriorityDoctors) : nonPriorityDoctors;
+    
+    // Combine with priority doctors first (today's available first, then others with schedules)
+    return [...shuffledPriorityToday, ...shuffledPriorityOther, ...shuffledNonPriority];
+}
+
+
+
+   
+      function shuffleDoctorsPriority2(doctors,makeRandom) {
       // Separate doctors into priority and non-priority groups
       const priorityDoctors = doctors.filter(doctor => doctor.schedules && doctor.schedules.length >= 1);
       const nonPriorityDoctors = doctors.filter(doctor => !doctor.schedules || doctor.schedules.length < 1);
@@ -232,7 +328,7 @@ export const DataProvider = ({ children }) => {
           [array[i], array[j]] = [array[j], array[i]]; // Swap elements
       }
       return array;
-    }
+     }
 
 
     async function _get(from,params){

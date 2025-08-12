@@ -119,7 +119,7 @@ export default function Doctors() {
                         <span className="mt-2">{t('common.loading')}...</span>
                 </div>}
                  {data._loaded.includes('doctors') && <div className="relative w-full">
-                    <DoctorList loaded={data._loaded.includes('doctors')} center={false}  max={10} items={data._doctors?.data || []}/>
+                    <DoctorList loaded={data._loaded.includes('doctors')} center={false}  max={20} items={data._doctors?.data || []}/>
                  </div>}
              </div>
            </div>
