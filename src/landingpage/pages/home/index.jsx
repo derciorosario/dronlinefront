@@ -20,6 +20,8 @@ import 'aos/dist/aos.css';
 import DoctorList from '../../components/Doctors/list';
 import DoctorJoinAppointment from '../../components/Steppers/how-to-appointment-work';
 import { useAuth } from '../../../contexts/AuthContext';
+import NurseChatButton from '../../../components/Chatbot/chat-btn-start';
+
 
 function App() {
 
@@ -37,7 +39,6 @@ function App() {
     const script = document.createElement('script');
     script.src = 'https://static.elfsight.com/platform/platform.js';
     script.async = true;
-
     document.body.appendChild(script);
    
     return () => {
@@ -134,6 +135,7 @@ function App() {
 
 
    <DefaultLayout>
+                  
                    <div className="">
 
                    <div className="w-full h-[100vh] md:min-h-[500px] max-md:h-[70vh] bg-blue-300 relative">

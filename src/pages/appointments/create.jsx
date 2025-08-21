@@ -833,7 +833,7 @@ return (
               {form.name?.split(" ").slice(0, 2).join(" ")} 
               {data._loaded.includes('specialty_categories') && (
                 <span className="text-xs text-gray-500 ml-1 whitespace-nowrap"> 
-                  ({data._specialty_categories.find(f => f.id == form.medical_specialty)?.[i18next.language + "_name"]}zxczcx zxczxc sfsd)
+                  ({data._specialty_categories.find(f => f.id == form.medical_specialty)?.[i18next.language + "_name"]})
                 </span>
               )}
             </p>

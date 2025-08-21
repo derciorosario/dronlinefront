@@ -27,12 +27,13 @@ import ChangePasswordModal from '../components/modals/change-password.jsx'
 import UserWaitingInTheRoom from '../components/modals/user-waiting-in-meeting-room.jsx'
 import Loader from '../components/Loaders/loader.jsx'
 import LogoImageCropper from '../components/Inputs/imageCropper.jsx'
+import NurseChat from '../components/Chatbot/chat-btn-start.jsx'
 
 function DefaultLayout({children,Export,printing,hide,showDates,pageContent,removeMargin,hideAll,disableUpdateButton,refreshOnUpdate,hideSupportBadges,startDate,endDate,setStartDate,setEndDate,hideSidebar,headerLeftContent}) {
     
 
   const data=useData()
-  const {user,setIsLoading,setPathName} = useAuth()
+  const {user,setIsLoading,setPathName,loading,serverTime} = useAuth()
   const navigate=useNavigate()
 
   const {pathname} = useLocation()
@@ -56,7 +57,7 @@ function DefaultLayout({children,Export,printing,hide,showDates,pageContent,remo
   return ( 
 
     <div id={'top'} className={`flex ${!hide ? 'bg-[#F9F9F9]':''} w-full  `}>
-            
+               <NurseChat hide={(data.isLoading || loading || !serverTime || pathname=="/login")}/>
                <LogoImageCropper/>
                <UserWaitingInTheRoom/>
                <ChangePasswordModal/>

@@ -72,6 +72,8 @@ function DoctorProfile() {
     return translated;
   };
 
+
+
   useEffect(() => {
     const fetchDoctor = async () => {
       try {
@@ -195,34 +197,70 @@ function DoctorProfile() {
     return slot?.type || 'individual';
   };
 
+ 
   const handleTimeSlotClick = (time, type) => {
-    const consultationType = getConsultationType(time, type);
-    const date = selectedDates[doctor.id] || dayjs().format('YYYY-MM-DD');
-    const weekday = weekdayNames[i18next.language][Object.keys(weekdayNames.en)[new Date(date).getDay()]];
+  const consultationType = getConsultationType(time, type);
+  const date = selectedDates[doctor.id] || dayjs().format('YYYY-MM-DD');
+  
+  // SEMPRE obter o nome do dia da semana em inglês
+  const englishWeekday = Object.keys(weekdayNames.en)[new Date(date).getDay()];
 
-    if (user?.role == "patient") {
-      homeData.setIsLoading(true);
-      window.location.href = (`/add-appointments&scheduled_doctor=${doctor.id}&type_of_care=${type}&consultation_type=${consultationType}&scheduled_hours=${time}&scheduled_date=${date}&scheduled_weekday=${weekday}`);
-      return;
-    }
-
-    data._closeAllPopUps();
-    homeData._closeAllPopUps();
-    data.setPaymentInfo({ doctor });
-    data.setSelectedDoctorToSchedule({});
-    homeData.setSelectedDoctorToSchedule({});
+  if (user?.role == "patient") {
     homeData.setIsLoading(true);
-    window.location.href = (`/login?nextpage=add-appointments?scheduled_doctor=${doctor.id}&type_of_care=${type}&consultation_type=${consultationType}&scheduled_hours=${time}&scheduled_date=${date}&scheduled_weekday=${weekday}&canceled_appointment_id=${data.appointmentcancelationData?.consultation?.id || ''}`);
-    data.setAppointmentcancelationData({});
-  };
+    window.location.href = (`/add-appointments?scheduled_doctor=${doctor.id}&type_of_care=${type}&consultation_type=${consultationType}&scheduled_hours=${time}&scheduled_date=${date}&scheduled_weekday=${englishWeekday}`);
+    return;
+  }
+
+  data._closeAllPopUps();
+  homeData._closeAllPopUps();
+  data.setPaymentInfo({ doctor });
+  data.setSelectedDoctorToSchedule({});
+  homeData.setSelectedDoctorToSchedule({});
+  homeData.setIsLoading(true);
+  window.location.href = (`/login?nextpage=add-appointments?scheduled_doctor=${doctor.id}&type_of_care=${type}&consultation_type=${consultationType}&scheduled_hours=${time}&scheduled_date=${date}&scheduled_weekday=${englishWeekday}&canceled_appointment_id=${data.appointmentcancelationData?.consultation?.id || ''}`);
+  data.setAppointmentcancelationData({});
+};
+
+// Modifique também a função getNextDateForWeekday
+const getNextDateForWeekday = (weekday) => {
+  const currentLang = i18next.language;
+  
+  // Encontre o nome em inglês correspondente ao dia da semana (se estiver em português)
+  let englishWeekday = weekday;
+  
+  // Se estiver em português, converter para inglês
+  if (currentLang === 'pt') {
+    const ptToEnMap = {
+      'Domingo': 'Sunday',
+      'Segunda': 'Monday',
+      'Terça': 'Tuesday',
+      'Quarta': 'Wednesday',
+      'Quinta': 'Thursday',
+      'Sexta': 'Friday',
+      'Sábado': 'Saturday'
+    };
+    englishWeekday = ptToEnMap[weekday] || weekday;
+  }
+  
+  const targetDay = Object.keys(weekdayNames.en).indexOf(englishWeekday);
+  let date = dayjs();
+  
+  while (date.day() !== targetDay) {
+    date = date.add(1, 'day');
+  }
+  
+  return date.format('YYYY-MM-DD');
+};
 
   const renderAvailability = () => {
-    if (!doctor) return null;
+   if (!doctor) return null;
 
-    const selectedDate = selectedDates[doctor.id] || dayjs().format('YYYY-MM-DD');
-    const selectedWeekDay = selectedWeekDays[doctor.id] || weekdayNames[i18next.language][Object.keys(weekdayNames.en)[new Date(selectedDate).getDay()]];
-    const normalHours = getAvailableHours(doctor, "normal");
-    const urgentHours = getAvailableHours(doctor, "urgent");
+  const selectedDate = selectedDates[doctor.id] || dayjs().format('YYYY-MM-DD');
+  const currentWeekday = weekdayNames[i18next.language][Object.keys(weekdayNames.en)[new Date(selectedDate).getDay()]];
+  const selectedWeekDay = selectedWeekDays[doctor.id] || currentWeekday;
+  
+  const normalHours = getAvailableHours(doctor, "normal");
+  const urgentHours = getAvailableHours(doctor, "urgent");
 
     return (
       <div className="mt-8">
@@ -260,21 +298,25 @@ function DoctorProfile() {
           />
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-4">
-          {Object.values(weekdayNames[i18next.language]).map((day) => (
-            <button
-              key={day}
-              onClick={() => setSelectedWeekDays({ [doctor.id]: day })}
-              className={`px-3 py-1 rounded-full text-sm ${
-                selectedWeekDay === day 
-                  ? 'bg-honolulu_blue-300 text-white' 
-                  : 'bg-gray-200 hover:bg-gray-300'
-              }`}
-            >
-              {day.substring(0, 3)}
-            </button>
-          ))}
-        </div>
+         <div className="flex flex-wrap gap-2 mb-4">
+        {Object.values(weekdayNames[i18next.language]).map((day) => (
+          <button
+            key={day}
+            onClick={() => {
+              const nextDate = getNextDateForWeekday(day);
+              setSelectedDates({ [doctor.id]: nextDate });
+              setSelectedWeekDays({ [doctor.id]: day });
+            }}
+            className={`px-3 py-1 rounded-full text-sm ${
+              selectedWeekDay === day 
+                ? 'bg-honolulu_blue-300 text-white' 
+                : 'bg-gray-200 hover:bg-gray-300'
+            }`}
+          >
+            {day.substring(0, 3)}
+          </button>
+        ))}
+      </div>
 
         <div className="mb-6">
           <h4 className="text-gray-700 mb-2">{t('common.available-times')}:</h4>

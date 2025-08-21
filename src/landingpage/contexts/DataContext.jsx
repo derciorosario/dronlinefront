@@ -275,10 +275,7 @@ export const HomeDataProvider = ({ children }) => {
     
     // Combine with priority doctors first (today's available first, then others with schedules)
     return [...shuffledPriorityToday, ...shuffledPriorityOther, ...shuffledNonPriority];
-}
-
-
-
+  }
 
 
     function shuffleDoctorsPriority2(doctors,makeRandom) {

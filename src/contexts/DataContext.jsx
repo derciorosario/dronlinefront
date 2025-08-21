@@ -6,8 +6,9 @@ import toast from 'react-hot-toast';
 let env="pro"
 import io from 'socket.io-client';
 import { t } from 'i18next';
-const socket_server=env=="pro" ? 'https://socket.dronlinemz.com' : env == "test" ? "https://testsocket.dronlinemz.com" : 'http://localhost:3001'
+const socket_server=env=="pro" ? 'https://socket.dronlinemz.com' : env == "test" ? "https://testsocket.dronlinemz.com" : 'http://localhost:3009'
 const socket = io(socket_server)
+
 
 let log_id=Math.random().toString()
 const DataContext = createContext();
@@ -373,7 +374,7 @@ export const DataProvider = ({ children }) => {
         }
         
         try{
-          timeRef.current = new Date(timeRef.current.getTime() + 3000);
+          timeRef.current = new Date(timeRef.current.getTime() + 300000);
 
           setServerTime({
             week_day: timeRef.current.getDay(),
@@ -387,14 +388,40 @@ export const DataProvider = ({ children }) => {
            console.log({e})
         }
 
-      }, 3000);
+      }, 300000);
   
       return () => clearInterval(intervalId);
 
     }, [updatingServerInfo]);
+
+
+    const [botData,setBotData]=useState({
+      messages:[],
+      status:'not_started',
+      input:''
+    })
+
+    let mariaFunctions={
+        start_chat:function(){
+            console.log(user)
+            //...
+        },
+        update_messages:function(){
+
+        }
+    }
+
+     useEffect(()=>{
+      socket.on('receive-message',({time})=>{
+          
+      })
+    },[])
    
 
     useEffect(()=>{
+
+
+      
 
       socket.on('info',({time})=>{
         if(localStorage.getItem('changing_doctor_calendar')){
@@ -1114,6 +1141,9 @@ function isSetAsUrgentHour(hour,AppSettings){
     }
    
     const value = {
+      socket,
+      mariaFunctions,
+      botData,setBotData,
       getFakeConsultationCount,
       _c_date,
       uploadFromCrop,

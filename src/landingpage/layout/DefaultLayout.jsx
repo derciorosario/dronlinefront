@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import { t } from 'i18next'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import Search from '../components/PopUps/search'
 import { useHomeData } from '../contexts/DataContext'
@@ -14,10 +14,12 @@ import BasicPopUp from '../components/PopUp/basic'
 import WorkWithUsForm from '../components/Form/work-with-us'
 import DoctorRequestSentPopUp from '../components/PopUp/doctor-request-sent'
 import Reviews from '../components/PopUps/reviews'
+import NurseChat from '../../components/Chatbot/chat-btn-start'
 
 function DefaultLayout({children}) {
   const navigate=useNavigate()
   const data=useHomeData()
+  const {pathname} = useLocation()
 
 
 
@@ -25,7 +27,7 @@ function DefaultLayout({children}) {
 
     <>
       <PreLoader/>
-
+      <NurseChat hide={pathname=="/login"}/>
       <Reviews show={data._openPopUps.reviews}/>
          <WorkWithUsForm/>
          <DoctorRequestSentPopUp/>

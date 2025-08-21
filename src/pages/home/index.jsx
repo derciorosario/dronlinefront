@@ -12,16 +12,14 @@ import SinglePrint from '../../components/Print/single';
 
 
 function App() {
+  
   const data=useData()
   const { t, i18n } = useTranslation();
   const {user} = useAuth()
-
   const navigate = useNavigate()
-
   const [endDate,setEndDate]=useState('')
   const [startDate,setStartDate]=useState('')
 
- 
   return (
 
           <div>
