@@ -37,7 +37,7 @@ export default function NurseChat({hide}) {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const { user } = useAuth();
-  const { ai_socket } = useData(); 
+  const { socket } = useData(); 
   const {pathname} = useLocation()
   
 
@@ -118,26 +118,26 @@ export default function NurseChat({hide}) {
 
   // Connection status monitoring
   useEffect(() => {
-    if (!ai_socket) return;
+    if (!socket) return;
 
     const handleConnect = () => setConnectionStatus('connected');
     const handleDisconnect = () => setConnectionStatus('disconnected');
     const handleReconnect = () => setConnectionStatus('reconnecting');
 
-    ai_socket.on('connect', handleConnect);
-    ai_socket.on('disconnect', handleDisconnect);
-    ai_socket.on('reconnecting', handleReconnect);
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+    socket.on('reconnecting', handleReconnect);
 
     return () => {
-      ai_socket.off('connect', handleConnect);
-      ai_socket.off('disconnect', handleDisconnect);
-      ai_socket.off('reconnecting', handleReconnect);
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+      socket.off('reconnecting', handleReconnect);
     };
-  }, [ai_socket]);
+  }, [socket]);
 
   // Handle receiving messages with improved error handling
   useEffect(() => {
-    if (!ai_socket) return;
+    if (!socket) return;
 
     const handleReceiveMessage = (data) => {
       setIsBotTyping(false);
@@ -170,16 +170,16 @@ export default function NurseChat({hide}) {
       setIsBotTyping(false);
     };
 
-    ai_socket.on('receive-message', handleReceiveMessage);
-    ai_socket.on('bot-typing', handleTyping);
-    ai_socket.on('chat-error', handleError);
+    socket.on('receive-message', handleReceiveMessage);
+    socket.on('bot-typing', handleTyping);
+    socket.on('chat-error', handleError);
 
     return () => {
-      ai_socket.off('receive-message', handleReceiveMessage);
-      ai_socket.off('bot-typing', handleTyping);
-      ai_socket.off('chat-error', handleError);
+      socket.off('receive-message', handleReceiveMessage);
+      socket.off('bot-typing', handleTyping);
+      socket.off('chat-error', handleError);
     };
-  }, [ai_socket, isMinimized]);
+  }, [socket, isMinimized]);
 
   // Enhanced message addition with message status
   const addMessage = useCallback((text, sender, status = 'sent') => {
@@ -211,19 +211,19 @@ export default function NurseChat({hide}) {
     setConversationId(null);
     setIsBotTyping(false);
     
-    if (!ai_socket) {
+    if (!socket) {
       addMessage("Erro de conexão. Por favor, recarregue a página.", 'bot', 'error');
       return;
     }
 
-    ai_socket.emit('start-chat', { patientId: user?.id || null }, (response) => {
+    socket.emit('start-chat', { patientId: user?.id || null }, (response) => {
       if (response?.status === 'success') {
         setConversationId(response.conversationId);
       } else {
         addMessage("Erro ao iniciar conversa. Tente novamente.", 'bot', 'error');
       }
     });
-  }, [ai_socket, user?.id, addMessage, messages, conversationId]);
+  }, [socket, user?.id, addMessage, messages, conversationId]);
 
   // Start chat with loading state
   const startChat = useCallback(() => {
@@ -240,11 +240,11 @@ export default function NurseChat({hide}) {
   // Enhanced send message with validation
   const sendMessage = useCallback(() => {
     const trimmedMessage = inputMessage.trim();
-    if (!trimmedMessage || !ai_socket || connectionStatus !== 'connected') return;
+    if (!trimmedMessage || !socket || connectionStatus !== 'connected') return;
     
     addMessage(trimmedMessage, 'user');
     
-    ai_socket.emit('send-message', {
+    socket.emit('send-message', {
       message: trimmedMessage,
       conversationId,
       timestamp: new Date().toISOString()
@@ -254,14 +254,14 @@ export default function NurseChat({hide}) {
     setIsBotTyping(true);
     
     setTimeout(() => inputRef.current?.focus(), 100);
-  }, [inputMessage, ai_socket, connectionStatus, conversationId, addMessage]);
+  }, [inputMessage, socket, connectionStatus, conversationId, addMessage]);
 
   // Handle FAQ question click
   const handleFAQClick = useCallback((question) => {
     addMessage(question, 'user');
     
-    if (ai_socket && connectionStatus === 'connected') {
-      ai_socket.emit('send-message', {
+    if (socket && connectionStatus === 'connected') {
+      socket.emit('send-message', {
         message: question,
         conversationId,
         timestamp: new Date().toISOString()
@@ -273,7 +273,7 @@ export default function NurseChat({hide}) {
     setInputMessage("");
     setShowFAQ(false);
     setTimeout(() => inputRef.current?.focus(), 100);
-  }, [ai_socket, connectionStatus, conversationId, addMessage]);
+  }, [socket, connectionStatus, conversationId, addMessage]);
 
   // Handle Enter key press with Shift+Enter for new lines
   const handleKeyPress = useCallback((e) => {

@@ -6,11 +6,8 @@ import toast from 'react-hot-toast';
 let env="pro"
 import io from 'socket.io-client';
 import { t } from 'i18next';
-const socket_server=env=="pro" ? 'https://socket.dronlinemz.com' : env == "test" ? "https://testsocket.dronlinemz.com" : 'http://localhost:3001'
+const socket_server=env=="pro" ? 'https://socket-ai.dronlinemz.com' : env == "test" ? "https://testsocket.dronlinemz.com" : 'http://localhost:3009'
 const socket = io(socket_server)
-
-const ai_socket_server=env=="pro" ? 'https://aisocket.dronlinemz.com' : env == "test" ? "https://testsocket.dronlinemz.com" : 'http://localhost:3009'
-const ai_socket = io(ai_socket_server)
 
 
 let log_id=Math.random().toString()
@@ -1145,7 +1142,6 @@ function isSetAsUrgentHour(hour,AppSettings){
    
     const value = {
       socket,
-      ai_socket,
       mariaFunctions,
       botData,setBotData,
       getFakeConsultationCount,
