@@ -673,7 +673,7 @@ export default function NurseChat({hide}) {
   };
 
   return (
-    <div className={`fixed inset-0 pointer-events-none z-50 ${hide || pathname=="/login" ? 'opacity-0 pointer-events-none':''}`}>
+    <div style={{zIndex:9999}} className={`fixed inset-0 pointer-events-none z-50 ${hide || pathname=="/login" ? 'opacity-0 pointer-events-none':''}`}>
       {/* Chat Window */}
       {isChatOpen && (
         <div className={`fixed bg-white shadow-2xl rounded-2xl border border-gray-200 pointer-events-auto flex flex-col transition-all duration-300 ${
