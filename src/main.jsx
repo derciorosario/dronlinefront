@@ -17,10 +17,12 @@ import { HomeAuthProvider } from './landingpage/contexts/AuthContext.jsx';
 
 import { Toaster } from 'react-hot-toast';
 import { registerSW } from 'virtual:pwa-register'
+import DrOnlineMaintenance from './components/AppDown/index.jsx';
 registerSW()
 
+let appDown=true
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')).render(appDown ? <DrOnlineMaintenance/> :
   <AuthProvider>
     <GoogleOAuthProvider clientId="344779464047-n0amoat05o993dpkjpfov5245p8dt7d3.apps.googleusercontent.com">
       <DataProvider>

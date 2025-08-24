@@ -24,11 +24,68 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
+
+// Componente para renderizar mensagens com formatação Markdown e links clicáveis
+const MessageRenderer = ({ text }) => {
+  const renderFormattedText = (content) => {
+    if (!content) return null;
+    
+    // Regex para detectar URLs
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    
+    // Divide o texto em partes: texto normal e URLs
+    const parts = content.split(urlRegex);
+    
+    return parts.map((part, index) => {
+      // Verifica se é uma URL
+      if (urlRegex.test(part)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800 underline break-words"
+            onClick={(e) => {
+              e.stopPropagation();
+              // Opcional: você pode adicionar tracking de clicks aqui
+              console.log('Link clicado:', part);
+            }}
+          >
+            {part}
+          </a>
+        );
+      }
+      
+      // Processa texto com **negrito** dentro do texto normal
+      const boldParts = part.split(/(\*\*.*?\*\*)/g);
+      
+      return (
+        <span key={index}>
+          {boldParts.map((boldPart, boldIndex) => {
+            if (boldPart.startsWith('**') && boldPart.endsWith('**')) {
+              const boldText = boldPart.slice(2, -2);
+              return (
+                <strong key={boldIndex} className="font-semibold">
+                  {boldText}
+                </strong>
+              );
+            }
+            return <span key={boldIndex}>{boldPart}</span>;
+          })}
+        </span>
+      );
+    });
+  };
+
+  return <div className="whitespace-pre-wrap break-words">{renderFormattedText(text)}</div>;
+};
+
 export default function NurseChat({hide}) {
   const [isIntroOpen, setIsIntroOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false); 
   const [inputMessage, setInputMessage] = useState("");
   const [isBotTyping, setIsBotTyping] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('connected');
@@ -38,18 +95,46 @@ export default function NurseChat({hide}) {
   const inputRef = useRef(null);
   const { user } = useAuth();
   const { socket } = useData(); 
+  const data=useData()
   const {pathname} = useLocation()
-  
 
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(null);
   const [conversationHistory, setConversationHistory] = useState([]);
-
-
-
   
- 
- 
+  // Função para salvar conversationId no localStorage com validade de 2 horas
+  const saveConversationId = useCallback((id,reset) => {
+    const conversationData = {
+      id: id,
+      expiry: Date.now() + 2 * 60 * 60 * 1000, // 2 horas em milissegundos
+      messages:reset ? ([]) : messages
+    };
+    localStorage.setItem('nurseChatConversation', JSON.stringify(conversationData));
+    setConversationId(id);
+  }, [messages]);
+
+  // Função para carregar conversationId do localStorage
+  const loadConversationId = useCallback(() => {
+    const savedData = localStorage.getItem('nurseChatConversation');
+    if (!savedData) return null;
+
+    const conversationData = JSON.parse(savedData);
+    
+    // Verificar se a conversa ainda é válida (menos de 2 horas)
+    if (Date.now() > conversationData.expiry) {
+      localStorage.removeItem('nurseChatConversation');
+      return null;
+    }
+
+    return conversationData;
+  }, []);
+
+  // Função para limpar conversationId do localStorage
+  const clearConversationId = useCallback(() => {
+    localStorage.removeItem('nurseChatConversation');
+    setConversationId(null);
+  }, []);
+
   useEffect(() => {
     if(hide) return
 
@@ -65,7 +150,7 @@ export default function NurseChat({hide}) {
         return () => clearTimeout(timer);
       } else {
         const lastShownTime = parseInt(popupShown);
-        const twoDaysInMs = 7 * 24 * 60 * 60 * 1000;
+        const twoDaysInMs = 2 * 24 * 60 * 60 * 1000;
         const currentTime = Date.now();
         
         if (currentTime - lastShownTime > twoDaysInMs) {
@@ -90,31 +175,57 @@ export default function NurseChat({hide}) {
     };
   }, [hide]);
 
+  // Carregar conversa salva quando o componente montar
+  useEffect(() => {
+    const savedConversation = loadConversationId();
+    if (savedConversation) {
+      setConversationId(savedConversation.id);
+      setMessages(savedConversation.messages || []);
+      if(data.botPopUp.status!='closed'){
+        startChat()
+      }
+    }
+  }, [loadConversationId]);
 
+  useEffect(()=>{
+    if(loadConversationId() && isIntroOpen && !isChatOpen){
+      setIsIntroOpen(false)
+      if (!isIntroOpen) {
+              localStorage.setItem('nurseChatPopupShown', Date.now().toString());
+      }
+      startChat()
+    }
+  },[isIntroOpen])
 
   const faqQuestions = [
-  // Orientação médica
-  "Como devo proceder se estiver com febre alta?",
-  "Quais são os horários de atendimento dos especialistas?",
-  "Preciso de uma consulta com um neurologista",
-  "Quais são os sintomas da malária?",
-  "Como posso marcar uma consulta presencial?",
-  "Quais são os preços das consultas?",
-  //  "Como posso atualizar meus dados na plataforma?"
+    "Como devo proceder se estiver com febre alta?",
+    "Quais são os horários de atendimento dos especialistas?",
+    "Preciso de uma consulta com um neurologista",
+    "Quais são os sintomas da malária?",
+    "Como posso marcar uma consulta presencial?",
+    "Quais são os preços das consultas?",
+  ];
 
-];
+  const getMessageStatusIcon = (status) => {
+    switch(status) {
+      case 'error': return <AlertCircle className="w-3 h-3 text-red-500" />;
+      case 'sent': return <CheckCircle className="w-3 h-3 text-green-500" />;
+      default: return null;
+    }
+  };
 
   // Optimized scroll to bottom with smooth behavior
-  const scrollToBottom = useCallback(() => {
+  const scrollToBottom = useCallback((behavior) => {
     messagesEndRef.current?.scrollIntoView({ 
-      behavior: "smooth",
+      behavior:behavior || "smooth",
       block: "end"
     });
   }, []);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, scrollToBottom]);
+    if(conversationId) saveConversationId(conversationId)
+  }, [messages, scrollToBottom,conversationId]);
 
   // Connection status monitoring
   useEffect(() => {
@@ -140,21 +251,38 @@ export default function NurseChat({hide}) {
     if (!socket) return;
 
     const handleReceiveMessage = (data) => {
-      setIsBotTyping(false);
+
+      console.log({data})
+
+      if(!data.type && !data.loading){
+          setIsBotTyping(false);
+      }
       
       if (isMinimized) {
         setUnreadCount(prev => prev + 1);
       }
       
       if (data.type === 'doctor_recommendation') {
-        setMessages(prev => [...prev, {
+        const newMessage = {
           id: Date.now(),
           type: 'doctor_recommendation',
           data: data,
           sender: 'bot',
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           timestamp: new Date()
-        }]);
+        };
+        
+        setMessages(prev => {
+          const updatedMessages = [...prev, newMessage];
+          // Salvar mensagens atualizadas no localStorage
+          const savedData = localStorage.getItem('nurseChatConversation');
+          if (savedData) {
+            const conversationData = JSON.parse(savedData);
+            conversationData.messages = updatedMessages;
+            localStorage.setItem('nurseChatConversation', JSON.stringify(conversationData));
+          }
+          return updatedMessages;
+        });
       } else {
         addMessage(data.message || data, 'bot');
       }
@@ -181,7 +309,7 @@ export default function NurseChat({hide}) {
     };
   }, [socket, isMinimized]);
 
-  // Enhanced message addition with message status
+  // Enhanced message addition with message status and localStorage saving
   const addMessage = useCallback((text, sender, status = 'sent') => {
     const newMessage = {
       id: Date.now() + Math.random(),
@@ -191,8 +319,19 @@ export default function NurseChat({hide}) {
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       timestamp: new Date()
     };
-    setMessages(prev => [...prev, newMessage]);
-  }, []);
+    
+    setMessages(prev => {
+      const updatedMessages = [...prev, newMessage];
+      // Salvar mensagens atualizadas no localStorage
+      const savedData = localStorage.getItem('nurseChatConversation');
+      if (savedData && conversationId) {
+        const conversationData = JSON.parse(savedData);
+        conversationData.messages = updatedMessages;
+        localStorage.setItem('nurseChatConversation', JSON.stringify(conversationData));
+      }
+      return updatedMessages;
+    });
+  }, [conversationId]);
 
   // Start a new chat
   const startNewChat = useCallback(() => {
@@ -206,9 +345,9 @@ export default function NurseChat({hide}) {
       setConversationHistory(prev => [...prev, conversation]);
     }
     
-    // Reset chat state
+    // Reset chat state and clear localStorage
     setMessages([]);
-    setConversationId(null);
+    clearConversationId();
     setIsBotTyping(false);
     
     if (!socket) {
@@ -216,27 +355,64 @@ export default function NurseChat({hide}) {
       return;
     }
 
-    socket.emit('start-chat', { patientId: user?.id || null }, (response) => {
+    socket.emit('start-chat', { 
+
+       userId: user?.id || null,
+       patientId:user?.role=="patient" ? user?.data?.id : null,
+       doctorId:user?.role=="doctor" ? user?.data?.id : null
+
+       }, (response) => {
       if (response?.status === 'success') {
-        setConversationId(response.conversationId);
+        saveConversationId(response.conversationId,'reset');
       } else {
         addMessage("Erro ao iniciar conversa. Tente novamente.", 'bot', 'error');
       }
     });
-  }, [socket, user?.id, addMessage, messages, conversationId]);
+  }, [socket, user?.id, addMessage, messages, conversationId, clearConversationId, saveConversationId]);
 
-  // Start chat with loading state
+
+    // Start a new chat
+  const continueChat = useCallback(() => {
+    if (!socket) {
+      addMessage("Erro de conexão. Por favor, recarregue a página.", 'bot', 'error');
+      return;
+    }
+    socket.emit('continue-chat', { conversationId }, (response) => {
+      if (response?.status === 'success') {
+        //console.log(response.chatHistory) //not applied yet
+      } else {
+        addMessage("Erro ao continuar conversa. Tente novamente.", 'bot', 'error');
+      }
+    });
+  }, [socket, user?.id, addMessage, messages, conversationId, clearConversationId, saveConversationId]);
+
+
+ 
+
+  // Start chat with loading state - verifica se há conversa salva
   const startChat = useCallback(() => {
     setIsIntroOpen(false);
     setIsChatOpen(true);
-    setIsMinimized(false);
-    setIsExpanded(false);
+    setIsMinimized(data.botPopUp.status=='minimized' ? true : false);
+    setIsExpanded(data.botPopUp.status=='expanded' ? true : false);
     setUnreadCount(0);
     setShowFAQ(false);
-    
-    startNewChat();
-  }, [startNewChat]);
 
+    data.setBotPopUp({...data.botPopUp,status:data.botPopUp.status=='closed' ? 'open' : data.botPopUp.status})
+    
+    // Verificar se há uma conversa salva válida
+    const savedConversation = loadConversationId();
+    if (savedConversation && savedConversation.messages && savedConversation.messages.length > 0) {
+      // Já temos uma conversa carregada, não precisa iniciar nova
+      setConversationId(savedConversation.id);
+      setMessages(savedConversation.messages);
+    } else {
+      // Iniciar nova conversa
+      startNewChat();
+    }
+  }, [startNewChat, loadConversationId]);
+
+  
   // Enhanced send message with validation
   const sendMessage = useCallback(() => {
     const trimmedMessage = inputMessage.trim();
@@ -289,18 +465,41 @@ export default function NurseChat({hide}) {
     if (isMinimized) {
       setUnreadCount(0);
     }
+    setTimeout(()=>{
+         scrollToBottom('instant');
+    },200)
+    data.setBotPopUp({...data.botPopUp,status:!isMinimized ? 'minimized' : 'open'})
   }, [isMinimized]);
 
   // Toggle chat expansion
   const toggleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
     setIsMinimized(false);
+    data.setBotPopUp({...data.botPopUp,status:!isExpanded ? 'expanded' : 'open'})
   }, [isExpanded]);
 
   // Toggle FAQ visibility
   const toggleFAQ = useCallback(() => {
     setShowFAQ(prev => !prev);
   }, []);
+
+
+
+  
+    const non_shown_types = [
+    'specialty_prices',
+    'all_specialties', 
+    'doctors_info',
+    'doctor_search_result',
+    'doctor_details',
+    'availability_analysis',
+    'no_specialty_found',
+    'no_doctors_available',
+    'specialty_not_found',
+    'no_doctors_found',
+    'emergency_alert'
+  ];
+
 
   // Enhanced Doctor Recommendation Component
   const DoctorRecommendation = ({ data }) => {
@@ -342,6 +541,7 @@ export default function NurseChat({hide}) {
       return dayMap[dayValue] || dayValue || 'Dia não especificado';
     };
 
+
     // Determine slot display date
     const getSlotDisplayDate = (slot) => {
       if (!slot) return 'Data não especificada';
@@ -360,22 +560,17 @@ export default function NurseChat({hide}) {
         return;
       }
 
-    
-
       const params = new URLSearchParams({
         scheduled_doctor: doctor.id || '',
         scheduled_hours: slot.time_slot || '',
         scheduled_weekday: slot.date || slot.day_value || '',
         consultation_type: slot.type || 'individual',
         type_of_care: slot.is_urgent ? 'urgent' : 'normal',
-        scheduled_date:slot.datetime?.split('T')?.[0] || new Date().split('T')[0]
+        scheduled_date: slot.datetime?.split('T')?.[0] || new Date().toISOString().split('T')[0]
       });
 
-      window.open(`/add-appointments?${params}`, '_blank', 'noopener,noreferrer');
-      
+      window.open(`/login?nextpage=add-appointments&${params}`, '_blank', 'noopener,noreferrer');
     };
-
-
 
     // Group and sort slots by date
     const groupSlotsByDate = useMemo(() => {
@@ -435,6 +630,7 @@ export default function NurseChat({hide}) {
           {data.doctors?.length > 0 ? (
             data.doctors.map((doctor, index) => {
               const groupedSlots = groupSlotsByDate(doctor.available_slots || []);
+              console.log({doctor})
 
               return (
                 <div key={doctor.id || index} className="border border-gray-200 rounded-lg p-5 bg-white shadow-sm hover:shadow-md transition-all duration-200">
@@ -475,10 +671,7 @@ export default function NurseChat({hide}) {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <MapPin className="w-4 h-4 mr-1" aria-hidden="true" />
-                      <span>{doctor.location || 'Localização não informada'}</span>
-                    </div>
+                   
                   </div>
 
                   {/* Available Slots */}
@@ -513,7 +706,7 @@ export default function NurseChat({hide}) {
                                   </div>
                                 )}
 
-                                <span className="!text-[9px] text-gray-500">{(slot.datetime?.split('T')?.[0]?.split('-')?.reverse().join('/') || new Date().split('T')[0]?.split('-')?.reverse().join('/'))}</span>
+                                <span className="!text-[9px] text-gray-500">{(slot.datetime?.split('T')?.[0]?.split('-')?.reverse().join('/') || new Date().toISOString().split('T')[0]?.split('-')?.reverse().join('/'))}</span>
                                
                               </button>
                             ))}
@@ -565,68 +758,8 @@ export default function NurseChat({hide}) {
     );
   };
 
-  // Enhanced Messages component with better performance
-  const Messages = (({ messages }) => {
-    const getMessageStatusIcon = (status) => {
-      switch(status) {
-        case 'error': return <AlertCircle className="w-3 h-3 text-red-500" />;
-        case 'sent': return <CheckCircle className="w-3 h-3 text-green-500" />;
-        default: return null;
-      }
-    };
-
-    return (
-      <div className="flex-1 p-4 overflow-y-auto text-sm space-y-4 scroll-smooth">
-        {messages.map((message) => (
-          <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'items-start space-x-2'} animate-slideIn`}>
-            {message.sender === 'bot' && message.type !== 'doctor_recommendation' && (
-              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#074665] text-white font-bold shadow-md">
-                 <Bot className={`w-6 h-6`} />
-              </div>
-            )}
-            
-            {message.type === 'doctor_recommendation' ? (
-              <DoctorRecommendation data={message.data} />
-            ) : (
-              <div className={`px-4 py-3 rounded-2xl max-w-[85%] shadow-sm relative ${
-                message.sender === 'user' 
-                  ? 'bg-[#095e89] text-white' 
-                  : `bg-white border ${message.status === 'error' ? 'border-red-200 bg-red-50' : 'border-gray-100'} shadow-md`
-              }`}>
-                <div className="whitespace-pre-wrap">{message.text}</div>
-                <div className={`flex items-center justify-between text-xs mt-2 ${
-                  message.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
-                }`}>
-                  <span>{message.time}</span>
-                  {message.sender === 'user' && getMessageStatusIcon(message.status)}
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-        
-        {isBotTyping && (
-          <div className="flex items-start space-x-2 animate-slideIn">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#074665] text-white font-bold shadow-md">
-              M
-            </div>
-            <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl shadow-md">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 rounded-full bg-[#1c9cd3] animate-bounce"></div>
-                <div className="w-2 h-2 rounded-full bg-[#1c9cd3] animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 rounded-full bg-[#1c9cd3] animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-              </div>
-            </div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-    );
-  });
-
   // FAQ Component
   const FAQSection = () => (
-
     <div className="bg-gray-50 border-t border-gray-200 p-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-700">Perguntas Frequentes</h3>
@@ -673,7 +806,7 @@ export default function NurseChat({hide}) {
   };
 
   return (
-    <div style={{zIndex:9999}} className={`fixed inset-0 pointer-events-none z-50 ${hide || pathname=="/login" ? 'opacity-0 pointer-events-none':''}`}>
+    <div style={{zIndex:99999999}} className={`fixed inset-0 pointer-events-none z-50 ${hide || pathname=="/login" ? 'opacity-0 pointer-events-none':''}`}>
       {/* Chat Window */}
       {isChatOpen && (
         <div className={`fixed bg-white shadow-2xl rounded-2xl border border-gray-200 pointer-events-auto flex flex-col transition-all duration-300 ${
@@ -681,7 +814,7 @@ export default function NurseChat({hide}) {
             ? 'bottom-4 left-4 w-80 max-w-[calc(100vw-2rem)] h-16' 
             : isExpanded 
               ? 'inset-0 w-full h-full rounded-none'
-              : 'bottom-4 left-4 w-full sm:w-96 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] h-[min(600px,calc(100vh-2rem))]'
+              : 'bottom-4 left-4 w-full sm:w-96 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] max-md:h-full md:h-[min(600px,calc(100vh-2rem))]'
         }`}>
           {/* Header */}
           <div className="flex justify-between items-center px-6 py-4 border-b bg-[#074665] text-white rounded-t-2xl">
@@ -717,7 +850,7 @@ export default function NurseChat({hide}) {
               {!isMinimized && (
                 <button 
                   onClick={toggleExpand} 
-                  className="text-white hover:text-blue-200 transition p-1"
+                  className={`text-white max-md:hidden hover:text-blue-200 transition p-1`}
                   title={isExpanded ? "Restaurar" : "Expandir"}
                 >
                   {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Expand className="w-4 h-4" />}
@@ -731,7 +864,10 @@ export default function NurseChat({hide}) {
                 {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
               </button>
               <button 
-                onClick={() => setIsChatOpen(false)} 
+                onClick={() => {
+                  data.setBotPopUp({...data.botPopUp,status:'closed'})
+                  setIsChatOpen(false)
+                } } 
                 className="text-white hover:text-blue-200 transition p-1"
                 title="Fechar"
               >
@@ -741,12 +877,57 @@ export default function NurseChat({hide}) {
           </div>
 
           {/* Messages - only show if not minimized */}
-          {!isMinimized && <Messages messages={messages} />}
+          {!isMinimized && 
+            <div className="flex-1 p-4 overflow-y-auto text-sm space-y-4 scroll-smooth">
+              {messages.filter(i=>!non_shown_types.includes(i?.text?.type)).map((message) => (
+                <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'items-start space-x-2'} animate-slideIn`}>
+                  {message.sender === 'bot' && message.type !== 'doctor_recommendation' && (
+                    <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#074665] text-white font-bold shadow-md">
+                      <Bot className={`w-6 h-6`} />
+                    </div>
+                  )}
+                  
+                  {message.type === 'doctor_recommendation' ? (
+                    <DoctorRecommendation data={message.data} />
+                  ) : (
+                    <div className={`px-4 py-3 rounded-2xl max-w-[85%] shadow-sm relative ${
+                      message.sender === 'user' 
+                        ? 'bg-[#095e89] text-white' 
+                        : `bg-white border ${message.status === 'error' ? 'border-red-200 bg-red-50' : 'border-gray-100'} shadow-md`
+                    }`}>
+                      <MessageRenderer text={message.text} />
+                      <div className={`flex items-center justify-between text-xs mt-2 ${
+                        message.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
+                      }`}>
+                        <span>{message.time}</span>
+                        {message.sender === 'user' && getMessageStatusIcon(message.status)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+              
+              {isBotTyping && (
+                <div className="flex items-start space-x-2 animate-slideIn">
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#074665] text-white font-bold shadow-md">
+                    <Bot className={`w-6 h-6`} />
+                  </div>
+                  <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl shadow-md">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 rounded-full bg-[#1c9cd3] animate-bounce"></div>
+                      <div className="w-2 h-2 rounded-full bg-[#1c9cd3] animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 rounded-full bg-[#1c9cd3] animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+          }
 
           {/* FAQ Section - only show if not minimized */}
           {!isMinimized && <FAQSection />}
 
-          {/* Input - only show if not minimized */}
           {!isMinimized && (
             <div className="border-t p-4 bg-gray-50 rounded-b-2xl">
               <div className="flex items-end space-x-2">
@@ -755,14 +936,14 @@ export default function NurseChat({hide}) {
                   rows={2}
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  ___onKeyPress={isBotTyping ? {} : handleKeyPress}
                   placeholder={connectionStatus === 'connected' ? "Escreva sua mensagem..." : "Aguardando conexão..."}
                   disabled={connectionStatus !== 'connected'}
                   className="flex-1 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#1c9cd3] resize-none shadow-inner disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
                 <button 
                   onClick={sendMessage}
-                  disabled={inputMessage.trim() === "" || connectionStatus !== 'connected'}
+                  disabled={inputMessage.trim() === "" || connectionStatus !== 'connected' || isBotTyping}
                   className="px-4 py-3 bg-[#095e89] text-white rounded-xl hover:bg-[#074665] disabled:opacity-50 disabled:cursor-not-allowed transition shadow-md"
                   title="Enviar mensagem"
                 >
@@ -784,12 +965,10 @@ export default function NurseChat({hide}) {
             <p className="font-semibold text-gray-800">
               Pergunte à Enfermeira <span className="text-[#095e89]">MARIA</span>
             </p>
-              <button onClick={() =>{
-                setIsIntroOpen(false)
-                localStorage.setItem('nurseChatPopupShown', Date.now().toString());
-              }
-              
-              } className="text-gray-400 hover:text-gray-600 transition">
+            <button onClick={() =>{
+              setIsIntroOpen(false)
+              localStorage.setItem('nurseChatPopupShown', Date.now().toString());
+            }} className="text-gray-400 hover:text-gray-600 transition">
               ✕
             </button>
           </div>
@@ -837,39 +1016,38 @@ Estou aqui para te acompanhar e tornar mais fácil cuidar da sua saúde.</p>
             onClick={startChat} 
             className="mt-4 w-full bg-[#095e89] text-white font-medium py-3 rounded-xl hover:bg-[#074665] transition shadow-md hover:scale-105 transform flex-shrink-0"
           >
-            Iniciar Conversa
+            {loadConversationId() ? 'Continuar Conversa' : 'Iniciar Conversa'}
           </button>
         </div>
       )}
 
       {/* Enhanced Floating Button */}
       {!isChatOpen && (
-     <button 
-  onClick={() =>{ 
-    setIsIntroOpen(!isIntroOpen)
-    if (!isIntroOpen) {
-      localStorage.setItem('nurseChatPopupShown', Date.now().toString());
-    }
-  }} 
-  className="fixed bottom-6 left-6 flex items-center space-x-3 bg-[#095e89] text-white px-6 py-3 rounded-full shadow-2xl hover:bg-[#074665] transition transform hover:scale-105 pointer-events-auto group z-50"
->
-  <Bot className={`w-6 h-6 ${!isIntroOpen ? 'animate-bounce':''}`} />
+        <button 
+          onClick={() =>{ 
+            setIsIntroOpen(!isIntroOpen)
+            if (!isIntroOpen) {
+              localStorage.setItem('nurseChatPopupShown', Date.now().toString());
+            }
+          }} 
+          className="fixed bottom-6 left-6 flex items-center space-x-3 bg-[#095e89] text-white px-6 py-3 rounded-full shadow-2xl hover:bg-[#074665] transition transform hover:scale-105 pointer-events-auto group z-50"
+        >
+          <Bot className={`w-6 h-6 ${!isIntroOpen ? 'animate-bounce':''}`} />
 
-  {isIntroOpen && <span className="font-semibold">Fechar</span>}
-  
-  {!isIntroOpen && (
-    <span className="font-semibold hidden group-hover:inline">
-      Falar com à Enfermeira MARIA
-    </span>
-  )}
+          {isIntroOpen && <span className="font-semibold">Fechar</span>}
+          
+          {!isIntroOpen && (
+            <span className="font-semibold hidden group-hover:inline">
+              Falar com à Enfermeira MARIA
+            </span>
+          )}
 
-  {unreadCount > 0 && (
-    <div className="absolute -top-2 -left-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold animate-pulse">
-      {unreadCount}
-    </div>
-  )}
-</button>
-
+          {unreadCount > 0 && (
+            <div className="absolute -top-2 -left-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold animate-pulse">
+              {unreadCount}
+            </div>
+          )}
+        </button>
       )}
     </div>
   );

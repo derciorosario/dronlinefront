@@ -217,7 +217,7 @@ function DoctorProfile() {
   data.setSelectedDoctorToSchedule({});
   homeData.setSelectedDoctorToSchedule({});
   homeData.setIsLoading(true);
-  window.location.href = (`/login?nextpage=add-appointments?scheduled_doctor=${doctor.id}&type_of_care=${type}&consultation_type=${consultationType}&scheduled_hours=${time}&scheduled_date=${date}&scheduled_weekday=${englishWeekday}&canceled_appointment_id=${data.appointmentcancelationData?.consultation?.id || ''}`);
+  window.location.href = (`/login?nextpage=add-appointments&scheduled_doctor=${doctor.id}&type_of_care=${type}&consultation_type=${consultationType}&scheduled_hours=${time}&scheduled_date=${date}&scheduled_weekday=${englishWeekday}&canceled_appointment_id=${data.appointmentcancelationData?.consultation?.id || ''}`);
   data.setAppointmentcancelationData({});
 };
 

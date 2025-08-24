@@ -3,11 +3,13 @@ import { useAuth } from './AuthContext';
 import html2pdf from 'html2pdf.js';
 import toast from 'react-hot-toast';
 
-let env="pro"
+let env="dev"
 import io from 'socket.io-client';
 import { t } from 'i18next';
 const socket_server=env=="pro" ? 'https://socket-ai.dronlinemz.com' : env == "test" ? "https://testsocket.dronlinemz.com" : 'http://localhost:3009'
+const default_socket_server=env=="pro" ? 'https://socket.dronlinemz.com' : env == "test" ? "https://testsocket.dronlinemz.com" : 'http://localhost:3001'
 const socket = io(socket_server)
+
 
 
 let log_id=Math.random().toString()
@@ -16,6 +18,7 @@ const DataContext = createContext();
 export const DataProvider = ({ children }) => {
     const [dialogs,setDialogs]=useState({})
     const [isDeleting,setIsDeleting]=useState(false)
+    const appDown=false
     let initial_popups={
       basic_popup:false,
       doctor_list:false,
@@ -1139,8 +1142,16 @@ function isSetAsUrgentHour(hour,AppSettings){
     
       return arr
     }
+
+
+    const [botPopUp,setBotPopUp]=useState({
+       status:'closed'
+    })
+
+    console.log(botPopUp.status)
    
     const value = {
+      botPopUp,setBotPopUp,
       socket,
       mariaFunctions,
       botData,setBotData,
@@ -1170,6 +1181,7 @@ function isSetAsUrgentHour(hour,AppSettings){
       socket,
       APP_FRONDEND,
       socket_server,
+      default_socket_server,
       handleZoomMeetings,
       isMobile,setIsMobile,
       hasConsultationTimePassed,

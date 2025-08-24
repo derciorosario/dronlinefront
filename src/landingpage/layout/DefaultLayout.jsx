@@ -27,7 +27,7 @@ function DefaultLayout({children}) {
 
     <>
       <PreLoader/>
-      <NurseChat hide={pathname=="/login"}/>
+      <NurseChat hide={pathname=="/login" || !data.isPreloaderLoaded}/>
       <Reviews show={data._openPopUps.reviews}/>
          <WorkWithUsForm/>
          <DoctorRequestSentPopUp/>
