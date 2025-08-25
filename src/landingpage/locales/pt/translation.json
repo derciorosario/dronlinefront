@@ -584,6 +584,12 @@
         "this-document-is-a-propriety-of":"Este documento é propriedade da:"
     },
     "common":{
+        "messages":"Mensagens",
+        "maria-messages":"Mensagens com MARIA",
+        "maria_conversation":"Conversas com MARIA",
+        "maria-conversation":"Conversas com MARIA",
+        "guest":"Visitante",
+        "convasation-list":"Lista de conversas",
         "available-times":"Horários disponíveis",
         "calendar":"Calendário",
         "date-and-hour":"Data e hora",

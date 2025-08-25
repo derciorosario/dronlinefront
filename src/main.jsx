@@ -20,7 +20,7 @@ import { registerSW } from 'virtual:pwa-register'
 import DrOnlineMaintenance from './components/AppDown/index.jsx';
 registerSW()
 
-let appDown=true
+let appDown=false
 
 ReactDOM.createRoot(document.getElementById('root')).render(appDown ? <DrOnlineMaintenance/> :
   <AuthProvider>

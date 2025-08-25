@@ -22,6 +22,7 @@ import MoreIcon from '../../assets/images/menu-icons/more.svg'
 import MedicalCerificateIcon from '../../assets/images/menu-icons/medical-certificate.svg'
 import AvailabilityIcon from '../../assets/images/menu-icons/availability.svg'
 import WaitingListIcon from '../../assets/images/menu-icons/waitinglist.svg'
+import MariaIcon from '../../assets/images/menu-icons/maria.svg'
 
 import { t } from 'i18next';
 import { useAuth } from '../../contexts/AuthContext';
@@ -77,6 +78,7 @@ function SideBar({hideSidebar}) {
       ],access:['admin'],manager_access:{name:'stats',per:['read']}},
      
      {name:t('menu.scheduler'),path:'/scheduler',paths:['/scheduler'],field:'scheduler',icon:'scheduler',access:['doctor','patient'],showInMobile:true},
+
      //{name:t('menu.payment-management'),path:'/payment-management',paths:['/payment-management','/payment-management/:id'],field:'payment-management',icon:'payment_management',access:['admin'],manager_access:{name:'payment_management',per:['read','reject','approve']}},
 
      {name:user?.role=="patient" || data.isMobile ? t('common.payments') : t('menu.payment-management'),path:'/payment-management',field:'payment-management',icon:'payment_management',sub_menus:[
@@ -85,6 +87,7 @@ function SideBar({hideSidebar}) {
      ],access:['admin','patient'],manager_access:{name:'payment_management',per:['read','reject','approve']},showInMobile:true},
     
      {name:t('common.medical-certificates'),path:'/medical-certificates',paths:['/medical-certificates','medical-certificate/:id'], field:'medical-certificate',icon:'medical_certificate',access:['admin','manager','patient','doctor'],manager_access:{name:'medical_certificates',per:['read','reject','approve']}},
+    // {name:'MARIA',path:'/ai/conversations',paths:['/ai/conversation/:id'],field:'ai',icon:'maria',access:['manager','admin']},
     
      {name:t('common.waiting-list'),path:'/waiting-list',field:'waiting_list',icon:'waiting_list',sub_menus:[
       {name:t('common.list'),path:'/waiting-list',paths:['/waiting-list','waiting-list/:id'],access:['admin','manager'],manager_access:{name:'waiting_list',per:['read']}},
@@ -133,7 +136,8 @@ function SideBar({hideSidebar}) {
       specialty_categories:SpecialtyCategoriesIcon,
       more:MoreIcon,
       consultation_availability:AvailabilityIcon,
-      waiting_list:WaitingListIcon
+      waiting_list:WaitingListIcon,
+      maria:MariaIcon
 
   }
 

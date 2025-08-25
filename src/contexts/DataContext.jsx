@@ -3,7 +3,7 @@ import { useAuth } from './AuthContext';
 import html2pdf from 'html2pdf.js';
 import toast from 'react-hot-toast';
 
-let env="dev"
+let env="pro"
 import io from 'socket.io-client';
 import { t } from 'i18next';
 const socket_server=env=="pro" ? 'https://socket-ai.dronlinemz.com' : env == "test" ? "https://testsocket.dronlinemz.com" : 'http://localhost:3009'
@@ -151,10 +151,13 @@ export const DataProvider = ({ children }) => {
     const [_patient_dashboard,setPatientDashboard]=useState([])
     const [_medical_certificates,setMedicalCertificates]=useState([])
     const [_waiting_list,setWaitingList]=useState([])
+    const [_maria_conversations,setMariaConversations]=useState([])
+
     const [updateTable,setUpdateTable]=useState(null)
     
 
     let dbs=[
+      {name:'maria_conversations',update:setMariaConversations,get:_maria_conversations},
       {name:'waiting_list',update:setWaitingList,get:_waiting_list},
       {name:'settings',update:setSettings,get:_settings},
       {name:'appointments',update:setAppointments,get:_appointments},
@@ -1151,6 +1154,7 @@ function isSetAsUrgentHour(hour,AppSettings){
     console.log(botPopUp.status)
    
     const value = {
+      _maria_conversations,
       botPopUp,setBotPopUp,
       socket,
       mariaFunctions,

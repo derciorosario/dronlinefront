@@ -58,7 +58,8 @@ import AppointmentCancelationTerms from './landingpage/pages/appointment-cancela
 import VerifyCode from './landingpage/pages/verify-doc-qrcode/index.jsx'
 import TestReactPdf from './components/Print/renderpdf-test.jsx'
 import DoctorProfile from './landingpage/pages/doctor-profile/index.jsx';
-
+import MariaConversation from './pages/ai/conversations.jsx'
+import MariaMessages from './pages/ai/conversation-details.jsx'
 function App() {
 
   //const {pathname} = useLocation()
@@ -80,6 +81,8 @@ function App() {
          <Route path="/login"  element={<Login/>} />
          <Route path="/specialists" element={<Specialists/>} />
          <Route path="/" element={<LandingPageHome/>}/>
+         <Route path="/ai/conversation/:id" element={<ProtectedRoute redirectTo="/login"><MariaMessages/></ProtectedRoute>}/>
+         <Route path="/ai/conversations" element={<ProtectedRoute redirectTo="/login"><MariaConversation/></ProtectedRoute>}/>
          <Route path="/appointments" element={<ProtectedRoute redirectTo="/login"><Appointments/></ProtectedRoute>}/>
          <Route path="/add-appointments" element={<ProtectedRoute redirectTo="/login"><CreateAppointments/></ProtectedRoute>}/>
          <Route path="/appointment/:id" element={<ProtectedRoute redirectTo="/login"><CreateAppointments/></ProtectedRoute>}/>

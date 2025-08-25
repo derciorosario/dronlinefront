@@ -574,6 +574,12 @@
         "this-document-is-a-propriety-of":"This document is a propriety of:"
     },    
     "common":{
+        "messages":"Messages",
+        "maria-messages":"MARIA Messages",
+        "maria_conversation":"MARIA Conversation",
+        "maria-conversation":"MARIA Conversation",
+        "guest":"Guest",
+        "convasation-list":"Conversation list",
         "available-times":"Available times",
         "calendar":"Calendar",
         "date-and-hour":"Date and hour",

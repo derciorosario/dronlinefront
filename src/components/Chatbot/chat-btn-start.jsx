@@ -760,9 +760,9 @@ export default function NurseChat({hide}) {
 
   // FAQ Component
   const FAQSection = () => (
-    <div className="bg-gray-50 border-t border-gray-200 p-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-700">Perguntas Frequentes</h3>
+    <div className={`bg-gray-50 border-t  border-gray-200 ${showFAQ ? 'p-4':'p-2'}`}>
+      <div className={`flex items-center justify-between ${showFAQ ? 'mb-3':''}`}>
+        <h3 className={`text-sm font-semibold text-gray-700`}>Perguntas Frequentes</h3>
         <button 
           onClick={toggleFAQ}
           className="text-xs text-[#095e89] hover:text-[#074665]"
@@ -833,7 +833,7 @@ export default function NurseChat({hide}) {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              {!isMinimized && (
+              {/**{!isMinimized && (
                 <button 
                   onClick={startNewChat}
                   className="text-white hover:text-blue-200 transition p-1"
@@ -841,13 +841,13 @@ export default function NurseChat({hide}) {
                 >
                   <Plus className="w-4 h-4" />
                 </button>
-              )}
+              )} */}
               {unreadCount > 0 && isMinimized && (
                 <div className="bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
                   {unreadCount}
                 </div>
               )}
-              {!isMinimized && (
+              {/**{!isMinimized && (
                 <button 
                   onClick={toggleExpand} 
                   className={`text-white max-md:hidden hover:text-blue-200 transition p-1`}
@@ -855,14 +855,14 @@ export default function NurseChat({hide}) {
                 >
                   {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Expand className="w-4 h-4" />}
                 </button>
-              )}
-              <button 
+              )} */}
+              {isMinimized && <button 
                 onClick={toggleMinimize} 
                 className="text-white hover:text-blue-200 transition p-1"
                 title={isMinimized ? "Expandir" : "Minimizar"}
               >
                 {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
-              </button>
+              </button> }
               <button 
                 onClick={() => {
                   data.setBotPopUp({...data.botPopUp,status:'closed'})
@@ -874,7 +874,62 @@ export default function NurseChat({hide}) {
                 ✕
               </button>
             </div>
-          </div>
+    </div>
+
+  <div className="flex items-center space-x-2 p-1 border-gray-200 border-b">
+  {(!isMinimized) && (
+    <button 
+      onClick={startNewChat}
+      disabled={isBotTyping}
+      className={`flex  hover:text-blue-200 ${isBotTyping ? ' pointer-events-none bg-[#095e895d]':'bg-[#095e89]'} items-center  text-white  transition px-2 py-1 text-xs rounded-md`}
+      title="Nova Conversa"
+    >
+      <Plus className="w-3 h-3 mr-1 text-white" />
+      Nova conversa
+    </button>
+  )}
+  
+  {!isMinimized && (
+    <button 
+      onClick={toggleExpand} 
+      className={`flex items-center bg-gray-200 text-black max-md:hidden hover:bg-white/20 transition px-2 py-1 text-xs rounded`}
+      title={isExpanded ? "Restaurar" : "Expandir"}
+    >
+      {isExpanded ? (
+        <>
+          <Minimize2 className="w-3 h-3 mr-1 text-black" />
+          Restaurar
+        </>
+      ) : (
+        <>
+          <Expand className="w-3 h-3 mr-1 text-black" />
+          Expandir
+        </>
+      )}
+    </button>
+  )}
+  <button 
+    onClick={toggleMinimize} 
+    className="flex items-center bg-gray-200 text-black hover:bg-white/20 transition px-2 py-1 text-xs rounded"
+    title={isMinimized ? "Expandir" : "Minimizar"}
+  >
+    {isMinimized ? (
+      <>
+        <Maximize2 className="w-3 h-3 mr-1 text-black" />
+        Expandir
+      </>
+    ) : (
+      <>
+        <Minus className="w-3 h-3 mr-1 text-black" />
+        Minimizar
+      </>
+    )}
+  </button>
+</div>
+
+
+
+
 
           {/* Messages - only show if not minimized */}
           {!isMinimized && 
